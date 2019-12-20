@@ -6,11 +6,14 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Mesh.hpp"
 
 class Model {
 public:
-    Model(std::string path, bool useTexture = true, glm::vec4 color = glm::vec4(0.0f), glm::vec3 specular = glm::vec3(1.0f), glm::vec3 emissive = glm::vec3(0.0f)) {
+    Model(std::string path, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), bool useTexture = true, glm::vec4 color = glm::vec4(0.0f), glm::vec3 specular = glm::vec3(1.0f), glm::vec3 emissive = glm::vec3(0.0f)) {
+        this->pos = pos;
+        this->rot = rot;
         this->useTexture = useTexture;
         this->color = color;
         this->specular = specular;
@@ -19,7 +22,10 @@ public:
     }
     void draw(Shader shader);
     void cleanup();
+
 private:
+    glm::vec3 pos;
+    glm::vec3 rot;
     std::vector<Mesh> meshes;
     std::string directory;
     std::vector<Texture> textures_loaded;

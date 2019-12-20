@@ -151,7 +151,7 @@ int main() {
 		return -1;
 	}
 
-	Model obj(std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	Model obj(std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), glm::vec3(0.0f, 1.0f, -1.0f), glm::vec3(1.0f), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
 	// Shaders
 	Shader textureShader("./shaders/lighting.vert", "./shaders/lighting.frag");
@@ -185,9 +185,6 @@ int main() {
 		processInput(window);
 		widget.updateEvents(window);
 		textureShader.use();
-
-		glm::mat4 model = glm::mat4(1.0f);
-		textureShader.setMat4("model", model);
 
 		if (rebuildProjectionMatrix) {
 			glm::mat4 projection = glm::perspective(glm::radians(80.0f), aspectRatio, 0.1f, 100.0f);

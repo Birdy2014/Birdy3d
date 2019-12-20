@@ -1,6 +1,12 @@
 #include "Model.hpp"
 
 void Model::draw(Shader shader) {
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, pos);
+    model = glm::rotate(model, rot.x, glm::vec3(1, 0, 0));
+    model = glm::rotate(model, rot.y, glm::vec3(0, 1, 0));
+    model = glm::rotate(model, rot.z, glm::vec3(0, 0, 1));
+    shader.setMat4("model", model);
     for(unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].draw(shader);
 }
