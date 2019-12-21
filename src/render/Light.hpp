@@ -2,12 +2,14 @@
 #define BIRDY3D_LIGHT_HPP
 
 #include "Shader.hpp"
+#include "../objects/Component.hpp"
+#include "../objects/GameObject.hpp"
 
-class Light {
+class Light : public Component {
 public:
-    Light(int type, glm::vec3 position, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic, float innerCutOff, float outerCutOff) {
+    Light(GameObject *o, int id, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic, float innerCutOff, float outerCutOff) : Component(o) {
+        this->id = id;
         this->type = type;
-        this->position = position;
         this->direction = direction;
         this->ambient = ambient;
         this->diffuse = diffuse;
@@ -18,9 +20,9 @@ public:
         this->outerCutOff = outerCutOff;
     }
 
-    Light() {
+    Light(GameObject *o, int id) : Component(o) {
+        this->id = id;
         this->type = 0;
-        this->position = glm::vec3(0.0f);
         this->direction = glm::vec3(1.0f);
         this->ambient = glm::vec3(1.0f);
         this->diffuse = glm::vec3(1.0f);
@@ -34,7 +36,7 @@ public:
     void use(Shader shader, int id) {
         std::string i = std::to_string(id);
         shader.setInt("lights[" + i + "].type", type);
-        shader.setVec3("lights[" + i + "].position", position);
+        shader.setVec3("lights[" + i + "].position", this->object->absPos());
         shader.setVec3("lights[" + i + "].direction", direction);
         shader.setVec3("lights[" + i + "].ambient", ambient);
         shader.setVec3("lights[" + i + "].diffuse", diffuse);
@@ -45,9 +47,15 @@ public:
         shader.setFloat("lights[" + i + "].outerCutOff", outerCutOff);
     }
 
+    void start() override {}
+    void update(float deltaTime) override {
+        use(*this->object->shader, id);
+    }
+    void cleanup() override {}
+
 protected:
+    int id;
     int type;
-    glm::vec3 position;
     glm::vec3 direction;
     glm::vec3 ambient;
     glm::vec3 diffuse;

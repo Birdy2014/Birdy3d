@@ -5,9 +5,8 @@
 
 class PointLight : public Light {
 public:
-    PointLight(glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic) {
+    PointLight(GameObject *o, int id, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic) : Light(o, id) {
         this->type = 1;
-        this->position = position;
         this->ambient = ambient;
         this->diffuse = diffuse;
         this->specular = specular;

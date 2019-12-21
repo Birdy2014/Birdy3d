@@ -14,6 +14,7 @@
 #include "render/DirectionalLight.hpp"
 #include "render/PointLight.hpp"
 #include "ui/Widget.hpp"
+#include "objects/GameObject.hpp"
 
 GLFWwindow *window;
 
@@ -151,18 +152,21 @@ int main() {
 		return -1;
 	}
 
-	Model obj(std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), glm::vec3(0.0f, 1.0f, -1.0f), glm::vec3(1.0f), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
 	// Shaders
 	Shader textureShader("./shaders/lighting.vert", "./shaders/lighting.frag");
 	Shader uiShader("./shaders/ui.vert", "./shaders/ui.frag");
-	textureShader.use();
+
+	GameObject obj = GameObject(nullptr, &textureShader, glm::vec3(0.0f, 1.0f, -1.0f), glm::vec3(1.0f));
+	obj.addComponent(new Model(&obj, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+	GameObject obj2 = GameObject(&obj, &textureShader, glm::vec3(0.0f, 2.0f, 0.0f));
+	obj2.addComponent(new Model(&obj2, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+	obj.addChild(obj2);
 
 	// Light
-	DirectionalLight dirLight(glm::vec3(0.9f, -1.0f, 0.8f), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(1.0f));
-	PointLight pLight(glm::vec3(2.0f, 1.5f, 4.0f), glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), 0.09f, 0.032f);
-	pLight.use(textureShader, 0);
-	dirLight.use(textureShader, 1);
+	GameObject dirLight = GameObject(nullptr, &textureShader);
+	dirLight.addComponent(new DirectionalLight(&dirLight, 0, glm::vec3(0.9f, -1.0f, 0.8f), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(1.0f)));
+	GameObject pLight = GameObject(nullptr, &textureShader, glm::vec3(2.0f, 1.5f, 4.0f));
+	pLight.addComponent(new PointLight(&pLight, 1, glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), 0.09f, 0.032f));
 	
 	textureShader.setFloat("material.shininess", 64);
 
@@ -170,7 +174,6 @@ int main() {
 	widget.hidden = true;
 	widget.setOnClick([]() {
     	glfwSetWindowShouldClose(window, true);
-		std::cout << "Clicked!" << std::endl;
 	});
 	uiShader.use();
 	widget.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1.0f));
@@ -200,7 +203,9 @@ int main() {
 		glm::mat4 view = cam.getViewMatrix();
 		textureShader.setMat4("view", view);
 		textureShader.setVec3("viewPos", cam.pos);
-		obj.draw(textureShader);
+		dirLight.update(deltaTime);
+		pLight.update(deltaTime);
+		obj.update(deltaTime);
 
 		// draw UI
 		glClear(GL_DEPTH_BUFFER_BIT);

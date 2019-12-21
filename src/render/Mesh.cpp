@@ -51,9 +51,8 @@ void Mesh::setupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader shader) {
-    shader.use();
-    shader.setBool("useTexture", useTexture);
+void Mesh::draw(Shader *shader) {
+    shader->setBool("useTexture", useTexture);
     if (useTexture) {
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
@@ -76,20 +75,20 @@ void Mesh::draw(Shader shader) {
             else if(name == "texture_emissive")        // emission map -> emit light (does not illuminate other objects)
                 number = std::to_string(normalNr++);
 
-            shader.setFloat(("material." + name + number).c_str(), i);
+            shader->setFloat(("material." + name + number).c_str(), i);
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
         if (specularNr > 1)
-            shader.setBool("hasSpecular", true);
+            shader->setBool("hasSpecular", true);
         if (emissiveNr > 1)
-            shader.setBool("hasEmissive", true);
+            shader->setBool("hasEmissive", true);
         glActiveTexture(GL_TEXTURE0);
     } else {
-        shader.setBool("hasSpecular", true);
-        shader.setBool("hasEmissive", true);
-        shader.setVec4("material.color", this->color);
-        shader.setVec3("material.specular", this->specular);
-        shader.setVec3("material.emissive", this->emissive);
+        shader->setBool("hasSpecular", true);
+        shader->setBool("hasEmissive", true);
+        shader->setVec4("material.color", this->color);
+        shader->setVec3("material.specular", this->specular);
+        shader->setVec3("material.emissive", this->emissive);
     }
     // draw mesh
     glBindVertexArray(VAO);

@@ -8,24 +8,25 @@
 #include <assimp/postprocess.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Mesh.hpp"
+#include "../objects/Component.hpp"
+#include "../objects/GameObject.hpp"
 
-class Model {
+class Model : public Component {
 public:
-    Model(std::string path, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), bool useTexture = true, glm::vec4 color = glm::vec4(0.0f), glm::vec3 specular = glm::vec3(1.0f), glm::vec3 emissive = glm::vec3(0.0f)) {
-        this->pos = pos;
-        this->rot = rot;
+    Model(GameObject *o, std::string path, bool useTexture = true, glm::vec4 color = glm::vec4(0.0f), glm::vec3 specular = glm::vec3(1.0f), glm::vec3 emissive = glm::vec3(0.0f)) : Component(o) {
+        this->path = path;
         this->useTexture = useTexture;
         this->color = color;
         this->specular = specular;
         this->emissive = emissive;
-        loadModel(path);
     }
     void draw(Shader shader);
-    void cleanup();
+    void cleanup() override;
+    void start() override;
+    void update(float deltaTime) override;
 
 private:
-    glm::vec3 pos;
-    glm::vec3 rot;
+    std::string path;
     std::vector<Mesh> meshes;
     std::string directory;
     std::vector<Texture> textures_loaded;

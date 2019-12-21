@@ -1,14 +1,17 @@
 #include "Model.hpp"
 
-void Model::draw(Shader shader) {
+void Model::update(float deltaTime) {
+    glm::vec3 absPos = this->object->absPos();
+    glm::vec3 absRot = this->object->absRot();
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, pos);
-    model = glm::rotate(model, rot.x, glm::vec3(1, 0, 0));
-    model = glm::rotate(model, rot.y, glm::vec3(0, 1, 0));
-    model = glm::rotate(model, rot.z, glm::vec3(0, 0, 1));
-    shader.setMat4("model", model);
+    model = glm::translate(model, absPos);
+    model = glm::rotate(model, absRot.x, glm::vec3(1, 0, 0));
+    model = glm::rotate(model, absRot.y, glm::vec3(0, 1, 0));
+    model = glm::rotate(model, absRot.z, glm::vec3(0, 0, 1));
+    this->object->shader->use();
+    this->object->shader->setMat4("model", model);
     for(unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].draw(shader);
+        meshes[i].draw(this->object->shader);
 }
 
 void Model::loadModel(std::string path) {
@@ -121,4 +124,9 @@ void Model::cleanup() {
     for (Mesh &m : this->meshes) {
         m.cleanup();
     }
+}
+
+void Model::start() {
+    this->object->shader->use();
+    loadModel(this->path);
 }

@@ -1,0 +1,48 @@
+#include "GameObject.hpp"
+
+GameObject::GameObject(GameObject *parent, Shader *s, glm::vec3 pos, glm::vec3 rot) {
+    this->parent = parent;
+    this->shader = s;
+    this->pos = pos;
+    this->rot = rot;
+}
+
+void GameObject::addChild(GameObject c) {
+    this->children.push_back(c);
+}
+
+void GameObject::addComponent(Component *c) {
+    this->components.push_back(c);
+    this->components[this->components.size() - 1]->start();
+}
+
+void GameObject::update(float deltaTime) {
+    for (Component *c : this->components) {
+        c->update(deltaTime);
+    }
+    for (GameObject o : this->children) {
+        o.update(deltaTime);
+    }
+}
+
+void GameObject::cleanup() {
+    for (Component *c : this->components) {
+        c->cleanup();
+    }
+}
+
+glm::vec3 GameObject::absPos() {
+    if (parent == nullptr) {
+        return this->pos;
+    } else {
+        return this->parent->pos + this->pos;
+    }
+}
+
+glm::vec3 GameObject::absRot() {
+    if (parent == nullptr) {
+        return this->rot;
+    } else {
+        return this->parent->rot + this->rot;
+    }
+}
