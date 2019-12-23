@@ -156,9 +156,9 @@ int main() {
 	Shader textureShader("./shaders/lighting.vert", "./shaders/lighting.frag");
 	Shader uiShader("./shaders/ui.vert", "./shaders/ui.frag");
 
-	GameObject obj = GameObject(nullptr, &textureShader, glm::vec3(0.0f, 1.0f, -1.0f), glm::vec3(1.0f));
+	GameObject obj = GameObject(nullptr, &textureShader, glm::vec3(0.0f, 5.0f, -1.0f), glm::vec3(0.5f));
 	obj.addComponent(new Model(&obj, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
-	GameObject obj2 = GameObject(&obj, &textureShader, glm::vec3(0.0f, 2.0f, 0.0f));
+	GameObject obj2 = GameObject(&obj, &textureShader, glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
 	obj2.addComponent(new Model(&obj2, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
 	obj.addChild(obj2);
 

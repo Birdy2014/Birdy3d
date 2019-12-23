@@ -1,10 +1,11 @@
 #include "GameObject.hpp"
 
-GameObject::GameObject(GameObject *parent, Shader *s, glm::vec3 pos, glm::vec3 rot) {
+GameObject::GameObject(GameObject *parent, Shader *s, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
     this->parent = parent;
     this->shader = s;
     this->pos = pos;
     this->rot = rot;
+    this->scale = scale;
 }
 
 void GameObject::addChild(GameObject c) {
@@ -44,5 +45,13 @@ glm::vec3 GameObject::absRot() {
         return this->rot;
     } else {
         return this->parent->rot + this->rot;
+    }
+}
+
+glm::vec3 GameObject::absScale() {
+    if (parent == nullptr) {
+        return this->scale;
+    } else {
+        return this->parent->scale * this->scale;
     }
 }
