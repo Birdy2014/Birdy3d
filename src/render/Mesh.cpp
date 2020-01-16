@@ -96,6 +96,12 @@ void Mesh::draw(Shader *shader) {
     glBindVertexArray(0);
 }
 
+void Mesh::renderDepth() {
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
 void Mesh::cleanup() {
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);

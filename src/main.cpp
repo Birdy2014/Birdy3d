@@ -112,6 +112,34 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	cam.updateCameraVectors();
 }
 
+unsigned int quadVAO = 0;
+unsigned int quadVBO;
+void renderQuad()
+{
+    if (quadVAO == 0)
+    {
+        float quadVertices[] = {
+            // positions        // texture Coords
+            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        };
+        // setup plane VAO
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    }
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+}
 
 bool initGL() {
 	glfwInit();
@@ -137,6 +165,7 @@ bool initGL() {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_CULL_FACE);
 
 	// Set Viewport and resize callback
 	glViewport(0, 0, 800, 600);
@@ -154,19 +183,25 @@ int main() {
 
 	// Shaders
 	Shader textureShader("./shaders/lighting.vert", "./shaders/lighting.frag");
+	Shader depthShader("./shaders/depth.vert", "./shaders/depth.frag");
 	Shader uiShader("./shaders/ui.vert", "./shaders/ui.frag");
 
-	GameObject obj = GameObject(nullptr, &textureShader, glm::vec3(0.0f, 5.0f, -1.0f), glm::vec3(0.5f));
+	GameObject scene = GameObject(nullptr, &textureShader, &depthShader);
+
+	GameObject obj = GameObject(&scene, &textureShader, &depthShader, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
 	obj.addComponent(new Model(&obj, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
-	GameObject obj2 = GameObject(&obj, &textureShader, glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+	GameObject obj2 = GameObject(&obj, &textureShader, &depthShader, glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
 	obj2.addComponent(new Model(&obj2, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
 	obj.addChild(obj2);
+	scene.addChild(obj);
 
 	// Light
-	GameObject dirLight = GameObject(nullptr, &textureShader);
-	dirLight.addComponent(new DirectionalLight(&dirLight, 0, glm::vec3(0.9f, -1.0f, 0.8f), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(1.0f)));
-	GameObject pLight = GameObject(nullptr, &textureShader, glm::vec3(2.0f, 1.5f, 4.0f));
-	pLight.addComponent(new PointLight(&pLight, 1, glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), 0.09f, 0.032f));
+	GameObject dirLight = GameObject(&scene, &textureShader, &depthShader, glm::vec3(0.0f, 3.0f, 0.0f));
+	dirLight.addComponent(new DirectionalLight(&dirLight, 0, glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(1.0f)));
+	scene.addChild(dirLight);
+	//GameObject pLight = GameObject(&scene, &textureShader, &depthShader, glm::vec3(2.0f, 1.5f, 4.0f));
+	//pLight.addComponent(new PointLight(&pLight, &depthShader, 1, glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), 0.09f, 0.032f));
+	//scene.addChild(pLight);
 	
 	textureShader.setFloat("material.shininess", 64);
 
@@ -203,10 +238,21 @@ int main() {
 		glm::mat4 view = cam.getViewMatrix();
 		textureShader.setMat4("view", view);
 		textureShader.setVec3("viewPos", cam.pos);
-		dirLight.update(deltaTime);
-		pLight.update(deltaTime);
-		obj.update(deltaTime);
+		scene.update(deltaTime);
+		//dirLight.update(deltaTime);
+		//pLight.update(deltaTime);
+		//obj.update(deltaTime);
 
+/*
+		// render Depth map to quad for visual debugging
+        // ---------------------------------------------
+        debugShader.use();
+        debugShader.setFloat("near_plane", 1.0f);
+        debugShader.setFloat("far_plane", 7.5f);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, depthMap);
+        renderQuad();
+*/
 		// draw UI
 		glClear(GL_DEPTH_BUFFER_BIT);
 		widget.draw(uiShader);
@@ -216,7 +262,7 @@ int main() {
     	glfwPollEvents();
 	}
 
-	obj.cleanup();
+	scene.cleanup();
 
 	glfwTerminate();
     return 0;

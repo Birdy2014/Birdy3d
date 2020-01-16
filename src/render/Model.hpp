@@ -24,6 +24,10 @@ public:
     void cleanup() override;
     void start() override;
     void update(float deltaTime) override;
+    void renderDepth() override;
+    const std::type_info &getTypeid() override {
+        return typeid(Model);
+    }
 
 private:
     std::string path;

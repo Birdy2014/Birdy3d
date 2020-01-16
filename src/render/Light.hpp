@@ -1,9 +1,11 @@
 #ifndef BIRDY3D_LIGHT_HPP
 #define BIRDY3D_LIGHT_HPP
 
+#include <glm/gtc/matrix_transform.hpp>
 #include "Shader.hpp"
 #include "../objects/Component.hpp"
 #include "../objects/GameObject.hpp"
+#include <typeinfo>
 
 class Light : public Component {
 public:
@@ -47,11 +49,19 @@ public:
         shader.setFloat("lights[" + i + "].outerCutOff", outerCutOff);
     }
 
-    void start() override {}
+    void setupShadowMap();
+    void genShadowMap();
+    void start() override {
+        setupShadowMap();
+    }
     void update(float deltaTime) override {
+        genShadowMap();
         use(*this->object->shader, id);
     }
     void cleanup() override {}
+    const std::type_info &getTypeid() override {
+        return typeid(Light);
+    }
 
 protected:
     int id;
@@ -64,6 +74,8 @@ protected:
     float quadratic;
     float innerCutOff;
     float outerCutOff;
+    unsigned int depthMapFBO, depthMap;
+    const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 };
 
 #endif

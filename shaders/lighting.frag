@@ -26,11 +26,14 @@ struct Light {
 
 	float linear;
 	float quadratic;
+
+	sampler2D shadowMap;
 };
 
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
+in vec4 FragPosLightSpace[2];
 
 const int NR_LIGHTS = 16;
 
@@ -52,7 +55,7 @@ vec3 calcLightColor(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 m
 			lightDir = normalize(light.position - fragPos);
 			float distance = length(light.position - fragPos);
 			float attenuation = 1.0 / (1.0 + light.linear * distance + light.quadratic * (distance * distance));
-			light.ambient *= attenuation;
+			//light.ambient *= attenuation;
 			light.diffuse *= attenuation;
 			light.specular *= attenuation;
 			break;
@@ -64,7 +67,7 @@ vec3 calcLightColor(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 m
 			float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 			float distance = length(light.position - fragPos);
 			float attenuation = 1.0 / (1.0 + light.linear * distance + light.quadratic * (distance * distance));
-			light.ambient *= attenuation * intensity;
+			//light.ambient *= attenuation * intensity;
 			light.diffuse *= attenuation * intensity;
 			light.specular *= attenuation * intensity;
 			break;
@@ -74,7 +77,7 @@ vec3 calcLightColor(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 m
 	}
 
 	// ambient lighting
-	vec3 ambient = light.ambient * materialColor;
+	//vec3 ambient = light.ambient * materialColor;
 
 	// diffuse lighting
 	float diff = max(dot(normal, lightDir), 0.0);
@@ -87,7 +90,31 @@ vec3 calcLightColor(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 m
 	float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 	vec3 specular = materialSpecular * spec * light.specular;
 
-	return (ambient + diffuse + specular);
+	return (diffuse + specular);
+}
+
+float calcShadow(vec4 fragPosLightSpace, sampler2D shadowMap, vec3 lightPos) {
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+	projCoords = projCoords * 0.5 + 0.5;
+	float closestDepth = texture(shadowMap, projCoords.xy).r;
+	float currentDepth = projCoords.z;
+	vec3 normal = normalize(Normal);
+	vec3 lightDir = normalize(lightPos - FragPos);
+	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+
+	float shadow = 0;
+	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+	for (int x = -1; x <= 1; x++) {
+		for (int y = -1; y <= 1; y++) {
+			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+		}
+	}
+	shadow /= 9.0;
+
+	if (projCoords.z > 1.0)
+		shadow = 0.0;
+	return 1 - shadow;
 }
 
 void main() {
@@ -114,9 +141,16 @@ void main() {
 	vec3 viewDir = normalize(viewPos - FragPos);
 
 	vec3 result = vec3(0.0);
-	for (int i = 0; i < NR_LIGHTS; i++)
-		result += calcLightColor(lights[i], norm, FragPos, viewDir, baseColor.rgb, specular);
+	vec3 totalAmbient = vec3(0.0);
+	int ambientCount = 0;
+	for (int i = 0; i < NR_LIGHTS; i++) {
+		result += calcLightColor(lights[i], norm, FragPos, viewDir, baseColor.rgb, specular) * calcShadow(FragPosLightSpace[i], lights[i].shadowMap, lights[i].position);
+		if (lights[i].ambient != vec3(0.0)) {
+			totalAmbient += lights[i].ambient;
+			ambientCount++;
+		}
+	}
 
 	// result
-	FragColor = vec4(result + emission, 1.0);
+	FragColor = vec4(result + emission + totalAmbient / ambientCount, 1.0);
 }

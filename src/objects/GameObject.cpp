@@ -1,8 +1,10 @@
 #include "GameObject.hpp"
 
-GameObject::GameObject(GameObject *parent, Shader *s, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
+GameObject::GameObject(GameObject *parent, Shader *s, Shader *depthShader, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
     this->parent = parent;
+    this->scene = this->getScene();
     this->shader = s;
+    this->depthShader = depthShader;
     this->pos = pos;
     this->rot = rot;
     this->scale = scale;
@@ -23,6 +25,15 @@ void GameObject::update(float deltaTime) {
     }
     for (GameObject o : this->children) {
         o.update(deltaTime);
+    }
+}
+
+void GameObject::renderDepth() {
+    for (Component *c : this->components) {
+        c->renderDepth();
+    }
+    for (GameObject o : this->children) {
+        o.renderDepth();
     }
 }
 
@@ -53,5 +64,13 @@ glm::vec3 GameObject::absScale() {
         return this->scale;
     } else {
         return this->parent->scale * this->scale;
+    }
+}
+
+GameObject *GameObject::getScene() {
+    if (this->parent == nullptr) {
+        return this;
+    } else {
+        return this->parent->getScene();
     }
 }
