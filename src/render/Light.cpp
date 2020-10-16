@@ -1,4 +1,20 @@
 #include "Light.hpp"
+#include "Model.hpp"
+
+void Light::use(Shader *shader, int id) {
+    std::string i = std::to_string(id);
+    shader->setInt("lights[" + i + "].type", type);
+    shader->setVec3("lights[" + i + "].position", this->object->absPos());
+    shader->setVec3("lights[" + i + "].direction", direction);
+    shader->setVec3("lights[" + i + "].ambient", ambient);
+    shader->setVec3("lights[" + i + "].diffuse", diffuse);
+    shader->setVec3("lights[" + i + "].specular", specular);
+    shader->setFloat("lights[" + i + "].linear", linear);
+    shader->setFloat("lights[" + i + "].quadratic", quadratic);
+    shader->setFloat("lights[" + i + "].innerCutOff", innerCutOff);
+    shader->setFloat("lights[" + i + "].outerCutOff", outerCutOff);
+    genShadowMap(shader, id);
+}
 
 void Light::setupShadowMap() {
     // framebuffer
@@ -21,7 +37,7 @@ void Light::setupShadowMap() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Light::genShadowMap() {
+void Light::genShadowMap(Shader *lightShader, int id) {
     GLint m_viewport[4];
     glGetIntegerv(GL_VIEWPORT, m_viewport);
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -36,12 +52,14 @@ void Light::genShadowMap() {
 
     this->object->depthShader->use();
     this->object->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    this->object->scene->renderDepth();
-    this->object->shader->use();
-    glActiveTexture(GL_TEXTURE10 + id);
+    for (Model *m : this->object->scene->getComponents<Model>()) {
+        m->renderDepth();
+    }
+    lightShader->use();
+    glActiveTexture(GL_TEXTURE3 + id);
     glBindTexture(GL_TEXTURE_2D, depthMap);
-    this->object->shader->setMat4("lightSpaceMatrix[" + std::to_string(id) + "]", lightSpaceMatrix);
-    this->object->shader->setInt("lights[" + std::to_string(id) + "].shadowMap", 10 + id);
+    lightShader->setMat4("lights[" + std::to_string(id) + "].lightSpaceMatrix", lightSpaceMatrix);
+    lightShader->setInt("lights[" + std::to_string(id) + "].shadowMap", 3 + id);
 
     // reset framebuffer and viewport
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -9,8 +9,7 @@
 
 class Light : public Component {
 public:
-    Light(GameObject *o, int id, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic, float innerCutOff, float outerCutOff) : Component(o) {
-        this->id = id;
+    Light(GameObject *o, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic, float innerCutOff, float outerCutOff) : Component(o) {
         this->type = type;
         this->direction = direction;
         this->ambient = ambient;
@@ -22,8 +21,7 @@ public:
         this->outerCutOff = outerCutOff;
     }
 
-    Light(GameObject *o, int id) : Component(o) {
-        this->id = id;
+    Light(GameObject *o) : Component(o) {
         this->type = 0;
         this->direction = glm::vec3(1.0f);
         this->ambient = glm::vec3(1.0f);
@@ -35,36 +33,19 @@ public:
         this->outerCutOff = glm::cos(glm::radians(40.0f));
     }
 
-    void use(Shader shader, int id) {
-        std::string i = std::to_string(id);
-        shader.setInt("lights[" + i + "].type", type);
-        shader.setVec3("lights[" + i + "].position", this->object->absPos());
-        shader.setVec3("lights[" + i + "].direction", direction);
-        shader.setVec3("lights[" + i + "].ambient", ambient);
-        shader.setVec3("lights[" + i + "].diffuse", diffuse);
-        shader.setVec3("lights[" + i + "].specular", specular);
-        shader.setFloat("lights[" + i + "].linear", linear);
-        shader.setFloat("lights[" + i + "].quadratic", quadratic);
-        shader.setFloat("lights[" + i + "].innerCutOff", innerCutOff);
-        shader.setFloat("lights[" + i + "].outerCutOff", outerCutOff);
-    }
-
+    void use(Shader *shader, int id);
     void setupShadowMap();
-    void genShadowMap();
+    void genShadowMap(Shader *lightShader, int id);
     void start() override {
         setupShadowMap();
     }
-    void update(float deltaTime) override {
-        genShadowMap();
-        use(*this->object->shader, id);
-    }
+    void update(float deltaTime) override {}
     void cleanup() override {}
     const std::type_info &getTypeid() override {
         return typeid(Light);
     }
 
 protected:
-    int id;
     int type;
     glm::vec3 direction;
     glm::vec3 ambient;

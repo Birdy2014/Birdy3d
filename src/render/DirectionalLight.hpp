@@ -5,7 +5,7 @@
 
 class DirectionalLight : public Light {
 public:
-    DirectionalLight(GameObject *o, int id, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) : Light(o, id) {
+    DirectionalLight(GameObject *o, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) : Light(o) {
         this->type = 0;
         this->direction = direction;
         this->ambient = ambient;

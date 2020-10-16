@@ -10,21 +10,22 @@
 #include "Mesh.hpp"
 #include "../objects/Component.hpp"
 #include "../objects/GameObject.hpp"
+#include "Light.hpp"
 
 class Model : public Component {
 public:
-    Model(GameObject *o, std::string path, bool useTexture = true, glm::vec4 color = glm::vec4(0.0f), glm::vec3 specular = glm::vec3(1.0f), glm::vec3 emissive = glm::vec3(0.0f)) : Component(o) {
+    Model(GameObject *o, std::string path, bool useTexture = true, glm::vec3 color = glm::vec4(0.0f), float specular = 16, glm::vec3 emissive = glm::vec3(0.0f)) : Component(o) {
         this->path = path;
         this->useTexture = useTexture;
         this->color = color;
         this->specular = specular;
         this->emissive = emissive;
     }
-    void draw(Shader shader);
     void cleanup() override;
     void start() override;
-    void update(float deltaTime) override;
-    void renderDepth() override;
+    void update(float deltaTime);
+    void render();
+    void renderDepth();
     const std::type_info &getTypeid() override {
         return typeid(Model);
     }
@@ -35,8 +36,8 @@ private:
     std::string directory;
     std::vector<Texture> textures_loaded;
     bool useTexture;
-    glm::vec4 color;
-    glm::vec3 specular;
+    glm::vec3 color;
+    float specular;
     glm::vec3 emissive;
 
     void loadModel(std::string path);

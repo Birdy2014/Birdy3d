@@ -1,6 +1,10 @@
 #include "Model.hpp"
 
 void Model::update(float deltaTime) {
+
+}
+
+void Model::render() {
     glm::vec3 absPos = this->object->absPos();
     glm::vec3 absRot = this->object->absRot();
     glm::vec3 absScale = this->object->absScale();
@@ -12,8 +16,9 @@ void Model::update(float deltaTime) {
     model = glm::scale(model, absScale);
     this->object->shader->use();
     this->object->shader->setMat4("model", model);
-    for(unsigned int i = 0; i < meshes.size(); i++)
+    for(unsigned int i = 0; i < meshes.size(); i++) {
         meshes[i].draw(this->object->shader);
+    }
 }
 
 void Model::renderDepth() {

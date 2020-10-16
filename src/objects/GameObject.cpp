@@ -28,15 +28,6 @@ void GameObject::update(float deltaTime) {
     }
 }
 
-void GameObject::renderDepth() {
-    for (Component *c : this->components) {
-        c->renderDepth();
-    }
-    for (GameObject o : this->children) {
-        o.renderDepth();
-    }
-}
-
 void GameObject::cleanup() {
     for (Component *c : this->components) {
         c->cleanup();

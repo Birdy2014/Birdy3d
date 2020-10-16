@@ -16,6 +16,8 @@
 #include "ui/Widget.hpp"
 #include "objects/GameObject.hpp"
 
+void createGBuffer(int width, int height);
+
 GLFWwindow *window;
 
 Camera cam(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
@@ -34,10 +36,15 @@ bool firstMouse = true;
 bool hideMouse = true;
 bool updatedHiddenStatus = false;
 
+// Gbuffer
+unsigned int gBuffer, gPosition, gNormal, gAlbedoSpec, rboDepth;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 	aspectRatio = (float)width / (float)height;
 	rebuildProjectionMatrix = true;
+	glDeleteFramebuffers(1, &gBuffer);
+	createGBuffer(width, height);
 }
 
 void window_focus_callback(GLFWwindow *window, int focused) {
@@ -114,10 +121,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 unsigned int quadVAO = 0;
 unsigned int quadVBO;
-void renderQuad()
-{
-    if (quadVAO == 0)
-    {
+void renderQuad() {
+    if (quadVAO == 0) {
         float quadVertices[] = {
             // positions        // texture Coords
             -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
@@ -146,7 +151,6 @@ bool initGL() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 16); // 16xMSAA
 
 	// Create Window
 	window = glfwCreateWindow(800, 600, "Birdy3d", nullptr, nullptr);
@@ -164,7 +168,6 @@ bool initGL() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_CULL_FACE);
 
 	// Set Viewport and resize callback
@@ -176,34 +179,87 @@ bool initGL() {
 	return true;
 }
 
+void createGBuffer(int width, int height) {
+	glGenFramebuffers(1, &gBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+	// - position color buffer
+	glGenTextures(1, &gPosition);
+	glBindTexture(GL_TEXTURE_2D, gPosition);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+
+	// - normal color buffer
+	glGenTextures(1, &gNormal);
+	glBindTexture(GL_TEXTURE_2D, gNormal);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+
+	// - color + specular color buffer
+	glGenTextures(1, &gAlbedoSpec);
+	glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+
+	// - tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
+	unsigned int attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+	glDrawBuffers(3, attachments);
+
+	// create and attach depth buffer (renderbuffer)
+	glGenRenderbuffers(1, &rboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+	// finally check if framebuffer is complete
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Framebuffer not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 int main() {
 	if (!initGL()) {
 		return -1;
 	}
 
 	// Shaders
-	Shader textureShader("./shaders/lighting.vert", "./shaders/lighting.frag");
+	Shader geometryShader("./shaders/gBuffer.vert", "./shaders/gBuffer.frag");
+	Shader lightShader("./shaders/lighting.vert", "./shaders/lighting.frag");
 	Shader depthShader("./shaders/depth.vert", "./shaders/depth.frag");
 	Shader uiShader("./shaders/ui.vert", "./shaders/ui.frag");
 
-	GameObject scene = GameObject(nullptr, &textureShader, &depthShader);
+	createGBuffer(800, 600);
 
-	GameObject obj = GameObject(&scene, &textureShader, &depthShader, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-	obj.addComponent(new Model(&obj, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
-	GameObject obj2 = GameObject(&obj, &textureShader, &depthShader, glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-	obj2.addComponent(new Model(&obj2, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+	// lightShader configuration
+	lightShader.use();
+	lightShader.setInt("gPosition", 0);
+	lightShader.setInt("gNormal", 1);
+	lightShader.setInt("gAlbedoSpec", 2);
+
+	// GameObjects
+	GameObject scene = GameObject(nullptr, &geometryShader, &depthShader);
+
+	GameObject obj = GameObject(&scene, &geometryShader, &depthShader, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+	obj.addComponent(new Model(&obj, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
+	GameObject obj2 = GameObject(&obj, &geometryShader, &depthShader, glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+	obj2.addComponent(new Model(&obj2, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
 	obj.addChild(obj2);
 	scene.addChild(obj);
 
 	// Light
-	GameObject dirLight = GameObject(&scene, &textureShader, &depthShader, glm::vec3(0.0f, 3.0f, 0.0f));
-	dirLight.addComponent(new DirectionalLight(&dirLight, 0, glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(1.0f)));
+	GameObject dirLight = GameObject(&scene, &lightShader, &depthShader, glm::vec3(0.0f, 3.0f, 0.0f));
+	dirLight.addComponent(new DirectionalLight(&dirLight, glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(1.0f)));
 	scene.addChild(dirLight);
-	//GameObject pLight = GameObject(&scene, &textureShader, &depthShader, glm::vec3(2.0f, 1.5f, 4.0f));
-	//pLight.addComponent(new PointLight(&pLight, &depthShader, 1, glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), 0.09f, 0.032f));
-	//scene.addChild(pLight);
+	GameObject pLight = GameObject(&scene, &lightShader, &depthShader, glm::vec3(2.0f, 1.5f, 4.0f));
+	pLight.addComponent(new PointLight(&pLight, glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), 0.09f, 0.032f));
+	scene.addChild(pLight);
 	
-	textureShader.setFloat("material.shininess", 64);
+	lightShader.setFloat("material.shininess", 64);
 
 	// UI
 	widget.hidden = true;
@@ -222,26 +278,44 @@ int main() {
 
 		processInput(window);
 		widget.updateEvents(window);
-		textureShader.use();
 
+		scene.update(deltaTime);
+
+		// draw the object
+
+		// 1. geometry pass: render all geometric/color data to g-buffer
+		glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+		geometryShader.use();
 		if (rebuildProjectionMatrix) {
 			glm::mat4 projection = glm::perspective(glm::radians(80.0f), aspectRatio, 0.1f, 100.0f);
-			textureShader.setMat4("projection", projection);
+			geometryShader.setMat4("projection", projection);
 			rebuildProjectionMatrix = false;
 		}
-
-		// clear screen
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		// draw the object
 		glm::mat4 view = cam.getViewMatrix();
-		textureShader.setMat4("view", view);
-		textureShader.setVec3("viewPos", cam.pos);
-		scene.update(deltaTime);
-		//dirLight.update(deltaTime);
-		//pLight.update(deltaTime);
-		//obj.update(deltaTime);
+		geometryShader.setMat4("view", view);
+		glClearColor(0.0, 0.0, 0.0, 1.0); // keep it black so it doesn't leak into g-buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		for (Model *m : scene.getComponents<Model>(true)) {
+			m->render();
+		}
+
+		lightShader.use();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, gPosition);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, gNormal);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+		std::vector<Light*> lights = scene.getComponents<Light>(true);
+		int i;
+		for (i = 0; i < lights.size(); i++) {
+			lights[i]->use(&lightShader, i);
+		}
+		lightShader.setInt("nrLights", i);
+		lightShader.setVec3("viewPos", cam.pos);
+		renderQuad();
 
 /*
 		// render Depth map to quad for visual debugging

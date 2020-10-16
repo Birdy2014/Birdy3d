@@ -18,12 +18,26 @@ public:
     void addChild(GameObject c);
     void addComponent(Component *c);
     void update(float deltaTime);
-    void renderDepth();
     void cleanup();
     glm::vec3 absPos();
     glm::vec3 absRot();
     glm::vec3 absScale();
     GameObject *getScene();
+
+    template<class T>
+    std::vector<T*> getComponents(bool recursive = false) {
+        std::vector<T*> components;
+        for (GameObject o : this->children) {
+            std::vector<T*> childComponents = o.getComponents<T>(true);
+            components.insert(components.end(), childComponents.begin(), childComponents.end());
+        }
+        for (Component *c : this->components) {
+            if (c->getTypeid() == typeid(T)) {
+                components.push_back((T*)c);
+            }
+        }
+        return components;
+    }
 
     template<class T>
     T *getComponent() {

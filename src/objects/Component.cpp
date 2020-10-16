@@ -12,10 +12,6 @@ void Component::update(float deltaTime) {
     
 }
 
-void Component::renderDepth() {
-    
-}
-
 void Component::cleanup() {
 
 }

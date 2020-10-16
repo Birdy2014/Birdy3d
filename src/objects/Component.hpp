@@ -8,7 +8,6 @@ public:
     Component(GameObject *object);
     virtual void start();
     virtual void update(float deltaTime);
-    virtual void renderDepth();
     virtual void cleanup();
     virtual const std::type_info &getTypeid();
 
