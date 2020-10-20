@@ -21,7 +21,7 @@ void Model::render() {
     }
 }
 
-void Model::renderDepth() {
+void Model::renderDepth(Shader *shader) {
     glm::vec3 absPos = this->object->absPos();
     glm::vec3 absRot = this->object->absRot();
     glm::vec3 absScale = this->object->absScale();
@@ -31,8 +31,8 @@ void Model::renderDepth() {
     model = glm::rotate(model, absRot.y, glm::vec3(0, 1, 0));
     model = glm::rotate(model, absRot.z, glm::vec3(0, 0, 1));
     model = glm::scale(model, absScale);
-    this->object->depthShader->use();
-    this->object->depthShader->setMat4("model", model);
+    shader->use();
+    shader->setMat4("model", model);
     for (Mesh m : meshes) {
         m.renderDepth();
     }

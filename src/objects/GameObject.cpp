@@ -1,10 +1,9 @@
 #include "GameObject.hpp"
 
-GameObject::GameObject(GameObject *parent, Shader *s, Shader *depthShader, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
+GameObject::GameObject(GameObject *parent, Shader *s, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
     this->parent = parent;
     this->scene = this->getScene();
     this->shader = s;
-    this->depthShader = depthShader;
     this->pos = pos;
     this->rot = rot;
     this->scale = scale;

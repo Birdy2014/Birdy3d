@@ -25,7 +25,7 @@ public:
     void start() override;
     void update(float deltaTime);
     void render();
-    void renderDepth();
+    void renderDepth(Shader *shader);
     const std::type_info &getTypeid() override {
         return typeid(Model);
     }

@@ -5,14 +5,16 @@
 
 class PointLight : public Light {
 public:
-    PointLight(GameObject *o, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic) : Light(o) {
+    PointLight(GameObject *o, Shader *depthShader, Shader *lightShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic) : Light(o, depthShader, lightShader) {
         this->type = 1;
         this->ambient = ambient;
         this->diffuse = diffuse;
-        this->specular = specular;
         this->linear = linear;
         this->quadratic = quadratic;
     }
+
+    void setupShadowMap() override;
+    void genShadowMap(int id, int textureid) override;
 };
 
 #endif

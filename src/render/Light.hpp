@@ -9,33 +9,35 @@
 
 class Light : public Component {
 public:
-    Light(GameObject *o, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float linear, float quadratic, float innerCutOff, float outerCutOff) : Component(o) {
+    Light(GameObject *o, Shader *depthShader, Shader *lightShader, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, float innerCutOff, float outerCutOff) : Component(o) {
+        this->depthShader = depthShader;
+        this->lightShader = lightShader;
         this->type = type;
         this->direction = direction;
         this->ambient = ambient;
         this->diffuse = diffuse;
-        this->specular = specular;
         this->linear = linear;
         this->quadratic = quadratic;
         this->innerCutOff = innerCutOff;
         this->outerCutOff = outerCutOff;
     }
 
-    Light(GameObject *o) : Component(o) {
+    Light(GameObject *o, Shader *depthShader, Shader *lightShader) : Component(o) {
+        this->depthShader = depthShader;
+        this->lightShader = lightShader;
         this->type = 0;
         this->direction = glm::vec3(1.0f);
         this->ambient = glm::vec3(1.0f);
         this->diffuse = glm::vec3(1.0f);
-        this->specular = glm::vec3(1.0f);
         this->linear = 1;
         this->quadratic = 1;
         this->innerCutOff = glm::cos(glm::radians(30.0f));
         this->outerCutOff = glm::cos(glm::radians(40.0f));
     }
 
-    void use(Shader *shader, int id);
-    void setupShadowMap();
-    void genShadowMap(Shader *lightShader, int id);
+    void use(int id, int textureid);
+    virtual void setupShadowMap() {}
+    virtual void genShadowMap(int id, int textureid) {}
     void start() override {
         setupShadowMap();
     }
@@ -44,13 +46,17 @@ public:
     const std::type_info &getTypeid() override {
         return typeid(Light);
     }
+    Shader *getLightShader() {
+        return this->lightShader;
+    }
 
 protected:
+    Shader *depthShader;
+    Shader *lightShader;
     int type;
     glm::vec3 direction;
     glm::vec3 ambient;
     glm::vec3 diffuse;
-    glm::vec3 specular;
     float linear;
     float quadratic;
     float innerCutOff;

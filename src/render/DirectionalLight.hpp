@@ -5,13 +5,15 @@
 
 class DirectionalLight : public Light {
 public:
-    DirectionalLight(GameObject *o, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) : Light(o) {
+    DirectionalLight(GameObject *o, Shader *depthShader, Shader *lightShader, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse) : Light(o, depthShader, lightShader) {
         this->type = 0;
         this->direction = direction;
         this->ambient = ambient;
         this->diffuse = diffuse;
-        this->specular = specular;
     }
+
+    void setupShadowMap() override;
+    void genShadowMap(int id, int textureid) override;
 };
 
 #endif

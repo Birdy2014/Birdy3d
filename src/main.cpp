@@ -228,39 +228,38 @@ int main() {
 	}
 
 	// Shaders
-	Shader geometryShader("./shaders/gBuffer.vert", "./shaders/gBuffer.frag");
-	Shader lightShader("./shaders/lighting.vert", "./shaders/lighting.frag");
-	Shader depthShader("./shaders/depth.vert", "./shaders/depth.frag");
+	Shader geometryShader("./shaders/gBuffer.vs", "./shaders/gBuffer.fs");
+	Shader lightingShader("./shaders/lighting.vs", "./shaders/lighting.fs");
+	Shader dirLightDepthShader("./shaders/dDepth.vs", "./shaders/dDepth.fs");
+	Shader pointLightDepthShader("./shaders/pDepth.vs", "./shaders/pDepth.gs", "./shaders/pDepth.fs");
 	Shader uiShader("./shaders/ui.vert", "./shaders/ui.frag");
 
 	createGBuffer(800, 600);
 
 	// lightShader configuration
-	lightShader.use();
-	lightShader.setInt("gPosition", 0);
-	lightShader.setInt("gNormal", 1);
-	lightShader.setInt("gAlbedoSpec", 2);
+	lightingShader.use();
+	lightingShader.setInt("gPosition", 0);
+	lightingShader.setInt("gNormal", 1);
+	lightingShader.setInt("gAlbedoSpec", 2);
 
 	// GameObjects
-	GameObject scene = GameObject(nullptr, &geometryShader, &depthShader);
+	GameObject scene = GameObject(nullptr, &geometryShader);
 
-	GameObject obj = GameObject(&scene, &geometryShader, &depthShader, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+	GameObject obj = GameObject(&scene, &geometryShader, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
 	obj.addComponent(new Model(&obj, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
-	GameObject obj2 = GameObject(&obj, &geometryShader, &depthShader, glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+	GameObject obj2 = GameObject(&obj, &geometryShader, glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
 	obj2.addComponent(new Model(&obj2, std::string(std::filesystem::current_path()) + std::string("/testObjects/cube.obj"), false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
 	obj.addChild(obj2);
 	scene.addChild(obj);
 
 	// Light
-	GameObject dirLight = GameObject(&scene, &lightShader, &depthShader, glm::vec3(0.0f, 3.0f, 0.0f));
-	dirLight.addComponent(new DirectionalLight(&dirLight, glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(1.0f)));
+	GameObject dirLight = GameObject(&scene, &geometryShader, glm::vec3(0.0f, 3.0f, 0.0f));
+	dirLight.addComponent(new DirectionalLight(&dirLight, &dirLightDepthShader, &lightingShader, glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f)));
 	scene.addChild(dirLight);
-	GameObject pLight = GameObject(&scene, &lightShader, &depthShader, glm::vec3(2.0f, 1.5f, 4.0f));
-	pLight.addComponent(new PointLight(&pLight, glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), 0.09f, 0.032f));
+	GameObject pLight = GameObject(&scene, &geometryShader, glm::vec3(2.0f, 1.5f, 4.0f));
+	pLight.addComponent(new PointLight(&pLight, &pointLightDepthShader, &lightingShader, glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f));
 	scene.addChild(pLight);
 	
-	lightShader.setFloat("material.shininess", 64);
-
 	// UI
 	widget.hidden = true;
 	widget.setOnClick([]() {
@@ -299,7 +298,7 @@ int main() {
 			m->render();
 		}
 
-		lightShader.use();
+		// 2. lighting pass
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
@@ -309,24 +308,17 @@ int main() {
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
 		std::vector<Light*> lights = scene.getComponents<Light>(true);
-		int i;
-		for (i = 0; i < lights.size(); i++) {
-			lights[i]->use(&lightShader, i);
+		int dirLightId = 0;
+		int pointLightId = 0;
+		for (int i = 0; i < lights.size(); i++) {
+			if (dynamic_cast<DirectionalLight*>(lights[i]))
+				lights[i]->use(dirLightId++, i);
+			else if (dynamic_cast<PointLight*>(lights[i]))
+				lights[i]->use(pointLightId++, i);
 		}
-		lightShader.setInt("nrLights", i);
-		lightShader.setVec3("viewPos", cam.pos);
+		lightingShader.setVec3("viewPos", cam.pos);
 		renderQuad();
 
-/*
-		// render Depth map to quad for visual debugging
-        // ---------------------------------------------
-        debugShader.use();
-        debugShader.setFloat("near_plane", 1.0f);
-        debugShader.setFloat("far_plane", 7.5f);
-        //glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, depthMap);
-        renderQuad();
-*/
 		// draw UI
 		glClear(GL_DEPTH_BUFFER_BIT);
 		widget.draw(uiShader);

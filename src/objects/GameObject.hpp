@@ -8,13 +8,12 @@
 class GameObject {
 public:
     Shader *shader;
-    Shader *depthShader;
     glm::vec3 pos;
     glm::vec3 rot;
     glm::vec3 scale;
     GameObject *scene;
 
-    GameObject(GameObject *parent, Shader *s, Shader *depthShader, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
+    GameObject(GameObject *parent, Shader *s, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
     void addChild(GameObject c);
     void addComponent(Component *c);
     void update(float deltaTime);
