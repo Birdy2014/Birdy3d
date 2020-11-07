@@ -20,7 +20,7 @@ void DirectionalLight::setupShadowMap() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void DirectionalLight::genShadowMap(int id, int textureid) {
+void DirectionalLight::genShadowMap(Shader *lightShader, int id, int textureid) {
     glm::vec3 absPos = this->object->absPos();
 
     GLint m_viewport[4];
@@ -36,15 +36,15 @@ void DirectionalLight::genShadowMap(int id, int textureid) {
     glm::mat4 lightView = glm::lookAt(absPos, absPos + this->direction, glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
     this->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    for (Model *m : this->object->scene->getComponents<Model>()) {
+    for (Model *m : this->object->scene->getComponents<Model>(true)) {
         m->renderDepth(this->depthShader);
     }
 
-    this->lightShader->use();
+    lightShader->use();
     glActiveTexture(GL_TEXTURE3 + textureid);
     glBindTexture(GL_TEXTURE_2D, depthMap);
-    this->lightShader->setMat4("dirLights[" + std::to_string(id) + "].lightSpaceMatrix", lightSpaceMatrix);
-    this->lightShader->setInt("dirLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
+    lightShader->setMat4("dirLights[" + std::to_string(id) + "].lightSpaceMatrix", lightSpaceMatrix);
+    lightShader->setInt("dirLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
 
     // reset framebuffer and viewport
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

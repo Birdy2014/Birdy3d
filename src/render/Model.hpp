@@ -8,13 +8,13 @@
 #include <assimp/postprocess.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Mesh.hpp"
-#include "../objects/Component.hpp"
-#include "../objects/GameObject.hpp"
+#include "../api/Component.hpp"
+#include "../api/GameObject.hpp"
 #include "Light.hpp"
 
 class Model : public Component {
 public:
-    Model(GameObject *o, std::string path, bool useTexture = true, glm::vec3 color = glm::vec4(0.0f), float specular = 16, glm::vec3 emissive = glm::vec3(0.0f)) : Component(o) {
+    Model(std::string path, bool useTexture = true, glm::vec3 color = glm::vec4(0.0f), float specular = 16, glm::vec3 emissive = glm::vec3(0.0f)) {
         this->path = path;
         this->useTexture = useTexture;
         this->color = color;
@@ -26,9 +26,6 @@ public:
     void update(float deltaTime);
     void render();
     void renderDepth(Shader *shader);
-    const std::type_info &getTypeid() override {
-        return typeid(Model);
-    }
 
 private:
     std::string path;

@@ -46,22 +46,22 @@ void Widget::fillBuffer() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)offsetof(UI_Vertex, color));
 }
 
-void Widget::draw(Shader shader, glm::mat4 move, float parentSize[]) {
+void Widget::draw(glm::mat4 move, float parentSize[]) {
     if (hidden) {
         return;
     }
     
-    shader.use();
+    this->shader->use();
     // get viewport size
     float *viewport = getViewportSize();
-    shader.setInt("width", viewport[0]);
-    shader.setInt("height", viewport[1]);
+    this->shader->setInt("width", viewport[0]);
+    this->shader->setInt("height", viewport[1]);
     // draw self
     glm::vec3 absPos = getAbsPos(parentSize);
     x = absPos.x / viewport[0] * 2;
     y = absPos.y / viewport[1] * -2;
     move = glm::translate(move, glm::vec3(x, y, pos.z));
-    shader.setMat4("move", move);
+    this->shader->setMat4("move", move);
     glBindVertexArray(lines_VAO);
     glDrawArrays(GL_LINES, 0, lines.size());
     glBindVertexArray(triangles_VAO);
@@ -69,7 +69,7 @@ void Widget::draw(Shader shader, glm::mat4 move, float parentSize[]) {
     // draw children
     for (Widget w : children) {
         float *size = getSize();
-        w.draw(shader, move, size);
+        w.draw(move, size);
     }
 }
 

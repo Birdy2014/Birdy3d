@@ -24,7 +24,7 @@ void PointLight::setupShadowMap() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void PointLight::genShadowMap(int id, int textureid) {
+void PointLight::genShadowMap(Shader *lightShader, int id, int textureid) {
     glm::vec3 absPos = this->object->absPos();
 
     GLint m_viewport[4];
@@ -51,15 +51,15 @@ void PointLight::genShadowMap(int id, int textureid) {
         this->depthShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
     this->depthShader->setFloat("far_plane", far);
     this->depthShader->setVec3("lightPos", absPos);
-    for (Model *m : this->object->scene->getComponents<Model>()) {
+    for (Model *m : this->object->scene->getComponents<Model>(true)) {
         m->renderDepth(this->depthShader);
     }
 
-    this->lightShader->use();
+    lightShader->use();
     glActiveTexture(GL_TEXTURE3 + textureid);
     glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
-    this->lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
-    this->lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
+    lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
+    lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
 
     // reset framebuffer and viewport
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

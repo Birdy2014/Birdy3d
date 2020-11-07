@@ -4,20 +4,32 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "../api/Component.hpp"
+#include "Shader.hpp"
+#include "../ui/Widget.hpp"
 
-class Camera {
+class Camera : public Component {
 public:
-    glm::vec3 pos;
-    glm::vec3 front;
-    glm::vec3 up;
-    glm::vec3 right;
-    glm::vec3 worldUp;
-    float yaw;
-    float pitch;
+    Widget *canvas = nullptr;
 
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = 0, float pitch = 0);
-    glm::mat4 getViewMatrix();
-    void updateCameraVectors();
+    Camera(Shader *lightShader, int width, int height);
+    Camera(Shader *lightShader, int width, int height, Widget *canvas);
+    void start() override;
+    void render();
+    void resize(int width, int height);
+
+private:
+    unsigned int gBuffer, gPosition, gNormal, gAlbedoSpec, rboDepth;
+    int width, height;
+    glm::mat4 projectionMatrix;
+    unsigned int quadVAO = 0;
+    unsigned int quadVBO;
+    Shader *lightShader;
+    glm::vec3 worldUp = glm::vec3(0, 1, 0);
+
+    void createGBuffer();
+    void deleteGBuffer();
+    void renderQuad();
 };
 
 #endif

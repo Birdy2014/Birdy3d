@@ -23,7 +23,8 @@ class Widget {
 public:
     bool hidden = false;
 
-    Widget(glm::vec3 pos = glm::vec3(0.0f), Placement placement = TOP_LEFT) {
+    Widget(Shader *shader, glm::vec3 pos = glm::vec3(0.0f), Placement placement = TOP_LEFT) {
+        this->shader = shader;
         this->pos = pos;
         this->placement = placement;
     }
@@ -36,9 +37,9 @@ public:
     void addChild(Widget w) {
         children.push_back(w);
     }
-    void draw(Shader shader, glm::mat4 move, float parentSize[2]);
-    void draw(Shader shader) {
-        draw(shader, glm::mat4(1.0f), getViewportSize());
+    void draw(glm::mat4 move, float parentSize[2]);
+    void draw() {
+        draw(glm::mat4(1.0f), getViewportSize());
     }
     void fillBuffer();
     void setOnClick(void (*clickHandler)()) {
@@ -51,6 +52,7 @@ public:
     glm::vec3 getAbsPos(float parentSize[]);
 
 private:
+    Shader *shader;
     unsigned int lines_VBO, lines_VAO, triangles_VBO, triangles_VAO;
     float x, y;
     glm::vec3 pos;

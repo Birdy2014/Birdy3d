@@ -1,19 +1,19 @@
 #include "GameObject.hpp"
 
-GameObject::GameObject(GameObject *parent, Shader *s, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
-    this->parent = parent;
-    this->scene = this->getScene();
+GameObject::GameObject(Shader *s, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
     this->shader = s;
     this->pos = pos;
     this->rot = rot;
     this->scale = scale;
 }
 
-void GameObject::addChild(GameObject c) {
+void GameObject::addChild(GameObject *c) {
+    c->parent = this;
     this->children.push_back(c);
 }
 
 void GameObject::addComponent(Component *c) {
+    c->object = this;
     this->components.push_back(c);
     this->components[this->components.size() - 1]->start();
 }
@@ -22,8 +22,8 @@ void GameObject::update(float deltaTime) {
     for (Component *c : this->components) {
         c->update(deltaTime);
     }
-    for (GameObject o : this->children) {
-        o.update(deltaTime);
+    for (GameObject *o : this->children) {
+        o->update(deltaTime);
     }
 }
 
@@ -57,10 +57,29 @@ glm::vec3 GameObject::absScale() {
     }
 }
 
-GameObject *GameObject::getScene() {
-    if (this->parent == nullptr) {
-        return this;
-    } else {
-        return this->parent->getScene();
+glm::vec3 GameObject::absForward() {
+    glm::vec3 absRot = this->absRot();
+    glm::vec3 forward;
+    forward.x = cos(absRot.y) * cos(absRot.x);
+    forward.y = sin(absRot.x);
+    forward.z = sin(absRot.y) * cos(absRot.x);
+    return glm::normalize(forward);
+}
+
+glm::vec3 GameObject::absRight() {
+    return glm::normalize(glm::cross(this->absForward(), glm::vec3(0, 1, 0)));
+}
+
+glm::vec3 GameObject::absUp() {
+    return glm::normalize(glm::cross(this->absRight(), this->absForward()));
+
+}
+
+GameObject *GameObject::setScene(GameObject *scene) {
+    if (scene == nullptr)
+        scene = this;
+    this->scene = scene;
+    for (GameObject *c : this->children) {
+        c->setScene(scene);
     }
 }

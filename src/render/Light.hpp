@@ -3,15 +3,13 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.hpp"
-#include "../objects/Component.hpp"
-#include "../objects/GameObject.hpp"
-#include <typeinfo>
+#include "../api/Component.hpp"
+#include "../api/GameObject.hpp"
 
 class Light : public Component {
 public:
-    Light(GameObject *o, Shader *depthShader, Shader *lightShader, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, float innerCutOff, float outerCutOff) : Component(o) {
+    Light(Shader *depthShader, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, float innerCutOff, float outerCutOff) {
         this->depthShader = depthShader;
-        this->lightShader = lightShader;
         this->type = type;
         this->direction = direction;
         this->ambient = ambient;
@@ -22,9 +20,8 @@ public:
         this->outerCutOff = outerCutOff;
     }
 
-    Light(GameObject *o, Shader *depthShader, Shader *lightShader) : Component(o) {
+    Light(Shader *depthShader) : Component() {
         this->depthShader = depthShader;
-        this->lightShader = lightShader;
         this->type = 0;
         this->direction = glm::vec3(1.0f);
         this->ambient = glm::vec3(1.0f);
@@ -35,24 +32,17 @@ public:
         this->outerCutOff = glm::cos(glm::radians(40.0f));
     }
 
-    void use(int id, int textureid);
+    void use(Shader *lightShader, int id, int textureid);
     virtual void setupShadowMap() {}
-    virtual void genShadowMap(int id, int textureid) {}
+    virtual void genShadowMap(Shader *lightShader, int id, int textureid) {}
     void start() override {
         setupShadowMap();
     }
     void update(float deltaTime) override {}
     void cleanup() override {}
-    const std::type_info &getTypeid() override {
-        return typeid(Light);
-    }
-    Shader *getLightShader() {
-        return this->lightShader;
-    }
 
 protected:
     Shader *depthShader;
-    Shader *lightShader;
     int type;
     glm::vec3 direction;
     glm::vec3 ambient;

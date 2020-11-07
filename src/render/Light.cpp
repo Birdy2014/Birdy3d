@@ -1,18 +1,18 @@
 #include "Light.hpp"
 #include "Model.hpp"
 
-void Light::use(int id, int textureid) {
-    genShadowMap(id, textureid);
+void Light::use(Shader *lightShader, int id, int textureid) {
+    genShadowMap(lightShader, id, textureid);
     std::string i = std::to_string(id);
     std::string name = (this->type == 0 ? "dirLights" : "pointLights");
     name += "[" + i + "].";
-    this->lightShader->setInt(name + "type", type);
-    this->lightShader->setVec3(name + "position", this->object->absPos());
-    this->lightShader->setVec3(name + "direction", direction);
-    this->lightShader->setVec3(name + "ambient", ambient);
-    this->lightShader->setVec3(name + "diffuse", diffuse);
-    this->lightShader->setFloat(name + "linear", linear);
-    this->lightShader->setFloat(name + "quadratic", quadratic);
-    this->lightShader->setFloat(name + "innerCutOff", innerCutOff);
-    this->lightShader->setFloat(name + "outerCutOff", outerCutOff);
+    lightShader->setInt(name + "type", type);
+    lightShader->setVec3(name + "position", this->object->absPos());
+    lightShader->setVec3(name + "direction", direction);
+    lightShader->setVec3(name + "ambient", ambient);
+    lightShader->setVec3(name + "diffuse", diffuse);
+    lightShader->setFloat(name + "linear", linear);
+    lightShader->setFloat(name + "quadratic", quadratic);
+    lightShader->setFloat(name + "innerCutOff", innerCutOff);
+    lightShader->setFloat(name + "outerCutOff", outerCutOff);
 }
