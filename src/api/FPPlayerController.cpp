@@ -19,7 +19,6 @@ void FPPlayerController::start() {
 void FPPlayerController::update(float deltaTime) {
 	// Keyboard
 	if (Input::keyPressed(GLFW_KEY_ESCAPE)) {
-		// Debounce
 		if (!this->hiddenStatusUpdated) {
 			hiddenStatusUpdated = true;
 			Input::toggleCursorHidden();

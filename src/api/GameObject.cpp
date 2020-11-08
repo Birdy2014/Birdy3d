@@ -50,8 +50,7 @@ glm::vec3 GameObject::absPos() {
     if (parent == nullptr) {
         return this->pos;
     } else {
-        // TODO: respect parent rotation
-        return this->parent->absPos() + this->pos;
+        return this->parent->absTransform() * glm::vec4(this->pos, 1);
     }
 }
 
