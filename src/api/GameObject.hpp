@@ -19,6 +19,7 @@ public:
     void addComponent(Component *c);
     void update(float deltaTime);
     void cleanup();
+    glm::mat4 absTransform();
     glm::vec3 absPos();
     glm::vec3 absRot();
     glm::vec3 absScale();

@@ -1,4 +1,5 @@
 #include "GameObject.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 GameObject::GameObject(Shader *s, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
     this->shader = s;
@@ -33,11 +34,24 @@ void GameObject::cleanup() {
     }
 }
 
+glm::mat4 GameObject::absTransform() {
+    glm::mat4 m(1);
+    m = glm::rotate(m, this->rot.x, glm::vec3(1, 0, 0));
+    m = glm::rotate(m, this->rot.y, glm::vec3(0, 1, 0));
+    m = glm::rotate(m, this->rot.z, glm::vec3(0, 0, 1));
+    if (this->parent != nullptr)
+        m = m * this->parent->absTransform();
+    m = glm::translate(m, this->pos);
+    m = glm::scale(m, this->scale);
+    return m;
+}
+
 glm::vec3 GameObject::absPos() {
     if (parent == nullptr) {
         return this->pos;
     } else {
-        return this->parent->pos + this->pos;
+        // TODO: respect parent rotation
+        return this->parent->absPos() + this->pos;
     }
 }
 
@@ -72,7 +86,6 @@ glm::vec3 GameObject::absRight() {
 
 glm::vec3 GameObject::absUp() {
     return glm::normalize(glm::cross(this->absRight(), this->absForward()));
-
 }
 
 GameObject *GameObject::setScene(GameObject *scene) {
