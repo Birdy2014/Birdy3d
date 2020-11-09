@@ -28,6 +28,8 @@ bool Engine::init(const char *windowName, int width, int height) {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Set Viewport and resize callback
 	glViewport(0, 0, width, height);
@@ -59,4 +61,10 @@ GLFWwindow *Engine::getWindow() {
 
 EventHandler<framebufferSizeArg> *Engine::getFramebufferSizeEventHandler() {
 	return framebufferSizeEventHandler;
+}
+
+glm::vec2 Engine::getViewportSize() {
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    return glm::vec2(viewport[2], viewport[3]);
 }

@@ -35,7 +35,7 @@ int main() {
 	Shader lightingShader("./shaders/lighting.vs", "./shaders/lighting.fs");
 	Shader dirLightDepthShader("./shaders/dDepth.vs", "./shaders/dDepth.fs");
 	Shader pointLightDepthShader("./shaders/pDepth.vs", "./shaders/pDepth.gs", "./shaders/pDepth.fs");
-	Shader uiShader("./shaders/ui.vert", "./shaders/ui.frag");
+	Shader uiShader("./shaders/ui.vs", "./shaders/ui.fs");
 
 	// lightShader configuration
 	lightingShader.use();
@@ -44,13 +44,14 @@ int main() {
 	lightingShader.setInt("gAlbedoSpec", 2);
 
 	// UI
-	Widget widget(&uiShader, glm::vec3(0.0f, 0.0f, 0.0f), CENTER);
+	Widget widget(&uiShader, glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
 	widget.hidden = true;
 	widget.setOnClick([]() {
     	glfwSetWindowShouldClose(Engine::getWindow(), true);
 	});
 	uiShader.use();
-	widget.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1.0f));
+	widget.addFilledRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1.0f), 0, 0.5);
+	widget.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1, 0, 0));
 	widget.fillBuffer();
 
 	// GameObjects
@@ -85,7 +86,7 @@ int main() {
 		lastFrame = currentFrame;
 
 		Input::update();
-		widget.updateEvents(Engine::getWindow());
+		widget.updateEvents();
 
 		scene->update(deltaTime);
 

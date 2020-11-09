@@ -4,6 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include "EventHandler.hpp"
 
 struct framebufferSizeArg {
@@ -16,6 +17,7 @@ public:
     static bool init(const char *windowName, int width, int height);
     static GLFWwindow *getWindow();
     static EventHandler<framebufferSizeArg> *getFramebufferSizeEventHandler();
+    static glm::vec2 getViewportSize();
 
 private:
     static GLFWwindow *window;

@@ -28,6 +28,9 @@ void FPPlayerController::update(float deltaTime) {
 		this->hiddenStatusUpdated = false;
 	}
 
+	if (!Input::isCursorHidden())
+		return;
+
 	float cameraSpeed = 2.5f * deltaTime;
 	if (Input::keyPressed(GLFW_KEY_W))
         this->object->pos += cameraSpeed * this->object->absForward();
@@ -43,10 +46,6 @@ void FPPlayerController::update(float deltaTime) {
 		this->object->pos += glm::vec3(0.0f, -cameraSpeed, 0.0f);
 
 	// Mouse
-	if (!Input::isCursorHidden()) {
-		return;
-	}
-
 	glm::vec2 cursorOffset = Input::cursorPosOffset();
 	float xoffset = cursorOffset.x;
 	float yoffset = cursorOffset.y;

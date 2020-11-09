@@ -50,6 +50,7 @@ void Camera::render() {
     }
 
     // 2. lighting pass
+	glEnable(GL_BLEND);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
@@ -74,6 +75,7 @@ void Camera::render() {
 		glClear(GL_DEPTH_BUFFER_BIT);
         this->canvas->draw();
     }
+	glDisable(GL_BLEND);
 }
 
 void Camera::createGBuffer() {

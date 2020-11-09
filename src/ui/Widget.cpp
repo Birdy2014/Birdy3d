@@ -1,19 +1,34 @@
 #include "Widget.hpp"
+#include "../api/Engine.hpp"
+#include "../api/Input.hpp"
 
-void Widget::addLine(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 color) {
-    this->lines.push_back(UI_Vertex{pos1, color});
-    this->lines.push_back(UI_Vertex{pos2, color});
+Widget::Widget(Shader *shader, glm::vec3 pos, Placement placement) {
+    this->shader = shader;
+    this->pos = pos;
+    this->placement = placement;
 }
 
-void Widget::addTriangle(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 pos3, glm::vec3 color) {
-    this->triangles.push_back(UI_Vertex{pos1, color});
-    this->triangles.push_back(UI_Vertex{pos2, color});
-    this->triangles.push_back(UI_Vertex{pos3, color});
+void Widget::addLine(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth, float opacity) {
+    this->lines.push_back(UI_Vertex{glm::vec3(pos1, depth), glm::vec4(color, opacity)});
+    this->lines.push_back(UI_Vertex{glm::vec3(pos2, depth), glm::vec4(color, opacity)});
 }
 
-void Widget::addRectangle(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 color) {
-    this->addTriangle(pos1, glm::vec3(pos1.x, pos2.y, pos2.z), pos2, color);
-    this->addTriangle(pos1, glm::vec3(pos2.x, pos1.y, pos1.z), pos2, color);
+void Widget::addTriangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec3 color, float depth, float opacity) {
+    this->triangles.push_back(UI_Vertex{glm::vec3(pos1, depth), glm::vec4(color, opacity)});
+    this->triangles.push_back(UI_Vertex{glm::vec3(pos2, depth), glm::vec4(color, opacity)});
+    this->triangles.push_back(UI_Vertex{glm::vec3(pos3, depth), glm::vec4(color, opacity)});
+}
+
+void Widget::addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth, float opacity) {
+    this->addLine(pos1, glm::vec2(pos2.x, pos1.y), color, depth, opacity);
+    this->addLine(glm::vec2(pos2.x, pos1.y), pos2, color, depth, opacity);
+    this->addLine(pos1, glm::vec2(pos1.x, pos2.y), color, depth, opacity);
+    this->addLine(glm::vec2(pos1.x, pos2.y), pos2, color, depth, opacity);
+}
+
+void Widget::addFilledRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth, float opacity) {
+    this->addTriangle(pos1, glm::vec2(pos1.x, pos2.y), pos2, color, depth, opacity);
+    this->addTriangle(pos1, pos2, glm::vec2(pos2.x, pos1.y), color, depth, opacity);
 }
 
 void Widget::fillBuffer() {
@@ -29,7 +44,7 @@ void Widget::fillBuffer() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)0);
     // vertex colors
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)offsetof(UI_Vertex, color));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)offsetof(UI_Vertex, color));
 
     // triangles
     glGenVertexArrays(1, &triangles_VAO);
@@ -43,21 +58,20 @@ void Widget::fillBuffer() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)0);
     // vertex colors
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)offsetof(UI_Vertex, color));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)offsetof(UI_Vertex, color));
 }
 
-void Widget::draw(glm::mat4 move, float parentSize[]) {
-    if (hidden) {
+void Widget::draw(glm::mat4 move, glm::vec2 parentSize) {
+    if (hidden)
         return;
-    }
     
     this->shader->use();
     // get viewport size
-    float *viewport = getViewportSize();
-    this->shader->setInt("width", viewport[0]);
-    this->shader->setInt("height", viewport[1]);
+    glm::ivec2 viewport = Engine::getViewportSize();
+    this->shader->setInt("width", viewport.x);
+    this->shader->setInt("height", viewport.y);
     // draw self
-    glm::vec3 absPos = getAbsPos(parentSize);
+    glm::vec3 absPos = getAbsPos(parentSize.x, parentSize.y);
     x = absPos.x / viewport[0] * 2;
     y = absPos.y / viewport[1] * -2;
     move = glm::translate(move, glm::vec3(x, y, pos.z));
@@ -67,77 +81,73 @@ void Widget::draw(glm::mat4 move, float parentSize[]) {
     glBindVertexArray(triangles_VAO);
     glDrawArrays(GL_TRIANGLES, 0, triangles.size());
     // draw children
+    glm::vec2 size = getSize();
     for (Widget w : children) {
-        float *size = getSize();
         w.draw(move, size);
     }
 }
 
-float *Widget::getSize() {
-    float *size = (float*)malloc(2 * sizeof(float));
-    size[0] = 0;
-    size[1] = 0;
+void Widget::draw() {
+    draw(glm::mat4(1.0f), Engine::getViewportSize());
+}
+
+glm::vec2 Widget::getSize() {
+    glm::vec2 size(0);
     for (UI_Vertex v : lines) {
-        if (v.position.x > size[0])
-            size[0] = v.position.x;
-        if (v.position.y > size[1])
-            size[1] = v.position.y;
+        if (v.position.x > size.x)
+            size.x = v.position.x;
+        if (v.position.y > size.y)
+            size.y = v.position.y;
     }
     for (UI_Vertex v : triangles) {
-        if (v.position.x > size[0])
-            size[0] = v.position.x;
-        if (v.position.y > size[1])
-            size[1] = v.position.y;
+        if (v.position.x > size.x)
+            size.x = v.position.x;
+        if (v.position.y > size.y)
+            size.y = v.position.y;
     }
     return size;
 }
 
-float *Widget::getViewportSize() {
-    GLint m_viewport[4];
-    glGetIntegerv(GL_VIEWPORT, m_viewport);
-    float *screen = (float*)malloc(2 * sizeof(float));
-    screen[0] = m_viewport[2];
-    screen[1] = m_viewport[3];
-    return screen;
-}
-
-void Widget::updateEvents(GLFWwindow *window, glm::vec3 parentAbsPos, float parentSize[]) {
-    if (hidden) {
+void Widget::updateEvents(glm::vec3 parentAbsPos, glm::vec2 parentSize) {
+    if (hidden)
         return;
-    }
+
+    glm::vec2 size = getSize();
     
     // self
-    glm::vec3 absPos = parentAbsPos + getAbsPos(parentSize);
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        double xpos, ypos;
-        glfwGetCursorPos(window, &xpos, &ypos);
-        float *size = getSize();
-        if (xpos > absPos.x && xpos < absPos.x + size[0] && ypos > absPos.y && ypos < absPos.y + size[1]) {
+    glm::vec3 absPos = parentAbsPos + getAbsPos(parentSize.x, parentSize.y);
+    if (Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+        glm::vec2 cursorPos = Input::cursorPos();
+        if (cursorPos.x > absPos.x && cursorPos.x < absPos.x + size.x && cursorPos.y > absPos.y && cursorPos.y < absPos.y + size.y) {
             clickHandler();
         }
     }
+
     // children
-    float *size = getSize();
     for (Widget w : this->children) {
-        w.updateEvents(window, absPos, size);
+        w.updateEvents(absPos, size);
     }
 }
 
-glm::vec3 Widget::getAbsPos(float parentSize[]) {
+void Widget::updateEvents() {
+    updateEvents(glm::vec3(0.0f), Engine::getViewportSize());
+}
+
+glm::vec3 Widget::getAbsPos(int parentWidth, int parentHeight) {
     glm::vec3 absPos;
-    if (placement == TOP_LEFT || placement == BOTTOM_LEFT || placement == CENTER_LEFT) {
+    if (placement == Placement::TOP_LEFT || placement == Placement::BOTTOM_LEFT || placement == Placement::CENTER_LEFT) {
         absPos.x = pos.x;
-    } else if (placement == TOP_RIGHT || placement == BOTTOM_RIGHT || placement == CENTER_RIGHT) {
-        absPos.x = parentSize[0] - pos.x;
-    } else if (placement == TOP_CENTER || placement == BOTTOM_CENTER || placement == CENTER) {
-        absPos.x = parentSize[0] / 2 + pos.x;
+    } else if (placement == Placement::TOP_RIGHT || placement == Placement::BOTTOM_RIGHT || placement == Placement::CENTER_RIGHT) {
+        absPos.x = parentWidth - pos.x;
+    } else if (placement == Placement::TOP_CENTER || placement == Placement::BOTTOM_CENTER || placement == Placement::CENTER) {
+        absPos.x = parentWidth / 2 + pos.x;
     }
-    if (placement == TOP_LEFT || placement == TOP_RIGHT || placement == TOP_CENTER) {
+    if (placement == Placement::TOP_LEFT || placement == Placement::TOP_RIGHT || placement == Placement::TOP_CENTER) {
         absPos.y = pos.y;
-    } else if (placement == BOTTOM_LEFT || placement == BOTTOM_RIGHT || placement == BOTTOM_CENTER) {
-        absPos.y = parentSize[1] - pos.y; 
-    } else if (placement == CENTER_LEFT || placement == CENTER_RIGHT || placement == CENTER) {
-        absPos.y = parentSize[1] / 2 + pos.y;
+    } else if (placement == Placement::BOTTOM_LEFT || placement == Placement::BOTTOM_RIGHT || placement == Placement::BOTTOM_CENTER) {
+        absPos.y = parentHeight - pos.y; 
+    } else if (placement == Placement::CENTER_LEFT || placement == Placement::CENTER_RIGHT || placement == Placement::CENTER) {
+        absPos.y = parentHeight / 2 + pos.y;
     }
     return absPos;
 }

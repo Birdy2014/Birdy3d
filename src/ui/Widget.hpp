@@ -7,49 +7,39 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-enum Placement {
-    TOP_LEFT,
-    BOTTOM_LEFT,
-    TOP_RIGHT,
-    BOTTOM_RIGHT,
-    CENTER_LEFT,
-    CENTER_RIGHT,
-    TOP_CENTER,
-    BOTTOM_CENTER,
-    CENTER
-};
-
 class Widget {
 public:
+    enum class Placement {
+        TOP_LEFT,
+        BOTTOM_LEFT,
+        TOP_RIGHT,
+        BOTTOM_RIGHT,
+        CENTER_LEFT,
+        CENTER_RIGHT,
+        TOP_CENTER,
+        BOTTOM_CENTER,
+        CENTER
+    };
+
     bool hidden = false;
 
-    Widget(Shader *shader, glm::vec3 pos = glm::vec3(0.0f), Placement placement = TOP_LEFT) {
-        this->shader = shader;
-        this->pos = pos;
-        this->placement = placement;
-    }
-    void addLine(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 color);
-    void addTriangle(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 pos3, glm::vec3 color);
-    void addRectangle(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 color);
-    void addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth = 0.0f) {
-        addRectangle(glm::vec3(pos1, depth), glm::vec3(pos2, depth), color);
-    }
+    Widget(Shader *shader, glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT);
+    void addLine(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
+    void addTriangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
+    void addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
+    void addFilledRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
     void addChild(Widget w) {
         children.push_back(w);
     }
-    void draw(glm::mat4 move, float parentSize[2]);
-    void draw() {
-        draw(glm::mat4(1.0f), getViewportSize());
-    }
+    void draw(glm::mat4 move, glm::vec2 parentSize);
+    void draw();
     void fillBuffer();
     void setOnClick(void (*clickHandler)()) {
         this->clickHandler = clickHandler;
     }
-    void updateEvents(GLFWwindow *window, glm::vec3 parentAbsPos, float parentSize[]);
-    void updateEvents(GLFWwindow *window) {
-        updateEvents(window, glm::vec3(0.0f), getViewportSize());
-    }
-    glm::vec3 getAbsPos(float parentSize[]);
+    void updateEvents(glm::vec3 parentAbsPos, glm::vec2 parentSize);
+    void updateEvents();
+    glm::vec3 getAbsPos(int parentWidth, int parentHeight);
 
 private:
     Shader *shader;
@@ -62,8 +52,7 @@ private:
     void (*clickHandler)();
     Placement placement;
 
-    float *getSize();
-    float *getViewportSize();
+    glm::vec2 getSize();
 };
 
 #endif
