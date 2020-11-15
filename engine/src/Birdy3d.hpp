@@ -13,3 +13,7 @@
 #include "render/Texture.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/PointLight.hpp"
+
+// UI
+#include "ui/Widget.hpp"
+#include "ui/TextRenderer.hpp"

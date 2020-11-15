@@ -83,8 +83,8 @@ void Widget::draw(glm::mat4 move, glm::vec2 parentSize) {
     glDrawArrays(GL_TRIANGLES, 0, triangles.size());
     // draw children
     glm::vec2 size = getSize();
-    for (Widget w : children) {
-        w.draw(move, size);
+    for (Widget *w : children) {
+        w->draw(move, size);
     }
 }
 
@@ -109,25 +109,26 @@ glm::vec2 Widget::getSize() {
     return size;
 }
 
-void Widget::updateEvents(glm::vec3 parentAbsPos, glm::vec2 parentSize) {
+bool Widget::updateEvents(glm::vec3 parentAbsPos, glm::vec2 parentSize) {
     if (hidden)
-        return;
+        return false;
 
     glm::vec2 size = getSize();
-    
-    // self
     glm::vec3 absPos = parentAbsPos + getAbsPos(parentSize.x, parentSize.y);
+    
+    // children
+    for (Widget *w : this->children) {
+        if (w->updateEvents(absPos, size))
+            return true;
+    }
+    // self
     if (Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
         glm::vec2 cursorPos = Input::cursorPos();
         if (cursorPos.x > absPos.x && cursorPos.x < absPos.x + size.x && cursorPos.y > absPos.y && cursorPos.y < absPos.y + size.y) {
-            clickHandler();
+            return clickHandler();
         }
     }
-
-    // children
-    for (Widget w : this->children) {
-        w.updateEvents(absPos, size);
-    }
+    return false;
 }
 
 void Widget::updateEvents() {

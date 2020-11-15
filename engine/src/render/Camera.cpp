@@ -43,6 +43,7 @@ void Camera::render() {
     glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
 
     // 1. geometry pass: render all geometric/color data to g-buffer
+	glDisable(GL_BLEND);
     glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -79,7 +80,6 @@ void Camera::render() {
 		glClear(GL_DEPTH_BUFFER_BIT);
         this->canvas->draw();
     }
-	glDisable(GL_BLEND);
 }
 
 void Camera::createGBuffer() {

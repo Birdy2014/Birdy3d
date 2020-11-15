@@ -18,6 +18,7 @@ int main() {
 	Shader dirLightDepthShader("./shaders/dDepth.vs", "./shaders/dDepth.fs");
 	Shader pointLightDepthShader("./shaders/pDepth.vs", "./shaders/pDepth.gs", "./shaders/pDepth.fs");
 	Shader uiShader("./shaders/ui.vs", "./shaders/ui.fs");
+	Shader rectShader("./shaders/rect.vs", "./shaders/rect.fs");
 
 	// lightShader configuration
 	lightingShader.use();
@@ -26,21 +27,30 @@ int main() {
 	lightingShader.setInt("gAlbedoSpec", 2);
 
 	// UI
-	Widget widget(&uiShader, glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
-	widget.hidden = true;
-	widget.setOnClick([]() {
+	Widget canvas(&uiShader, glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
+	canvas.hidden = true;
+	canvas.setOnClick([]() {
+		std::cout << "Canvas clicked" << std::endl;
+		return false;
+	});
+	canvas.addRectangle(glm::vec3(-100), glm::vec3(100), glm::vec3(1), 0, 0);
+	Widget closeButton(&uiShader, glm::vec3(0), Widget::Placement::CENTER);
+	closeButton.hidden = false;
+	closeButton.setOnClick([]() {
     	glfwSetWindowShouldClose(Application::getWindow(), true);
+		return true;
 	});
 	uiShader.use();
-	widget.addFilledRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1.0f), 0, 0.5);
-	widget.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1, 0, 0));
-	widget.fillBuffer();
+	closeButton.addFilledRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1.0f), 0, 0.5);
+	closeButton.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1, 0, 0));
+	closeButton.fillBuffer();
+	canvas.addChild(&closeButton);
 
 	// GameObjects
 	GameObject *scene = new GameObject(&geometryShader);
 
 	player = new GameObject(&geometryShader, glm::vec3(0, 0, 3));
-	player->addComponent(new Camera(&lightingShader, 800, 600, &widget));
+	player->addComponent(new Camera(&lightingShader, 800, 600, &canvas));
 	player->addComponent(new FPPlayerController());
 	scene->addChild(player);
 
@@ -61,19 +71,37 @@ int main() {
 
 	scene->setScene();
 
+	PointLight *light = scene->getComponents<PointLight>(true)[0];
+	bool up = true;
+
+	TextRenderer textRenderer;
+	textRenderer.init(&rectShader, "/usr/share/fonts/TTF/DejaVuSans.ttf", 30);
+
 	//Mainloop
 	while(!glfwWindowShouldClose(Application::getWindow())) {
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
+		if (up) {
+			light->object->pos.y += 0.1 * deltaTime;
+			if (light->object->pos.y > 3)
+				up = false;
+		} else {
+			light->object->pos.y -= 0.1 * deltaTime;
+			if (light->object->pos.y < 1)
+				up = true;
+		}
+
 		Input::update();
-		widget.updateEvents();
+		canvas.updateEvents();
 
 		scene->update(deltaTime);
 
 		// draw the object
 		player->getComponent<Camera>()->render();
+
+		textRenderer.renderText("Hello World", 0, 0, 1, glm::vec4(1));
 
 		// swap Buffers
     	glfwSwapBuffers(Application::getWindow());

@@ -7,9 +7,9 @@ BIN		:= sandbox
 ENGINEDIR	:= ../engine
 SOURCES := $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 SHADERS	:= $(wildcard $(ENGINEDIR)/src/shaders/*)
-INCLUDE	:= -I/usr/include -I$(ENGINEDIR)/build/include/src -I$(ENGINEDIR)/build/include/vendor/stb_image -I$(ENGINEDIR)/build/include/vendor/glad/include
+INCLUDE	:= -I/usr/include -I$(ENGINEDIR)/build/include/src -I$(ENGINEDIR)/build/include/vendor/stb_image -I$(ENGINEDIR)/build/include/vendor/glad/include -I/usr/include/freetype2
 LIB		:= -Wl,-rpath,'$$ORIGIN/bin' -L$(OUTDIR)/bin
-LIBRARIES	:= -lglfw -lassimp -lBirdy3d
+LIBRARIES	:= -lglfw -lassimp -lBirdy3d -lfreetype
 OUTSHADERS	:= $(notdir $(SHADERS))
 OUTSHADERS	:= $(addprefix $(OUTDIR)/shaders/,$(OUTSHADERS))
 

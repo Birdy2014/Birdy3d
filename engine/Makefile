@@ -10,7 +10,7 @@ INCLDIR	:= $(OUTDIR)/include
 BIN		:= libBirdy3d.so
 SOURCES := $(wildcard src/*.cpp) $(wildcard src/*/*.cpp) vendor/glad/src/glad.c
 HEADERS	:= $(wildcard src/*.hpp) $(wildcard src/*/*.hpp) $(wildcard vendor/**/*.h) $(wildcard vendor/**/include/**/*.h)
-INCLUDE	:= -I/usr/include -Ivendor/glad/include -Ivendor/stb_image -Isrc
+INCLUDE	:= -I/usr/include -Ivendor/glad/include -Ivendor/stb_image -Isrc -I/usr/include/freetype2
 LIBRARIES	:= -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lassimp
 
 OBJECTS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SOURCES))

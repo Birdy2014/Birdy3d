@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/engine/src",
+                "${workspaceFolder}/engine/vendor/glad/include",
+                "${workspaceFolder}/engine/vendor/stb_image",
+                "${workspaceFolder}/sandbox/src",
+                "/usr/include/freetype2"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
