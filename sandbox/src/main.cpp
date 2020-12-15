@@ -18,7 +18,6 @@ int main() {
 	Shader dirLightDepthShader("./shaders/dDepth.vs", "./shaders/dDepth.fs");
 	Shader pointLightDepthShader("./shaders/pDepth.vs", "./shaders/pDepth.gs", "./shaders/pDepth.fs");
 	Shader uiShader("./shaders/ui.vs", "./shaders/ui.fs");
-	Shader rectShader("./shaders/rect.vs", "./shaders/rect.fs");
 
 	// lightShader configuration
 	lightingShader.use();
@@ -33,17 +32,15 @@ int main() {
 		std::cout << "Canvas clicked" << std::endl;
 		return false;
 	});
-	canvas.addRectangle(glm::vec3(-100), glm::vec3(100), glm::vec3(1), 0, 0);
+	canvas.addRectangle(glm::vec3(-100), glm::vec3(200), glm::vec4(1));
 	Widget closeButton(&uiShader, glm::vec3(0), Widget::Placement::CENTER);
 	closeButton.hidden = false;
 	closeButton.setOnClick([]() {
     	glfwSetWindowShouldClose(Application::getWindow(), true);
 		return true;
 	});
-	uiShader.use();
-	closeButton.addFilledRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1.0f), 0, 0.5);
-	closeButton.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec3(1, 0, 0));
-	closeButton.fillBuffer();
+	closeButton.addFilledRectangle(glm::vec2(-20.0, -20.0), glm::vec2(40.0, 40.0), glm::vec4(1.0f), 0);
+	closeButton.addRectangle(glm::vec2(-20.0, -20.0), glm::vec2(40.0, 40.0), glm::vec4(1, 0, 0, 1));
 	canvas.addChild(&closeButton);
 
 	// GameObjects
@@ -75,7 +72,7 @@ int main() {
 	bool up = true;
 
 	TextRenderer textRenderer;
-	textRenderer.init(&rectShader, "/usr/share/fonts/TTF/DejaVuSans.ttf", 30);
+	textRenderer.init(&uiShader, "/usr/share/fonts/TTF/DejaVuSans.ttf", 30);
 
 	//Mainloop
 	while(!glfwWindowShouldClose(Application::getWindow())) {

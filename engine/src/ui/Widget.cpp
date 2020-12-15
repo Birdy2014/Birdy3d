@@ -3,153 +3,134 @@
 #include "core/Application.hpp"
 #include "core/Input.hpp"
 
-Widget::Widget(Shader *shader, glm::vec3 pos, Placement placement) {
+Widget::Widget(Shader *shader, glm::vec3 pos, Placement placement, float rotation, glm::vec2 scale) {
     this->shader = shader;
     this->pos = pos;
     this->placement = placement;
+    this->rot = rotation;
+    this->scale = scale;
 }
 
-void Widget::addLine(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth, float opacity) {
-    this->lines.push_back(UI_Vertex{glm::vec3(pos1, depth), glm::vec4(color, opacity)});
-    this->lines.push_back(UI_Vertex{glm::vec3(pos2, depth), glm::vec4(color, opacity)});
+void Widget::addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth) {
+    this->rectangles.push_back(Rectangle(this->shader, pos, size, depth, false, color));
 }
 
-void Widget::addTriangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec3 color, float depth, float opacity) {
-    this->triangles.push_back(UI_Vertex{glm::vec3(pos1, depth), glm::vec4(color, opacity)});
-    this->triangles.push_back(UI_Vertex{glm::vec3(pos2, depth), glm::vec4(color, opacity)});
-    this->triangles.push_back(UI_Vertex{glm::vec3(pos3, depth), glm::vec4(color, opacity)});
-}
-
-void Widget::addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth, float opacity) {
-    this->addLine(pos1, glm::vec2(pos2.x, pos1.y), color, depth, opacity);
-    this->addLine(glm::vec2(pos2.x, pos1.y), pos2, color, depth, opacity);
-    this->addLine(pos1, glm::vec2(pos1.x, pos2.y), color, depth, opacity);
-    this->addLine(glm::vec2(pos1.x, pos2.y), pos2, color, depth, opacity);
-}
-
-void Widget::addFilledRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth, float opacity) {
-    this->addTriangle(pos1, glm::vec2(pos1.x, pos2.y), pos2, color, depth, opacity);
-    this->addTriangle(pos1, pos2, glm::vec2(pos2.x, pos1.y), color, depth, opacity);
-}
-
-void Widget::fillBuffer() {
-    // lines
-    glGenVertexArrays(1, &lines_VAO);
-    glGenBuffers(1, &lines_VBO);
-    glBindVertexArray(lines_VAO);
-    // load vertices into VBO
-    glBindBuffer(GL_ARRAY_BUFFER, lines_VBO);
-    glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(UI_Vertex), &lines[0], GL_STATIC_DRAW);
-    // vertex positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)0);
-    // vertex colors
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)offsetof(UI_Vertex, color));
-
-    // triangles
-    glGenVertexArrays(1, &triangles_VAO);
-    glGenBuffers(1, &triangles_VBO);
-    glBindVertexArray(triangles_VAO);
-    // load vertices into VBO
-    glBindBuffer(GL_ARRAY_BUFFER, triangles_VBO);
-    glBufferData(GL_ARRAY_BUFFER, triangles.size() * sizeof(UI_Vertex), &triangles[0], GL_STATIC_DRAW);
-    // vertex positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)0);
-    // vertex colors
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(UI_Vertex), (void*)offsetof(UI_Vertex, color));
-}
-
-void Widget::draw(glm::mat4 move, glm::vec2 parentSize) {
-    if (hidden)
-        return;
-    
-    this->shader->use();
-    // get viewport size
-    glm::ivec2 viewport = Application::getViewportSize();
-    this->shader->setInt("width", viewport.x);
-    this->shader->setInt("height", viewport.y);
-    // draw self
-    glm::vec3 absPos = getAbsPos(parentSize.x, parentSize.y);
-    x = absPos.x / viewport[0] * 2;
-    y = absPos.y / viewport[1] * -2;
-    move = glm::translate(move, glm::vec3(x, y, pos.z));
-    this->shader->setMat4("move", move);
-    glBindVertexArray(lines_VAO);
-    glDrawArrays(GL_LINES, 0, lines.size());
-    glBindVertexArray(triangles_VAO);
-    glDrawArrays(GL_TRIANGLES, 0, triangles.size());
-    // draw children
-    glm::vec2 size = getSize();
-    for (Widget *w : children) {
-        w->draw(move, size);
-    }
+void Widget::addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth) {
+    this->rectangles.push_back(Rectangle(this->shader, pos, size, depth, true, color));
 }
 
 void Widget::draw() {
-    draw(glm::mat4(1.0f), Application::getViewportSize());
+    if (hidden)
+        return;
+
+    glm::mat4 move = this->absTransform(true);
+
+    for (Rectangle r : this->rectangles) {
+        r.setMove(move);
+        r.draw();
+    }
+    // draw children
+    glm::vec2 size = getSize();
+    for (Widget *w : children) {
+        w->draw();
+    }
 }
 
-glm::vec2 Widget::getSize() {
-    glm::vec2 size(0);
-    for (UI_Vertex v : lines) {
-        if (v.position.x > size.x)
-            size.x = v.position.x;
-        if (v.position.y > size.y)
-            size.y = v.position.y;
+glm::ivec2 Widget::getBottomLeft() {
+    glm::ivec2 bottomLeft(Application::getViewportSize());
+    for (Rectangle r : this->rectangles) {
+        glm::ivec2 rpos = r.getPos();
+        if (rpos.x < bottomLeft.x)
+            bottomLeft.x = rpos.x;
+        if (rpos.y < bottomLeft.y)
+            bottomLeft.y = rpos.y;
     }
-    for (UI_Vertex v : triangles) {
-        if (v.position.x > size.x)
-            size.x = v.position.x;
-        if (v.position.y > size.y)
-            size.y = v.position.y;
-    }
-    return size;
+    return bottomLeft;
 }
 
-bool Widget::updateEvents(glm::vec3 parentAbsPos, glm::vec2 parentSize) {
+glm::ivec2 Widget::getTopRight() {
+    glm::ivec2 topRight(0);
+    for (Rectangle r : this->rectangles) {
+        glm::ivec2 rpos = r.getPos();
+        glm::ivec2 rsize = r.getSize();
+        if (rpos.x + rsize.x > topRight.x)
+            topRight.x = rpos.x + rsize.x;
+        if (rpos.y + rsize.y > topRight.y)
+            topRight.y = rpos.y + rsize.y;
+    }
+    return topRight;
+}
+
+glm::ivec2 Widget::getSize() {
+    return this->getTopRight() - this->getBottomLeft();
+}
+
+bool Widget::updateEvents() {
     if (hidden)
         return false;
 
     glm::vec2 size = getSize();
-    glm::vec3 absPos = parentAbsPos + getAbsPos(parentSize.x, parentSize.y);
-    
+    glm::vec2 viewportSize = Application::getViewportSize();
+    glm::vec3 absPos = this->absTransform() * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+
     // children
     for (Widget *w : this->children) {
-        if (w->updateEvents(absPos, size))
+        if (w->updateEvents())
             return true;
     }
     // self
     if (Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
         glm::vec2 cursorPos = Input::cursorPos();
-        if (cursorPos.x > absPos.x && cursorPos.x < absPos.x + size.x && cursorPos.y > absPos.y && cursorPos.y < absPos.y + size.y) {
+        glm::ivec2 bottomLeft = this->getBottomLeft() + glm::ivec2(absPos);
+        glm::ivec2 topRight = this->getTopRight() + glm::ivec2(absPos);
+        if (cursorPos.x > bottomLeft.x && cursorPos.x < topRight.x && cursorPos.y > bottomLeft.y && cursorPos.y < topRight.y) {
             return clickHandler();
         }
     }
     return false;
 }
 
-void Widget::updateEvents() {
-    updateEvents(glm::vec3(0.0f), Application::getViewportSize());
-}
-
-glm::vec3 Widget::getAbsPos(int parentWidth, int parentHeight) {
-    glm::vec3 absPos;
+// Widget position relative to the parent
+glm::vec2 Widget::getPos() {
+    glm::vec2 pos;
+    glm::vec2 parentSize;
+    glm::vec2 bottomLeft;
+    if (this->parent) {
+        parentSize = this->parent->getSize();
+        bottomLeft = this->parent->getBottomLeft();
+    } else {
+        parentSize = Application::getViewportSize();
+        bottomLeft = glm::vec2(0);
+    }
+    
     if (placement == Placement::TOP_LEFT || placement == Placement::BOTTOM_LEFT || placement == Placement::CENTER_LEFT) {
-        absPos.x = pos.x;
+        pos.x = this->pos.x + bottomLeft.x;
     } else if (placement == Placement::TOP_RIGHT || placement == Placement::BOTTOM_RIGHT || placement == Placement::CENTER_RIGHT) {
-        absPos.x = parentWidth - pos.x;
+        pos.x = parentSize.x + this->pos.x + bottomLeft.x;
     } else if (placement == Placement::TOP_CENTER || placement == Placement::BOTTOM_CENTER || placement == Placement::CENTER) {
-        absPos.x = parentWidth / 2 + pos.x;
+        pos.x = parentSize.x / 2 + this->pos.x + bottomLeft.x;
     }
     if (placement == Placement::TOP_LEFT || placement == Placement::TOP_RIGHT || placement == Placement::TOP_CENTER) {
-        absPos.y = pos.y;
+        pos.y = parentSize.y + this->pos.y + bottomLeft.y;
     } else if (placement == Placement::BOTTOM_LEFT || placement == Placement::BOTTOM_RIGHT || placement == Placement::BOTTOM_CENTER) {
-        absPos.y = parentHeight - pos.y; 
+        pos.y = this->pos.y + bottomLeft.y;
     } else if (placement == Placement::CENTER_LEFT || placement == Placement::CENTER_RIGHT || placement == Placement::CENTER) {
-        absPos.y = parentHeight / 2 + pos.y;
+        pos.y = parentSize.y / 2 + this->pos.y + bottomLeft.y;
     }
-    return absPos;
+    return pos;
+}
+
+glm::mat4 Widget::absTransform(bool normalize) {
+    glm::mat4 m(1);
+    m = glm::rotate(m, this->rot, glm::vec3(0, 0, 1));
+    if (this->parent)
+        m = m * this->parent->absTransform();
+    m = glm::translate(m, glm::vec3(this->getPos(), 0.0f));
+    m = glm::scale(m, glm::vec3(this->scale, 1.0f));
+    if (normalize) {
+        // Convert the pixel coordinates to normalized coordinates
+        glm::vec2 viewportSize = Application::getViewportSize();
+        m = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y) * m;
+    }
+    return m;
 }

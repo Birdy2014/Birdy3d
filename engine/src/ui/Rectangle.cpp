@@ -1,10 +1,8 @@
 #include "ui/Rectangle.hpp"
 
-
 Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, bool filled, glm::vec4 color) : shader(shader), pos(pos), size(size), depth(depth), filled(filled), color(color) {
     this->hasTexture = false;
     this->isText = false;
-    this->filled = true;
 }
 
 Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, unsigned int textureID) : shader(shader), pos(pos), size(size), depth(depth), textureID(textureID) {
@@ -18,6 +16,14 @@ Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float dept
     this->filled = true;
 }
 
+glm::ivec2 Rectangle::getPos() {
+    return this->pos;
+}
+
+glm::ivec2 Rectangle::getSize() {
+    return this->size;
+}
+
 void Rectangle::resize(glm::ivec2 size) {
     if (this->size != size) {
         this->size = size;
@@ -25,7 +31,7 @@ void Rectangle::resize(glm::ivec2 size) {
     }
 }
 
-void Rectangle::move(glm::ivec2 pos) {
+void Rectangle::setPos(glm::ivec2 pos) {
     if (this->pos != pos) {
         this->pos = pos;
         this->dirty = true;
@@ -47,6 +53,11 @@ void Rectangle::setDepth(float depth) {
     }
 }
 
+void Rectangle::setMove(glm::mat4 move) {
+    this->hasMatrix = true;
+    this->move = move;
+}
+
 void Rectangle::draw() {
     if (!vao || !vbo)
         this->createBuffers();
@@ -63,13 +74,15 @@ void Rectangle::draw() {
     this->shader->use();
     this->shader->setBool("isText", this->isText);
     this->shader->setBool("hasTexture", this->hasTexture);
+    this->shader->setBool("hasMatrix", this->hasMatrix);
+    this->shader->setMat4("move", this->move);
     this->shader->setVec4("color", this->color);
     this->shader->setInt("rectTexture", 0);
     glBindVertexArray(this->vao);
     if (this->filled)
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     else
-        glDrawArrays(GL_LINE_STRIP, 0, 4);
+        glDrawArrays(GL_LINE_LOOP, 0, 4);
 }
 
 void Rectangle::createBuffers() {
@@ -92,27 +105,38 @@ void Rectangle::createBuffers() {
 void Rectangle::updateVBO() {
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    glm::vec2 viewportSize = Application::getViewportSize();
-    float xratio = 2 / viewportSize.x;
-    float yratio = 2 / viewportSize.y;
-    float x = this->pos.x * xratio - 1;
-    float y = 1 - (this->pos.y * yratio);
-    float w = this->size.x * xratio;
-    float h = this->size.y * yratio;
+    float x;
+    float y;
+    float w;
+    float h;
     float d = this->depth;
+    if (this->isText) {
+        glm::vec2 viewportSize = Application::getViewportSize();
+        float xratio = 2 / viewportSize.x;
+        float yratio = 2 / viewportSize.y;
+        x = this->pos.x * xratio - 1;
+        y = this->pos.y * yratio - 1;
+        w = this->size.x * xratio;
+        h = this->size.y * yratio;
+    } else {
+        x = this->pos.x;
+        y = this->pos.y;
+        w = this->size.x;
+        h = this->size.y;
+    }
     if (this->filled) {
         float vertices[] = {
-            x,     y,     d,  0.0f, 0.0f,
-            x,     y - h, d,  0.0f, 1.0f,
-            x + w, y,     d,  1.0f, 0.0f,
-            x + w, y - h, d,  1.0f, 1.0f
+            x,     y,     d,  0.0f, 1.0f,
+            x + w, y,     d,  1.0f, 1.0f,
+            x,     y + h, d,  0.0f, 0.0f,
+            x + w, y + h, d,  1.0f, 0.0f
         };
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
     } else {
         float vertices[] = {
             x,     y,     d,  0.0f, 0.0f,
-            x,     y - h, d,  0.0f, 1.0f,
-            x + w, y - h, d,  1.0f, 1.0f,
+            x,     y + h, d,  0.0f, 1.0f,
+            x + w, y + h, d,  1.0f, 1.0f,
             x + w, y,     d,  1.0f, 0.0f,
         };
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);

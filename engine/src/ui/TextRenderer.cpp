@@ -57,11 +57,12 @@ void TextRenderer::renderText(std::string text, float x, float y, float scale, g
         }
         Character ch = this->chars[*c];
         float xpos = x + ch.bearing.x * scale;
-        float ypos = y - ch.size.y + this->fontSize;
+        //float ypos = y - ch.size.y + this->fontSize;
+        float ypos = y;
         float w = ch.size.x * scale;
         float h = ch.size.y * scale;
 
-        this->rect->move(glm::ivec2(xpos, ypos));
+        this->rect->setPos(glm::ivec2(xpos, ypos));
         this->rect->resize(glm::ivec2(w, h));
         this->rect->setTexture(ch.textureID);
         this->rect->draw();

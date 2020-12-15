@@ -17,7 +17,7 @@ void Input::update() {
     double x, y;
     glfwGetCursorPos(Application::getWindow(), &x, &y);
     Input::lastCursorPos = Input::currentCursorPos;
-    Input::currentCursorPos = glm::vec2(x, y);
+    Input::currentCursorPos = glm::vec2(x, Application::getViewportSize().y - y);
 }
 
 bool Input::keyPressed(int key) {

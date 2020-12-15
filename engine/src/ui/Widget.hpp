@@ -4,7 +4,7 @@
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include "render/Shader.hpp"
-#include "ui/UI_Vertex.hpp"
+#include "ui/Rectangle.hpp"
 
 class Widget {
 public:
@@ -20,38 +20,37 @@ public:
         CENTER
     };
 
+    Widget *parent = nullptr;
     bool hidden = false;
+    glm::vec3 pos;
+    float rot;
+    glm::vec2 scale;
+    Placement placement;
 
-    Widget(Shader *shader, glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT);
-    void addLine(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
-    void addTriangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
-    void addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
-    void addFilledRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec3 color, float depth = 0.0f, float opacity = 1.0f);
+    Widget(Shader *shader, glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT, float rotation = 0.0f, glm::vec2 scale = glm::vec2(1));
+    void addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth = 0.0f);
+    void addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth = 0.0f);
     void addChild(Widget *w) {
+        w->parent = this;
         children.push_back(w);
     }
-    void draw(glm::mat4 move, glm::vec2 parentSize);
     void draw();
-    void fillBuffer();
     void setOnClick(bool (*clickHandler)()) {
         this->clickHandler = clickHandler;
     }
-    bool updateEvents(glm::vec3 parentAbsPos, glm::vec2 parentSize);
-    void updateEvents();
-    glm::vec3 getAbsPos(int parentWidth, int parentHeight);
+    bool updateEvents();
+    glm::ivec2 getSize();
+    glm::vec2 getPos();
+    glm::mat4 absTransform(bool normalize = false);
 
 private:
     Shader *shader;
-    unsigned int lines_VBO, lines_VAO, triangles_VBO, triangles_VAO;
-    float x, y;
-    glm::vec3 pos;
-    std::vector<UI_Vertex> lines;
-    std::vector<UI_Vertex> triangles;
+    std::vector<Rectangle> rectangles;
     std::vector<Widget*> children;
     bool (*clickHandler)();
-    Placement placement;
 
-    glm::vec2 getSize();
+    glm::ivec2 getBottomLeft();
+    glm::ivec2 getTopRight();
 };
 
 #endif

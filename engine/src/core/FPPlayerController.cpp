@@ -56,7 +56,7 @@ void FPPlayerController::update(float deltaTime) {
 	yoffset *= sensitivity;
 
 	this->object->rot.y += xoffset;
-	this->object->rot.x -= yoffset;
+	this->object->rot.x += yoffset;
 
 	float maxPitch = M_PI_2 - 0.001;
 	if(this->object->rot.x > maxPitch)
