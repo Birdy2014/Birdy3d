@@ -7,13 +7,13 @@
 #include <sstream>
 #include <iostream>
 #include <glm/glm.hpp>
+#include <unordered_map>
   
 class Shader {
 public:
     unsigned int ID;
   
-    Shader(const char *vertexPath, const char *fragmentPath);
-    Shader(const char *vertexPath, const char *geometryPath, const char *fragmentPath);
+    Shader(const std::string &shaderPath);
     void use();
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const; 
@@ -29,7 +29,9 @@ public:
     void setMat4(const std::string &name, const glm::mat4 &mat) const;
 
 private:
-    void checkCompileErrors(unsigned int shader, std::string type);
+    bool checkCompileErrors(GLuint shader, GLenum type);
+    std::unordered_map<GLenum, std::string> preprocess(std::string &shaderSource);
+    void compile(std::unordered_map<GLenum, std::string> &shaderSources);
 };
 
 #endif

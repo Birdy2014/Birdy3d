@@ -13,11 +13,11 @@ int main() {
 	Input::init();
 
 	// Shaders
-	Shader geometryShader("./shaders/gBuffer.vs", "./shaders/gBuffer.fs");
-	Shader lightingShader("./shaders/lighting.vs", "./shaders/lighting.fs");
-	Shader dirLightDepthShader("./shaders/dDepth.vs", "./shaders/dDepth.fs");
-	Shader pointLightDepthShader("./shaders/pDepth.vs", "./shaders/pDepth.gs", "./shaders/pDepth.fs");
-	Shader uiShader("./shaders/ui.vs", "./shaders/ui.fs");
+	Shader geometryShader("./shaders/gBuffer.glsl");
+	Shader lightingShader("./shaders/lighting.glsl");
+	Shader dirLightDepthShader("./shaders/dDepth.glsl");
+	Shader pointLightDepthShader("./shaders/pDepth.glsl");
+	Shader uiShader("./shaders/ui.glsl");
 
 	// lightShader configuration
 	lightingShader.use();
