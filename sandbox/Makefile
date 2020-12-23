@@ -22,6 +22,7 @@ run: all
 
 clean:
 	rm -r $(OUTDIR)
+	make -C $(ENGINEDIR) -f $(ENGINEDIR)/Makefile clean
 
 $(OUTDIR)/bin/libBirdy3d.so:
 	make -C $(ENGINEDIR) -f $(ENGINEDIR)/Makefile

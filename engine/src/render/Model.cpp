@@ -20,7 +20,7 @@ void Model::renderDepth(Shader *shader) {
 
 void Model::loadModel(std::string path) {
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords);
+    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
@@ -51,7 +51,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // process vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
-        glm::vec3 position, normal;
+        glm::vec3 position, normal, tangent;
         position.x = mesh->mVertices[i].x;
         position.y = mesh->mVertices[i].y;
         position.z = mesh->mVertices[i].z;
@@ -60,6 +60,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         normal.y = mesh->mNormals[i].y;
         normal.z = mesh->mNormals[i].z;
         vertex.normal = normal;
+        tangent.x = mesh->mTangents[i].x;
+        tangent.y = mesh->mTangents[i].y;
+        tangent.z = mesh->mTangents[i].z;
+        vertex.tangent = tangent;
         if (mesh->mTextureCoords[0]) {
             glm::vec2 texCoords;
             texCoords.x = mesh->mTextureCoords[0][i].x;

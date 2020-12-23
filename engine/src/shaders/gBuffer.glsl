@@ -3,10 +3,12 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
+layout (location = 3) in vec3 aTangent;
 
 out vec3 FragPos;
 out vec2 TexCoords;
 out vec3 Normal;
+out mat3 TBN;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -19,7 +21,12 @@ void main()
     TexCoords = aTexCoords;
     
     mat3 normalMatrix = transpose(inverse(mat3(model)));
-    Normal = normalMatrix * aNormal;
+    vec3 T = normalize(normalMatrix * aTangent);
+    Normal = normalize(normalMatrix * aNormal);
+    T = normalize(T - dot(T, Normal) * Normal);
+    vec3 B = cross(Normal, T);
+
+    TBN = mat3(T, B, Normal);
 
     gl_Position = projection * view * worldPos;
 }
@@ -33,26 +40,26 @@ layout (location = 2) out vec4 gAlbedoSpec;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+in mat3 TBN;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
+uniform sampler2D texture_normal1;
 uniform bool useTexture;
 uniform vec3 color;
 uniform float specular;
 
 void main()
 {    
-    // store the fragment position vector in the first gbuffer texture
     gPosition = FragPos;
-    // also store the per-fragment normals into the gbuffer
-    gNormal = normalize(Normal);
     if (useTexture) {
-        // and the diffuse per-fragment color
         gAlbedoSpec.rgb = texture(texture_diffuse1, TexCoords).rgb;
-        // store specular intensity in gAlbedoSpec's alpha component
         gAlbedoSpec.a = texture(texture_specular1, TexCoords).r;
+        //gNormal = TBN * normalize(texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
+        gNormal = normalize(TBN * texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
     } else {
         gAlbedoSpec.rgb = color;
         gAlbedoSpec.a = specular;
+        gNormal = normalize(Normal);
     }
 }
