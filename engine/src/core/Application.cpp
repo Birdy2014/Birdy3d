@@ -4,7 +4,7 @@
 #include "core/Input.hpp"
 
 GLFWwindow *Application::window = nullptr;
-EventHandler<framebufferSizeArg> *Application::framebufferSizeEventHandler = nullptr;
+EventDispatcher<Application::EventArg> *Application::eventDispatcher = nullptr;
 
 bool Application::init(const char *windowName, int width, int height) {
 	glfwInit();
@@ -36,14 +36,14 @@ bool Application::init(const char *windowName, int width, int height) {
 	glViewport(0, 0, width, height);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetWindowFocusCallback(window, window_focus_callback);
-	framebufferSizeEventHandler = new EventHandler<framebufferSizeArg>();
+	eventDispatcher = new EventDispatcher<Application::EventArg>();
 
 	return true;
 }
 
 void Application::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
-	framebufferSizeEventHandler->emitEvent({ width, height });
+	eventDispatcher->emitEvent(Application::EVENT_FRAMEBUFFER_SIZE, { width, height });
 }
 
 void Application::window_focus_callback(GLFWwindow *window, int focused) {
@@ -60,8 +60,8 @@ GLFWwindow *Application::getWindow() {
 	return window;
 }
 
-EventHandler<framebufferSizeArg> *Application::getFramebufferSizeEventHandler() {
-	return framebufferSizeEventHandler;
+void *Application::registerEvent(Application::EventTypes type, std::function<void(Application::EventArg)> callback) {
+	eventDispatcher->addHandler(type, callback);
 }
 
 glm::vec2 Application::getViewportSize() {

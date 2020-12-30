@@ -11,7 +11,7 @@ FPPlayerController::FPPlayerController() {
 
 void FPPlayerController::start() {
 	this->cam = this->object->getComponent<Camera>();
-	Application::getFramebufferSizeEventHandler()->addHandler([&](framebufferSizeArg arg) {
+	Application::registerEvent(Application::EVENT_FRAMEBUFFER_SIZE, [&](Application::EventArg arg) {
 		this->cam->resize(arg.width, arg.height);
 	});
 	Input::setCursorHidden(true);
