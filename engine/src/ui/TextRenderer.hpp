@@ -20,7 +20,8 @@ class TextRenderer {
 public:
     ~TextRenderer();
     bool init(Shader *shader, std::string path, unsigned int fontSize);
-    void renderText(std::string text, float x, float y, float scale, glm::vec4 color);
+    void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color);
+    void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move);
 
 private:
     std::map<char, Character> chars;

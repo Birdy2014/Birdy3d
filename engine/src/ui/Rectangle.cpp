@@ -1,17 +1,17 @@
 #include "ui/Rectangle.hpp"
 
-Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, bool filled, glm::vec4 color) : shader(shader), pos(pos), size(size), depth(depth), filled(filled), color(color) {
+Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color) : shader(shader), pos(pos), size(size), filled(filled), color(color) {
     this->hasTexture = false;
     this->isText = false;
 }
 
-Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, unsigned int textureID) : shader(shader), pos(pos), size(size), depth(depth), textureID(textureID) {
+Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, unsigned int textureID) : shader(shader), pos(pos), size(size), textureID(textureID) {
     this->hasTexture = true;
     this->filled = true;
     this->isText = false;
 }
 
-Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, glm::vec4 textColor, unsigned int charTexture) : shader(shader), pos(pos), size(size), depth(depth), color(textColor), textureID(charTexture) {
+Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, glm::vec4 textColor, unsigned int charTexture) : shader(shader), pos(pos), size(size), color(textColor), textureID(charTexture) {
     this->isText = true;
     this->filled = true;
 }
@@ -46,13 +46,6 @@ void Rectangle::setColor(glm::vec4 color) {
     this->color = color;
 }
 
-void Rectangle::setDepth(float depth) {
-    if (this->depth != depth) {
-        this->depth = depth;
-        this->dirty = true;
-    }
-}
-
 void Rectangle::setMove(glm::mat4 move) {
     this->hasMatrix = true;
     this->move = move;
@@ -67,6 +60,7 @@ void Rectangle::draw() {
         this->updateVBO();
     }
 
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glActiveTexture(GL_TEXTURE0);
@@ -86,7 +80,7 @@ void Rectangle::draw() {
 }
 
 void Rectangle::createBuffers() {
-    float vertices[4 * 5];
+    float vertices[4 * 4];
     // Create buffers
     glGenVertexArrays(1, &this->vao);
     glGenBuffers(1, &this->vbo);
@@ -96,48 +90,33 @@ void Rectangle::createBuffers() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
     // vertex positions
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     // vertex colors
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
 void Rectangle::updateVBO() {
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    float x;
-    float y;
-    float w;
-    float h;
-    float d = this->depth;
-    if (this->isText) {
-        glm::vec2 viewportSize = Application::getViewportSize();
-        float xratio = 2 / viewportSize.x;
-        float yratio = 2 / viewportSize.y;
-        x = this->pos.x * xratio - 1;
-        y = this->pos.y * yratio - 1;
-        w = this->size.x * xratio;
-        h = this->size.y * yratio;
-    } else {
-        x = this->pos.x;
-        y = this->pos.y;
-        w = this->size.x;
-        h = this->size.y;
-    }
+    float x = this->pos.x;
+    float y = this->pos.y;
+    float w = this->size.x;
+    float h = this->size.y;
     if (this->filled) {
         float vertices[] = {
-            x,     y,     d,  0.0f, 1.0f,
-            x + w, y,     d,  1.0f, 1.0f,
-            x,     y + h, d,  0.0f, 0.0f,
-            x + w, y + h, d,  1.0f, 0.0f
+            x,     y,     0.0f, 1.0f,
+            x + w, y,     1.0f, 1.0f,
+            x,     y + h, 0.0f, 0.0f,
+            x + w, y + h, 1.0f, 0.0f
         };
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
     } else {
         float vertices[] = {
-            x,     y,     d,  0.0f, 0.0f,
-            x,     y + h, d,  0.0f, 1.0f,
-            x + w, y + h, d,  1.0f, 1.0f,
-            x + w, y,     d,  1.0f, 0.0f,
+            x,     y,     0.0f, 0.0f,
+            x,     y + h, 0.0f, 1.0f,
+            x + w, y + h, 1.0f, 1.0f,
+            x + w, y,     1.0f, 0.0f,
         };
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
     }

@@ -11,12 +11,16 @@ Widget::Widget(Shader *shader, glm::vec3 pos, Placement placement, float rotatio
     this->scale = scale;
 }
 
-void Widget::addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth) {
-    this->rectangles.push_back(Rectangle(this->shader, pos, size, depth, false, color));
+void Widget::addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color) {
+    this->rectangles.push_back(Rectangle(this->shader, pos, size, false, color));
 }
 
-void Widget::addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth) {
-    this->rectangles.push_back(Rectangle(this->shader, pos, size, depth, true, color));
+void Widget::addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color) {
+    this->rectangles.push_back(Rectangle(this->shader, pos, size, true, color));
+}
+
+void Widget::addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color) {
+    this->texts.push_back(Widget::Text{pos, fontSize, text, color});
 }
 
 void Widget::draw() {
@@ -25,10 +29,16 @@ void Widget::draw() {
 
     glm::mat4 move = this->absTransform(true);
 
+    // draw self
     for (Rectangle r : this->rectangles) {
         r.setMove(move);
         r.draw();
     }
+
+    for (Widget::Text t : this->texts) {
+        this->textRenderer->renderText(t.text, t.pos.x, t.pos.y, t.fontSize, t.color, move);
+    }
+
     // draw children
     glm::vec2 size = getSize();
     for (Widget *w : children) {

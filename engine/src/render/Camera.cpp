@@ -42,6 +42,7 @@ void Camera::render() {
     glm::vec3 up = this->object->absUp();
     glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
 
+    glEnable(GL_DEPTH_TEST);
     // 1. geometry pass: render all geometric/color data to g-buffer
 	glDisable(GL_BLEND);
     glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);

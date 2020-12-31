@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "render/Shader.hpp"
 #include "ui/Rectangle.hpp"
+#include "ui/TextRenderer.hpp"
 
 class Widget {
 public:
@@ -20,16 +21,25 @@ public:
         CENTER
     };
 
+    struct Text {
+        glm::vec2 pos;
+        float fontSize;
+        std::string text;
+        glm::vec4 color;
+    };
+
     Widget *parent = nullptr;
     bool hidden = false;
     glm::vec3 pos;
     float rot;
     glm::vec2 scale;
     Placement placement;
+    TextRenderer *textRenderer; // TODO: move to RessourceManager
 
     Widget(Shader *shader, glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT, float rotation = 0.0f, glm::vec2 scale = glm::vec2(1));
-    void addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth = 0.0f);
-    void addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color, float depth = 0.0f);
+    void addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color);
+    void addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color);
+    void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color);
     void addChild(Widget *w) {
         w->parent = this;
         children.push_back(w);
@@ -46,6 +56,7 @@ public:
 private:
     Shader *shader;
     std::vector<Rectangle> rectangles;
+    std::vector<Widget::Text> texts;
     std::vector<Widget*> children;
     bool (*clickHandler)();
 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 TextRenderer::~TextRenderer() {
     FT_Done_Face(this->face);
@@ -19,13 +20,13 @@ bool TextRenderer::init(Shader *shader, std::string path, unsigned int fontSize)
         return -1;
     }
     FT_Set_Pixel_Sizes(face, 0, fontSize);
-    this->rect = new Rectangle(shader, glm::ivec2(0), glm::ivec2(0), 0, glm::vec4(1), 0);
+    this->rect = new Rectangle(shader, glm::ivec2(0), glm::ivec2(0), glm::vec4(1), 0);
 }
 
 bool TextRenderer::addChar(char c) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     if (FT_Load_Char(this->face, c, FT_LOAD_RENDER)) {
-        std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+        std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
         return false;
     }
     // generate texture
@@ -48,16 +49,22 @@ bool TextRenderer::addChar(char c) {
     this->chars.insert(std::pair<char, Character>(c, character));
 }
 
-void TextRenderer::renderText(std::string text, float x, float y, float scale, glm::vec4 color) {
-    this->rect->setDepth(0);
+void TextRenderer::renderText(std::string text, float x, float y, float fontSize, glm::vec4 color) {
+    glm::vec2 viewportSize = Application::getViewportSize();
+    glm::mat4 m = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
+    this->renderText(text, x, y, fontSize, color, m);
+}
+
+void TextRenderer::renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move) {
+    float scale = (fontSize / this->fontSize);
     this->rect->setColor(color);
+    this->rect->setMove(move);
     for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
         if (chars.count(*c) == 0) {
             this->addChar(*c);
         }
         Character ch = this->chars[*c];
         float xpos = x + ch.bearing.x * scale;
-        //float ypos = y - ch.size.y + this->fontSize;
         float ypos = y;
         float w = ch.size.x * scale;
         float h = ch.size.y * scale;

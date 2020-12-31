@@ -8,16 +8,15 @@
 
 class Rectangle {
 public:
-    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, bool filled, glm::vec4 color);
-    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, unsigned int textureID);
-    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, float depth, glm::vec4 textColor, unsigned int charTexture);
+    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color);
+    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, unsigned int textureID);
+    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, glm::vec4 textColor, unsigned int charTexture);
     glm::ivec2 getPos();
     glm::ivec2 getSize();
     void resize(glm::ivec2 size);
     void setPos(glm::ivec2 pos);
     void setTexture(unsigned int textureID);
     void setColor(glm::vec4 color);
-    void setDepth(float depth);
     void setMove(glm::mat4 move);
     void draw();
 
@@ -30,7 +29,6 @@ private:
     glm::ivec2 pos;
     glm::ivec2 size;
     glm::mat4 move;
-    int depth;
     bool filled;
     bool hasTexture;
     bool isText;
