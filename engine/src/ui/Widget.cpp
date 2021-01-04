@@ -36,7 +36,7 @@ void Widget::draw() {
     }
 
     for (Widget::Text t : this->texts) {
-        this->textRenderer->renderText(t.text, t.pos.x, t.pos.y, t.fontSize, t.color, move);
+        Application::getTextRenderer()->renderText(t.text, t.pos.x, t.pos.y, t.fontSize, t.color, move);
     }
 
     // draw children

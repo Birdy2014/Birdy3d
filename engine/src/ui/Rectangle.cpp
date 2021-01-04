@@ -1,5 +1,6 @@
 #include "ui/Rectangle.hpp"
 
+#include "core/Application.hpp"
 #include "core/RessourceManager.hpp"
 
 Rectangle::Rectangle(glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color) : pos(pos), size(size), filled(filled), color(color) {

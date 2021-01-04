@@ -7,14 +7,10 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 int main() {
-	if (!Application::init("Birdy3d", 800, 600)) {
+	if (!Application::init("Birdy3d", 800, 600, "TTF/DejaVuSans.ttf", 30)) {
 		return -1;
 	}
 	Input::init();
-
-	// TextRenderer
-	TextRenderer textRenderer;
-	textRenderer.init("/usr/share/fonts/TTF/DejaVuSans.ttf", 30);
 
 	// UI
 	Widget canvas(glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
@@ -32,7 +28,6 @@ int main() {
 	});
 	closeButton.addFilledRectangle(glm::vec2(-20.0, -20.0), glm::vec2(40.0, 40.0), glm::vec4(1.0f));
 	closeButton.addRectangle(glm::vec2(-20.0, -20.0), glm::vec2(40.0, 40.0), glm::vec4(1, 0, 0, 1));
-	closeButton.textRenderer = &textRenderer;
 	closeButton.addText(glm::vec2(-20, -10), 20, "Quit", glm::vec4(0, 1, 1, 1));
 	canvas.addChild(&closeButton);
 
@@ -88,7 +83,7 @@ int main() {
 		// draw the object
 		player->getComponent<Camera>()->render();
 
-		textRenderer.renderText("Hello World", 0, 0, 30, glm::vec4(1));
+		Application::getTextRenderer()->renderText("Hello World", 0, 0, 30, glm::vec4(1));
 
 		// swap Buffers
     	glfwSwapBuffers(Application::getWindow());

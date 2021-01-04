@@ -18,8 +18,8 @@ struct Character {
 
 class TextRenderer {
 public:
+    TextRenderer(std::string path, unsigned int fontSize);
     ~TextRenderer();
-    bool init(std::string path, unsigned int fontSize);
     void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color);
     void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move);
 

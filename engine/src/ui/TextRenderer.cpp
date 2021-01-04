@@ -1,5 +1,6 @@
 #include "ui/TextRenderer.hpp"
 
+#include "core/Application.hpp"
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,16 +10,12 @@ TextRenderer::~TextRenderer() {
     FT_Done_FreeType(this->ft);
 }
 
-bool TextRenderer::init(std::string path, unsigned int fontSize) {
+TextRenderer::TextRenderer(std::string path, unsigned int fontSize) {
     this->fontSize = fontSize;
-    if (FT_Init_FreeType(&this->ft)) {
+    if (FT_Init_FreeType(&this->ft))
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-        return false;
-    }
-    if (FT_New_Face(this->ft, path.c_str(), 0, &this->face)) {
+    if (FT_New_Face(this->ft, path.c_str(), 0, &this->face))
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-        return -1;
-    }
     FT_Set_Pixel_Sizes(face, 0, fontSize);
     this->rect = new Rectangle(glm::ivec2(0), glm::ivec2(0), glm::vec4(1), 0);
 }

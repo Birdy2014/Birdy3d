@@ -2,11 +2,13 @@
 
 #include <iostream>
 #include "core/Input.hpp"
+#include "core/RessourceManager.hpp"
 
 GLFWwindow *Application::window = nullptr;
 EventDispatcher<Application::EventArg> *Application::eventDispatcher = nullptr;
+TextRenderer *Application::textRenderer = nullptr;
 
-bool Application::init(const char *windowName, int width, int height) {
+bool Application::init(const char *windowName, int width, int height, const std::string &font, unsigned int fontSize) {
 	glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -36,7 +38,10 @@ bool Application::init(const char *windowName, int width, int height) {
 	glViewport(0, 0, width, height);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetWindowFocusCallback(window, window_focus_callback);
+
+	// Init variables
 	eventDispatcher = new EventDispatcher<Application::EventArg>();
+	textRenderer = new TextRenderer(RessourceManager::getFontPath(font), fontSize);
 
 	return true;
 }
@@ -68,4 +73,8 @@ glm::vec2 Application::getViewportSize() {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     return glm::vec2(viewport[2], viewport[3]);
+}
+
+TextRenderer *Application::getTextRenderer() {
+	return textRenderer;
 }

@@ -34,7 +34,6 @@ public:
     float rot;
     glm::vec2 scale;
     Placement placement;
-    TextRenderer *textRenderer; // TODO: move to RessourceManager
 
     Widget(glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT, float rotation = 0.0f, glm::vec2 scale = glm::vec2(1));
     void addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color);

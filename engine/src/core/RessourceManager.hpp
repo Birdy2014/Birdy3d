@@ -8,6 +8,7 @@
 class RessourceManager {
 public:
     static Shader *getShader(const std::string &name);
+    static std::string getFontPath(std::string name);
 
 private:
     enum class RessourceType {

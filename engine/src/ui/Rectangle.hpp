@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include "render/Shader.hpp"
-#include "core/Application.hpp"
 
 class Rectangle {
 public:

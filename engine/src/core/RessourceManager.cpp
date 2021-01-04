@@ -21,6 +21,10 @@ Shader *RessourceManager::getShader(const std::string &name) {
     return shader;
 }
 
+std::string RessourceManager::getFontPath(std::string name) {
+    return getRessourcePath(name, RessourceType::FONT);
+}
+
 Shader *RessourceManager::loadShader(std::string name) {
     std::string path = getRessourcePath(name, RessourceType::SHADER);
     Shader *s = new Shader(readFile(path));
@@ -64,6 +68,7 @@ std::string RessourceManager::getRessourcePath(std::string &name, RessourceType 
             break;
         case RessourceType::FONT:
             subdir = "fonts/";
+            default_dir = "/usr/share/fonts/";
             if (extension.size() == 0)
                 extension = ".ttf";
             break;
