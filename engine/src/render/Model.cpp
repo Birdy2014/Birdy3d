@@ -1,5 +1,7 @@
 #include "render/Model.hpp"
 
+#include "core/Logger.hpp"
+
 void Model::render() {
     glm::mat4 model = this->object->absTransform();
     this->object->shader->use();
@@ -23,7 +25,7 @@ void Model::loadModel(std::string path) {
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+        Logger::error(std::string("ASSIMP: ") + importer.GetErrorString());
         return;
     }
     directory = path.substr(0, path.find_last_of('/'));
@@ -120,7 +122,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
             }
         }
         if (!skip) {
-            Texture texture((directory + "/" + std::string(str.C_Str())).c_str(), typeName, std::string(str.C_Str()));
+            Texture texture(directory + "/" + std::string(str.C_Str()), typeName, std::string(str.C_Str()));
             textures.push_back(texture);
             textures_loaded.push_back(texture);
         }

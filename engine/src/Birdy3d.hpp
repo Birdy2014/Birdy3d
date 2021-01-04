@@ -5,6 +5,7 @@
 #include "core/GameObject.hpp"
 #include "core/Component.hpp"
 #include "core/FPPlayerController.hpp"
+#include "core/Logger.hpp"
 
 // Renderer
 #include "render/Camera.hpp"

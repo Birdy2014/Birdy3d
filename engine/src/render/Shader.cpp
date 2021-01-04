@@ -1,9 +1,10 @@
 #include "render/Shader.hpp"
 
+#include "core/Logger.hpp"
 #include <cstring>
 #include <algorithm>
 
-Shader::Shader(const std::string &shaderSource) {
+Shader::Shader(const std::string &shaderSource, const std::string &name) : name(name) {
     std::unordered_map<GLenum, std::string> shaderSources = preprocess(shaderSource);
     compile(shaderSources);
 }
@@ -19,21 +20,21 @@ bool Shader::checkCompileErrors(GLuint shader, GLenum type) {
     else if (type == 0)
         typeString = "program";
     else
-        std::cout << "ERROR: invalid shader type" << std::endl;
+        Logger::warn("invalid shader type");
     int success;
     char infoLog[1024];
     if (type != 0) {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << typeString << "\n" << infoLog << std::endl;
+            Logger::warn("shader compilation error: name: " + name + " type: " + typeString + "\n" + infoLog);
             return true;
         }
     } else {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-            std::cout << "ERROR::PROGRAM_LINKING_ERROR: " << "\n" << infoLog << std::endl;
+            Logger::warn("program linking error: name: " + name + "\n" + infoLog);
             return true;
         }
     }
@@ -58,7 +59,7 @@ std::unordered_map<GLenum, std::string> Shader::preprocess(const std::string &sh
         else if (type == "fragment")
             typeEnum = GL_FRAGMENT_SHADER;
         else
-            std::cout << "ERROR: Invalid shader type" << std::endl;
+            Logger::warn("Invalid shader type");
 
         pos = shaderSource.find(typeToken, nextLine);
         unsigned int lineNr = std::count(shaderSource.begin(), shaderSource.begin() + nextLine, '\n');

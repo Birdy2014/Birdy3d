@@ -1,5 +1,6 @@
 #include "core/RessourceManager.hpp"
 
+#include "core/Logger.hpp"
 #include <filesystem>
 #include <string>
 #include <algorithm>
@@ -27,14 +28,14 @@ std::string RessourceManager::getFontPath(std::string name) {
 
 Shader *RessourceManager::loadShader(std::string name) {
     std::string path = getRessourcePath(name, RessourceType::SHADER);
-    Shader *s = new Shader(readFile(path));
+    Shader *s = new Shader(readFile(path), name);
     shaders[name] = s;
     return s;
 }
 
 std::string RessourceManager::getRessourcePath(std::string &name, RessourceType type) {
     if (name.size() == 0) {
-        std::cout << "ERROR: invalid ressource name" << std::endl;
+        Logger::error("invalid ressource name");
         return nullptr;
     }
 
@@ -83,7 +84,7 @@ std::string RessourceManager::getRessourcePath(std::string &name, RessourceType 
     if (std::filesystem::exists(default_dir + name + extension))
         return default_dir + name + extension;
 
-    std::cout << "ERROR: can't find ressource " << name << std::endl;
+    Logger::error("can't find ressource " + name);
     return "";
 }
 
@@ -108,7 +109,7 @@ std::string RessourceManager::readFile(const std::string &path, bool convertEOL)
         if (convertEOL)
             content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
     } catch (std::ifstream::failure &e) {
-        std::cout << "ERROR: Failed to read file " << path << std::endl;
+        Logger::error("Failed to read file " + path);
     }
     return content;
 }

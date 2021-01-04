@@ -1,7 +1,7 @@
 #include "core/Application.hpp"
 
-#include <iostream>
 #include "core/Input.hpp"
+#include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 
 GLFWwindow *Application::window = nullptr;
@@ -17,7 +17,7 @@ bool Application::init(const char *windowName, int width, int height, const std:
 	// Create Window
 	Application::window = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
 	if (window == nullptr) {
-    	std::cout << "Failed to create GLFW window" << std::endl;
+    	Logger::error("Failed to create GLFW window");
     	glfwTerminate();
     	return false;
 	}
@@ -25,7 +25,7 @@ bool Application::init(const char *windowName, int width, int height, const std:
 
 	// Load OpenGL
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    	std::cout << "Failed to initialize GLAD" << std::endl;
+    	Logger::error("Failed to initialize GLAD");
     	return false;
 	}
 

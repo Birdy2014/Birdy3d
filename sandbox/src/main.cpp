@@ -16,7 +16,7 @@ int main() {
 	Widget canvas(glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
 	canvas.hidden = true;
 	canvas.setOnClick([]() {
-		std::cout << "Canvas clicked" << std::endl;
+		Logger::debug("Canvas clicked");
 		return false;
 	});
 	canvas.addRectangle(glm::vec3(-100), glm::vec3(200), glm::vec4(1));

@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "core/GameObject.hpp"
+#include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Model.hpp"
 #include "render/DirectionalLight.hpp"
@@ -128,7 +129,7 @@ void Camera::createGBuffer() {
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 	// finally check if framebuffer is complete
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "Framebuffer not complete!" << std::endl;
+		Logger::error("Framebuffer not complete!");
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

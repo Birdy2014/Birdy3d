@@ -1,7 +1,7 @@
 #include "ui/TextRenderer.hpp"
 
 #include "core/Application.hpp"
-#include <iostream>
+#include "core/Logger.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -13,9 +13,9 @@ TextRenderer::~TextRenderer() {
 TextRenderer::TextRenderer(std::string path, unsigned int fontSize) {
     this->fontSize = fontSize;
     if (FT_Init_FreeType(&this->ft))
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        Logger::error("freetype: Could not init FreeType Library");
     if (FT_New_Face(this->ft, path.c_str(), 0, &this->face))
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+        Logger::error("freetype: Failed to load font");
     FT_Set_Pixel_Sizes(face, 0, fontSize);
     this->rect = new Rectangle(glm::ivec2(0), glm::ivec2(0), glm::vec4(1), 0);
 }
@@ -23,7 +23,7 @@ TextRenderer::TextRenderer(std::string path, unsigned int fontSize) {
 bool TextRenderer::addChar(char c) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     if (FT_Load_Char(this->face, c, FT_LOAD_RENDER)) {
-        std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
+        Logger::warn("freetype: Failed to load Glyph " + (unsigned)c);
         return false;
     }
     // generate texture

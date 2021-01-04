@@ -1,9 +1,9 @@
 #ifndef BIRDY3D_TEXTURE_HPP
 #define BIRDY3D_TEXTURE_HPP
 
+#include "core/Logger.hpp"
 #include <glad/glad.h>
 #include "stb_image.h"
-#include <iostream>
 
 class Texture {
 public:
@@ -11,10 +11,10 @@ public:
 	std::string type, path;
     int width, height, nrChannels;
     
-    Texture(const char *filePath, std::string type, std::string path) {
+    Texture(const std::string &filePath, std::string type, std::string path) {
 		this->type = type;
 		this->path = path;
-	    unsigned char *data = stbi_load(filePath, &this->width, &this->height, &this->nrChannels, 0);
+	    unsigned char *data = stbi_load(filePath.data(), &this->width, &this->height, &this->nrChannels, 0);
 
 		if (data) {
 			GLenum format;
@@ -36,7 +36,7 @@ public:
         	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	    } else {
-	    	std::cout << "Failed to load texture at: " << filePath << std::endl;
+	    	Logger::warn("Failed to load texture at: " + filePath);
 	    }
 	    stbi_image_free(data);
     }
