@@ -1,6 +1,7 @@
 #include "render/Shader.hpp"
 
 #include "core/Logger.hpp"
+#include "core/RessourceManager.hpp"
 #include <cstring>
 #include <algorithm>
 
@@ -41,10 +42,24 @@ bool Shader::checkCompileErrors(GLuint shader, GLenum type) {
     return false;
 }
 
-std::unordered_map<GLenum, std::string> Shader::preprocess(const std::string &shaderSource) {
+std::unordered_map<GLenum, std::string> Shader::preprocess(std::string shaderSource) {
+    // include
+    const char *includeToken = "#include";
+    size_t pos = shaderSource.find(includeToken, 0);
+    while (pos != std::string::npos) {
+        size_t eol = shaderSource.find_first_of('\n', pos);
+        size_t pathStart = pos + strlen(includeToken) + 1;
+        std::string includePath = shaderSource.substr(pathStart, eol - pathStart);
+        std::string fileContent = RessourceManager::readFile(RessourceManager::getRessourcePath(includePath, RessourceManager::RessourceType::SHADER));
+        shaderSource.erase(pos, eol - pos + 1);
+        shaderSource.insert(pos, fileContent);
+        pos = shaderSource.find(includeToken, pos + 1);
+    }
+
+    // type
     std::unordered_map<GLenum, std::string> shaderSources;
     const char *typeToken = "#type";
-    size_t pos = shaderSource.find(typeToken, 0);
+    pos = shaderSource.find(typeToken, 0);
     while (pos != std::string::npos) {
         size_t eol = shaderSource.find_first_of('\n', pos);
         size_t nextLine = shaderSource.find_first_not_of('\n', eol);

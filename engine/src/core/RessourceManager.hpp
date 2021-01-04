@@ -7,10 +7,6 @@
 
 class RessourceManager {
 public:
-    static Shader *getShader(const std::string &name);
-    static std::string getFontPath(std::string name);
-
-private:
     enum class RessourceType {
         SHADER,
         TEXTURE,
@@ -18,12 +14,16 @@ private:
         FONT
     };
 
+    static Shader *getShader(const std::string &name);
+    static std::string getFontPath(std::string name);
+    static std::string getRessourcePath(std::string &name, RessourceType type);
+    static std::string readFile(const std::string &path, bool convertEOL = true);
+
+private:
     static std::unordered_map<std::string, Shader*> shaders;
 
     static Shader *loadShader(std::string name);
-    static std::string getRessourcePath(std::string &name, RessourceType type);
     static std::string getExecutableDir();
-    static std::string readFile(const std::string &path, bool convertEOL = true);
 };
 
 #endif

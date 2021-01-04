@@ -32,7 +32,7 @@ private:
     std::string name;
 
     bool checkCompileErrors(GLuint shader, GLenum type);
-    std::unordered_map<GLenum, std::string> preprocess(const std::string &shaderSource);
+    std::unordered_map<GLenum, std::string> preprocess(std::string shaderSource);
     void compile(std::unordered_map<GLenum, std::string> &shaderSources);
 };
 
