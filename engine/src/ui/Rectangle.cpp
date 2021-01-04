@@ -1,17 +1,22 @@
 #include "ui/Rectangle.hpp"
 
-Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color) : shader(shader), pos(pos), size(size), filled(filled), color(color) {
+#include "core/RessourceManager.hpp"
+
+Rectangle::Rectangle(glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color) : pos(pos), size(size), filled(filled), color(color) {
+    this->shader = RessourceManager::getShader("ui");
     this->hasTexture = false;
     this->isText = false;
 }
 
-Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, unsigned int textureID) : shader(shader), pos(pos), size(size), textureID(textureID) {
+Rectangle::Rectangle(glm::ivec2 pos, glm::ivec2 size, unsigned int textureID) : pos(pos), size(size), textureID(textureID) {
+    this->shader = RessourceManager::getShader("ui");
     this->hasTexture = true;
     this->filled = true;
     this->isText = false;
 }
 
-Rectangle::Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, glm::vec4 textColor, unsigned int charTexture) : shader(shader), pos(pos), size(size), color(textColor), textureID(charTexture) {
+Rectangle::Rectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 textColor, unsigned int charTexture) : pos(pos), size(size), color(textColor), textureID(charTexture) {
+    this->shader = RessourceManager::getShader("ui");
     this->isText = true;
     this->filled = true;
 }

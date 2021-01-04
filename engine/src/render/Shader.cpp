@@ -3,16 +3,7 @@
 #include <cstring>
 #include <algorithm>
 
-Shader::Shader(const std::string &shaderPath) {
-    std::ifstream shaderFile;
-    std::string shaderSource;
-    try {
-        shaderFile.open(shaderPath);
-        shaderSource.assign(std::istreambuf_iterator<char>(shaderFile), std::istreambuf_iterator<char>());
-        shaderSource.erase(std::remove(shaderSource.begin(), shaderSource.end(), '\r'), shaderSource.end());
-    } catch (std::ifstream::failure &e) {
-        std::cout << "ERROR: Failed to read shader source";
-    }
+Shader::Shader(const std::string &shaderSource) {
     std::unordered_map<GLenum, std::string> shaderSources = preprocess(shaderSource);
     compile(shaderSources);
 }
@@ -49,7 +40,7 @@ bool Shader::checkCompileErrors(GLuint shader, GLenum type) {
     return false;
 }
 
-std::unordered_map<GLenum, std::string> Shader::preprocess(std::string &shaderSource) {
+std::unordered_map<GLenum, std::string> Shader::preprocess(const std::string &shaderSource) {
     std::unordered_map<GLenum, std::string> shaderSources;
     const char *typeToken = "#type";
     size_t pos = shaderSource.find(typeToken, 0);

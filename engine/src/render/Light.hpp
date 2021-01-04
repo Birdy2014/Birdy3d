@@ -18,8 +18,8 @@ public:
         this->outerCutOff = outerCutOff;
     }
 
-    Light(Shader *depthShader) : Component() {
-        this->depthShader = depthShader;
+    Light() : Component() {
+        this->depthShader = nullptr;
         this->type = 0;
         this->direction = glm::vec3(1.0f);
         this->ambient = glm::vec3(1.0f);

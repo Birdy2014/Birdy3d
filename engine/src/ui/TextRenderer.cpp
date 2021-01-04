@@ -9,7 +9,7 @@ TextRenderer::~TextRenderer() {
     FT_Done_FreeType(this->ft);
 }
 
-bool TextRenderer::init(Shader *shader, std::string path, unsigned int fontSize) {
+bool TextRenderer::init(std::string path, unsigned int fontSize) {
     this->fontSize = fontSize;
     if (FT_Init_FreeType(&this->ft)) {
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
@@ -20,7 +20,7 @@ bool TextRenderer::init(Shader *shader, std::string path, unsigned int fontSize)
         return -1;
     }
     FT_Set_Pixel_Sizes(face, 0, fontSize);
-    this->rect = new Rectangle(shader, glm::ivec2(0), glm::ivec2(0), glm::vec4(1), 0);
+    this->rect = new Rectangle(glm::ivec2(0), glm::ivec2(0), glm::vec4(1), 0);
 }
 
 bool TextRenderer::addChar(char c) {

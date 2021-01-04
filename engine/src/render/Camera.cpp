@@ -4,18 +4,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "core/GameObject.hpp"
+#include "core/RessourceManager.hpp"
 #include "render/Model.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/PointLight.hpp"
 
-Camera::Camera(Shader *lightShader, int width, int height) {
-    this->lightShader = lightShader;
+Camera::Camera(int width, int height) {
+    this->lightShader = RessourceManager::getShader("deferred_lighting");
     this->width = width;
     this->height = height;
 }
 
-Camera::Camera(Shader *lightShader, int width, int height, Widget *canvas) {
-    this->lightShader = lightShader;
+Camera::Camera(int width, int height, Widget *canvas) {
+    this->lightShader = RessourceManager::getShader("deferred_lighting");
     this->width = width;
     this->height = height;
     this->canvas = canvas;
@@ -23,6 +24,11 @@ Camera::Camera(Shader *lightShader, int width, int height, Widget *canvas) {
 
 void Camera::start() {
     createGBuffer();
+	// lightShader configuration
+	this->lightShader->use();
+	this->lightShader->setInt("gPosition", 0);
+	this->lightShader->setInt("gNormal", 1);
+	this->lightShader->setInt("gAlbedoSpec", 2);
 }
 
 void Camera::resize(int width, int height) {

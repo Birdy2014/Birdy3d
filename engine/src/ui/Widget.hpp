@@ -36,7 +36,7 @@ public:
     Placement placement;
     TextRenderer *textRenderer; // TODO: move to RessourceManager
 
-    Widget(Shader *shader, glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT, float rotation = 0.0f, glm::vec2 scale = glm::vec2(1));
+    Widget(glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT, float rotation = 0.0f, glm::vec2 scale = glm::vec2(1));
     void addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color);
     void addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color);
     void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color);
@@ -54,7 +54,6 @@ public:
     glm::mat4 absTransform(bool normalize = false);
 
 private:
-    Shader *shader;
     std::vector<Rectangle> rectangles;
     std::vector<Widget::Text> texts;
     std::vector<Widget*> children;

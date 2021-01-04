@@ -2,9 +2,9 @@
 
 #include "core/Application.hpp"
 #include "core/Input.hpp"
+#include "core/RessourceManager.hpp"
 
-Widget::Widget(Shader *shader, glm::vec3 pos, Placement placement, float rotation, glm::vec2 scale) {
-    this->shader = shader;
+Widget::Widget(glm::vec3 pos, Placement placement, float rotation, glm::vec2 scale) {
     this->pos = pos;
     this->placement = placement;
     this->rot = rotation;
@@ -12,11 +12,11 @@ Widget::Widget(Shader *shader, glm::vec3 pos, Placement placement, float rotatio
 }
 
 void Widget::addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color) {
-    this->rectangles.push_back(Rectangle(this->shader, pos, size, false, color));
+    this->rectangles.push_back(Rectangle(pos, size, false, color));
 }
 
 void Widget::addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color) {
-    this->rectangles.push_back(Rectangle(this->shader, pos, size, true, color));
+    this->rectangles.push_back(Rectangle(pos, size, true, color));
 }
 
 void Widget::addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color) {

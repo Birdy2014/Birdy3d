@@ -134,7 +134,7 @@ float calcPointShadow(vec3 fragPos, samplerCube shadowMap, vec3 lightPos, float 
 {
 	vec3 fragToLight = fragPos - lightPos;
 	float currentDepth = length(fragToLight);
-	float bias = 0.01;
+	float bias = 0.00;
 	float closestDepth = texture(shadowMap, fragToLight).r;
 	closestDepth *= far;
 	float shadow = (currentDepth - bias < closestDepth) ? 1.0 : 0.0;

@@ -1,9 +1,10 @@
 #include "core/GameObject.hpp"
 
+#include "core/RessourceManager.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-GameObject::GameObject(Shader *s, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
-    this->shader = s;
+GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
+    this->shader = RessourceManager::getShader("geometry_buffer");
     this->pos = pos;
     this->rot = rot;
     this->scale = scale;

@@ -13,7 +13,7 @@ class Shader {
 public:
     unsigned int ID;
   
-    Shader(const std::string &shaderPath);
+    Shader(const std::string &shaderSource);
     void use();
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const; 
@@ -30,7 +30,7 @@ public:
 
 private:
     bool checkCompileErrors(GLuint shader, GLenum type);
-    std::unordered_map<GLenum, std::string> preprocess(std::string &shaderSource);
+    std::unordered_map<GLenum, std::string> preprocess(const std::string &shaderSource);
     void compile(std::unordered_map<GLenum, std::string> &shaderSources);
 };
 

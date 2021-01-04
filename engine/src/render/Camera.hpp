@@ -10,8 +10,8 @@ class Camera : public Component {
 public:
     Widget *canvas = nullptr;
 
-    Camera(Shader *lightShader, int width, int height);
-    Camera(Shader *lightShader, int width, int height, Widget *canvas);
+    Camera(int width, int height);
+    Camera(int width, int height, Widget *canvas);
     void start() override;
     void render();
     void resize(int width, int height);

@@ -14,7 +14,7 @@ public:
     GameObject *parent = nullptr;
     GameObject *scene = nullptr;
 
-    GameObject(Shader *s, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
+    GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
     void addChild(GameObject *c);
     void addComponent(Component *c);
     void update(float deltaTime);

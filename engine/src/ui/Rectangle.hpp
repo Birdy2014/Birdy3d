@@ -8,9 +8,9 @@
 
 class Rectangle {
 public:
-    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color);
-    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, unsigned int textureID);
-    Rectangle(Shader *shader, glm::ivec2 pos, glm::ivec2 size, glm::vec4 textColor, unsigned int charTexture);
+    Rectangle(glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color);
+    Rectangle(glm::ivec2 pos, glm::ivec2 size, unsigned int textureID);
+    Rectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 textColor, unsigned int charTexture);
     glm::ivec2 getPos();
     glm::ivec2 getSize();
     void resize(glm::ivec2 size);

@@ -12,32 +12,19 @@ int main() {
 	}
 	Input::init();
 
-	// Shaders
-	Shader geometryShader("./shaders/gBuffer.glsl");
-	Shader lightingShader("./shaders/lighting.glsl");
-	Shader dirLightDepthShader("./shaders/dDepth.glsl");
-	Shader pointLightDepthShader("./shaders/pDepth.glsl");
-	Shader uiShader("./shaders/ui.glsl");
-
-	// lightShader configuration
-	lightingShader.use();
-	lightingShader.setInt("gPosition", 0);
-	lightingShader.setInt("gNormal", 1);
-	lightingShader.setInt("gAlbedoSpec", 2);
-
 	// TextRenderer
 	TextRenderer textRenderer;
-	textRenderer.init(&uiShader, "/usr/share/fonts/TTF/DejaVuSans.ttf", 30);
+	textRenderer.init("/usr/share/fonts/TTF/DejaVuSans.ttf", 30);
 
 	// UI
-	Widget canvas(&uiShader, glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
+	Widget canvas(glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
 	canvas.hidden = true;
 	canvas.setOnClick([]() {
 		std::cout << "Canvas clicked" << std::endl;
 		return false;
 	});
 	canvas.addRectangle(glm::vec3(-100), glm::vec3(200), glm::vec4(1));
-	Widget closeButton(&uiShader, glm::vec3(0), Widget::Placement::CENTER);
+	Widget closeButton(glm::vec3(0), Widget::Placement::CENTER);
 	closeButton.hidden = false;
 	closeButton.setOnClick([]() {
     	glfwSetWindowShouldClose(Application::getWindow(), true);
@@ -50,26 +37,26 @@ int main() {
 	canvas.addChild(&closeButton);
 
 	// GameObjects
-	GameObject *scene = new GameObject(&geometryShader);
+	GameObject *scene = new GameObject();
 
-	player = new GameObject(&geometryShader, glm::vec3(0, 0, 3));
-	player->addComponent(new Camera(&lightingShader, 800, 600, &canvas));
+	player = new GameObject(glm::vec3(0, 0, 3));
+	player->addComponent(new Camera(800, 600, &canvas));
 	player->addComponent(new FPPlayerController());
 	scene->addChild(player);
 
-	GameObject *obj = new GameObject(&geometryShader, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+	GameObject *obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
 	obj->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
-	GameObject *obj2 = new GameObject(&geometryShader, glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+	GameObject *obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
 	obj2->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
 	obj->addChild(obj2);
 	scene->addChild(obj);
 
 	// Light
-	GameObject *dirLight = new GameObject(&geometryShader, glm::vec3(0.0f, 3.0f, 0.0f));
-	dirLight->addComponent(new DirectionalLight(&dirLightDepthShader, glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f)));
+	GameObject *dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f));
+	dirLight->addComponent(new DirectionalLight(glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f)));
 	scene->addChild(dirLight);
-	GameObject *pLight = new GameObject(&geometryShader, glm::vec3(2.0f, 1.5f, 4.0f));
-	pLight->addComponent(new PointLight(&pointLightDepthShader, glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f));
+	GameObject *pLight = new GameObject(glm::vec3(2.0f, 1.5f, 4.0f));
+	pLight->addComponent(new PointLight(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f));
 	scene->addChild(pLight);
 
 	scene->setScene();
