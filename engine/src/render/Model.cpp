@@ -2,12 +2,13 @@
 
 #include "core/Logger.hpp"
 
-void Model::render() {
+void Model::render(Shader *shader, bool transparent) {
     glm::mat4 model = this->object->absTransform();
-    this->object->shader->use();
-    this->object->shader->setMat4("model", model);
-    for(unsigned int i = 0; i < meshes.size(); i++) {
-        meshes[i].draw(this->object->shader);
+    shader->use();
+    shader->setMat4("model", model);
+    for(Mesh &m : this->meshes) {
+        if (transparent == m.hasTransparency())
+            m.render(shader);
     }
 }
 
@@ -137,6 +138,5 @@ void Model::cleanup() {
 }
 
 void Model::start() {
-    this->object->shader->use();
     loadModel(this->path);
 }

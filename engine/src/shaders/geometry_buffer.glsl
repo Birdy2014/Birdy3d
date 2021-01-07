@@ -46,7 +46,7 @@ uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 uniform bool useTexture;
-uniform vec3 color;
+uniform vec4 color;
 uniform float specular;
 
 void main()
@@ -58,8 +58,10 @@ void main()
         //gNormal = TBN * normalize(texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
         gNormal = normalize(TBN * texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
     } else {
-        gAlbedoSpec.rgb = color;
+        gAlbedoSpec.rgb = color.rgb;
         gAlbedoSpec.a = specular;
         gNormal = normalize(Normal);
     }
+    if (gAlbedoSpec.a < 0.1)
+        discard;
 }

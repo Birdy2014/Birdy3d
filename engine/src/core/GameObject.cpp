@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
-    this->shader = RessourceManager::getShader("geometry_buffer");
     this->pos = pos;
     this->rot = rot;
     this->scale = scale;
@@ -18,7 +17,15 @@ void GameObject::addChild(GameObject *c) {
 void GameObject::addComponent(Component *c) {
     c->object = this;
     this->components.push_back(c);
-    this->components[this->components.size() - 1]->start();
+}
+
+void GameObject::start() {
+    for (Component *c : this->components) {
+        c->start();
+    }
+    for (GameObject *o : this->children) {
+        o->start();
+    }
 }
 
 void GameObject::update(float deltaTime) {

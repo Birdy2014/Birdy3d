@@ -36,7 +36,7 @@ $(OUTDIR)/$(BIN): $(SOURCES) $(OUTDIR)/bin/libBirdy3d.so
 $(OUTSHADERS): $(SHADERS)
 	@echo $^
 	@mkdir -p $(dir $@)
-	@cp $^ $(dir $@)
+	@cp -r $^ $(dir $@)
 
 $(OUTDIR)/ressources: ressources
 	@mkdir -p $(dir $@)

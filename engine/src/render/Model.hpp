@@ -14,7 +14,8 @@
 
 class Model : public Component {
 public:
-    Model(std::string path, bool useTexture = true, glm::vec3 color = glm::vec4(0.0f), float specular = 16, glm::vec3 emissive = glm::vec3(0.0f)) {
+
+    Model(std::string path, bool useTexture = true, glm::vec4 color = glm::vec4(0.0f), float specular = 1, glm::vec3 emissive = glm::vec3(0.0f)) {
         this->path = path;
         this->useTexture = useTexture;
         this->color = color;
@@ -23,7 +24,7 @@ public:
     }
     void cleanup() override;
     void start() override;
-    void render();
+    void render(Shader *shader, bool transparent);
     void renderDepth(Shader *shader);
 
 private:
@@ -32,7 +33,7 @@ private:
     std::string directory;
     std::vector<Texture> textures_loaded;
     bool useTexture;
-    glm::vec3 color;
+    glm::vec4 color;
     float specular;
     glm::vec3 emissive;
 

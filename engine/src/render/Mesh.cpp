@@ -9,7 +9,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     setupMesh();
 }
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, glm::vec3 color, float specular, glm::vec3 emissive) {
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, glm::vec4 color, float specular, glm::vec3 emissive) {
     this->vertices = vertices;
     this->indices = indices;
     this->color = color;
@@ -53,7 +53,7 @@ void Mesh::setupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader *shader) {
+void Mesh::render(Shader *shader) {
     shader->setBool("useTexture", useTexture);
     if (useTexture) {
         unsigned int diffuseNr = 1;
@@ -88,7 +88,7 @@ void Mesh::draw(Shader *shader) {
     } else {
         shader->setBool("hasSpecular", true);
         shader->setBool("hasEmissive", true);
-        shader->setVec3("color", this->color);
+        shader->setVec4("color", this->color);
         shader->setFloat("specular", this->specular);
         shader->setVec3("emissive", this->emissive);
     }
@@ -108,4 +108,16 @@ void Mesh::cleanup() {
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
     glDeleteVertexArrays(1, &VAO);
+}
+
+bool Mesh::hasTransparency() {
+    if (this->useTexture) {
+        for (Texture t : this->textures) {
+            if (t.nrChannels == 4)
+                return true;
+        }
+        return false;
+    } else {
+        return color.a < 1;
+    }
 }

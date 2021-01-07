@@ -7,7 +7,6 @@
 
 class GameObject {
 public:
-    Shader *shader;
     glm::vec3 pos;
     glm::vec3 rot;
     glm::vec3 scale;
@@ -17,6 +16,7 @@ public:
     GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
     void addChild(GameObject *c);
     void addComponent(Component *c);
+    void start();
     void update(float deltaTime);
     void cleanup();
     glm::mat4 absTransform();

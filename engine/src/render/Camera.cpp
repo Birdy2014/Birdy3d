@@ -10,26 +10,33 @@
 #include "render/DirectionalLight.hpp"
 #include "render/PointLight.hpp"
 
-Camera::Camera(int width, int height) {
-    this->lightShader = RessourceManager::getShader("deferred_lighting");
+Camera::Camera(int width, int height, bool deferred) {
     this->width = width;
     this->height = height;
+    this->deferred = deferred;
 }
 
-Camera::Camera(int width, int height, Widget *canvas) {
-    this->lightShader = RessourceManager::getShader("deferred_lighting");
+Camera::Camera(int width, int height, bool deferred, Widget *canvas) {
     this->width = width;
     this->height = height;
+    this->deferred = deferred;
     this->canvas = canvas;
 }
 
 void Camera::start() {
+    projectionMatrix = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
     createGBuffer();
-	// lightShader configuration
-	this->lightShader->use();
-	this->lightShader->setInt("gPosition", 0);
-	this->lightShader->setInt("gNormal", 1);
-	this->lightShader->setInt("gAlbedoSpec", 2);
+    this->deferredGeometryShader = RessourceManager::getShader("geometry_buffer");
+    this->deferredLightShader = RessourceManager::getShader("deferred_lighting");
+    this->forwardShader = RessourceManager::getShader("forward_lighting");
+	this->deferredLightShader->use();
+	this->deferredLightShader->setInt("gPosition", 0);
+	this->deferredLightShader->setInt("gNormal", 1);
+	this->deferredLightShader->setInt("gAlbedoSpec", 2);
+}
+
+void Camera::cleanup() {
+    deleteGBuffer();
 }
 
 void Camera::resize(int width, int height) {
@@ -43,45 +50,14 @@ void Camera::resize(int width, int height) {
 }
 
 void Camera::render() {
-    glm::vec3 absPos = this->object->absPos();
-    glm::vec3 absForward = this->object->absForward();
-    glm::vec3 right = this->object->absRight();
-    glm::vec3 up = this->object->absUp();
-    glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
-
-    glEnable(GL_DEPTH_TEST);
-    // 1. geometry pass: render all geometric/color data to g-buffer
-	glDisable(GL_BLEND);
-    glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
     glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (Model *m : this->object->scene->getComponents<Model>(true)) {
-        m->object->shader->use();
-        m->object->shader->setMat4("projection", this->projectionMatrix);
-        m->object->shader->setMat4("view", view);
-        m->render();
+
+    if (this->deferred) {
+        renderDeferred();
+        renderForward(false);
+    } else {
+        renderForward(true);
     }
-
-    // 2. lighting pass
-	glEnable(GL_BLEND);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, gPosition);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, gNormal);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-    int textureId = 0;
-    std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
-    std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
-    for (int i = 0; i < dirLights.size(); i++)
-        dirLights[i]->use(this->lightShader, i, textureId++);
-    for (int i = 0; i < pointLights.size(); i++)
-        pointLights[i]->use(this->lightShader, i, textureId++);
-
-    this->lightShader->setVec3("viewPos", absPos);
-    renderQuad();
 
     // GUI
     if (this->canvas) {
@@ -163,4 +139,95 @@ void Camera::renderQuad() {
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
+}
+
+void Camera::renderDeferred() {
+    glm::vec3 absPos = this->object->absPos();
+    glm::vec3 absForward = this->object->absForward();
+    glm::vec3 right = this->object->absRight();
+    glm::vec3 up = this->object->absUp();
+    glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+
+    // 1. geometry pass: render all geometric/color data to g-buffer
+    glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    for (Model *m : this->object->scene->getComponents<Model>(true)) {
+        this->deferredGeometryShader->use();
+        this->deferredGeometryShader->setMat4("projection", this->projectionMatrix);
+        this->deferredGeometryShader->setMat4("view", view);
+        m->render(this->deferredGeometryShader, false);
+    }
+
+    // 2. lighting pass
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+    std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
+    std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
+    int textureId = 0;
+    // FIXME: The shadowmaps are not correctly generated. Why?!
+    for (int i = 0; i < dirLights.size(); i++)
+        dirLights[i]->use(this->deferredLightShader, i, textureId++);
+    for (int i = 0; i < pointLights.size(); i++)
+        pointLights[i]->use(this->deferredLightShader, i, textureId++);
+
+    this->deferredLightShader->use();
+    this->deferredLightShader->setVec3("viewPos", absPos);
+    renderQuad();
+}
+
+void Camera::renderForward(bool renderOpaque) {
+    glm::vec3 absPos = this->object->absPos();
+    glm::vec3 absForward = this->object->absForward();
+    glm::vec3 right = this->object->absRight();
+    glm::vec3 up = this->object->absUp();
+    glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+
+    glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
+    std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
+    int textureId = 0;
+    for (int i = 0; i < dirLights.size(); i++)
+        dirLights[i]->use(this->forwardShader, i, textureId++);
+    for (int i = 0; i < pointLights.size(); i++)
+        pointLights[i]->use(this->forwardShader, i, textureId++);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    if (renderOpaque) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    } else {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, this->gBuffer);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        glBlitFramebuffer(0, 0, this->width, this->height, 0, 0, this->width, this->height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    }
+
+    this->forwardShader->setMat4("projection", this->projectionMatrix);
+    this->forwardShader->setMat4("view", view);
+    this->forwardShader->setVec3("viewPos", absPos);
+    if (renderOpaque) {
+        for (Model *m : this->object->scene->getComponents<Model>(true)) {
+            m->render(this->forwardShader, false);
+        }
+    }
+
+    // Transparency
+    std::vector models = this->object->scene->getComponents<Model>(true);
+    std::map<float, Model*> sorted;
+    for (Model *m : models) {
+        float distance = glm::length(this->object->pos - m->object->pos);
+        sorted[distance] = m;
+    }
+
+    for (std::map<float, Model*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++) {
+        it->second->render(this->forwardShader, true);
+    }
 }

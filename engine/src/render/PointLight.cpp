@@ -34,6 +34,7 @@ void PointLight::genShadowMap(Shader *lightShader, int id, int textureid) {
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
     glCullFace(GL_FRONT);
+    glEnable(GL_DEPTH_TEST);
 
     this->depthShader->use();
     float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;

@@ -1,7 +1,6 @@
 #ifndef BIRDY3D_ENGINE_HPP
 #define BIRDY3D_ENGINE_HPP
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>

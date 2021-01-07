@@ -1,4 +1,3 @@
-#define STB_IMAGE_IMPLEMENTATION
 #include "Birdy3d.hpp"
 
 GameObject *player;
@@ -35,16 +34,19 @@ int main() {
 	GameObject *scene = new GameObject();
 
 	player = new GameObject(glm::vec3(0, 0, 3));
-	player->addComponent(new Camera(800, 600, &canvas));
+	player->addComponent(new Camera(800, 600, true, &canvas));
 	player->addComponent(new FPPlayerController());
 	scene->addChild(player);
 
 	GameObject *obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-	obj->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
-	GameObject *obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-	obj2->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 16, glm::vec3(0.0f, 0.0f, 0.0f)));
-	obj->addChild(obj2);
+	obj->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 0.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
 	scene->addChild(obj);
+	GameObject *obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+	obj2->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+	scene->addChild(obj2);
+	GameObject *obj3 = new GameObject(glm::vec3(-3.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+	obj3->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(0.0f, 1.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+	scene->addChild(obj3);
 
 	// Light
 	GameObject *dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f));
@@ -55,8 +57,9 @@ int main() {
 	scene->addChild(pLight);
 
 	scene->setScene();
+	scene->start();
 
-	PointLight *light = scene->getComponents<PointLight>(true)[0];
+	PointLight *light = pLight->getComponent<PointLight>();
 	bool up = true;
 
 	//Mainloop
