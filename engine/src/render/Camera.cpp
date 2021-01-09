@@ -172,7 +172,6 @@ void Camera::renderDeferred() {
     std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
     std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
     int textureId = 0;
-    // FIXME: The shadowmaps are not correctly generated. Why?!
     for (int i = 0; i < dirLights.size(); i++)
         dirLights[i]->use(this->deferredLightShader, i, textureId++);
     for (int i = 0; i < pointLights.size(); i++)

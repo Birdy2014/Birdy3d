@@ -30,13 +30,11 @@ public:
         this->outerCutOff = glm::cos(glm::radians(40.0f));
     }
 
-    void use(Shader *lightShader, int id, int textureid);
+    virtual void use(Shader *lightShader, int id, int textureid) {};
     virtual void setupShadowMap() {}
     virtual void genShadowMap(Shader *lightShader, int id, int textureid) {}
-    void start() override {
-        setupShadowMap();
-    }
-    void update(float deltaTime) override {}
+    void start() override;
+    void update(float deltaTime) override;
     void cleanup() override {}
 
 protected:
@@ -51,6 +49,7 @@ protected:
     float outerCutOff;
     unsigned int depthMapFBO, depthMap;
     const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+    bool shadowMapUpdated = false;
 };
 
 #endif

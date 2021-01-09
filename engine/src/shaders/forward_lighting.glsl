@@ -49,10 +49,6 @@ uniform float specular;
 uniform vec3 viewPos;
 
 #include includes/lighting
-#define NR_DIRECTIONAL_LIGHS 1
-#define NR_POINT_LIGHTS 1
-uniform DirectionalLight dirLights[NR_DIRECTIONAL_LIGHS];
-uniform PointLight pointLights[NR_POINT_LIGHTS];
 
 void main()
 {
@@ -72,12 +68,7 @@ void main()
     if (var_diffuse.a < 0.1)
         discard;
 
-    vec3 lighting = vec3(0);
-    for (int i = 0; i < NR_DIRECTIONAL_LIGHS; i++)
-        lighting += calcDirLight(dirLights[i], var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular);
-
-    for (int i = 0; i < NR_POINT_LIGHTS; i++)
-        lighting += calcPointLight(pointLights[i], var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular);
+    vec3 lighting = calcLights(var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular);
 
 	FragColor = vec4(lighting, var_diffuse.a);
 }

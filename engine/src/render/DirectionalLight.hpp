@@ -16,6 +16,10 @@ public:
 
     void setupShadowMap() override;
     void genShadowMap(Shader *lightShader, int id, int textureid) override;
+    void use(Shader *lightShader, int id, int textureid) override;
+
+private:
+    glm::mat4 lightSpaceMatrix;
 };
 
 #endif

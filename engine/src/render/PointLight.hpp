@@ -17,6 +17,10 @@ public:
 
     void setupShadowMap() override;
     void genShadowMap(Shader *lightShader, int id, int textureid) override;
+    void use(Shader *lightShader, int id, int textureid) override;
+
+private:
+    float far = 25.0f;
 };
 
 #endif

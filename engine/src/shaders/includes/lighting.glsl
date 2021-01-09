@@ -23,6 +23,11 @@ struct PointLight {
 	samplerCube shadowMap;
 };
 
+#define NR_DIRECTIONAL_LIGHS 1
+#define NR_POINT_LIGHTS 1
+uniform DirectionalLight dirLights[NR_DIRECTIONAL_LIGHS];
+uniform PointLight pointLights[NR_POINT_LIGHTS];
+
 vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess)
 {
 	vec3 lightDir = normalize(-light.direction);
@@ -99,29 +104,14 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
 	return lighting * shadow;
 }
 
-/* SHADOWS */
-float calcDirShadow(vec3 fragPos, mat4 lightSpaceMatrix, sampler2D shadowMap, vec3 lightPos, vec3 normal)
+vec3 calcLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess)
 {
-	vec4 fragPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.0);
-	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-	projCoords = projCoords * 0.5 + 0.5;
-	float closestDepth = texture(shadowMap, projCoords.xy).r;
-	float currentDepth = projCoords.z;
-	vec3 lightDir = normalize(lightPos - fragPos);
-	//float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-	float bias = 0;
+    vec3 lighting = vec3(0);
+    for (int i = 0; i < NR_DIRECTIONAL_LIGHS; i++)
+        lighting += calcDirLight(dirLights[i], normal, fragPos, viewDir, materialColor, shininess);
+    
+    for (int i = 0; i < NR_POINT_LIGHTS; i++)
+        lighting += calcPointLight(pointLights[i], normal, fragPos, viewDir, materialColor, shininess);
 
-	float shadow = 0;
-	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-	for (int x = -1; x <= 1; x++) {
-		for (int y = -1; y <= 1; y++) {
-			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
-		}
-	}
-	shadow /= 9.0;
-
-	if (projCoords.z > 1.0)
-		shadow = 0.0;
-	return 1 - shadow;
+	return lighting;
 }

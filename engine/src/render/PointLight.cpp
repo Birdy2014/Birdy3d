@@ -25,6 +25,25 @@ void PointLight::setupShadowMap() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void PointLight::use(Shader *lightShader, int id, int textureid) {
+    if (!shadowMapUpdated) {
+        genShadowMap(lightShader, id, textureid);
+        shadowMapUpdated = true;
+    }
+    std::string name = "pointLights[" + std::to_string(id) + "].";
+    lightShader->use();
+    lightShader->setVec3(name + "position", this->object->absPos());
+    lightShader->setVec3(name + "ambient", ambient);
+    lightShader->setVec3(name + "diffuse", diffuse);
+    lightShader->setFloat(name + "linear", linear);
+    lightShader->setFloat(name + "quadratic", quadratic);
+    glActiveTexture(GL_TEXTURE3 + textureid);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
+    lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
+    lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
+
+}
+
 void PointLight::genShadowMap(Shader *lightShader, int id, int textureid) {
     glm::vec3 absPos = this->object->absPos();
 
@@ -39,7 +58,7 @@ void PointLight::genShadowMap(Shader *lightShader, int id, int textureid) {
     this->depthShader->use();
     float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
     float near = 1.0f;
-    float far = 25.0f;
+    far = 25.0f;
     glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
 
     std::vector<glm::mat4> shadowTransforms;
@@ -56,12 +75,6 @@ void PointLight::genShadowMap(Shader *lightShader, int id, int textureid) {
     for (Model *m : this->object->scene->getComponents<Model>(true)) {
         m->renderDepth(this->depthShader);
     }
-
-    lightShader->use();
-    glActiveTexture(GL_TEXTURE3 + textureid);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
-    lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
-    lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
 
     // reset framebuffer and viewport
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
