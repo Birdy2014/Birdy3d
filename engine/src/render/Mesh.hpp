@@ -17,7 +17,7 @@ public:
     glm::vec3 emissive;
     bool useTexture;
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, float specular = 1.0f, glm::vec3 emissive = glm::vec3(0.0f));
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, glm::vec4 color, float specular, glm::vec3 emissive);
     void render(Shader *shader);
     void renderDepth();

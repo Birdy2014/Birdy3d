@@ -46,22 +46,29 @@ uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 uniform bool useTexture;
+uniform bool hasNormal;
+uniform bool hasSpecular;
 uniform vec4 color;
 uniform float specular;
 
 void main()
 {    
     gPosition = FragPos;
-    if (useTexture) {
+    if (useTexture)
         gAlbedoSpec.rgb = texture(texture_diffuse1, TexCoords).rgb;
-        gAlbedoSpec.a = texture(texture_specular1, TexCoords).r;
-        //gNormal = TBN * normalize(texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
-        gNormal = normalize(TBN * texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
-    } else {
+    else
         gAlbedoSpec.rgb = color.rgb;
-        gAlbedoSpec.a = specular;
+
+    if (useTexture && hasNormal)
+        gNormal = normalize(TBN * texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
+    else
         gNormal = normalize(Normal);
-    }
+    
+    if (useTexture && hasSpecular)
+        gAlbedoSpec.a = texture(texture_specular1, TexCoords).r;
+    else
+        gAlbedoSpec.a = specular;
+
     if (gAlbedoSpec.a < 0.1)
         discard;
 }

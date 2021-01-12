@@ -1,10 +1,12 @@
 #include "render/Mesh.hpp"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, float specular, glm::vec3 emissive) {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
     this->useTexture = true;
+    this->specular = specular;
+    this->emissive = emissive;
 
     setupMesh();
 }
@@ -80,14 +82,30 @@ void Mesh::render(Shader *shader) {
             shader->setInt((name + number).c_str(), i);
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
-        if (specularNr > 1)
+        if (specularNr > 1) {
             shader->setBool("hasSpecular", true);
-        if (emissiveNr > 1)
+        } else {
+            shader->setBool("hasSpecular", false);
+            shader->setFloat("specular", this->specular);
+        }
+        
+        if (normalNr > 1) {
+            shader->setBool("hasNormal", true);
+        } else {
+            shader->setBool("hasNormal", false);
+        }
+
+        if (emissiveNr > 1) {
             shader->setBool("hasEmissive", true);
+        } else {
+            shader->setBool("hasEmissive", false);
+            shader->setVec3("emissive", this->emissive);
+        }
         glActiveTexture(GL_TEXTURE0);
     } else {
-        shader->setBool("hasSpecular", true);
-        shader->setBool("hasEmissive", true);
+        shader->setBool("hasSpecular", false);
+        shader->setBool("hasNormal", false);
+        shader->setBool("hasEmissive", false);
         shader->setVec4("color", this->color);
         shader->setFloat("specular", this->specular);
         shader->setVec3("emissive", this->emissive);

@@ -103,7 +103,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         std::vector<Texture> emissiveMaps = loadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emissive");
         textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
 
-        return Mesh(vertices, indices, textures);
+        return Mesh(vertices, indices, textures, specular, emissive);
     } else {
         return Mesh(vertices, indices, color, specular, emissive);
     }
