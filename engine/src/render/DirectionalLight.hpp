@@ -6,10 +6,8 @@
 
 class DirectionalLight : public Light {
 public:
-    DirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse) : Light() {
+    DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse) : Light() {
         this->depthShader = RessourceManager::getShader("directional_light_depth");
-        this->type = 0;
-        this->direction = direction;
         this->ambient = ambient;
         this->diffuse = diffuse;
     }

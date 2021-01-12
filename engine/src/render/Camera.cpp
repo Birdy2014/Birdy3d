@@ -9,6 +9,7 @@
 #include "render/Model.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/PointLight.hpp"
+#include "render/Spotlight.hpp"
 
 Camera::Camera(int width, int height, bool deferred) {
     this->width = width;
@@ -171,11 +172,14 @@ void Camera::renderDeferred() {
     glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
     std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
     std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
+    std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(true);
     int textureId = 0;
     for (int i = 0; i < dirLights.size(); i++)
         dirLights[i]->use(this->deferredLightShader, i, textureId++);
     for (int i = 0; i < pointLights.size(); i++)
         pointLights[i]->use(this->deferredLightShader, i, textureId++);
+    for (int i = 0; i < spotlights.size(); i++)
+        spotlights[i]->use(this->deferredLightShader, i, textureId++);
 
     this->deferredLightShader->use();
     this->deferredLightShader->setVec3("viewPos", absPos);
@@ -194,11 +198,14 @@ void Camera::renderForward(bool renderOpaque) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
     std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
+    std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(true);
     int textureId = 0;
     for (int i = 0; i < dirLights.size(); i++)
         dirLights[i]->use(this->forwardShader, i, textureId++);
     for (int i = 0; i < pointLights.size(); i++)
         pointLights[i]->use(this->forwardShader, i, textureId++);
+    for (int i = 0; i < spotlights.size(); i++)
+        spotlights[i]->use(this->forwardShader, i, textureId++);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     if (renderOpaque) {

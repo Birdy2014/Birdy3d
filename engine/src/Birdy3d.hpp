@@ -14,6 +14,7 @@
 #include "render/Texture.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/PointLight.hpp"
+#include "render/Spotlight.hpp"
 
 // UI
 #include "ui/Widget.hpp"

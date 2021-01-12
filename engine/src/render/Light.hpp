@@ -6,10 +6,8 @@
 
 class Light : public Component {
 public:
-    Light(Shader *depthShader, int type, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, float innerCutOff, float outerCutOff) {
+    Light(Shader *depthShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, float innerCutOff, float outerCutOff) {
         this->depthShader = depthShader;
-        this->type = type;
-        this->direction = direction;
         this->ambient = ambient;
         this->diffuse = diffuse;
         this->linear = linear;
@@ -20,8 +18,6 @@ public:
 
     Light() : Component() {
         this->depthShader = nullptr;
-        this->type = 0;
-        this->direction = glm::vec3(1.0f);
         this->ambient = glm::vec3(1.0f);
         this->diffuse = glm::vec3(1.0f);
         this->linear = 1;
@@ -39,8 +35,6 @@ public:
 
 protected:
     Shader *depthShader;
-    int type;
-    glm::vec3 direction;
     glm::vec3 ambient;
     glm::vec3 diffuse;
     float linear;

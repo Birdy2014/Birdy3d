@@ -31,7 +31,7 @@ void DirectionalLight::use(Shader *lightShader, int id, int textureid) {
     std::string name = "dirLights[" + std::to_string(id) + "].";
     lightShader->use();
     lightShader->setVec3(name + "position", this->object->absPos());
-    lightShader->setVec3(name + "direction", direction);
+    lightShader->setVec3(name + "direction", this->object->absForward());
     lightShader->setVec3(name + "ambient", ambient);
     lightShader->setVec3(name + "diffuse", diffuse);
     glActiveTexture(GL_TEXTURE3 + textureid);
@@ -54,7 +54,7 @@ void DirectionalLight::genShadowMap(Shader *lightShader, int id, int textureid) 
     this->depthShader->use();
     float nearPlane = 1.0f, farPlane = 7.5f;
     glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, nearPlane, farPlane);
-    glm::mat4 lightView = glm::lookAt(absPos, absPos + this->direction, glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 lightView = glm::lookAt(absPos, absPos + this->object->absForward(), glm::vec3(0.0f, 1.0f, 0.0f));
     lightSpaceMatrix = lightProjection * lightView;
     this->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
     for (Model *m : this->object->scene->getComponents<Model>(true)) {

@@ -49,12 +49,15 @@ int main() {
 	scene->addChild(obj3);
 
 	// Light
-	GameObject *dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f));
-	dirLight->addComponent(new DirectionalLight(glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(0.8f)));
+	GameObject *dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
+	dirLight->addComponent(new DirectionalLight(glm::vec3(0.2f), glm::vec3(0.7f)));
 	scene->addChild(dirLight);
 	GameObject *pLight = new GameObject(glm::vec3(2.0f, 1.5f, 4.0f));
 	pLight->addComponent(new PointLight(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f));
 	scene->addChild(pLight);
+	GameObject *sLight = new GameObject(glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
+	sLight->addComponent(new Spotlight(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f));
+	scene->addChild(sLight);
 
 	scene->setScene();
 	scene->start();

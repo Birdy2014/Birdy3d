@@ -41,7 +41,6 @@ void PointLight::use(Shader *lightShader, int id, int textureid) {
     glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
     lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
     lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
-
 }
 
 void PointLight::genShadowMap(Shader *lightShader, int id, int textureid) {
