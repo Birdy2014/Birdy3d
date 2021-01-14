@@ -54,7 +54,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // process vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
-        glm::vec3 position, normal, tangent;
+        glm::vec3 position, normal;
         position.x = mesh->mVertices[i].x;
         position.y = mesh->mVertices[i].y;
         position.z = mesh->mVertices[i].z;
@@ -63,15 +63,16 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         normal.y = mesh->mNormals[i].y;
         normal.z = mesh->mNormals[i].z;
         vertex.normal = normal;
-        tangent.x = mesh->mTangents[i].x;
-        tangent.y = mesh->mTangents[i].y;
-        tangent.z = mesh->mTangents[i].z;
-        vertex.tangent = tangent;
         if (mesh->mTextureCoords[0]) {
             glm::vec2 texCoords;
             texCoords.x = mesh->mTextureCoords[0][i].x;
             texCoords.y = mesh->mTextureCoords[0][i].y;
             vertex.texCoords = texCoords;
+            glm::vec3 tangent;
+            tangent.x = mesh->mTangents[i].x;
+            tangent.y = mesh->mTangents[i].y;
+            tangent.z = mesh->mTangents[i].z;
+            vertex.tangent = tangent;
         } else {
             vertex.texCoords = glm::vec2(0.0f, 0.0f);
         }
