@@ -41,12 +41,34 @@ int main() {
 	GameObject *obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
 	obj->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 0.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
 	scene->addChild(obj);
+
 	GameObject *obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
 	obj2->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
 	scene->addChild(obj2);
+
 	GameObject *obj3 = new GameObject(glm::vec3(-3.0f, 0.0f, -1.0f), glm::vec3(0.0f));
 	obj3->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(0.0f, 1.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
 	scene->addChild(obj3);
+
+	// Spheres
+	GameObject *sphere1 = new GameObject(glm::vec3(-3.0f, 4.0f, -1.0f));
+	sphere1->addComponent(new Model("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
+	Collider *collider1 = new Collider();
+	collider1->addShape(new SphereCollider(glm::vec3(0), 1));
+	sphere1->addComponent(collider1);
+	scene->addChild(sphere1);
+
+	GameObject *sphere2 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f));
+	sphere2->addComponent(new Model("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
+	Collider *collider2 = new Collider();
+	collider2->addShape(new SphereCollider(glm::vec3(0.0f), 1));
+	sphere2->addComponent(collider2);
+	scene->addChild(sphere2);
+
+	bool collision = false;
+	collider1->eventDispatcher->addHandler(Collider::COLLISION, [&](Collider::EventArg arg) {
+		collision = true;
+	});
 
 	// Light
 	GameObject *dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
@@ -63,7 +85,8 @@ int main() {
 	scene->start();
 
 	PointLight *light = pLight->getComponent<PointLight>();
-	bool up = true;
+	bool lightup = true;
+	bool sphereup = true;
 
 	//Mainloop
 	while(!glfwWindowShouldClose(Application::getWindow())) {
@@ -71,14 +94,24 @@ int main() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		if (up) {
+		if (lightup) {
 			light->object->pos.y += 0.1 * deltaTime;
 			if (light->object->pos.y > 3)
-				up = false;
+				lightup = false;
 		} else {
 			light->object->pos.y -= 0.1 * deltaTime;
 			if (light->object->pos.y < 1)
-				up = true;
+				lightup = true;
+		}
+
+		if (sphereup) {
+			sphere2->pos.y += 0.2 * deltaTime;
+			if (sphere2->pos.y > 7)
+				sphereup = false;
+		} else {
+			sphere2->pos.y -= 0.2 * deltaTime;
+			if (sphere2->pos.y < 5)
+				sphereup = true;
 		}
 
 		Input::update();
@@ -89,7 +122,11 @@ int main() {
 		// draw the object
 		player->getComponent<Camera>()->render();
 
-		Application::getTextRenderer()->renderText("Hello World", 0, 0, 30, glm::vec4(1));
+		Application::getTextRenderer()->renderText("FPS: " + std::to_string((int)round(1 / deltaTime)), 0, 0, 10, glm::vec4(1));
+		if (collision) {
+			Application::getTextRenderer()->renderText("collision", 100, 0, 20, glm::vec4(1));
+			collision = false;
+		}
 
 		// swap Buffers
     	glfwSwapBuffers(Application::getWindow());

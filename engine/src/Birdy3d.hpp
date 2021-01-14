@@ -7,6 +7,10 @@
 #include "core/FPPlayerController.hpp"
 #include "core/Logger.hpp"
 
+// Physics
+#include "physics/Collider.hpp"
+#include "physics/SphereCollider.hpp"
+
 // Renderer
 #include "render/Camera.hpp"
 #include "render/Model.hpp"
