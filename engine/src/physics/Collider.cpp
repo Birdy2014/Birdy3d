@@ -31,8 +31,17 @@ void Collider::start() {
         for (const Mesh &mesh : model->getMeshes()) {
             // TODO: approximate convex decomposition
             std::vector<glm::vec3> collisionMesh;
-            for (const Vertex &v : mesh.vertices)
-                collisionMesh.push_back(v.position);
+            for (const Vertex &currentVertex : mesh.vertices) {
+                bool exists = false;
+                for (const glm::vec3 &v : collisionMesh) {
+                    if (currentVertex.position == v) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists)
+                    collisionMesh.push_back(currentVertex.position);
+            }
             Logger::debug("generated collision mesh size: " + std::to_string(collisionMesh.size()));
             addShape(new CollisionMesh(collisionMesh));
         }
