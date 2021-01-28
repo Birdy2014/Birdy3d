@@ -40,33 +40,26 @@ int main() {
 
 	GameObject *obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
 	obj->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 0.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+	obj->addComponent(new Collider());
 	scene->addChild(obj);
 
 	GameObject *obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
 	obj2->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
 	scene->addChild(obj2);
 
-	GameObject *obj3 = new GameObject(glm::vec3(-3.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+	GameObject *obj3 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
 	obj3->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(0.0f, 1.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+	obj3->addComponent(new Collider());
 	scene->addChild(obj3);
 
 	// Spheres
-	GameObject *sphere1 = new GameObject(glm::vec3(-3.0f, 4.0f, -1.0f));
+	GameObject *sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
 	sphere1->addComponent(new Model("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
-	Collider *collider1 = new Collider();
-	collider1->addShape(new SphereCollider(glm::vec3(0), 1));
-	sphere1->addComponent(collider1);
+	sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 0.5)));
 	scene->addChild(sphere1);
 
-	GameObject *sphere2 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f));
-	sphere2->addComponent(new Model("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
-	Collider *collider2 = new Collider();
-	collider2->addShape(new SphereCollider(glm::vec3(0.0f), 1));
-	sphere2->addComponent(collider2);
-	scene->addChild(sphere2);
-
 	bool collision = false;
-	collider1->eventDispatcher->addHandler(Collider::COLLISION, [&](Collider::EventArg arg) {
+	sphere1->getComponent<Collider>()->eventDispatcher->addHandler(Collider::COLLISION, [&](Collider::EventArg arg) {
 		collision = true;
 	});
 
@@ -94,6 +87,11 @@ int main() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
+		Input::update();
+		canvas.updateEvents();
+
+		scene->update(deltaTime);
+
 		if (lightup) {
 			light->object->pos.y += 0.1 * deltaTime;
 			if (light->object->pos.y > 3)
@@ -104,20 +102,17 @@ int main() {
 				lightup = true;
 		}
 
-		if (sphereup) {
-			sphere2->pos.y += 0.2 * deltaTime;
-			if (sphere2->pos.y > 7)
-				sphereup = false;
-		} else {
-			sphere2->pos.y -= 0.2 * deltaTime;
-			if (sphere2->pos.y < 5)
-				sphereup = true;
+		if (!collision) {
+			if (sphereup) {
+				sphere1->pos.y += 0.4 * deltaTime;
+				if (sphere1->pos.y > 5)
+					sphereup = false;
+			} else {
+				sphere1->pos.y -= 0.4 * deltaTime;
+				if (sphere1->pos.y < 1)
+					sphereup = true;
+			}
 		}
-
-		Input::update();
-		canvas.updateEvents();
-
-		scene->update(deltaTime);
 
 		// draw the object
 		player->getComponent<Camera>()->render();

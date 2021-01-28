@@ -9,7 +9,8 @@
 
 // Physics
 #include "physics/Collider.hpp"
-#include "physics/SphereCollider.hpp"
+#include "physics/CollisionMesh.hpp"
+#include "physics/CollisionSphere.hpp"
 
 // Renderer
 #include "render/Camera.hpp"

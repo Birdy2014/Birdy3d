@@ -3,6 +3,14 @@
 #include "core/GameObject.hpp"
 #include "core/Logger.hpp"
 #include "physics/CollisionShape.hpp"
+#include "physics/CollisionMesh.hpp"
+#include "render/Model.hpp"
+
+Collider::Collider() {}
+
+Collider::Collider(CollisionShape *shape) {
+    addShape(shape);
+}
 
 void Collider::addShape(CollisionShape *shape) {
     shape->collider = this;
@@ -15,6 +23,20 @@ bool Collider::collides(CollisionShape *shape) {
             return true;
     }
     return false;
+}
+
+void Collider::start() {
+    if (shapes.empty()) {
+        Model *model = object->getComponent<Model>();
+        for (const Mesh &mesh : model->getMeshes()) {
+            // TODO: approximate convex decomposition
+            std::vector<glm::vec3> collisionMesh;
+            for (const Vertex &v : mesh.vertices)
+                collisionMesh.push_back(v.position);
+            Logger::debug("generated collision mesh size: " + std::to_string(collisionMesh.size()));
+            addShape(new CollisionMesh(collisionMesh));
+        }
+    }
 }
 
 void Collider::update(float deltaTime) {
@@ -42,11 +64,13 @@ bool Collider::collides(CollisionShape *a, CollisionShape *b) {
     glm::vec3 direction = -s;
 
     while (true) {
+        if (direction == glm::vec3(0)) Logger::error("direction ist 0 in loop. n_points: " + std::to_string(n_points));
         s = support(a, b, direction);
 
         if (glm::dot(s, direction) <= 0)
             return false;
-
+        
+        if (points[0] == s) Logger::error("points are the same collides 1 nr:" + std::to_string(n_points));
         push_front(s);
 
         if (nextSimplex(direction))
@@ -55,8 +79,8 @@ bool Collider::collides(CollisionShape *a, CollisionShape *b) {
 }
 
 glm::vec3 Collider::support(CollisionShape *a, CollisionShape *b, glm::vec3 direction) {
-    glm::vec3 furthestA = a->findFurthestPointWorldSpace(direction);
-    glm::vec3 furthestB = b->findFurthestPointWorldSpace(-direction);
+    glm::vec3 furthestA = a->findFurthestPoint(direction);
+    glm::vec3 furthestB = b->findFurthestPoint(-direction);
     return furthestA - furthestB;
 }
 
@@ -159,7 +183,7 @@ bool Collider::tetrahedron(glm::vec3 &direction) {
 
     if (sameDirection(acd, ao)) {
         points[1] = c;
-        points[2] = b;
+        points[2] = d;
         n_points--;
         return triangle(direction);
     }

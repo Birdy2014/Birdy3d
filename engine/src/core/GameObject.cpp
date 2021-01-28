@@ -45,12 +45,12 @@ void GameObject::cleanup() {
 
 glm::mat4 GameObject::absTransform() {
     glm::mat4 m(1);
-    m = glm::rotate(m, this->rot.x, glm::vec3(1, 0, 0));
-    m = glm::rotate(m, this->rot.y, glm::vec3(0, 1, 0));
-    m = glm::rotate(m, this->rot.z, glm::vec3(0, 0, 1));
     if (this->parent != nullptr)
         m = m * this->parent->absTransform();
     m = glm::translate(m, this->pos);
+    m = glm::rotate(m, this->rot.x, glm::vec3(1, 0, 0));
+    m = glm::rotate(m, this->rot.y, glm::vec3(0, 1, 0));
+    m = glm::rotate(m, this->rot.z, glm::vec3(0, 0, 1));
     m = glm::scale(m, this->scale);
     return m;
 }

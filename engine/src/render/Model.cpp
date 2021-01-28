@@ -21,6 +21,10 @@ void Model::renderDepth(Shader *shader) {
     }
 }
 
+const std::vector<Mesh> &Model::getMeshes() {
+    return meshes;
+}
+
 void Model::loadModel(std::string path) {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace);
@@ -139,5 +143,6 @@ void Model::cleanup() {
 }
 
 void Model::start() {
+    Logger::debug("Loading model: " + path);
     loadModel(this->path);
 }

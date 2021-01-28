@@ -20,8 +20,11 @@ public:
 
     EventDispatcher<EventArg> *eventDispatcher = new EventDispatcher<EventArg>();
 
+    Collider();
+    Collider(CollisionShape *shape);
     void addShape(CollisionShape *shape);
     bool collides(CollisionShape *shape);
+    void start() override;
     void update(float deltaTime) override;
 
 private:

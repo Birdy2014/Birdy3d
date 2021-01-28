@@ -8,12 +8,10 @@ class CollisionShape {
 public:
     Collider *collider;
 
-    glm::vec3 findFurthestPointWorldSpace(glm::vec3 direction);
+    virtual glm::vec3 findFurthestPoint(glm::vec3 direction) = 0;
 
 protected:
     glm::vec3 pos;
-
-    virtual glm::vec3 findFurthestPoint(glm::vec3 direction) = 0;
 };
 
 #endif
