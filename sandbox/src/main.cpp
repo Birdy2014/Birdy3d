@@ -55,7 +55,7 @@ int main() {
 	// Spheres
 	GameObject *sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
 	sphere1->addComponent(new Model("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
-	sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 0.5)));
+	sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 1)));
 	scene->addChild(sphere1);
 
 	bool collision = false;
