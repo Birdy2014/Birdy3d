@@ -6,6 +6,7 @@
 #include "core/Component.hpp"
 #include "core/FPPlayerController.hpp"
 #include "core/Logger.hpp"
+#include "core/Transform.hpp"
 
 // Physics
 #include "physics/Collider.hpp"

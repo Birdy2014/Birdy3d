@@ -3,7 +3,7 @@
 #include "core/Logger.hpp"
 
 void Model::render(Shader *shader, bool transparent) {
-    glm::mat4 model = this->object->absTransform();
+    glm::mat4 model = this->object->transform.matrix();
     shader->use();
     shader->setMat4("model", model);
     for(Mesh &m : this->meshes) {
@@ -13,7 +13,7 @@ void Model::render(Shader *shader, bool transparent) {
 }
 
 void Model::renderDepth(Shader *shader) {
-    glm::mat4 model = this->object->absTransform();
+    glm::mat4 model = this->object->transform.matrix();
     shader->use();
     shader->setMat4("model", model);
     for (Mesh m : meshes) {

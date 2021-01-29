@@ -3,14 +3,15 @@
 #include "core/RessourceManager.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
-    this->pos = pos;
-    this->rot = rot;
-    this->scale = scale;
+GameObject::GameObject(glm::vec3 position, glm::vec3 orientation, glm::vec3 scale) {
+    this->transform.position = position;
+    this->transform.orientation = orientation;
+    this->transform.scale = scale;
 }
 
 void GameObject::addChild(GameObject *c) {
     c->parent = this;
+    c->transform.setParentTransform(&transform);
     this->children.push_back(c);
 }
 
@@ -43,44 +44,8 @@ void GameObject::cleanup() {
     }
 }
 
-glm::mat4 GameObject::absTransform() {
-    glm::mat4 m(1);
-    if (this->parent != nullptr)
-        m = m * this->parent->absTransform();
-    m = glm::translate(m, this->pos);
-    m = glm::rotate(m, this->rot.x, glm::vec3(1, 0, 0));
-    m = glm::rotate(m, this->rot.y, glm::vec3(0, 1, 0));
-    m = glm::rotate(m, this->rot.z, glm::vec3(0, 0, 1));
-    m = glm::scale(m, this->scale);
-    return m;
-}
-
-glm::vec3 GameObject::absPos() {
-    if (parent == nullptr) {
-        return this->pos;
-    } else {
-        return this->parent->absTransform() * glm::vec4(this->pos, 1);
-    }
-}
-
-glm::vec3 GameObject::absRot() {
-    if (parent == nullptr) {
-        return this->rot;
-    } else {
-        return this->parent->rot + this->rot;
-    }
-}
-
-glm::vec3 GameObject::absScale() {
-    if (parent == nullptr) {
-        return this->scale;
-    } else {
-        return this->parent->scale * this->scale;
-    }
-}
-
 glm::vec3 GameObject::absForward() {
-    glm::vec3 absRot = this->absRot();
+    glm::vec3 absRot = this->transform.worldOrientation();
     glm::vec3 forward;
     forward.x = cos(absRot.y) * cos(absRot.x);
     forward.y = sin(absRot.x);

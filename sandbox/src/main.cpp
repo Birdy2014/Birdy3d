@@ -93,23 +93,23 @@ int main() {
 		scene->update(deltaTime);
 
 		if (lightup) {
-			light->object->pos.y += 0.1 * deltaTime;
-			if (light->object->pos.y > 3)
+			light->object->transform.position.y += 0.1 * deltaTime;
+			if (light->object->transform.position.y > 3)
 				lightup = false;
 		} else {
-			light->object->pos.y -= 0.1 * deltaTime;
-			if (light->object->pos.y < 1)
+			light->object->transform.position.y -= 0.1 * deltaTime;
+			if (light->object->transform.position.y < 1)
 				lightup = true;
 		}
 
 		if (!collision) {
 			if (sphereup) {
-				sphere1->pos.y += 0.4 * deltaTime;
-				if (sphere1->pos.y > 5)
+				sphere1->transform.position.y += 0.4 * deltaTime;
+				if (sphere1->transform.position.y > 5)
 					sphereup = false;
 			} else {
-				sphere1->pos.y -= 0.4 * deltaTime;
-				if (sphere1->pos.y < 1)
+				sphere1->transform.position.y -= 0.4 * deltaTime;
+				if (sphere1->transform.position.y < 1)
 					sphereup = true;
 			}
 		}

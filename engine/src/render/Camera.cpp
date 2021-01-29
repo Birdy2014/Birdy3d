@@ -143,7 +143,7 @@ void Camera::renderQuad() {
 }
 
 void Camera::renderDeferred() {
-    glm::vec3 absPos = this->object->absPos();
+    glm::vec3 absPos = this->object->transform.worldPosition();
     glm::vec3 absForward = this->object->absForward();
     glm::vec3 right = this->object->absRight();
     glm::vec3 up = this->object->absUp();
@@ -187,7 +187,7 @@ void Camera::renderDeferred() {
 }
 
 void Camera::renderForward(bool renderOpaque) {
-    glm::vec3 absPos = this->object->absPos();
+    glm::vec3 absPos = this->object->transform.worldPosition();
     glm::vec3 absForward = this->object->absForward();
     glm::vec3 right = this->object->absRight();
     glm::vec3 up = this->object->absUp();
@@ -229,7 +229,7 @@ void Camera::renderForward(bool renderOpaque) {
     std::vector models = this->object->scene->getComponents<Model>(true);
     std::map<float, Model*> sorted;
     for (Model *m : models) {
-        float distance = glm::length(this->object->pos - m->object->pos);
+        float distance = glm::length(this->object->transform.position - m->object->transform.position);
         sorted[distance] = m;
     }
 

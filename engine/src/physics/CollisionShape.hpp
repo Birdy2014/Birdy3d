@@ -9,9 +9,6 @@ public:
     Collider *collider;
 
     virtual glm::vec3 findFurthestPoint(glm::vec3 direction) = 0;
-
-protected:
-    glm::vec3 pos;
 };
 
 #endif

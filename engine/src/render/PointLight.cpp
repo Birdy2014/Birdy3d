@@ -32,7 +32,7 @@ void PointLight::use(Shader *lightShader, int id, int textureid) {
     }
     std::string name = "pointLights[" + std::to_string(id) + "].";
     lightShader->use();
-    lightShader->setVec3(name + "position", this->object->absPos());
+    lightShader->setVec3(name + "position", this->object->transform.worldPosition());
     lightShader->setVec3(name + "ambient", ambient);
     lightShader->setVec3(name + "diffuse", diffuse);
     lightShader->setFloat(name + "linear", linear);
@@ -44,7 +44,7 @@ void PointLight::use(Shader *lightShader, int id, int textureid) {
 }
 
 void PointLight::genShadowMap(Shader *lightShader, int id, int textureid) {
-    glm::vec3 absPos = this->object->absPos();
+    glm::vec3 absPos = this->object->transform.worldPosition();
 
     GLint m_viewport[4];
     glGetIntegerv(GL_VIEWPORT, m_viewport);

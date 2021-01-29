@@ -33,34 +33,34 @@ void FPPlayerController::update(float deltaTime) {
 		return;
 
 	float cameraSpeed = 2.5f * deltaTime;
-	if (Input::keyPressed(GLFW_KEY_W))
-        this->object->pos += cameraSpeed * this->object->absForward();
-	if (Input::keyPressed(GLFW_KEY_S))
-        this->object->pos -= cameraSpeed * this->object->absForward();
-	if (Input::keyPressed(GLFW_KEY_A))
-        this->object->pos -= glm::normalize(glm::cross(this->object->absForward(), this->object->absUp())) * cameraSpeed;
-	if (Input::keyPressed(GLFW_KEY_D))
-        this->object->pos += glm::normalize(glm::cross(this->object->absForward(), this->object->absUp())) * cameraSpeed;
-	if (Input::keyPressed(GLFW_KEY_SPACE))
-		this->object->pos += glm::vec3(0.0f, cameraSpeed, 0.0f);
-	if (Input::keyPressed(GLFW_KEY_LEFT_SHIFT))
-		this->object->pos += glm::vec3(0.0f, -cameraSpeed, 0.0f);
+    if (Input::keyPressed(GLFW_KEY_W))
+        this->object->transform.position += cameraSpeed * this->object->absForward();
+    if (Input::keyPressed(GLFW_KEY_S))
+        this->object->transform.position -= cameraSpeed * this->object->absForward();
+    if (Input::keyPressed(GLFW_KEY_A))
+        this->object->transform.position -= glm::normalize(glm::cross(this->object->absForward(), this->object->absUp())) * cameraSpeed;
+    if (Input::keyPressed(GLFW_KEY_D))
+        this->object->transform.position += glm::normalize(glm::cross(this->object->absForward(), this->object->absUp())) * cameraSpeed;
+    if (Input::keyPressed(GLFW_KEY_SPACE))
+        this->object->transform.position += glm::vec3(0.0f, cameraSpeed, 0.0f);
+    if (Input::keyPressed(GLFW_KEY_LEFT_SHIFT))
+        this->object->transform.position += glm::vec3(0.0f, -cameraSpeed, 0.0f);
 
-	// Mouse
-	glm::vec2 cursorOffset = Input::cursorPosOffset();
-	float xoffset = cursorOffset.x;
-	float yoffset = cursorOffset.y;
+    // Mouse
+    glm::vec2 cursorOffset = Input::cursorPosOffset();
+    float xoffset = cursorOffset.x;
+    float yoffset = cursorOffset.y;
 
-	float sensitivity = 0.001f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
+    float sensitivity = 0.001f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
 
-	this->object->rot.y += xoffset;
-	this->object->rot.x += yoffset;
+    this->object->transform.orientation.y += xoffset;
+    this->object->transform.orientation.x += yoffset;
 
-	float maxPitch = M_PI_2 - 0.001;
-	if(this->object->rot.x > maxPitch)
-  		this->object->rot.x =  maxPitch;
-	if(this->object->rot.x < -maxPitch)
-  		this->object->rot.x = -maxPitch;
+    float maxPitch = M_PI_2 - 0.001;
+    if(this->object->transform.orientation.x > maxPitch)
+        this->object->transform.orientation.x =  maxPitch;
+    if(this->object->transform.orientation.x < -maxPitch)
+        this->object->transform.orientation.x = -maxPitch;
 }

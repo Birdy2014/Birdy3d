@@ -34,7 +34,7 @@ void Spotlight::setupShadowMap() {
 }
 
 void Spotlight::genShadowMap(Shader *lightShader, int id, int textureid) {
-    glm::vec3 absPos = this->object->absPos();
+    glm::vec3 absPos = this->object->transform.worldPosition();
 
     GLint m_viewport[4];
     glGetIntegerv(GL_VIEWPORT, m_viewport);
@@ -71,7 +71,7 @@ void Spotlight::use(Shader *lightShader, int id, int textureid) {
     }
     std::string name = "spotlights[" + std::to_string(id) + "].";
     lightShader->use();
-    lightShader->setVec3(name + "position", this->object->absPos());
+    lightShader->setVec3(name + "position", this->object->transform.worldPosition());
     lightShader->setVec3(name + "direction", this->object->absForward());
     lightShader->setVec3(name + "ambient", this->ambient);
     lightShader->setVec3(name + "diffuse", this->diffuse);

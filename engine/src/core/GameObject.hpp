@@ -3,13 +3,12 @@
 
 #include <vector>
 #include "core/Component.hpp"
+#include "core/Transform.hpp"
 #include "render/Shader.hpp"
 
 class GameObject {
 public:
-    glm::vec3 pos;
-    glm::vec3 rot;
-    glm::vec3 scale;
+    Transform3d transform;
     GameObject *parent = nullptr;
     GameObject *scene = nullptr;
 
@@ -19,10 +18,6 @@ public:
     void start();
     void update(float deltaTime);
     void cleanup();
-    glm::mat4 absTransform();
-    glm::vec3 absPos();
-    glm::vec3 absRot();
-    glm::vec3 absScale();
     glm::vec3 absForward();
     glm::vec3 absRight();
     glm::vec3 absUp();
