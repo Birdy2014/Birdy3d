@@ -4,36 +4,15 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include "render/Shader.hpp"
+#include "ui/Shape.hpp"
 
-class Rectangle {
+class Rectangle : public Shape {
 public:
-    Rectangle(glm::ivec2 pos, glm::ivec2 size, bool filled, glm::vec4 color);
-    Rectangle(glm::ivec2 pos, glm::ivec2 size, unsigned int textureID);
-    Rectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 textColor, unsigned int charTexture);
-    glm::ivec2 getPos();
-    glm::ivec2 getSize();
-    void resize(glm::ivec2 size);
-    void setPos(glm::ivec2 pos);
-    void setTexture(unsigned int textureID);
-    void setColor(glm::vec4 color);
-    void setMove(glm::mat4 move);
-    void draw();
+    Rectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color = glm::vec4(1), Type type = FILLED);
+    void draw(glm::mat4 move) override;
+    bool contains(glm::vec2 point) override;
 
 private:
-    Shader *shader;
-    unsigned int vao, vbo = 0;
-    bool dirty = true;
-    bool hasMatrix = false;
-    // Global position and size in pixels (maybe dpi independent later) or normalized
-    glm::ivec2 pos;
-    glm::ivec2 size;
-    glm::mat4 move;
-    bool filled;
-    bool hasTexture;
-    bool isText;
-    unsigned int textureID;
-    glm::vec4 color;
-
     void createBuffers();
     void updateVBO();
 };

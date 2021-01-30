@@ -3,6 +3,8 @@
 #include "core/Application.hpp"
 #include "core/Input.hpp"
 #include "core/RessourceManager.hpp"
+#include "ui/Rectangle.hpp"
+#include "ui/Triangle.hpp"
 
 Widget::Widget(glm::vec3 pos, Placement placement, float rotation, glm::vec2 scale) {
     this->pos = pos;
@@ -11,12 +13,20 @@ Widget::Widget(glm::vec3 pos, Placement placement, float rotation, glm::vec2 sca
     this->scale = scale;
 }
 
-void Widget::addRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color) {
-    this->rectangles.push_back(Rectangle(pos, size, false, color));
+void Widget::addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
+    this->shapes.push_back(new Rectangle(pos, size, color, Shape::OUTLINE));
 }
 
-void Widget::addFilledRectangle(glm::ivec2 pos, glm::ivec2 size, glm::vec4 color) {
-    this->rectangles.push_back(Rectangle(pos, size, true, color));
+void Widget::addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
+    this->shapes.push_back(new Rectangle(pos, size, color, Shape::FILLED));
+}
+
+void Widget::addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
+    this->shapes.push_back(new Triangle(pos, size, color, Shape::OUTLINE));
+}
+
+void Widget::addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
+    this->shapes.push_back(new Triangle(pos, size, color, Shape::FILLED));
 }
 
 void Widget::addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color) {
@@ -30,9 +40,8 @@ void Widget::draw() {
     glm::mat4 move = this->absTransform(true);
 
     // draw self
-    for (Rectangle r : this->rectangles) {
-        r.setMove(move);
-        r.draw();
+    for (Shape *s : this->shapes) {
+        s->draw(move);
     }
 
     for (Widget::Text t : this->texts) {
@@ -48,8 +57,8 @@ void Widget::draw() {
 
 glm::ivec2 Widget::getBottomLeft() {
     glm::ivec2 bottomLeft(Application::getViewportSize());
-    for (Rectangle r : this->rectangles) {
-        glm::ivec2 rpos = r.getPos();
+    for (Shape *s : this->shapes) {
+        glm::ivec2 rpos = s->position();
         if (rpos.x < bottomLeft.x)
             bottomLeft.x = rpos.x;
         if (rpos.y < bottomLeft.y)
@@ -60,9 +69,9 @@ glm::ivec2 Widget::getBottomLeft() {
 
 glm::ivec2 Widget::getTopRight() {
     glm::ivec2 topRight(0);
-    for (Rectangle r : this->rectangles) {
-        glm::ivec2 rpos = r.getPos();
-        glm::ivec2 rsize = r.getSize();
+    for (Shape *s : this->shapes) {
+        glm::ivec2 rpos = s->position();
+        glm::ivec2 rsize = s->size();
         if (rpos.x + rsize.x > topRight.x)
             topRight.x = rpos.x + rsize.x;
         if (rpos.y + rsize.y > topRight.y)
@@ -79,22 +88,19 @@ bool Widget::updateEvents() {
     if (hidden)
         return false;
 
-    glm::vec2 size = getSize();
-    glm::vec2 viewportSize = Application::getViewportSize();
-    glm::vec3 absPos = this->absTransform() * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-
     // children
     for (Widget *w : this->children) {
         if (w->updateEvents())
             return true;
     }
+
     // self
     if (Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+        glm::vec2 absPos = this->absTransform() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         glm::vec2 cursorPos = Input::cursorPos();
-        glm::ivec2 bottomLeft = this->getBottomLeft() + glm::ivec2(absPos);
-        glm::ivec2 topRight = this->getTopRight() + glm::ivec2(absPos);
-        if (cursorPos.x > bottomLeft.x && cursorPos.x < topRight.x && cursorPos.y > bottomLeft.y && cursorPos.y < topRight.y) {
-            return clickHandler();
+        for (Shape *s : this->shapes) {
+            if (s->contains(cursorPos - absPos))
+                return clickHandler();
         }
     }
     return false;

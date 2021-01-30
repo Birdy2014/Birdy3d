@@ -1,14 +1,13 @@
-#include "ui/Rectangle.hpp"
+#include "ui/Triangle.hpp"
 
-#include "core/Application.hpp"
 #include "core/RessourceManager.hpp"
 
-Rectangle::Rectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Type type) : Shape(pos, size, color) {
+Triangle::Triangle(glm::vec2 position, glm::vec2 size, glm::vec4 color, Type type) : Shape(position, size, color) {
     this->shader = RessourceManager::getShader("ui");
     this->type = type;
 }
 
-void Rectangle::draw(glm::mat4 move) {
+void Triangle::draw(glm::mat4 move) {
     if (!vao || !vbo)
         this->createBuffers();
     
@@ -29,19 +28,24 @@ void Rectangle::draw(glm::mat4 move) {
     this->shader->setInt("rectTexture", 0);
     glBindVertexArray(this->vao);
     if (type == Shape::OUTLINE)
-        glDrawArrays(GL_LINE_LOOP, 0, 4);
+        glDrawArrays(GL_LINE_LOOP, 0, 3);
     else
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-bool Rectangle::contains(glm::vec2 point) {
-    glm::vec2 bottomLeft = _position;
-    glm::vec2 topRight = _position + _size;
-    return point.x > bottomLeft.x && point.x < topRight.x && point.y > bottomLeft.y && point.y < topRight.y;
+bool Triangle::contains(glm::vec2 point) {
+    glm::vec2 a = _position;
+    glm::vec2 b = _position + glm::vec2(_size.x, 0);
+    glm::vec2 c = _position + glm::vec2(0, _size.y);
+    float area = this->area(a, b, c);
+    float area1 = this->area(point, b, c);
+    float area2 = this->area(a, point, c);
+    float area3 = this->area(a, b, point);
+    return (area == area1 + area2 + area3);
 }
 
-void Rectangle::createBuffers() {
-    float vertices[4 * 4];
+void Triangle::createBuffers() {
+    float vertices[3 * 4];
     // Create buffers
     glGenVertexArrays(1, &this->vao);
     glGenBuffers(1, &this->vbo);
@@ -57,7 +61,7 @@ void Rectangle::createBuffers() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
-void Rectangle::updateVBO() {
+void Triangle::updateVBO() {
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     float x = this->_position.x;
@@ -68,7 +72,6 @@ void Rectangle::updateVBO() {
         float vertices[] = {
             x,     y,     0.0f, 0.0f,
             x,     y + h, 0.0f, 1.0f,
-            x + w, y + h, 1.0f, 1.0f,
             x + w, y,     1.0f, 0.0f,
         };
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
@@ -77,8 +80,11 @@ void Rectangle::updateVBO() {
             x,     y,     0.0f, 1.0f,
             x + w, y,     1.0f, 1.0f,
             x,     y + h, 0.0f, 0.0f,
-            x + w, y + h, 1.0f, 0.0f
         };
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
     }
+}
+
+float Triangle::area(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
+    return glm::length(glm::cross(glm::vec3(c - a, 0), glm::vec3(c - b, 0))) / 2;
 }

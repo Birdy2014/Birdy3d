@@ -17,7 +17,7 @@ TextRenderer::TextRenderer(std::string path, unsigned int fontSize) {
     if (FT_New_Face(this->ft, path.c_str(), 0, &this->face))
         Logger::error("freetype: Failed to load font");
     FT_Set_Pixel_Sizes(face, 0, fontSize);
-    this->rect = new Rectangle(glm::ivec2(0), glm::ivec2(0), glm::vec4(1), 0);
+    this->rect = new Rectangle(glm::vec2(0), glm::vec2(0), glm::vec4(1), Shape::TEXT);
 }
 
 bool TextRenderer::addChar(char c) {
@@ -54,8 +54,7 @@ void TextRenderer::renderText(std::string text, float x, float y, float fontSize
 
 void TextRenderer::renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move) {
     float scale = (fontSize / this->fontSize);
-    this->rect->setColor(color);
-    this->rect->setMove(move);
+    this->rect->color(color);
     for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
         if (chars.count(*c) == 0) {
             this->addChar(*c);
@@ -66,10 +65,10 @@ void TextRenderer::renderText(std::string text, float x, float y, float fontSize
         float w = ch.size.x * scale;
         float h = ch.size.y * scale;
 
-        this->rect->setPos(glm::ivec2(xpos, ypos));
-        this->rect->resize(glm::ivec2(w, h));
-        this->rect->setTexture(ch.textureID);
-        this->rect->draw();
+        this->rect->position(glm::vec2(xpos, ypos));
+        this->rect->size(glm::vec2(w, h));
+        this->rect->texture(ch.textureID);
+        this->rect->draw(move);
         x += (ch.advance >> 6) * scale;
     }
 }

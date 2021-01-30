@@ -18,7 +18,8 @@ int main() {
 		Logger::debug("Canvas clicked");
 		return false;
 	});
-	canvas.addRectangle(glm::vec3(-100), glm::vec3(200), glm::vec4(1));
+	//canvas.addRectangle(glm::vec3(-100), glm::vec3(200), glm::vec4(1));
+	canvas.addFilledTriangle(glm::vec2(60, -10), glm::vec2(100), glm::vec4(0, 1, 0, 1));
 	Widget closeButton(glm::vec3(0), Widget::Placement::CENTER);
 	closeButton.hidden = false;
 	closeButton.setOnClick([]() {
