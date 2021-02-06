@@ -20,11 +20,13 @@ void Transform3d::setParentTransform(Transform3d *t) {
 }
 
 bool Transform3d::changed(bool updateStatus) {
-    if (position != _position || orientation != _orientation || scale != _scale) {
+    if (position != _position || orientation != _orientation || scale != _scale || (parentTransform && parentTransform->matrix() != _parentMatrix)) {
         if (updateStatus) {
             _position = position;
             _orientation = orientation;
             _scale = scale;
+            if (parentTransform)
+                _parentMatrix = parentTransform->matrix();
         }
         return true;
     }

@@ -29,6 +29,7 @@ private:
     glm::vec3 _position;
     glm::vec3 _orientation;
     glm::vec3 _scale;
+    glm::mat4 _parentMatrix;
 };
 
 #endif
