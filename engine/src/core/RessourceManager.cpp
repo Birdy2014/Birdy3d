@@ -51,8 +51,8 @@ std::string RessourceManager::getRessourcePath(std::string &name, RessourceType 
         name = name.substr(0, dotPos);
     }
 
-    std::string base_path = getExecutableDir() + "ressources/";
-    std::string default_dir = getExecutableDir();
+    std::string base_path = getExecutableDir() + "../ressources/";
+    std::string default_dir = getExecutableDir() + "../";
     std::string subdir;
     switch (type) {
         case RessourceType::SHADER:
