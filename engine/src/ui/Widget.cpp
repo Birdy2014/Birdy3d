@@ -6,11 +6,10 @@
 #include "ui/Rectangle.hpp"
 #include "ui/Triangle.hpp"
 
-Widget::Widget(glm::vec3 pos, Placement placement, float rotation, glm::vec2 scale) {
+Widget::Widget(glm::vec2 pos, Placement placement, float rotation) {
     this->pos = pos;
     this->placement = placement;
     this->rot = rotation;
-    this->scale = scale;
 }
 
 void Widget::addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
@@ -37,7 +36,7 @@ void Widget::draw() {
     if (hidden)
         return;
 
-    glm::mat4 move = this->absTransform(true);
+    glm::mat4 move = normalizedMove();
 
     // draw self
     for (Shape *s : this->shapes) {
@@ -49,7 +48,6 @@ void Widget::draw() {
     }
 
     // draw children
-    glm::vec2 size = getSize();
     for (Widget *w : children) {
         w->draw();
     }
@@ -80,10 +78,13 @@ glm::ivec2 Widget::getTopRight() {
     return topRight;
 }
 
+// TODO: size variable (with 0 for no preferred size) instead of this function
 glm::ivec2 Widget::getSize() {
-    return this->getTopRight() - this->getBottomLeft();
+    //return this->getTopRight() - this->getBottomLeft();
+    return this->getTopRight();
 }
 
+// TODO: eventdispatcher to notify about the individual shapes separately
 bool Widget::updateEvents() {
     if (hidden)
         return false;
@@ -96,7 +97,7 @@ bool Widget::updateEvents() {
 
     // self
     if (Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-        glm::vec2 absPos = this->absTransform() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         glm::vec2 cursorPos = Input::cursorPos();
         for (Shape *s : this->shapes) {
             if (s->contains(cursorPos - absPos))
@@ -106,47 +107,44 @@ bool Widget::updateEvents() {
     return false;
 }
 
+// TODO: use placement to position shapes additionally to widgets, getShapeByName
 // Widget position relative to the parent
-glm::vec2 Widget::getPos() {
+glm::vec2 Widget::getPos(glm::vec2 parentSize) {
     glm::vec2 pos;
-    glm::vec2 parentSize;
-    glm::vec2 bottomLeft;
-    if (this->parent) {
-        parentSize = this->parent->getSize();
-        bottomLeft = this->parent->getBottomLeft();
-    } else {
-        parentSize = Application::getViewportSize();
-        bottomLeft = glm::vec2(0);
-    }
-    
+
     if (placement == Placement::TOP_LEFT || placement == Placement::BOTTOM_LEFT || placement == Placement::CENTER_LEFT) {
-        pos.x = this->pos.x + bottomLeft.x;
+        pos.x = this->pos.x;
     } else if (placement == Placement::TOP_RIGHT || placement == Placement::BOTTOM_RIGHT || placement == Placement::CENTER_RIGHT) {
-        pos.x = parentSize.x + this->pos.x + bottomLeft.x;
+        pos.x = parentSize.x + this->pos.x;
     } else if (placement == Placement::TOP_CENTER || placement == Placement::BOTTOM_CENTER || placement == Placement::CENTER) {
-        pos.x = parentSize.x / 2 + this->pos.x + bottomLeft.x;
+        pos.x = parentSize.x / 2 + this->pos.x;
     }
     if (placement == Placement::TOP_LEFT || placement == Placement::TOP_RIGHT || placement == Placement::TOP_CENTER) {
-        pos.y = parentSize.y + this->pos.y + bottomLeft.y;
+        pos.y = parentSize.y + this->pos.y;
     } else if (placement == Placement::BOTTOM_LEFT || placement == Placement::BOTTOM_RIGHT || placement == Placement::BOTTOM_CENTER) {
-        pos.y = this->pos.y + bottomLeft.y;
+        pos.y = this->pos.y;
     } else if (placement == Placement::CENTER_LEFT || placement == Placement::CENTER_RIGHT || placement == Placement::CENTER) {
-        pos.y = parentSize.y / 2 + this->pos.y + bottomLeft.y;
+        pos.y = parentSize.y / 2 + this->pos.y;
     }
     return pos;
 }
 
-glm::mat4 Widget::absTransform(bool normalize) {
-    glm::mat4 m(1);
-    m = glm::rotate(m, this->rot, glm::vec3(0, 0, 1));
-    if (this->parent)
-        m = m * this->parent->absTransform();
-    m = glm::translate(m, glm::vec3(this->getPos(), 0.0f));
-    m = glm::scale(m, glm::vec3(this->scale, 1.0f));
-    if (normalize) {
-        // Convert the pixel coordinates to normalized coordinates
-        glm::vec2 viewportSize = Application::getViewportSize();
-        m = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y) * m;
+// TODO: arrange shapes based on their placement/unit values
+void Widget::arrange(glm::mat4 move, glm::vec2 size) {
+    this->move = move;
+    this->size = size; // TODO: use size to resize shapes
+    for (Widget *child : children) {
+        glm::mat4 m = move;
+        m = glm::translate(m, glm::vec3(child->getPos(size), 0.0f));
+        m = glm::rotate(m, child->rot, glm::vec3(0, 0, 1));
+        glm::vec2 childSize = child->getSize();
+        if (childSize.x == 0 || childSize.y == 0)
+            childSize = size;
+        child->arrange(m, childSize);
     }
-    return m;
+}
+
+glm::mat4 Widget::normalizedMove() {
+    glm::vec2 viewportSize = Application::getViewportSize();
+    return glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y) * move;
 }

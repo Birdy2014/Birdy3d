@@ -17,7 +17,7 @@ Camera::Camera(int width, int height, bool deferred) {
     this->deferred = deferred;
 }
 
-Camera::Camera(int width, int height, bool deferred, Widget *canvas) {
+Camera::Camera(int width, int height, bool deferred, Canvas *canvas) {
     this->width = width;
     this->height = height;
     this->deferred = deferred;

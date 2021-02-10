@@ -12,24 +12,34 @@ int main() {
 	Input::init();
 
 	// UI
-	Widget canvas(glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
+    Canvas canvas;
 	canvas.hidden = true;
-	canvas.setOnClick([]() {
-		Logger::debug("Canvas clicked");
+
+	Widget menu(glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
+	menu.setOnClick([]() {
+		Logger::debug("Menu clicked");
 		return false;
 	});
-	//canvas.addRectangle(glm::vec3(-100), glm::vec3(200), glm::vec4(1));
-	canvas.addFilledTriangle(glm::vec2(60, -10), glm::vec2(100), glm::vec4(0, 1, 0, 1));
+	menu.addRectangle(glm::vec3(0), glm::vec3(200), glm::vec4(1));
+    canvas.child = &menu;
+
+    DirectionalLayout layout(DirectionalLayout::Direction::DOWN);
+    menu.addChild(&layout);
+
 	Widget closeButton(glm::vec3(0), Widget::Placement::CENTER);
 	closeButton.hidden = false;
 	closeButton.setOnClick([]() {
     	glfwSetWindowShouldClose(Application::getWindow(), true);
 		return true;
 	});
-	closeButton.addFilledRectangle(glm::vec2(-20.0, -20.0), glm::vec2(40.0, 40.0), glm::vec4(1.0f));
-	closeButton.addRectangle(glm::vec2(-20.0, -20.0), glm::vec2(40.0, 40.0), glm::vec4(1, 0, 0, 1));
-	closeButton.addText(glm::vec2(-20, -10), 20, "Quit", glm::vec4(0, 1, 1, 1));
-	canvas.addChild(&closeButton);
+	closeButton.addFilledRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec4(1.0f));
+	closeButton.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec4(1, 0, 0, 1));
+	closeButton.addText(glm::vec2(0, 10), 20, "Quit", glm::vec4(0, 1, 1, 1));
+	layout.addChild(&closeButton);
+
+    Widget testWidget2;
+    testWidget2.addFilledRectangle(glm::vec2(0), glm::vec2(40, 40), glm::vec4(0, 0, 1, 1));
+    layout.addChild(&testWidget2);
 
 	// GameObjects
 	GameObject *scene = new GameObject();
@@ -89,7 +99,7 @@ int main() {
 		lastFrame = currentFrame;
 
 		Input::update();
-		canvas.updateEvents();
+		canvas.update();
 
 		scene->update(deltaTime);
 

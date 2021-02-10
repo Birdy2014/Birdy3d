@@ -21,6 +21,11 @@ public:
         CENTER
     };
 
+    enum class Unit {
+        PIXELS,
+        PERCENT // Not the best name: 1 is 100%
+    };
+
     struct Text {
         glm::vec2 pos;
         float fontSize;
@@ -28,21 +33,18 @@ public:
         glm::vec4 color;
     };
 
-    Widget *parent = nullptr;
     bool hidden = false;
-    glm::vec3 pos;
+    glm::vec2 pos;
     float rot;
-    glm::vec2 scale;
     Placement placement;
 
-    Widget(glm::vec3 pos = glm::vec3(0.0f), Placement placement = Placement::TOP_LEFT, float rotation = 0.0f, glm::vec2 scale = glm::vec2(1));
+    Widget(glm::vec2 pos = glm::vec2(0.0f), Placement placement = Placement::BOTTOM_LEFT, float rotation = 0.0f);
     void addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
     void addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
     void addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
     void addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
     void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color);
     void addChild(Widget *w) {
-        w->parent = this;
         children.push_back(w);
     }
     void draw();
@@ -51,17 +53,20 @@ public:
     }
     bool updateEvents();
     glm::ivec2 getSize();
-    glm::vec2 getPos();
-    glm::mat4 absTransform(bool normalize = false);
+    glm::vec2 getPos(glm::vec2 parentSize);
+    virtual void arrange(glm::mat4 move, glm::vec2 size);
 
-private:
+protected:
     std::vector<Shape*> shapes;
     std::vector<Widget::Text> texts;
     std::vector<Widget*> children;
-    bool (*clickHandler)();
+    bool (*clickHandler)(); // FIXME: This will cause a segfault if not set
+    glm::mat4 move;
+    glm::vec2 size;
 
     glm::ivec2 getBottomLeft();
     glm::ivec2 getTopRight();
+    glm::mat4 normalizedMove();
 };
 
 #endif

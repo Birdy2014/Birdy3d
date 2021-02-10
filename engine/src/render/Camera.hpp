@@ -4,14 +4,14 @@
 #include <glm/glm.hpp>
 #include "core/Component.hpp"
 #include "render/Shader.hpp"
-#include "ui/Widget.hpp"
+#include "ui/Canvas.hpp"
 
 class Camera : public Component {
 public:
-    Widget *canvas = nullptr;
+    Canvas *canvas = nullptr;
 
     Camera(int width, int height, bool deferred);
-    Camera(int width, int height, bool deferred, Widget *canvas);
+    Camera(int width, int height, bool deferred, Canvas *canvas);
     void start() override;
     void cleanup() override;
     void render();

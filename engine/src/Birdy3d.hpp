@@ -23,5 +23,7 @@
 #include "render/Spotlight.hpp"
 
 // UI
+#include "ui/Canvas.hpp"
+#include "ui/DirectionalLayout.hpp"
 #include "ui/Widget.hpp"
 #include "ui/TextRenderer.hpp"
