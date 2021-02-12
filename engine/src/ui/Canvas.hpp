@@ -14,8 +14,9 @@ public:
     void update() {
         if (!hidden) {
             glm::mat4 m(1);
-            m = glm::translate(m, glm::vec3(child->getPos(Application::getViewportSize()), 1.0f));
-            child->arrange(m, child->getSize());
+            glm::vec2 viewport = Application::getViewportSize();
+            m = glm::translate(m, glm::vec3(child->getPos(viewport), 1.0f));
+            child->arrange(m, Utils::convertToPixels(child->size, viewport, child->unit));
             child->updateEvents();
         }
     }

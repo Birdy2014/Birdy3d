@@ -72,3 +72,17 @@ void TextRenderer::renderText(std::string text, float x, float y, float fontSize
         x += (ch.advance >> 6) * scale;
     }
 }
+
+glm::vec2 TextRenderer::textSize(std::string text, float fontSize) {
+    float scale = (fontSize / this->fontSize);
+    glm::vec2 size;
+    for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
+        if (chars.count(*c) == 0)
+            this->addChar(*c);
+        Character ch = this->chars[*c];
+        float h = ch.size.y * scale;
+        size.y = std::max(size.y, h);
+        size.x += (ch.advance >> 6) * scale;
+    }
+    return size;
+}

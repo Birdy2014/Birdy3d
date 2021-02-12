@@ -3,7 +3,7 @@
 #include "core/Application.hpp"
 #include "core/RessourceManager.hpp"
 
-Rectangle::Rectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Type type) : Shape(pos, size, color) {
+Rectangle::Rectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Type type, Placement placement, Unit unit) : Shape(pos, size, color, placement, unit) {
     this->shader = RessourceManager::getShader("ui");
     this->type = type;
 }
@@ -35,8 +35,9 @@ void Rectangle::draw(glm::mat4 move) {
 }
 
 bool Rectangle::contains(glm::vec2 point) {
-    glm::vec2 bottomLeft = _position;
-    glm::vec2 topRight = _position + _size;
+    glm::vec2 bottomLeft = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
+    glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+    glm::vec2 topRight = bottomLeft + size;
     return point.x > bottomLeft.x && point.x < topRight.x && point.y > bottomLeft.y && point.y < topRight.y;
 }
 
@@ -60,10 +61,12 @@ void Rectangle::createBuffers() {
 void Rectangle::updateVBO() {
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    float x = this->_position.x;
-    float y = this->_position.y;
-    float w = this->_size.x;
-    float h = this->_size.y;
+    glm::vec2 pos = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
+    float x = pos.x;
+    float y = pos.y;
+    glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+    float w = size.x;
+    float h = size.y;
     if (type == Shape::OUTLINE) {
         float vertices[] = {
             x,     y,     0.0f, 0.0f,

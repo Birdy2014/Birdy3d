@@ -22,6 +22,7 @@ public:
     ~TextRenderer();
     void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color);
     void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move);
+    glm::vec2 textSize(std::string text, float fontSize);
 
 private:
     std::map<char, Character> chars;

@@ -15,31 +15,30 @@ int main() {
     Canvas canvas;
 	canvas.hidden = true;
 
-	Widget menu(glm::vec3(0.0f, 0.0f, 0.0f), Widget::Placement::CENTER);
+	Widget menu(glm::vec2(0), glm::vec2(0.5), Placement::CENTER, Unit::PERCENT);
 	menu.setOnClick([]() {
 		Logger::debug("Menu clicked");
 		return false;
 	});
-	menu.addRectangle(glm::vec3(0), glm::vec3(200), glm::vec4(1));
+	menu.addRectangle(glm::vec2(0), glm::vec2(1), glm::vec4(1), Placement::BOTTOM_LEFT, Unit::PERCENT);
     canvas.child = &menu;
 
     DirectionalLayout layout(DirectionalLayout::Direction::DOWN);
     menu.addChild(&layout);
 
-	Widget closeButton(glm::vec3(0), Widget::Placement::CENTER);
+	Widget closeButton(glm::vec3(0), glm::vec2(40), Placement::CENTER);
 	closeButton.hidden = false;
 	closeButton.setOnClick([]() {
     	glfwSetWindowShouldClose(Application::getWindow(), true);
 		return true;
 	});
-	closeButton.addFilledRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec4(1.0f));
-	closeButton.addRectangle(glm::vec2(0.0, 0.0), glm::vec2(40.0, 40.0), glm::vec4(1, 0, 0, 1));
-	closeButton.addText(glm::vec2(0, 10), 20, "Quit", glm::vec4(0, 1, 1, 1));
+	closeButton.addFilledRectangle(glm::vec2(0.0), glm::vec2(1.0, 1.0), glm::vec4(1.0f), Placement::BOTTOM_LEFT, Unit::PERCENT);
+	closeButton.addRectangle(glm::vec2(0.0), glm::vec2(1.0, 1.0), glm::vec4(1, 0, 0, 1), Placement::BOTTOM_LEFT, Unit::PERCENT);
+	closeButton.addText(glm::vec2(0, 10), 20, "Quit", glm::vec4(0, 1, 1, 1), Placement::BOTTOM_LEFT);
 	layout.addChild(&closeButton);
 
-    Widget testWidget2;
-    testWidget2.addFilledRectangle(glm::vec2(0), glm::vec2(40, 40), glm::vec4(0, 0, 1, 1));
-    layout.addChild(&testWidget2);
+	Button testButton(glm::vec2(0), Placement::BOTTOM_LEFT, "TestButton", 20, glm::vec4(0, 0, 1, 1), glm::vec4(1, 0, 0, 1), glm::vec4(0, 1, 0, 1));
+	layout.addChild(&testButton);
 
 	// GameObjects
 	GameObject *scene = new GameObject();

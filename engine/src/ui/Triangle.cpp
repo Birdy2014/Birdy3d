@@ -2,7 +2,7 @@
 
 #include "core/RessourceManager.hpp"
 
-Triangle::Triangle(glm::vec2 position, glm::vec2 size, glm::vec4 color, Type type) : Shape(position, size, color) {
+Triangle::Triangle(glm::vec2 position, glm::vec2 size, glm::vec4 color, Type type, Placement placement, Unit unit) : Shape(position, size, color, placement, unit) {
     this->shader = RessourceManager::getShader("ui");
     this->type = type;
 }
@@ -34,9 +34,11 @@ void Triangle::draw(glm::mat4 move) {
 }
 
 bool Triangle::contains(glm::vec2 point) {
-    glm::vec2 a = _position;
-    glm::vec2 b = _position + glm::vec2(_size.x, 0);
-    glm::vec2 c = _position + glm::vec2(0, _size.y);
+    glm::vec2 position = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
+    glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+    glm::vec2 a = position;
+    glm::vec2 b = position + glm::vec2(size.x, 0);
+    glm::vec2 c = position + glm::vec2(0, size.y);
     float area = this->area(a, b, c);
     float area1 = this->area(point, b, c);
     float area2 = this->area(a, point, c);
@@ -64,10 +66,12 @@ void Triangle::createBuffers() {
 void Triangle::updateVBO() {
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    float x = this->_position.x;
-    float y = this->_position.y;
-    float w = this->_size.x;
-    float h = this->_size.y;
+    glm::vec2 pos = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
+    float x = pos.x;
+    float y = pos.y;
+    glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+    float w = size.x;
+    float h = size.y;
     if (type == Shape::OUTLINE) {
         float vertices[] = {
             x,     y,     0.0f, 0.0f,

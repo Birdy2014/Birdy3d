@@ -9,41 +9,42 @@
 
 class Widget {
 public:
-    enum class Placement {
-        TOP_LEFT,
-        BOTTOM_LEFT,
-        TOP_RIGHT,
-        BOTTOM_RIGHT,
-        CENTER_LEFT,
-        CENTER_RIGHT,
-        TOP_CENTER,
-        BOTTOM_CENTER,
-        CENTER
-    };
-
-    enum class Unit {
-        PIXELS,
-        PERCENT // Not the best name: 1 is 100%
-    };
-
-    struct Text {
+    class Text {
+    public:
         glm::vec2 pos;
         float fontSize;
         std::string text;
         glm::vec4 color;
+        Placement placement;
+        TextRenderer *renderer;
+
+        Text(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement, TextRenderer *renderer) : pos(pos), fontSize(fontSize), text(text), color(color), placement(placement), renderer(renderer) {}
+        void calcPos(glm::vec2 parentSize) {
+            glm::vec2 textSize = renderer->textSize(text, fontSize);
+            relativePos = Utils::getRelativePosition(pos, textSize, parentSize, placement, Unit::PIXELS);
+        }
+
+        void render(glm::mat4 move) {
+            renderer->renderText(text, relativePos.x, relativePos.y, fontSize, color, move);
+        }
+
+    private:
+        glm::vec2 relativePos;
     };
 
     bool hidden = false;
     glm::vec2 pos;
+    glm::vec2 size;
     float rot;
     Placement placement;
+    Unit unit;
 
-    Widget(glm::vec2 pos = glm::vec2(0.0f), Placement placement = Placement::BOTTOM_LEFT, float rotation = 0.0f);
-    void addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
-    void addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
+    Widget(glm::vec2 pos = glm::vec2(0.0f), glm::vec2 size = glm::vec2(0.0f), Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS, float rotation = 0.0f);
+    void addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
+    void addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
     void addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
     void addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
-    void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color);
+    void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement);
     void addChild(Widget *w) {
         children.push_back(w);
     }
@@ -52,20 +53,16 @@ public:
         this->clickHandler = clickHandler;
     }
     bool updateEvents();
-    glm::ivec2 getSize();
     glm::vec2 getPos(glm::vec2 parentSize);
     virtual void arrange(glm::mat4 move, glm::vec2 size);
 
 protected:
     std::vector<Shape*> shapes;
-    std::vector<Widget::Text> texts;
+    std::vector<Text*> texts;
     std::vector<Widget*> children;
     bool (*clickHandler)(); // FIXME: This will cause a segfault if not set
     glm::mat4 move;
-    glm::vec2 size;
 
-    glm::ivec2 getBottomLeft();
-    glm::ivec2 getTopRight();
     glm::mat4 normalizedMove();
 };
 
