@@ -34,4 +34,21 @@ private:
     bool addChar(char c);
 };
 
+class Text {
+public:
+    glm::vec2 pos;
+    float fontSize;
+    std::string text;
+    glm::vec4 color;
+    Placement placement;
+    TextRenderer *renderer;
+
+    Text(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement, TextRenderer *renderer) : pos(pos), fontSize(fontSize), text(text), color(color), placement(placement), renderer(renderer) {}
+    void calcPos(glm::vec2 parentSize);
+    void render(glm::mat4 move);
+
+private:
+    glm::vec2 relativePos;
+};
+
 #endif

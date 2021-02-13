@@ -9,29 +9,6 @@
 
 class Widget {
 public:
-    class Text {
-    public:
-        glm::vec2 pos;
-        float fontSize;
-        std::string text;
-        glm::vec4 color;
-        Placement placement;
-        TextRenderer *renderer;
-
-        Text(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement, TextRenderer *renderer) : pos(pos), fontSize(fontSize), text(text), color(color), placement(placement), renderer(renderer) {}
-        void calcPos(glm::vec2 parentSize) {
-            glm::vec2 textSize = renderer->textSize(text, fontSize);
-            relativePos = Utils::getRelativePosition(pos, textSize, parentSize, placement, Unit::PIXELS);
-        }
-
-        void render(glm::mat4 move) {
-            renderer->renderText(text, relativePos.x, relativePos.y, fontSize, color, move);
-        }
-
-    private:
-        glm::vec2 relativePos;
-    };
-
     bool hidden = false;
     glm::vec2 pos;
     glm::vec2 size;
@@ -53,7 +30,13 @@ public:
         this->clickHandler = clickHandler;
     }
     bool updateEvents();
-    glm::vec2 getPos(glm::vec2 parentSize);
+
+    // Returns the position relative to the parent's origin in pixels
+    glm::vec2 pixelPosition(glm::vec2 parentSize);
+
+    // Returns the size in pixels
+    virtual glm::vec2 pixelSize(glm::vec2 parentSize);
+
     virtual void arrange(glm::mat4 move, glm::vec2 size);
 
 protected:

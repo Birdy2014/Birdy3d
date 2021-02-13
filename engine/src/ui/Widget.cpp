@@ -78,10 +78,14 @@ bool Widget::updateEvents() {
     return false;
 }
 
-// TODO: use placement to position shapes additionally to widgets, getShapeByName
-// Widget position relative to the parent
-glm::vec2 Widget::getPos(glm::vec2 parentSize) {
-    return Utils::getRelativePosition(this->pos, Utils::convertToPixels(this->size, parentSize), parentSize, this->placement, this->unit);
+glm::vec2 Widget::pixelPosition(glm::vec2 parentSize) {
+    return Utils::getRelativePosition(this->pos, pixelSize(parentSize), parentSize, this->placement, this->unit);
+}
+
+glm::vec2 Widget::pixelSize(glm::vec2 parentSize) {
+    if (glm::length(size) == 0)
+        return parentSize;
+    return Utils::convertToPixels(size, parentSize, unit);
 }
 
 // TODO: arrange shapes based on their placement/unit values
@@ -98,9 +102,9 @@ void Widget::arrange(glm::mat4 move, glm::vec2 size) {
 
     for (Widget *child : children) {
         glm::mat4 m = move;
-        m = glm::translate(m, glm::vec3(child->getPos(size), 0.0f));
+        m = glm::translate(m, glm::vec3(child->pixelPosition(size), 0.0f));
         m = glm::rotate(m, child->rot, glm::vec3(0, 0, 1));
-        glm::vec2 childSize = child->size;
+        glm::vec2 childSize = child->pixelSize(size);
         if (childSize.x == 0 || childSize.y == 0)
             childSize = size;
         child->arrange(m, childSize);

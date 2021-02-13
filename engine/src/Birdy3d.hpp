@@ -24,7 +24,7 @@
 
 // UI
 #include "ui/Canvas.hpp"
-#include "ui/DirectionalLayout.hpp"
 #include "ui/Widget.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/widgets/Button.hpp"
+#include "ui/widgets/DirectionalLayout.hpp"

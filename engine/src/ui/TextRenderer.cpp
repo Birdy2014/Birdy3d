@@ -87,3 +87,12 @@ glm::vec2 TextRenderer::textSize(std::string text, float fontSize) {
     }
     return size;
 }
+
+void Text::calcPos(glm::vec2 parentSize) {
+    glm::vec2 textSize = renderer->textSize(text, fontSize);
+    relativePos = Utils::getRelativePosition(pos, textSize, parentSize, placement, Unit::PIXELS);
+}
+
+void Text::render(glm::mat4 move) {
+    renderer->renderText(text, relativePos.x, relativePos.y, fontSize, color, move);
+}
