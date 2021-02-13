@@ -13,7 +13,7 @@ struct Character {
     unsigned int textureID;
     glm::ivec2 size;
     glm::ivec2 bearing;
-    unsigned int advance;
+    long advance;
 };
 
 class TextRenderer {

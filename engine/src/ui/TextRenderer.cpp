@@ -44,6 +44,7 @@ bool TextRenderer::addChar(char c) {
         this->face->glyph->advance.x
     };
     this->chars.insert(std::pair<char, Character>(c, character));
+    return true;
 }
 
 void TextRenderer::renderText(std::string text, float x, float y, float fontSize, glm::vec4 color) {
@@ -75,7 +76,7 @@ void TextRenderer::renderText(std::string text, float x, float y, float fontSize
 
 glm::vec2 TextRenderer::textSize(std::string text, float fontSize) {
     float scale = (fontSize / this->fontSize);
-    glm::vec2 size;
+    glm::vec2 size(0);
     for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
         if (chars.count(*c) == 0)
             this->addChar(*c);
