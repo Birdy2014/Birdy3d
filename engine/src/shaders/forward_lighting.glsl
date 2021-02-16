@@ -14,12 +14,11 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-void main()
-{
+void main() {
     vec4 worldPos = model * vec4(aPos, 1.0);
-    FragPos = worldPos.xyz; 
+    FragPos = worldPos.xyz;
     TexCoords = aTexCoords;
-    
+
     mat3 normalMatrix = transpose(inverse(mat3(model)));
     vec3 T = normalize(normalMatrix * aTangent);
     Normal = normalize(normalMatrix * aNormal);
@@ -50,12 +49,11 @@ uniform vec3 viewPos;
 
 #include includes/lighting
 
-void main()
-{
-	vec4 var_diffuse;
+void main() {
+    vec4 var_diffuse;
     float var_specular;
     vec3 var_normal;
-	vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 viewDir = normalize(viewPos - FragPos);
     if (useTexture) {
         var_diffuse = texture(texture_diffuse1, TexCoords).rgba;
         var_specular = texture(texture_specular1, TexCoords).r;
@@ -70,5 +68,5 @@ void main()
 
     vec3 lighting = calcLights(var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular);
 
-	FragColor = vec4(lighting, var_diffuse.a);
+    FragColor = vec4(lighting, var_diffuse.a);
 }

@@ -1,33 +1,35 @@
-#ifndef BIRDY3D_MESH_HPP
-#define BIRDY3D_MESH_HPP
+#pragma once
 
-#include <vector>
-#include "render/Vertex.hpp"
 #include "render/Texture.hpp"
-#include "render/Shader.hpp"
+#include "render/Vertex.hpp"
+#include <vector>
 
-class Mesh {
-public:
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
-    // without texture
-    glm::vec4 color;
-    float specular;
-    glm::vec3 emissive;
-    bool useTexture;
+namespace Birdy3d {
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, float specular = 1.0f, glm::vec3 emissive = glm::vec3(0.0f));
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, glm::vec4 color, float specular, glm::vec3 emissive);
-    void render(Shader *shader);
-    void renderDepth();
-    void cleanup();
-    bool hasTransparency();
+    class Shader;
 
-private:
-    unsigned int VAO, VBO, EBO;
+    class Mesh {
+    public:
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
+        std::vector<Texture> textures;
+        // without texture
+        glm::vec4 color;
+        float specular;
+        glm::vec3 emissive;
+        bool useTexture;
 
-    void setupMesh();
-};
+        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, float specular = 1.0f, glm::vec3 emissive = glm::vec3(0.0f));
+        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, glm::vec4 color, float specular, glm::vec3 emissive);
+        void render(Shader* shader);
+        void renderDepth();
+        void cleanup();
+        bool hasTransparency();
 
-#endif
+    private:
+        unsigned int VAO, VBO, EBO;
+
+        void setupMesh();
+    };
+
+}

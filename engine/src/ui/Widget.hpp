@@ -1,52 +1,54 @@
-#ifndef BIRDY3D_WIDGET_HPP
-#define BIRDY3D_WIDGET_HPP
+#pragma once
 
-#include <vector>
+#include "ui/Utils.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include "render/Shader.hpp"
-#include "ui/Shape.hpp"
-#include "ui/TextRenderer.hpp"
+#include <vector>
 
-class Widget {
-public:
-    bool hidden = false;
-    glm::vec2 pos;
-    glm::vec2 size;
-    float rot;
-    Placement placement;
-    Unit unit;
+namespace Birdy3d {
 
-    Widget(glm::vec2 pos = glm::vec2(0.0f), glm::vec2 size = glm::vec2(0.0f), Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS, float rotation = 0.0f);
-    void addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
-    void addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
-    void addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
-    void addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
-    void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement);
-    void addChild(Widget *w) {
-        children.push_back(w);
-    }
-    void draw();
-    void setOnClick(bool (*clickHandler)()) {
-        this->clickHandler = clickHandler;
-    }
-    bool updateEvents();
+    class Shape;
+    class Text;
 
-    // Returns the position relative to the parent's origin in pixels
-    glm::vec2 pixelPosition(glm::vec2 parentSize);
+    class Widget {
+    public:
+        bool hidden = false;
+        glm::vec2 pos;
+        glm::vec2 size;
+        float rot;
+        Placement placement;
+        Unit unit;
 
-    // Returns the size in pixels
-    virtual glm::vec2 pixelSize(glm::vec2 parentSize);
+        Widget(glm::vec2 pos = glm::vec2(0.0f), glm::vec2 size = glm::vec2(0.0f), Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS, float rotation = 0.0f);
+        void addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
+        void addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
+        void addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
+        void addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
+        void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement);
+        void addChild(Widget* w) {
+            children.push_back(w);
+        }
+        void draw();
+        void setOnClick(bool (*clickHandler)()) {
+            this->clickHandler = clickHandler;
+        }
+        bool updateEvents();
 
-    virtual void arrange(glm::mat4 move, glm::vec2 size);
+        // Returns the position relative to the parent's origin in pixels
+        glm::vec2 pixelPosition(glm::vec2 parentSize);
 
-protected:
-    std::vector<Shape*> shapes;
-    std::vector<Text*> texts;
-    std::vector<Widget*> children;
-    bool (*clickHandler)(); // FIXME: This will cause a segfault if not set
-    glm::mat4 move;
+        // Returns the size in pixels
+        virtual glm::vec2 pixelSize(glm::vec2 parentSize);
 
-    glm::mat4 normalizedMove();
-};
+        virtual void arrange(glm::mat4 move, glm::vec2 size);
 
-#endif
+    protected:
+        std::vector<Shape*> shapes;
+        std::vector<Text*> texts;
+        std::vector<Widget*> children;
+        bool (*clickHandler)(); // FIXME: This will cause a segfault if not set
+        glm::mat4 move;
+
+        glm::mat4 normalizedMove();
+    };
+
+}

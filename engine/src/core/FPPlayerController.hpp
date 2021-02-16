@@ -1,18 +1,20 @@
-#ifndef BIRDY3D_FPPLAYERCONTROLLER_HPP
-#define BIRDY3D_FPPLAYERCONTROLLER_HPP
+#pragma once
 
 #include "core/Component.hpp"
-#include "render/Camera.hpp"
 
-class FPPlayerController : public Component {
-public:
-    FPPlayerController();
-    void start() override;
-    void update(float deltaTime) override;
+namespace Birdy3d {
 
-private:
-    Camera *cam;
-    bool hiddenStatusUpdated = false;
-};
+    class Camera;
 
-#endif
+    class FPPlayerController : public Component {
+    public:
+        FPPlayerController();
+        void start() override;
+        void update(float deltaTime) override;
+
+    private:
+        Camera* cam;
+        bool hiddenStatusUpdated = false;
+    };
+
+}

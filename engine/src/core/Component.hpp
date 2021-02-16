@@ -1,16 +1,17 @@
-#ifndef BIRDY3D_COMPONENT_HPP
-#define BIRDY3D_COMPONENT_HPP
+#pragma once
 
-class GameObject;
+namespace Birdy3d {
 
-class Component {
-public:
-    GameObject* object = nullptr;
+    class GameObject;
 
-    Component() {};
-    virtual void start() {};
-    virtual void update(float deltaTime) {};
-    virtual void cleanup() {};
-};
+    class Component {
+    public:
+        GameObject* object = nullptr;
 
-#endif
+        Component() {};
+        virtual void start() {};
+        virtual void update(float deltaTime) {};
+        virtual void cleanup() {};
+    };
+
+}

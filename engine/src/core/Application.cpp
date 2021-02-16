@@ -3,78 +3,82 @@
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+#include "ui/TextRenderer.hpp"
 
-GLFWwindow *Application::window = nullptr;
-EventDispatcher<Application::EventArg> *Application::eventDispatcher = nullptr;
-TextRenderer *Application::textRenderer = nullptr;
+namespace Birdy3d {
 
-bool Application::init(const char *windowName, int width, int height, const std::string &font, unsigned int fontSize) {
-	glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* Application::window = nullptr;
+    EventDispatcher<Application::EventArg>* Application::eventDispatcher = nullptr;
+    TextRenderer* Application::textRenderer = nullptr;
 
-	// Create Window
-	Application::window = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
-	if (window == nullptr) {
-    	Logger::error("Failed to create GLFW window");
-    	glfwTerminate();
-    	return false;
-	}
-	glfwMakeContextCurrent(window);
+    bool Application::init(const char* windowName, int width, int height, const std::string& font, unsigned int fontSize) {
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Load OpenGL
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    	Logger::error("Failed to initialize GLAD");
-    	return false;
-	}
+        // Create Window
+        Application::window = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
+        if (window == nullptr) {
+            Logger::error("Failed to create GLFW window");
+            glfwTerminate();
+            return false;
+        }
+        glfwMakeContextCurrent(window);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // Load OpenGL
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+            Logger::error("Failed to initialize GLAD");
+            return false;
+        }
 
-	// Set Viewport and resize callback
-	glViewport(0, 0, width, height);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetWindowFocusCallback(window, window_focus_callback);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// Init variables
-	eventDispatcher = new EventDispatcher<Application::EventArg>();
-	textRenderer = new TextRenderer(RessourceManager::getFontPath(font), fontSize);
+        // Set Viewport and resize callback
+        glViewport(0, 0, width, height);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetWindowFocusCallback(window, window_focus_callback);
 
-	return true;
-}
+        // Init variables
+        eventDispatcher = new EventDispatcher<Application::EventArg>();
+        textRenderer = new TextRenderer(RessourceManager::getFontPath(font), fontSize);
 
-void Application::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-	eventDispatcher->emitEvent(Application::EVENT_FRAMEBUFFER_SIZE, { width, height });
-}
+        return true;
+    }
 
-void Application::window_focus_callback(GLFWwindow *window, int focused) {
-	if (focused && Input::isCursorHidden()) {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	} else if (focused) {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	} else {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-}
+    void Application::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
+        eventDispatcher->emitEvent(Application::EVENT_FRAMEBUFFER_SIZE, { width, height });
+    }
 
-GLFWwindow *Application::getWindow() {
-	return window;
-}
+    void Application::window_focus_callback(GLFWwindow* window, int focused) {
+        if (focused && Input::isCursorHidden())
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        else if (focused)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        else
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 
-void *Application::registerEvent(Application::EventTypes type, std::function<void(Application::EventArg)> callback) {
-	eventDispatcher->addHandler(type, callback);
-}
+    GLFWwindow* Application::getWindow() {
+        return window;
+    }
 
-glm::vec2 Application::getViewportSize() {
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    return glm::vec2(viewport[2], viewport[3]);
-}
+    void* Application::registerEvent(Application::EventTypes type, std::function<void(Application::EventArg)> callback) {
+        eventDispatcher->addHandler(type, callback);
+    }
 
-TextRenderer *Application::getTextRenderer() {
-	return textRenderer;
+    glm::vec2 Application::getViewportSize() {
+        GLint viewport[4];
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        return glm::vec2(viewport[2], viewport[3]);
+    }
+
+    TextRenderer* Application::getTextRenderer() {
+        return textRenderer;
+    }
+
 }

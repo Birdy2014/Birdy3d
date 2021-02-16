@@ -5,8 +5,7 @@ layout (location = 1) in vec2 aTexCoord;
 
 out vec2 TexCoord;
 
-void main()
-{
+void main() {
     gl_Position = vec4(aPos, 1.0);
     TexCoord = aTexCoord;
 }
@@ -25,15 +24,14 @@ uniform vec3 viewPos;
 
 #include includes/lighting
 
-void main()
-{
-	vec3 fragPos = texture(gPosition, TexCoord).rgb;
-	vec3 normal = texture(gNormal, TexCoord).rgb;
-	vec3 diffuse = texture(gAlbedoSpec, TexCoord).rgb;
-	float specular = texture(gAlbedoSpec, TexCoord).a;
-	vec3 viewDir = normalize(viewPos - fragPos);
+void main() {
+    vec3 fragPos = texture(gPosition, TexCoord).rgb;
+    vec3 normal = texture(gNormal, TexCoord).rgb;
+    vec3 diffuse = texture(gAlbedoSpec, TexCoord).rgb;
+    float specular = texture(gAlbedoSpec, TexCoord).a;
+    vec3 viewDir = normalize(viewPos - fragPos);
 
     vec3 lighting = calcLights(normal, fragPos, viewDir, diffuse, specular);
 
-	FragColor = vec4(lighting, 1.0);
+    FragColor = vec4(lighting, 1.0);
 }

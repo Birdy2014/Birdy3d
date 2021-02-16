@@ -1,60 +1,62 @@
-#ifndef BIRDY3D_GAMEOBJECT_HPP
-#define BIRDY3D_GAMEOBJECT_HPP
+#pragma once
 
-#include <vector>
-#include "core/Component.hpp"
 #include "core/Transform.hpp"
-#include "render/Shader.hpp"
+#include <vector>
 
-class GameObject {
-public:
-    Transform3d transform;
-    GameObject *parent = nullptr;
-    GameObject *scene = nullptr;
+namespace Birdy3d {
 
-    GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
-    void addChild(GameObject *c);
-    void addComponent(Component *c);
-    void start();
-    void update(float deltaTime);
-    void cleanup();
-    glm::vec3 absForward();
-    glm::vec3 absRight();
-    glm::vec3 absUp();
-    GameObject *setScene(GameObject *scene = nullptr);
+    class Component;
+    class Shader;
 
-    template<class T>
-    std::vector<T*> getComponents(bool recursive = false) {
-        std::vector<T*> components;
-        for (Component *c : this->components) {
-            T *casted = dynamic_cast<T*>(c);
-            if (casted) {
-                components.push_back(casted);
+    class GameObject {
+    public:
+        Transform3d transform;
+        GameObject* parent = nullptr;
+        GameObject* scene = nullptr;
+
+        GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
+        void addChild(GameObject* c);
+        void addComponent(Component* c);
+        void start();
+        void update(float deltaTime);
+        void cleanup();
+        glm::vec3 absForward();
+        glm::vec3 absRight();
+        glm::vec3 absUp();
+        void setScene(GameObject* scene = nullptr);
+
+        template <class T>
+        std::vector<T*> getComponents(bool recursive = false) {
+            std::vector<T*> components;
+            for (Component* c : this->components) {
+                T* casted = dynamic_cast<T*>(c);
+                if (casted) {
+                    components.push_back(casted);
+                }
             }
-        }
-        if (recursive) {
-            for (GameObject *o : this->children) {
-                std::vector<T*> childComponents = o->getComponents<T>(true);
-                components.insert(components.end(), childComponents.begin(), childComponents.end());
+            if (recursive) {
+                for (GameObject* o : this->children) {
+                    std::vector<T*> childComponents = o->getComponents<T>(true);
+                    components.insert(components.end(), childComponents.begin(), childComponents.end());
+                }
             }
+            return components;
         }
-        return components;
-    }
 
-    template<class T>
-    T *getComponent() {
-        for (Component *c : this->components) {
-            T *casted = dynamic_cast<T*>(c);
-            if (casted) {
-                return casted;
+        template <class T>
+        T* getComponent() {
+            for (Component* c : this->components) {
+                T* casted = dynamic_cast<T*>(c);
+                if (casted) {
+                    return casted;
+                }
             }
+            return nullptr;
         }
-        return nullptr;
-    }
 
-private:
-    std::vector<GameObject*> children;
-    std::vector<Component*> components;
-};
+    private:
+        std::vector<GameObject*> children;
+        std::vector<Component*> components;
+    };
 
-#endif
+}

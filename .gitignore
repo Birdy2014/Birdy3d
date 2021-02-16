@@ -3,3 +3,4 @@ build/
 .cache/
 __pycache__/
 compile_commands.json
+Session.vim

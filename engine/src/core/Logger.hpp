@@ -1,22 +1,23 @@
-#ifndef BIRDY3D_LOGGER_HPP
-#define BIRDY3D_LOGGER_HPP
+#pragma once
 
 #include <iostream>
 
-class Logger {
-public:
-    static void debug(const std::string &message) {
-        std::cout << "DEBUG: " << message << std::endl;
-    }
+namespace Birdy3d {
 
-    static void warn(const std::string &message) {
-        std::cerr << "WARNING: " << message << std::endl;
-    }
+    class Logger {
+    public:
+        static void debug(const std::string& message) {
+            std::cout << "DEBUG: " << message << std::endl;
+        }
 
-    static void error(const std::string &message) {
-        std::cerr << "ERROR: " << message << std::endl;
-        std::abort();
-    }
-};
+        static void warn(const std::string& message) {
+            std::cerr << "WARNING: " << message << std::endl;
+        }
 
-#endif
+        static void error(const std::string& message) {
+            std::cerr << "ERROR: " << message << std::endl;
+            std::abort();
+        }
+    };
+
+}

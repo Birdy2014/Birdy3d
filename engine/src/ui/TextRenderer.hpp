@@ -1,54 +1,63 @@
-#ifndef BIRDY3D_TEXTRENDERER_HPP
-#define BIRDY3D_TEXTRENDERER_HPP
+#pragma once
 
+#include "ui/Utils.hpp"
+#include <ft2build.h>
+#include <glm/glm.hpp>
 #include <map>
 #include <string>
-#include <glm/glm.hpp>
-#include <ft2build.h>
 #include FT_FREETYPE_H
-#include "render/Shader.hpp"
-#include "ui/Rectangle.hpp"
 
-struct Character {
-    unsigned int textureID;
-    glm::ivec2 size;
-    glm::ivec2 bearing;
-    long advance;
-};
+namespace Birdy3d {
 
-class TextRenderer {
-public:
-    TextRenderer(std::string path, unsigned int fontSize);
-    ~TextRenderer();
-    void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color);
-    void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move);
-    glm::vec2 textSize(std::string text, float fontSize);
+    class Rectangle;
+    class TextRenderer;
 
-private:
-    std::map<char, Character> chars;
-    FT_Library ft;
-    FT_Face face;
-    Rectangle *rect;
-    unsigned int fontSize;
+    struct Character {
+        unsigned int textureID;
+        glm::ivec2 size;
+        glm::ivec2 bearing;
+        long advance;
+    };
 
-    bool addChar(char c);
-};
+    class TextRenderer {
+    public:
+        TextRenderer(std::string path, unsigned int fontSize);
+        ~TextRenderer();
+        void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color);
+        void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move);
+        glm::vec2 textSize(std::string text, float fontSize);
 
-class Text {
-public:
-    glm::vec2 pos;
-    float fontSize;
-    std::string text;
-    glm::vec4 color;
-    Placement placement;
-    TextRenderer *renderer;
+    private:
+        std::map<char, Character> chars;
+        FT_Library ft;
+        FT_Face face;
+        Rectangle* rect;
+        unsigned int fontSize;
 
-    Text(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement, TextRenderer *renderer) : pos(pos), fontSize(fontSize), text(text), color(color), placement(placement), renderer(renderer) {}
-    void calcPos(glm::vec2 parentSize);
-    void render(glm::mat4 move);
+        bool addChar(char c);
+    };
 
-private:
-    glm::vec2 relativePos;
-};
+    class Text {
+    public:
+        glm::vec2 pos;
+        float fontSize;
+        std::string text;
+        glm::vec4 color;
+        Placement placement;
+        TextRenderer* renderer;
 
-#endif
+        Text(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement, TextRenderer* renderer)
+            : pos(pos)
+            , fontSize(fontSize)
+            , text(text)
+            , color(color)
+            , placement(placement)
+            , renderer(renderer) { }
+        void calcPos(glm::vec2 parentSize);
+        void render(glm::mat4 move);
+
+    private:
+        glm::vec2 relativePos;
+    };
+
+}

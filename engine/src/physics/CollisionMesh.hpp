@@ -1,17 +1,18 @@
-#ifndef BIRDY3D_COLLISIONMESH_HPP
-#define BIRDY3D_COLLISIONMESH_HPP
+#pragma once
 
 #include "physics/CollisionShape.hpp"
 #include <vector>
 
-class CollisionMesh : public CollisionShape {
-public:
-    CollisionMesh(std::vector<glm::vec3> vertices);
+namespace Birdy3d {
 
-private:
-    std::vector<glm::vec3> vertices;
+    class CollisionMesh : public CollisionShape {
+    public:
+        CollisionMesh(std::vector<glm::vec3> vertices);
 
-    glm::vec3 findFurthestPoint(glm::vec3 direction) override;
-};
+    private:
+        std::vector<glm::vec3> vertices;
 
-#endif
+        glm::vec3 findFurthestPoint(glm::vec3 direction) override;
+    };
+
+}

@@ -14,12 +14,11 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-void main()
-{
+void main() {
     vec4 worldPos = model * vec4(aPos, 1.0);
-    FragPos = worldPos.xyz; 
+    FragPos = worldPos.xyz;
     TexCoords = aTexCoords;
-    
+
     mat3 normalMatrix = transpose(inverse(mat3(model)));
     vec3 T = normalize(normalMatrix * aTangent);
     Normal = normalize(normalMatrix * aNormal);
@@ -51,8 +50,7 @@ uniform bool hasSpecular;
 uniform vec4 color;
 uniform float specular;
 
-void main()
-{    
+void main() {
     gPosition = FragPos;
     if (useTexture)
         gAlbedoSpec.rgb = texture(texture_diffuse1, TexCoords).rgb;
@@ -63,7 +61,7 @@ void main()
         gNormal = normalize(TBN * texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
     else
         gNormal = normalize(Normal);
-    
+
     if (useTexture && hasSpecular)
         gAlbedoSpec.a = texture(texture_specular1, TexCoords).r;
     else

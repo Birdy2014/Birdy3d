@@ -1,14 +1,16 @@
-#ifndef BIRDY3D_COLLISIONSHAPE_HPP
-#define BIRDY3D_COLLISIONSHAPE_HPP
+#pragma once
 
-#include "physics/Collider.hpp"
 #include <glm/glm.hpp>
 
-class CollisionShape {
-public:
-    Collider *collider;
+namespace Birdy3d {
 
-    virtual glm::vec3 findFurthestPoint(glm::vec3 direction) = 0;
-};
+    class Collider;
 
-#endif
+    class CollisionShape {
+    public:
+        Collider* collider;
+
+        virtual glm::vec3 findFurthestPoint(glm::vec3 direction) = 0;
+    };
+
+}
