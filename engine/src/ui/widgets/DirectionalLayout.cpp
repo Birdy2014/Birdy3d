@@ -10,39 +10,84 @@ namespace Birdy3d {
     }
 
     void DirectionalLayout::arrange(glm::mat4 move, glm::vec2 size) {
-        glm::vec2 widgetSize;
-        float offset = 0;
+        // Initial values
+        std::vector<Widget*> smallerWidgets = children;
+        float widgetSize;
         switch (dir) {
         case Direction::RIGHT:
         case Direction::LEFT:
-            widgetSize = glm::vec2(size.x / children.size(), size.y);
+            widgetSize = size.x / children.size();
             break;
         case Direction::DOWN:
         case Direction::UP:
-            widgetSize = glm::vec2(size.x, size.y / children.size());
+            widgetSize = size.y / children.size();
             break;
         }
+
+        // Determine widgetSize
+        bool done = false;
+        while (!done) {
+            done = true;
+            for (size_t i = 0; i < smallerWidgets.size(); i++) {
+                Widget* w = smallerWidgets[i];
+                switch (dir) {
+                case Direction::LEFT:
+                case Direction::RIGHT: {
+                    float width = w->pixelSize(size).x;
+                    if (widgetSize < width) {
+                        smallerWidgets.erase(smallerWidgets.begin() + i);
+                        i--;
+                        widgetSize -= (width - widgetSize) / smallerWidgets.size();
+                        done = false;
+                    }
+                    break;
+                }
+                case Direction::DOWN:
+                case Direction::UP: {
+                    float height = w->pixelSize(size).y;
+                    if (widgetSize < height) {
+                        smallerWidgets.erase(smallerWidgets.begin() + i);
+                        i--;
+                        widgetSize -= (height - widgetSize) / smallerWidgets.size();
+                        done = false;
+                    }
+                    break;
+                }
+                }
+            }
+        }
+
+        // Draw widgets
+        float offset = 0;
+        float width, height;
         for (Widget* w : children) {
             glm::mat4 m;
             switch (dir) {
             case Direction::RIGHT:
                 m = glm::translate(move, glm::vec3(offset, 0, 0));
-                offset += std::max(widgetSize.x, w->pixelSize(size).x);
+                width = std::max(widgetSize, w->pixelSize(size).x);
+                w->arrange(m, glm::vec2(width, size.y));
+                offset += width;
                 break;
             case Direction::LEFT:
-                m = glm::translate(move, glm::vec3(size.x - widgetSize.x - offset, 0, 0));
-                offset += std::max(widgetSize.x, w->pixelSize(size).x);
+                width = std::max(widgetSize, w->pixelSize(size).x);
+                m = glm::translate(move, glm::vec3(size.x - width - offset, 0, 0));
+                w->arrange(m, glm::vec2(width, size.y));
+                offset += width;
                 break;
             case Direction::DOWN:
-                m = glm::translate(move, glm::vec3(0, size.y - widgetSize.y - offset, 0));
-                offset += std::max(widgetSize.y, w->pixelSize(size).y);
+                height = std::max(widgetSize, w->pixelSize(size).y);
+                m = glm::translate(move, glm::vec3(0, size.y - height - offset, 0));
+                w->arrange(m, glm::vec2(size.x, height));
+                offset += height;
                 break;
             case Direction::UP:
+                height = std::max(widgetSize, w->pixelSize(size).y);
                 m = glm::translate(move, glm::vec3(0, offset, 0));
-                offset += std::max(widgetSize.y, w->pixelSize(size).y);
+                w->arrange(m, glm::vec2(size.x, height));
+                offset += height;
                 break;
             }
-            w->arrange(m, widgetSize);
         }
     }
 
