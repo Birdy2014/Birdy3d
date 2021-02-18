@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ui/Widget.hpp"
+#include "ui/Layout.hpp"
 
 namespace Birdy3d {
 
-    class DirectionalLayout : public Widget {
+    class DirectionalLayout : public Layout {
     public:
         enum class Direction {
             RIGHT,

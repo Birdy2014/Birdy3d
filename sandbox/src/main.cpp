@@ -17,7 +17,7 @@ int main() {
     Canvas canvas;
     canvas.hidden = true;
 
-    Widget menu(glm::vec2(0), glm::vec2(0.2), Placement::CENTER, Unit::PERCENT);
+    Layout menu(glm::vec2(0), glm::vec2(0.2), Placement::CENTER, Unit::PERCENT);
     menu.setOnClick([]() {
         Logger::debug("Menu clicked");
         return false;

@@ -4,7 +4,7 @@
 namespace Birdy3d {
 
     DirectionalLayout::DirectionalLayout(Direction dir, Placement placement, glm::vec2 size, Unit unit)
-        : Widget(glm::vec2(0), size, placement, unit)
+        : Layout(glm::vec2(0), size, placement, unit)
         , dir(dir) {
         unit = Unit::PIXELS;
     }

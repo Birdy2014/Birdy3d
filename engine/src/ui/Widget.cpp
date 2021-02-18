@@ -42,18 +42,12 @@ namespace Birdy3d {
 
         glm::mat4 move = normalizedMove();
 
-        // draw self
         for (Shape* s : this->shapes) {
             s->draw(move);
         }
 
         for (Text* t : this->texts) {
             t->render(move);
-        }
-
-        // draw children
-        for (Widget* w : children) {
-            w->draw();
         }
     }
 
@@ -62,13 +56,6 @@ namespace Birdy3d {
         if (hidden)
             return false;
 
-        // children
-        for (Widget* w : this->children) {
-            if (w->updateEvents())
-                return true;
-        }
-
-        // self
         if (Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
             glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
             glm::vec2 cursorPos = Input::cursorPos();
@@ -100,16 +87,6 @@ namespace Birdy3d {
 
         for (Text* t : texts) {
             t->calcPos(size);
-        }
-
-        for (Widget* child : children) {
-            glm::mat4 m = move;
-            m = glm::translate(m, glm::vec3(child->pixelPosition(size), 0.0f));
-            m = glm::rotate(m, child->rot, glm::vec3(0, 0, 1));
-            glm::vec2 childSize = child->pixelSize(size);
-            if (childSize.x == 0 || childSize.y == 0)
-                childSize = size;
-            child->arrange(m, childSize);
         }
     }
 

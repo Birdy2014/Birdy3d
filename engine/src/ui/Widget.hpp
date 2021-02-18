@@ -24,14 +24,11 @@ namespace Birdy3d {
         void addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
         void addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
         void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement);
-        void addChild(Widget* w) {
-            children.push_back(w);
-        }
-        void draw();
+        virtual void draw();
         void setOnClick(bool (*clickHandler)()) {
             this->clickHandler = clickHandler;
         }
-        bool updateEvents();
+        virtual bool updateEvents();
 
         // Returns the position relative to the parent's origin in pixels
         glm::vec2 pixelPosition(glm::vec2 parentSize);
@@ -44,7 +41,6 @@ namespace Birdy3d {
     protected:
         std::vector<Shape*> shapes;
         std::vector<Text*> texts;
-        std::vector<Widget*> children;
         bool (*clickHandler)(); // FIXME: This will cause a segfault if not set
         glm::mat4 move;
 
