@@ -7,6 +7,7 @@
 
 namespace Birdy3d {
 
+    Theme* Application::defaultTheme = nullptr;
     GLFWwindow* Application::window = nullptr;
     EventDispatcher<Application::EventArg>* Application::eventDispatcher = nullptr;
     TextRenderer* Application::textRenderer = nullptr;

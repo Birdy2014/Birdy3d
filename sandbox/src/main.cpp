@@ -14,6 +14,8 @@ int main() {
     Input::init();
 
     // UI
+    Application::defaultTheme = new Theme(glm::vec4(0.980469, 0.941406, 0.777344, 1), glm::vec4(0.15625, 0.15625, 0.15625, 1), glm::vec4(0.59375, 0.589844, 0.101563, 1));
+
     Canvas canvas;
     canvas.hidden = true;
 
@@ -28,14 +30,14 @@ int main() {
     DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER);
     menu.addChild(&layout);
 
-    Button closeButton(glm::vec2(0), Placement::BOTTOM_LEFT, "Close", 20, glm::vec4(0, 0, 1, 1), glm::vec4(1, 0, 0, 1), glm::vec4(0, 1, 0, 1));
+    Button closeButton(glm::vec2(0), Placement::BOTTOM_LEFT, "Close", 20);
     closeButton.setOnClick([]() {
         glfwSetWindowShouldClose(Application::getWindow(), true);
         return true;
     });
     layout.addChild(&closeButton);
 
-    Button testButton(glm::vec2(0), Placement::BOTTOM_LEFT, "TestButton", 20, glm::vec4(0, 0, 1, 1), glm::vec4(1, 0, 0, 1), glm::vec4(0, 1, 0, 1));
+    Button testButton(glm::vec2(0), Placement::BOTTOM_LEFT, "TestButton", 20);
     layout.addChild(&testButton);
 
     // GameObjects

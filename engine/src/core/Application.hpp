@@ -11,6 +11,7 @@
 namespace Birdy3d {
 
     class TextRenderer;
+    class Theme;
 
     class Application {
     public:
@@ -22,6 +23,8 @@ namespace Birdy3d {
             int width;
             int height;
         };
+
+        static Theme* defaultTheme;
 
         static bool init(const char* windowName, int width, int height, const std::string& font, unsigned int fontSize);
         static GLFWwindow* getWindow();

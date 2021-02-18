@@ -18,6 +18,11 @@ namespace Birdy3d {
             std::cerr << "ERROR: " << message << std::endl;
             std::abort();
         }
+
+        static void assertNotNull(void* obj, const std::string& message) {
+            if (obj == nullptr)
+                Logger::error("Assert not null failed: " + message);
+        }
     };
 
 }
