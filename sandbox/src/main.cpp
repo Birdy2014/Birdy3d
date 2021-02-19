@@ -14,7 +14,7 @@ int main() {
     Input::init();
 
     // UI
-    Application::defaultTheme = new Theme(glm::vec4(0.980469, 0.941406, 0.777344, 1), glm::vec4(0.15625, 0.15625, 0.15625, 1), glm::vec4(0.59375, 0.589844, 0.101563, 1));
+    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a");
 
     Canvas canvas;
     canvas.hidden = true;
