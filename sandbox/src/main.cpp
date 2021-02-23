@@ -27,7 +27,7 @@ int main() {
     menu.addRectangle(glm::vec2(0), glm::vec2(1), glm::vec4(1), Placement::BOTTOM_LEFT, Unit::PERCENT);
     canvas.child = &menu;
 
-    DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER);
+    DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER, glm::vec2(1), Unit::PERCENT, 10);
     menu.addChild(&layout);
 
     Button closeButton(glm::vec2(0), Placement::BOTTOM_LEFT, "Close", 20);

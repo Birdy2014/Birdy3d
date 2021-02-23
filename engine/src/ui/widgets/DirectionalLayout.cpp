@@ -3,9 +3,10 @@
 
 namespace Birdy3d {
 
-    DirectionalLayout::DirectionalLayout(Direction dir, Placement placement, glm::vec2 size, Unit unit)
+    DirectionalLayout::DirectionalLayout(Direction dir, Placement placement, glm::vec2 size, Unit unit, float gap)
         : Layout(glm::vec2(0), size, placement, unit)
-        , dir(dir) {
+        , dir(dir)
+        , gap(gap) {
         unit = Unit::PIXELS;
     }
 
@@ -13,14 +14,15 @@ namespace Birdy3d {
         // Initial values
         std::vector<Widget*> smallerWidgets = children;
         float widgetSize;
+        float gapps = gap * (children.size() - 1);
         switch (dir) {
         case Direction::RIGHT:
         case Direction::LEFT:
-            widgetSize = size.x / children.size();
+            widgetSize = (size.x - gapps) / children.size();
             break;
         case Direction::DOWN:
         case Direction::UP:
-            widgetSize = size.y / children.size();
+            widgetSize = (size.y - gapps) / children.size();
             break;
         }
 
@@ -88,6 +90,7 @@ namespace Birdy3d {
                 offset += height;
                 break;
             }
+            offset += gap;
         }
     }
 
@@ -102,6 +105,7 @@ namespace Birdy3d {
                 if (csize.y > minsize.y)
                     minsize.y = csize.y;
             }
+            minsize.x += gap * (children.size() - 1);
             break;
         case Direction::DOWN:
         case Direction::UP:
@@ -111,6 +115,7 @@ namespace Birdy3d {
                     minsize.x = csize.x;
                 minsize.y += csize.y;
             }
+            minsize.y += gap * (children.size() - 1);
             break;
         }
         glm::vec2 size = this->Widget::minimalSize();
