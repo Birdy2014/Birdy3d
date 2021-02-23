@@ -67,17 +67,25 @@ namespace Birdy3d {
         return false;
     }
 
-    glm::vec2 Widget::pixelPosition(glm::vec2 parentSize) {
-        return Utils::getRelativePosition(this->pos, pixelSize(parentSize), parentSize, this->placement, this->unit);
+    glm::vec2 Widget::preferredPosition(glm::vec2 parentSize) {
+        return Utils::getRelativePosition(this->pos, preferredSize(parentSize), parentSize, this->placement, this->unit);
     }
 
-    glm::vec2 Widget::pixelSize(glm::vec2 parentSize) {
+    glm::vec2 Widget::minimalSize() {
+        if (unit == Unit::PIXELS)
+            return size;
+        return glm::vec2(0);
+    }
+
+    glm::vec2 Widget::preferredSize(glm::vec2 parentSize) {
+        glm::vec2 s;
         if (glm::length(size) == 0)
-            return parentSize;
-        return Utils::convertToPixels(size, parentSize, unit);
+            s = parentSize;
+        else
+            s = Utils::convertToPixels(size, parentSize, unit);
+        return glm::max(s, minimalSize());
     }
 
-    // TODO: arrange shapes based on their placement/unit values
     void Widget::arrange(glm::mat4 move, glm::vec2 size) {
         this->move = move;
 

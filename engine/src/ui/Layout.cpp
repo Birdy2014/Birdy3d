@@ -33,9 +33,9 @@ namespace Birdy3d {
 
         for (Widget* child : children) {
             glm::mat4 m = move;
-            m = glm::translate(m, glm::vec3(child->pixelPosition(size), 0.0f));
+            m = glm::translate(m, glm::vec3(child->preferredPosition(size), 0.0f));
             m = glm::rotate(m, child->rot, glm::vec3(0, 0, 1));
-            glm::vec2 childSize = child->pixelSize(size);
+            glm::vec2 childSize = child->preferredSize(size);
             if (childSize.x == 0 || childSize.y == 0)
                 childSize = size;
             child->arrange(m, childSize);

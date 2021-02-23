@@ -16,8 +16,8 @@ namespace Birdy3d {
             if (!hidden) {
                 glm::mat4 m(1);
                 glm::vec2 viewport = Application::getViewportSize();
-                m = glm::translate(m, glm::vec3(child->pixelPosition(viewport), 1.0f));
-                child->arrange(m, child->pixelSize(viewport));
+                m = glm::translate(m, glm::vec3(child->preferredPosition(viewport), 1.0f));
+                child->arrange(m, child->preferredSize(viewport));
                 child->updateEvents();
             }
         }

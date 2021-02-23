@@ -31,10 +31,11 @@ namespace Birdy3d {
         virtual bool updateEvents();
 
         // Returns the position relative to the parent's origin in pixels
-        glm::vec2 pixelPosition(glm::vec2 parentSize);
+        glm::vec2 preferredPosition(glm::vec2 parentSize);
 
         // Returns the size in pixels
-        virtual glm::vec2 pixelSize(glm::vec2 parentSize);
+        virtual glm::vec2 minimalSize();
+        virtual glm::vec2 preferredSize(glm::vec2 parentSize);
 
         virtual void arrange(glm::mat4 move, glm::vec2 size);
 

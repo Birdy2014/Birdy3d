@@ -37,7 +37,7 @@ int main() {
     });
     layout.addChild(&closeButton);
 
-    Button testButton(glm::vec2(0), Placement::BOTTOM_LEFT, "TestButton", 20);
+    Button testButton(glm::vec2(0), Placement::BOTTOM_LEFT, "TestButton", 20, glm::vec2(200, 50));
     layout.addChild(&testButton);
 
     // GameObjects
