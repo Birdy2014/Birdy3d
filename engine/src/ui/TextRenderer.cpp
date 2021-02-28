@@ -20,7 +20,7 @@ namespace Birdy3d {
         if (FT_New_Face(this->ft, path.c_str(), 0, &this->face))
             Logger::error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(face, 0, fontSize);
-        this->rect = new Rectangle(glm::vec2(0), glm::vec2(0), glm::vec4(1), Shape::TEXT);
+        this->rect = new Rectangle(UIVector(0), UIVector(0), Color::WHITE, Rectangle::Type::TEXT);
     }
 
     bool TextRenderer::addChar(char c) {
@@ -50,13 +50,13 @@ namespace Birdy3d {
         return true;
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, glm::vec4 color) {
+    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color) {
         glm::vec2 viewportSize = Application::getViewportSize();
         glm::mat4 m = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
         this->renderText(text, x, y, fontSize, color, m);
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move) {
+    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move) {
         float scale = (fontSize / this->fontSize);
         this->rect->color(color);
         for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
@@ -69,31 +69,31 @@ namespace Birdy3d {
             float w = ch.size.x * scale;
             float h = ch.size.y * scale;
 
-            this->rect->position(glm::vec2(xpos, ypos));
-            this->rect->size(glm::vec2(w, h));
+            this->rect->position(UIVector(xpos, ypos));
+            this->rect->size(UIVector(w, h));
             this->rect->texture(ch.textureID);
             this->rect->draw(move);
             x += (ch.advance >> 6) * scale;
         }
     }
 
-    glm::vec2 TextRenderer::textSize(std::string text, float fontSize) {
+    UIVector TextRenderer::textSize(std::string text, float fontSize) {
         float scale = (fontSize / this->fontSize);
-        glm::vec2 size(0);
+        UIVector size(0_px);
         for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
             if (chars.count(*c) == 0)
                 this->addChar(*c);
             Character ch = this->chars[*c];
             float h = ch.size.y * scale;
-            size.y = std::max(size.y, h);
+            size.y = std::max((float)size.y, h);
             size.x += (ch.advance >> 6) * scale;
         }
         return size;
     }
 
     void Text::calcPos(glm::vec2 parentSize) {
-        glm::vec2 textSize = renderer->textSize(text, fontSize);
-        relativePos = Utils::getRelativePosition(pos, textSize, parentSize, placement, Unit::PIXELS);
+        UIVector textSize = renderer->textSize(text, fontSize);
+        relativePos = Utils::getRelativePosition(pos, textSize, parentSize, placement);
     }
 
     void Text::render(glm::mat4 move) {

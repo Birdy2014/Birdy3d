@@ -6,8 +6,8 @@
 
 namespace Birdy3d {
 
-    Rectangle::Rectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Type type, Placement placement, Unit unit)
-        : Shape(pos, size, color, placement, unit) {
+    Rectangle::Rectangle(UIVector pos, UIVector size, Color color, Type type, Placement placement)
+        : Shape(pos, size, color, placement) {
         this->shader = RessourceManager::getShader("ui");
         this->type = type;
     }
@@ -39,8 +39,8 @@ namespace Birdy3d {
     }
 
     bool Rectangle::contains(glm::vec2 point) {
-        glm::vec2 bottomLeft = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
-        glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+        glm::vec2 bottomLeft = Utils::getRelativePosition(_position, _size, _parentSize, _placement);
+        glm::vec2 size = _size.toPixels(_parentSize);
         glm::vec2 topRight = bottomLeft + size;
         return point.x > bottomLeft.x && point.x < topRight.x && point.y > bottomLeft.y && point.y < topRight.y;
     }
@@ -65,10 +65,10 @@ namespace Birdy3d {
     void Rectangle::updateVBO() {
         glBindVertexArray(this->vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glm::vec2 pos = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
+        glm::vec2 pos = Utils::getRelativePosition(_position, _size, _parentSize, _placement);
         float x = pos.x;
         float y = pos.y;
-        glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+        glm::vec2 size = _size.toPixels(_parentSize);
         float w = size.x;
         float h = size.y;
         if (type == Shape::OUTLINE) {

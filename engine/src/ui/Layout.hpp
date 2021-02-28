@@ -6,7 +6,7 @@ namespace Birdy3d {
 
     class Layout : public Widget {
     public:
-        Layout(glm::vec2 pos = glm::vec2(0.0f), glm::vec2 size = glm::vec2(0.0f), Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
+        Layout(UIVector pos = UIVector(0), UIVector size = UIVector(0), Placement placement = Placement::BOTTOM_LEFT);
         void addChild(Widget* w);
         void draw() override;
         virtual void arrange(glm::mat4 move, glm::vec2 size) override;

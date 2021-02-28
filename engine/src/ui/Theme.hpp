@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ui/Utils.hpp"
 #include <glm/glm.hpp>
 #include <string>
 
@@ -7,13 +8,11 @@ namespace Birdy3d {
 
     class Theme {
     public:
-        const glm::vec4 color_fg;
-        const glm::vec4 color_bg;
-        const glm::vec4 color_border;
+        const Color color_fg;
+        const Color color_bg;
+        const Color color_border;
 
-        Theme(glm::vec4 color_fg, glm::vec4 color_bg, glm::vec4 color_border);
-        Theme(const std::string& color_fg, const std::string& color_bg, const std::string& color_border);
-        static glm::vec4 parseColor(const std::string& colorString);
+        Theme(Color color_fg, Color color_bg, Color color_border);
 
         // TODO: load theme from file
     };

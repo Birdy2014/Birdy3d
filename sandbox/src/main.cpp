@@ -19,25 +19,25 @@ int main() {
     Canvas canvas;
     canvas.hidden = true;
 
-    Layout menu(glm::vec2(0), glm::vec2(0.2), Placement::CENTER, Unit::PERCENT);
+    Layout menu(0_px, 20_p, Placement::CENTER);
     menu.setOnClick([]() {
         Logger::debug("Menu clicked");
         return false;
     });
-    menu.addRectangle(glm::vec2(0), glm::vec2(1), glm::vec4(1), Placement::BOTTOM_LEFT, Unit::PERCENT);
+    menu.addRectangle(0_px, 100_p, Color::WHITE, Placement::BOTTOM_LEFT);
     canvas.child = &menu;
 
-    DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER, glm::vec2(1), Unit::PERCENT, 10);
+    DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 100_p, 10);
     menu.addChild(&layout);
 
-    Button closeButton(glm::vec2(0), Placement::BOTTOM_LEFT, "Close", 20);
+    Button closeButton(0_px, Placement::BOTTOM_LEFT, "Close", 20);
     closeButton.setOnClick([]() {
         glfwSetWindowShouldClose(Application::getWindow(), true);
         return true;
     });
     layout.addChild(&closeButton);
 
-    Button testButton(glm::vec2(0), Placement::BOTTOM_LEFT, "TestButton", 20, glm::vec2(200, 50));
+    Button testButton(0_px, Placement::BOTTOM_LEFT, "TestButton", 20, UIVector(200_px, 50_px));
     layout.addChild(&testButton);
 
     // GameObjects

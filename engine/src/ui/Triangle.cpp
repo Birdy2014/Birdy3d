@@ -6,8 +6,8 @@
 
 namespace Birdy3d {
 
-    Triangle::Triangle(glm::vec2 position, glm::vec2 size, glm::vec4 color, Type type, Placement placement, Unit unit)
-        : Shape(position, size, color, placement, unit) {
+    Triangle::Triangle(UIVector position, UIVector size, Color color, Type type, Placement placement)
+        : Shape(position, size, color, placement) {
         this->shader = RessourceManager::getShader("ui");
         this->type = type;
     }
@@ -39,8 +39,8 @@ namespace Birdy3d {
     }
 
     bool Triangle::contains(glm::vec2 point) {
-        glm::vec2 position = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
-        glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+        glm::vec2 position = Utils::getRelativePosition(_position, _size, _parentSize, _placement);
+        glm::vec2 size = _size.toPixels(_parentSize);
         glm::vec2 a = position;
         glm::vec2 b = position + glm::vec2(size.x, 0);
         glm::vec2 c = position + glm::vec2(0, size.y);
@@ -71,10 +71,10 @@ namespace Birdy3d {
     void Triangle::updateVBO() {
         glBindVertexArray(this->vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glm::vec2 pos = Utils::getRelativePosition(_position, _size, _parentSize, _placement, _unit);
+        glm::vec2 pos = Utils::getRelativePosition(_position, _size, _parentSize, _placement);
         float x = pos.x;
         float y = pos.y;
-        glm::vec2 size = Utils::convertToPixels(_size, _parentSize, _unit);
+        glm::vec2 size = _size.toPixels(_parentSize);
         float w = size.x;
         float h = size.y;
         if (type == Shape::OUTLINE) {

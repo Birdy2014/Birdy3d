@@ -29,6 +29,7 @@
 #include "ui/Layout.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
+#include "ui/Utils.hpp"
 #include "ui/Widget.hpp"
 #include "ui/widgets/Button.hpp"
 #include "ui/widgets/DirectionalLayout.hpp"

@@ -12,18 +12,17 @@ namespace Birdy3d {
     class Widget {
     public:
         bool hidden = false;
-        glm::vec2 pos;
-        glm::vec2 size;
+        UIVector pos;
+        UIVector size;
         float rot;
         Placement placement;
-        Unit unit;
 
-        Widget(glm::vec2 pos = glm::vec2(0.0f), glm::vec2 size = glm::vec2(0.0f), Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS, float rotation = 0.0f);
-        void addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
-        void addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS);
-        void addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
-        void addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
-        void addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement);
+        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, float rotation = 0.0f);
+        void addRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
+        void addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
+        void addTriangle(UIVector pos, UIVector size, Color color);
+        void addFilledTriangle(UIVector pos, UIVector size, Color color);
+        void addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
         virtual void draw();
         void setOnClick(bool (*clickHandler)()) {
             this->clickHandler = clickHandler;
@@ -42,7 +41,7 @@ namespace Birdy3d {
     protected:
         std::vector<Shape*> shapes;
         std::vector<Text*> texts;
-        bool (*clickHandler)(); // FIXME: This will cause a segfault if not set
+        bool (*clickHandler)(); // FIXME: This will cause a segfault if not set. Replace with events
         glm::mat4 move;
 
         glm::mat4 normalizedMove();

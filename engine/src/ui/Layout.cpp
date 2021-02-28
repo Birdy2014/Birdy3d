@@ -6,8 +6,8 @@
 
 namespace Birdy3d {
 
-    Layout::Layout(glm::vec2 pos, glm::vec2 size, Placement placement, Unit unit)
-        : Widget(pos, size, placement, unit) { }
+    Layout::Layout(UIVector pos, UIVector size, Placement placement)
+        : Widget(pos, size, placement) { }
 
     void Layout::addChild(Widget* w) {
         children.push_back(w);

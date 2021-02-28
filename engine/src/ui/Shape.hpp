@@ -18,24 +18,23 @@ namespace Birdy3d {
 
         Type type;
 
-        Shape(glm::vec2 position, glm::vec2 size, glm::vec4 color = glm::vec4(1), Placement placement = Placement::BOTTOM_LEFT, Unit unit = Unit::PIXELS)
+        Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT)
             : _position(position)
             , _size(size)
             , _color(color)
-            , _placement(placement)
-            , _unit(unit) { }
-        glm::vec2 position() { return _position; }
-        glm::vec2 position(glm::vec2 position) {
+            , _placement(placement) { }
+        UIVector position() { return _position; }
+        UIVector position(UIVector position) {
             dirty = true;
             return _position = position;
         }
-        glm::vec2 size() { return _size; }
-        glm::vec2 size(glm::vec2 size) {
+        UIVector size() { return _size; }
+        UIVector size(UIVector size) {
             dirty = true;
             return _size = size;
         }
-        glm::vec4 color() { return _color; }
-        glm::vec4 color(glm::vec4 color) { return _color = color; }
+        Color color() { return _color; }
+        Color color(Color color) { return _color = color; }
         Placement placement() { return _placement; }
         Placement placement(Placement placement) {
             dirty = true;
@@ -44,11 +43,6 @@ namespace Birdy3d {
         glm::vec2 parentSize(glm::vec2 parentSize) {
             dirty = true;
             return _parentSize = parentSize;
-        }
-        Unit unit() { return _unit; }
-        Unit unit(Unit unit) {
-            dirty = true;
-            return _unit = unit;
         }
         unsigned int texture() { return _texture; }
         unsigned int texture(unsigned int texture) { return _texture = texture; }
@@ -59,12 +53,11 @@ namespace Birdy3d {
         Shader* shader;
         unsigned int vao, vbo = 0;
         bool dirty = true;
-        glm::vec2 _position;
-        glm::vec2 _size;
-        glm::vec4 _color;
+        UIVector _position;
+        UIVector _size;
+        Color _color;
         unsigned int _texture;
         Placement _placement;
-        Unit _unit;
         glm::vec2 _parentSize;
     };
 

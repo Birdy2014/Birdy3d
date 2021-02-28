@@ -8,31 +8,30 @@
 
 namespace Birdy3d {
 
-    Widget::Widget(glm::vec2 pos, glm::vec2 size, Placement placement, Unit unit, float rotation) {
+    Widget::Widget(UIVector pos, UIVector size, Placement placement, float rotation) {
         this->pos = pos;
         this->size = size;
         this->placement = placement;
         this->rot = rotation;
-        this->unit = unit;
     }
 
-    void Widget::addRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement, Unit unit) {
-        this->shapes.push_back(new Rectangle(pos, size, color, Shape::OUTLINE, placement, unit));
+    void Widget::addRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        this->shapes.push_back(new Rectangle(pos, size, color, Shape::OUTLINE, placement));
     }
 
-    void Widget::addFilledRectangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color, Placement placement, Unit unit) {
-        this->shapes.push_back(new Rectangle(pos, size, color, Shape::FILLED, placement, unit));
+    void Widget::addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        this->shapes.push_back(new Rectangle(pos, size, color, Shape::FILLED, placement));
     }
 
-    void Widget::addTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
+    void Widget::addTriangle(UIVector pos, UIVector size, Color color) {
         this->shapes.push_back(new Triangle(pos, size, color, Shape::OUTLINE));
     }
 
-    void Widget::addFilledTriangle(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
+    void Widget::addFilledTriangle(UIVector pos, UIVector size, Color color) {
         this->shapes.push_back(new Triangle(pos, size, color, Shape::FILLED));
     }
 
-    void Widget::addText(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement) {
+    void Widget::addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
         this->texts.push_back(new Text(pos, fontSize, text, color, placement, Application::getTextRenderer()));
     }
 
@@ -68,22 +67,15 @@ namespace Birdy3d {
     }
 
     glm::vec2 Widget::preferredPosition(glm::vec2 parentSize) {
-        return Utils::getRelativePosition(this->pos, preferredSize(parentSize), parentSize, this->placement, this->unit);
+        return Utils::getRelativePosition(this->pos, size, parentSize, this->placement);
     }
 
     glm::vec2 Widget::minimalSize() {
-        if (unit == Unit::PIXELS)
-            return size;
-        return glm::vec2(0);
+        return size.toPixels();
     }
 
     glm::vec2 Widget::preferredSize(glm::vec2 parentSize) {
-        glm::vec2 s;
-        if (glm::length(size) == 0)
-            s = parentSize;
-        else
-            s = Utils::convertToPixels(size, parentSize, unit);
-        return glm::max(s, minimalSize());
+        return glm::max(size.toPixels(parentSize), minimalSize());
     }
 
     void Widget::arrange(glm::mat4 move, glm::vec2 size) {

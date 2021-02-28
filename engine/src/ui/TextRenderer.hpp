@@ -23,9 +23,9 @@ namespace Birdy3d {
     public:
         TextRenderer(std::string path, unsigned int fontSize);
         ~TextRenderer();
-        void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color);
-        void renderText(std::string text, float x, float y, float fontSize, glm::vec4 color, glm::mat4 move);
-        glm::vec2 textSize(std::string text, float fontSize);
+        void renderText(std::string text, float x, float y, float fontSize, Color color);
+        void renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move);
+        UIVector textSize(std::string text, float fontSize);
 
     private:
         std::map<char, Character> chars;
@@ -39,14 +39,14 @@ namespace Birdy3d {
 
     class Text {
     public:
-        glm::vec2 pos;
+        UIVector pos;
         float fontSize;
         std::string text;
-        glm::vec4 color;
+        Color color;
         Placement placement;
         TextRenderer* renderer;
 
-        Text(glm::vec2 pos, float fontSize, std::string text, glm::vec4 color, Placement placement, TextRenderer* renderer)
+        Text(UIVector pos, float fontSize, std::string text, Color color, Placement placement, TextRenderer* renderer)
             : pos(pos)
             , fontSize(fontSize)
             , text(text)

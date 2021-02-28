@@ -1,13 +1,11 @@
 #include "ui/widgets/DirectionalLayout.hpp"
-#include <glm/gtx/string_cast.hpp>
 
 namespace Birdy3d {
 
-    DirectionalLayout::DirectionalLayout(Direction dir, Placement placement, glm::vec2 size, Unit unit, float gap)
-        : Layout(glm::vec2(0), size, placement, unit)
+    DirectionalLayout::DirectionalLayout(Direction dir, Placement placement, UIVector size, float gap)
+        : Layout(UIVector(0), size, placement)
         , dir(dir)
         , gap(gap) {
-        unit = Unit::PIXELS;
     }
 
     void DirectionalLayout::arrange(glm::mat4 move, glm::vec2 size) {
