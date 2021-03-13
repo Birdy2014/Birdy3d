@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Component.hpp"
-#include "core/EventDispatcher.hpp"
+#include "events/EventBus.hpp"
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -11,16 +11,6 @@ namespace Birdy3d {
 
     class Collider : public Component {
     public:
-        struct EventArg {
-            Collider* other;
-        };
-
-        enum EventType {
-            COLLISION
-        };
-
-        EventDispatcher<EventArg>* eventDispatcher = new EventDispatcher<EventArg>();
-
         Collider();
         Collider(CollisionShape* shape);
         void addShape(CollisionShape* shape);

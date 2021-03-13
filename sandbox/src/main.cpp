@@ -69,8 +69,9 @@ int main() {
     scene->addChild(sphere1);
 
     bool collision = false;
-    sphere1->getComponent<Collider>()->eventDispatcher->addHandler(Collider::COLLISION, [&](Collider::EventArg arg) {
-        collision = true;
+    Application::eventBus->subscribe<CollisionEvent>([&](CollisionEvent* event) {
+        if (event->has(sphere1->getComponent<Collider>()))
+            collision = true;
     });
 
     // Light

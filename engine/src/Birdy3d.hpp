@@ -3,12 +3,17 @@
 // Core
 #include "core/Application.hpp"
 #include "core/Component.hpp"
-#include "core/EventDispatcher.hpp"
 #include "core/FPPlayerController.hpp"
 #include "core/GameObject.hpp"
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
 #include "core/Transform.hpp"
+
+// Events
+#include "events/CollisionEvent.hpp"
+#include "events/Event.hpp"
+#include "events/EventBus.hpp"
+#include "events/WindowResizeEvent.hpp"
 
 // Physics
 #include "physics/Collider.hpp"
@@ -33,3 +38,4 @@
 #include "ui/Widget.hpp"
 #include "ui/widgets/Button.hpp"
 #include "ui/widgets/DirectionalLayout.hpp"
+#include "ui/widgets/Textarea.hpp"

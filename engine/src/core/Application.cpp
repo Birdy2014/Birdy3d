@@ -3,13 +3,14 @@
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+#include "events/WindowResizeEvent.hpp"
 #include "ui/TextRenderer.hpp"
 
 namespace Birdy3d {
 
     Theme* Application::defaultTheme = nullptr;
+    EventBus* Application::eventBus = nullptr;
     GLFWwindow* Application::window = nullptr;
-    EventDispatcher<Application::EventArg>* Application::eventDispatcher = nullptr;
     TextRenderer* Application::textRenderer = nullptr;
 
     bool Application::init(const char* windowName, int width, int height, const std::string& font, unsigned int fontSize) {
@@ -44,7 +45,7 @@ namespace Birdy3d {
         glfwSetWindowFocusCallback(window, window_focus_callback);
 
         // Init variables
-        eventDispatcher = new EventDispatcher<Application::EventArg>();
+        eventBus = new EventBus();
         textRenderer = new TextRenderer(RessourceManager::getFontPath(font), fontSize);
 
         return true;
@@ -52,7 +53,7 @@ namespace Birdy3d {
 
     void Application::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);
-        eventDispatcher->emitEvent(Application::EVENT_FRAMEBUFFER_SIZE, { width, height });
+        eventBus->emit(new WindowResizeEvent(width, height));
     }
 
     void Application::window_focus_callback(GLFWwindow* window, int focused) {
@@ -66,10 +67,6 @@ namespace Birdy3d {
 
     GLFWwindow* Application::getWindow() {
         return window;
-    }
-
-    void* Application::registerEvent(Application::EventTypes type, std::function<void(Application::EventArg)> callback) {
-        eventDispatcher->addHandler(type, callback);
     }
 
     glm::vec2 Application::getViewportSize() {

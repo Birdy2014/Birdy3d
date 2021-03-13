@@ -1,7 +1,9 @@
 #include "physics/Collider.hpp"
 
+#include "core/Application.hpp"
 #include "core/GameObject.hpp"
 #include "core/Logger.hpp"
+#include "events/CollisionEvent.hpp"
 #include "physics/CollisionMesh.hpp"
 #include "physics/CollisionShape.hpp"
 #include "render/Mesh.hpp"
@@ -67,7 +69,7 @@ namespace Birdy3d {
             }
         }
         if (otherCollider)
-            this->eventDispatcher->emitEvent(EventType::COLLISION, { otherCollider });
+            Application::eventBus->emit(new CollisionEvent(this, otherCollider));
     }
 
     bool Collider::collides(CollisionShape* a, CollisionShape* b) {

@@ -3,6 +3,7 @@
 #include "core/Application.hpp"
 #include "core/GameObject.hpp"
 #include "core/Input.hpp"
+#include "events/WindowResizeEvent.hpp"
 #include "render/Camera.hpp"
 #include "ui/Canvas.hpp"
 
@@ -13,9 +14,7 @@ namespace Birdy3d {
 
     void FPPlayerController::start() {
         this->cam = this->object->getComponent<Camera>();
-        Application::registerEvent(Application::EVENT_FRAMEBUFFER_SIZE, [&](Application::EventArg arg) {
-            this->cam->resize(arg.width, arg.height);
-        });
+        Application::eventBus->subscribe(this, &FPPlayerController::onResize);
         Input::setCursorHidden(true);
     }
 
@@ -65,6 +64,10 @@ namespace Birdy3d {
             this->object->transform.orientation.x = maxPitch;
         if (this->object->transform.orientation.x < -maxPitch)
             this->object->transform.orientation.x = -maxPitch;
+    }
+
+    void FPPlayerController::onResize(WindowResizeEvent* event) {
+        this->cam->resize(event->width, event->height);
     }
 
 }
