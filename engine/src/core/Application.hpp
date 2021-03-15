@@ -17,6 +17,7 @@ namespace Birdy3d {
     public:
         static Theme* defaultTheme;
         static EventBus* eventBus;
+        static float deltaTime;
 
         static bool init(const char* windowName, int width, int height, const std::string& font, unsigned int fontSize);
         static GLFWwindow* getWindow();
@@ -29,6 +30,7 @@ namespace Birdy3d {
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);
+        static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     };
 
 }

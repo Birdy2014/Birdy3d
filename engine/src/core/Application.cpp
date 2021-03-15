@@ -3,6 +3,7 @@
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+#include "events/InputScrollEvent.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "ui/TextRenderer.hpp"
 
@@ -10,6 +11,7 @@ namespace Birdy3d {
 
     Theme* Application::defaultTheme = nullptr;
     EventBus* Application::eventBus = nullptr;
+    float Application::deltaTime = 0;
     GLFWwindow* Application::window = nullptr;
     TextRenderer* Application::textRenderer = nullptr;
 
@@ -43,6 +45,7 @@ namespace Birdy3d {
         glViewport(0, 0, width, height);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
         glfwSetWindowFocusCallback(window, window_focus_callback);
+        glfwSetScrollCallback(window, scroll_callback);
 
         // Init variables
         eventBus = new EventBus();
@@ -63,6 +66,10 @@ namespace Birdy3d {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         else
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    void Application::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+        eventBus->emit(new InputScrollEvent(xoffset, yoffset));
     }
 
     GLFWwindow* Application::getWindow() {

@@ -14,7 +14,6 @@ namespace Birdy3d {
             this->placement = placement;
             this->size = size;
 
-            Theme* theme = Application::defaultTheme;
             Logger::assertNotNull(theme, "no default theme set");
 
             addFilledRectangle(UIVector(0_px), UIVector(100_p), theme->color_bg, Placement::BOTTOM_LEFT);

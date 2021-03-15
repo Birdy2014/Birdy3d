@@ -9,11 +9,13 @@ namespace Birdy3d {
     public:
         Widget* child;
         bool hidden = false;
+        bool updated = false;
 
         Canvas() {};
 
         void update() {
             if (!hidden) {
+                updated = true;
                 glm::mat4 m(1);
                 glm::vec2 viewport = Application::getViewportSize();
                 m = glm::translate(m, glm::vec3(child->preferredPosition(viewport), 1.0f));
@@ -23,7 +25,7 @@ namespace Birdy3d {
         }
 
         void draw() {
-            if (!hidden)
+            if (!hidden && updated)
                 child->draw();
         }
     };

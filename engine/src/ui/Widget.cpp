@@ -1,6 +1,5 @@
 #include "ui/Widget.hpp"
 
-#include "core/Application.hpp"
 #include "core/Input.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
@@ -8,11 +7,12 @@
 
 namespace Birdy3d {
 
-    Widget::Widget(UIVector pos, UIVector size, Placement placement, float rotation) {
+    Widget::Widget(UIVector pos, UIVector size, Placement placement, float rotation, Theme* theme) {
         this->pos = pos;
         this->size = size;
         this->placement = placement;
         this->rot = rotation;
+        this->theme = theme;
     }
 
     void Widget::addRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
@@ -55,13 +55,18 @@ namespace Birdy3d {
         if (hidden)
             return false;
 
-        if (Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-            glm::vec2 cursorPos = Input::cursorPos();
-            for (Shape* s : this->shapes) {
-                if (s->contains(cursorPos - absPos))
-                    return clickHandler();
+        hover = false;
+        glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        glm::vec2 cursorPos = Input::cursorPos();
+        for (Shape* s : this->shapes) {
+            if (s->contains(cursorPos - absPos)) {
+                hover = true;
+                break;
             }
+        }
+
+        if (hover && Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+            return clickHandler();
         }
         return false;
     }
@@ -80,6 +85,7 @@ namespace Birdy3d {
 
     void Widget::arrange(glm::mat4 move, glm::vec2 size) {
         this->move = move;
+        this->actualSize = size;
 
         for (Shape* s : shapes) {
             s->parentSize(size);

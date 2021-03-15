@@ -14,20 +14,19 @@ int main() {
     Input::init();
 
     // UI
-    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a");
+    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", 22);
 
     Canvas canvas;
     canvas.hidden = true;
 
-    Layout menu(0_px, 20_p, Placement::CENTER);
+    Layout menu(0_px, 100_p, Placement::CENTER);
     menu.setOnClick([]() {
         Logger::debug("Menu clicked");
         return false;
     });
-    menu.addRectangle(0_px, 100_p, Color::WHITE, Placement::BOTTOM_LEFT);
     canvas.child = &menu;
 
-    DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 100_p, 10);
+    DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 20_p, 10);
     menu.addChild(&layout);
 
     Button closeButton(0_px, Placement::BOTTOM_LEFT, "Close", 20);
@@ -39,6 +38,10 @@ int main() {
 
     Button testButton(0_px, Placement::BOTTOM_LEFT, "TestButton", 20, UIVector(200_px, 50_px));
     layout.addChild(&testButton);
+
+    Textarea area(0_px, 100_px, Placement::BOTTOM_LEFT);
+    area.text = "Hallo Welt\nHallo Welt";
+    layout.addChild(&area);
 
     // GameObjects
     GameObject* scene = new GameObject();
@@ -97,6 +100,7 @@ int main() {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        Application::deltaTime = deltaTime;
 
         Input::update();
         canvas.update();
