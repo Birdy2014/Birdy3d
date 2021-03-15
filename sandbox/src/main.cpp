@@ -105,7 +105,7 @@ int main() {
         Input::update();
         canvas.update();
 
-        scene->update(deltaTime);
+        scene->update();
 
         if (lightup) {
             light->object->transform.position.y += 0.1 * deltaTime;

@@ -54,7 +54,7 @@ namespace Birdy3d {
         }
     }
 
-    void Collider::update(float deltaTime) {
+    void Collider::update() {
         Collider* otherCollider = nullptr;
         for (Collider* c : this->object->scene->getComponents<Collider>(true)) {
             if (c == this)

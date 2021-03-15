@@ -32,12 +32,12 @@ namespace Birdy3d {
         }
     }
 
-    void GameObject::update(float deltaTime) {
+    void GameObject::update() {
         for (Component* c : this->components) {
-            c->update(deltaTime);
+            c->update();
         }
         for (GameObject* o : this->children) {
-            o->update(deltaTime);
+            o->update();
         }
     }
 

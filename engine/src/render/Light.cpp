@@ -28,7 +28,7 @@ namespace Birdy3d {
         setupShadowMap();
     }
 
-    void Light::update(float deltaTime) {
+    void Light::update() {
         shadowMapUpdated = false;
     }
 

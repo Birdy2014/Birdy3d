@@ -15,7 +15,7 @@ namespace Birdy3d {
         virtual void setupShadowMap() { }
         virtual void genShadowMap(Shader* lightShader, int id, int textureid) { }
         void start() override;
-        void update(float deltaTime) override;
+        void update() override;
         void cleanup() override { }
 
     protected:

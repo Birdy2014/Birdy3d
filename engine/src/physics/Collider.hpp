@@ -16,7 +16,7 @@ namespace Birdy3d {
         void addShape(CollisionShape* shape);
         bool collides(CollisionShape* shape);
         void start() override;
-        void update(float deltaTime) override;
+        void update() override;
 
     private:
         std::vector<CollisionShape*> shapes;

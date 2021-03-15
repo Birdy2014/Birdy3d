@@ -11,7 +11,7 @@ namespace Birdy3d {
     public:
         FPPlayerController();
         void start() override;
-        void update(float deltaTime) override;
+        void update() override;
 
     private:
         Camera* cam;

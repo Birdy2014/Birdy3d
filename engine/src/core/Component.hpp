@@ -10,7 +10,7 @@ namespace Birdy3d {
 
         Component() {};
         virtual void start() {};
-        virtual void update(float deltaTime) {};
+        virtual void update() {};
         virtual void cleanup() {};
     };
 

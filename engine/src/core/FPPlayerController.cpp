@@ -18,7 +18,7 @@ namespace Birdy3d {
         Input::setCursorHidden(true);
     }
 
-    void FPPlayerController::update(float deltaTime) {
+    void FPPlayerController::update() {
         // Keyboard
         if (Input::keyPressed(GLFW_KEY_ESCAPE)) {
             if (!this->hiddenStatusUpdated) {
@@ -33,7 +33,7 @@ namespace Birdy3d {
         if (!Input::isCursorHidden())
             return;
 
-        float cameraSpeed = 2.5f * deltaTime;
+        float cameraSpeed = 2.5f * Application::deltaTime;
         if (Input::keyPressed(GLFW_KEY_W))
             this->object->transform.position += cameraSpeed * this->object->absForward();
         if (Input::keyPressed(GLFW_KEY_S))
