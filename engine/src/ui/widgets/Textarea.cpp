@@ -123,7 +123,7 @@ namespace Birdy3d {
     void Textarea::onScroll(InputScrollEvent* event) {
         if (!hover)
             return;
-        scrollpos += event->yoffset;
+        scrollpos -= event->yoffset;
         if (scrollpos < 0)
             scrollpos = 0;
     }
