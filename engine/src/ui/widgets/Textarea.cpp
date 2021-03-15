@@ -22,11 +22,19 @@ namespace Birdy3d {
         std::vector<std::string> lines = getLines();
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
-            tmpscroll += (scrollpos - tmpscroll) * Application::deltaTime;
+            // smooth scrolling
+            float scrolldelta = (scrollpos - tmpscroll) * Application::deltaTime;
+            tmpscroll += scrolldelta;
+            if (scrolldelta < 0.0002 && scrolldelta > -0.0002)
+                tmpscroll = scrollpos;
+
+            // draw lines
             line = l + floor(tmpscroll);
             int y = actualSize.y - (l + 1) * theme->fontSize + (tmpscroll - floor(tmpscroll)) * theme->fontSize;
-            if (line >= 0 && line < lines.size())
-                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove());
+            if (line >= 0 && line < lines.size()) {
+                float topOffset = actualSize.y - y - theme->fontSize;
+                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), topOffset < 0 ? -topOffset : 0, y < 0 ? -y : 0);
+            }
         }
     }
 

@@ -24,7 +24,7 @@ namespace Birdy3d {
         TextRenderer(std::string path, unsigned int fontSize);
         ~TextRenderer();
         void renderText(std::string text, float x, float y, float fontSize, Color color);
-        void renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move);
+        void renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop = 0, float cutBottom = 0);
         UIVector textSize(std::string text, float fontSize);
 
     private:

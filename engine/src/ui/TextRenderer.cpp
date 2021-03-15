@@ -56,7 +56,7 @@ namespace Birdy3d {
         this->renderText(text, x, y, fontSize, color, m);
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move) {
+    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop, float cutBottom) {
         float scale = (fontSize / this->fontSize);
         this->rect->color(color);
         for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
@@ -69,9 +69,21 @@ namespace Birdy3d {
             float w = ch.size.x * scale;
             float h = ch.size.y * scale;
 
-            this->rect->position(UIVector(xpos, ypos));
-            this->rect->size(UIVector(w, h));
+            if (h == 0 || w == 0)
+                continue;
+
+            this->rect->position(UIVector(xpos, ypos + cutBottom));
             this->rect->texture(ch.textureID);
+
+            // Cut text
+            float topSpace = fontSize - h;
+            float newCutTop = cutTop - topSpace;
+            if (newCutTop < 0) newCutTop = 0;
+            float cutTopTex = newCutTop / h;
+            float cutBottomTex = cutBottom / h;
+            this->rect->size(UIVector(w, h - newCutTop - cutBottom));
+            this->rect->texCoords(glm::vec2(0, cutTopTex), glm::vec2(1, 1 - cutBottomTex));
+
             this->rect->draw(move);
             x += (ch.advance >> 6) * scale;
         }

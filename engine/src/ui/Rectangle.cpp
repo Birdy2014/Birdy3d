@@ -71,35 +71,29 @@ namespace Birdy3d {
         glm::vec2 size = _size.toPixels(_parentSize);
         float w = size.x;
         float h = size.y;
+        float ua = texCoordA.x;
+        float va = texCoordA.y;
+        float ub = texCoordB.x;
+        float vb = texCoordB.y;
+        // clang-format off
         if (type == Shape::OUTLINE) {
             float vertices[] = {
-                x,
-                y,
-                0.0f,
-                0.0f,
-                x,
-                y + h,
-                0.0f,
-                1.0f,
-                x + w,
-                y + h,
-                1.0f,
-                1.0f,
-                x + w,
-                y,
-                1.0f,
-                0.0f,
+                x,     y,     ua, va,
+                x,     y + h, ua, vb,
+                x + w, y + h, ub, vb,
+                x + w, y,     ub, va
             };
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
         } else {
             float vertices[] = {
-                x, y, 0.0f, 1.0f,
-                x + w, y, 1.0f, 1.0f,
-                x, y + h, 0.0f, 0.0f,
-                x + w, y + h, 1.0f, 0.0f
+                x,     y,     ua, vb,
+                x + w, y,     ub, vb,
+                x,     y + h, ua, va,
+                x + w, y + h, ub, va
             };
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
         }
+        // clang-format on
     }
 
 }

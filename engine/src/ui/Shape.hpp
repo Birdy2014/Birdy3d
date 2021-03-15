@@ -18,11 +18,13 @@ namespace Birdy3d {
 
         Type type;
 
-        Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT)
+        Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1))
             : _position(position)
             , _size(size)
             , _color(color)
-            , _placement(placement) { }
+            , _placement(placement)
+            , texCoordA(texCoordA)
+            , texCoordB(texCoordB) { }
         UIVector position() { return _position; }
         UIVector position(UIVector position) {
             dirty = true;
@@ -46,6 +48,11 @@ namespace Birdy3d {
         }
         unsigned int texture() { return _texture; }
         unsigned int texture(unsigned int texture) { return _texture = texture; }
+        void texCoords(glm::vec2 a, glm::vec2 b) {
+            dirty = true;
+            texCoordA = a;
+            texCoordB = b;
+        }
         virtual void draw(glm::mat4 move) = 0;
         virtual bool contains(glm::vec2 point) = 0;
 
@@ -57,6 +64,8 @@ namespace Birdy3d {
         UIVector _size;
         Color _color;
         unsigned int _texture;
+        glm::vec2 texCoordA;
+        glm::vec2 texCoordB;
         Placement _placement;
         glm::vec2 _parentSize;
     };
