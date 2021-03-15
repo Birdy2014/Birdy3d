@@ -1,6 +1,8 @@
 #include "ui/widgets/Textarea.hpp"
 
 #include "core/Application.hpp"
+#include "core/Input.hpp"
+#include "events/InputClickEvent.hpp"
 #include "events/InputScrollEvent.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
@@ -13,13 +15,23 @@ namespace Birdy3d {
         tmpscroll = 0;
         Theme* theme = Application::defaultTheme;
         addFilledRectangle(0_px, 100_p, theme->color_bg);
+        Application::eventBus->subscribe(this, &Textarea::onClick);
         Application::eventBus->subscribe(this, &Textarea::onScroll);
+    }
+
+    void Textarea::append(const std::string& text) {
+        this->text += text;
+        lines = getLines();
+    }
+
+    void Textarea::arrange(glm::mat4 move, glm::vec2 size) {
+        Widget::arrange(move, size);
+        lines = getLines();
     }
 
     void Textarea::draw() {
         Widget::draw();
         int linec = actualSize.y / theme->fontSize;
-        std::vector<std::string> lines = getLines();
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
             // smooth scrolling
@@ -33,7 +45,7 @@ namespace Birdy3d {
             int y = actualSize.y - (l + 1) * theme->fontSize + (tmpscroll - floor(tmpscroll)) * theme->fontSize;
             if (line >= 0 && line < lines.size()) {
                 float topOffset = actualSize.y - y - theme->fontSize;
-                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), topOffset < 0 ? -topOffset : 0, y < 0 ? -y : 0);
+                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), topOffset < 0 ? -topOffset : 0, y < 0 ? -y : 0, line == textCursorY ? textCursorX : -1, theme->color_bg);
             }
         }
     }
@@ -70,15 +82,48 @@ namespace Birdy3d {
                 }
                 eol = prevspace;
             }
+            if (textCursor >= pos && textCursor < eol) {
+                textCursorX = textCursor - pos;
+                textCursorY = lines.size();
+            }
             pos = eol + 1;
             lines.push_back(line);
         }
         return lines;
     }
 
+    void Textarea::onClick(InputClickEvent* event) {
+        if (!hover)
+            return;
+        if (event->action != GLFW_PRESS)
+            return;
+        glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        glm::vec2 localPos = Input::cursorPos() - absPos;
+
+        int y = tmpscroll + (actualSize.y - localPos.y) / theme->fontSize;
+        if (y >= lines.size()) y = lines.size() - 1;
+        int x = -1;
+        float width = 0;
+        std::string& line = lines[y];
+        for (int i = 0; i < line.length(); i++) {
+            width += Application::getTextRenderer()->charWidth(line[i], theme->fontSize);
+            if (width > localPos.x) {
+                x = i;
+                break;
+            }
+        }
+        if (x == -1)
+            x = line.length() - 1;
+
+        textCursor = x;
+        for (int i = 0; i < y; i++)
+            textCursor += lines[i].length() + 1;
+    }
+
     void Textarea::onScroll(InputScrollEvent* event) {
-        if (hover)
-            scrollpos += event->yoffset;
+        if (!hover)
+            return;
+        scrollpos += event->yoffset;
         if (scrollpos < 0)
             scrollpos = 0;
     }

@@ -56,9 +56,9 @@ namespace Birdy3d {
         this->renderText(text, x, y, fontSize, color, m);
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop, float cutBottom) {
+    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop, float cutBottom, int highlightchar, Color bg_color) {
         float scale = (fontSize / this->fontSize);
-        this->rect->color(color);
+        int i = 0;
         for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
             if (chars.count(*c) == 0) {
                 this->addChar(*c);
@@ -69,11 +69,9 @@ namespace Birdy3d {
             float w = ch.size.x * scale;
             float h = ch.size.y * scale;
 
-            if (h == 0 || w == 0)
-                continue;
-
             this->rect->position(UIVector(xpos, ypos + cutBottom));
             this->rect->texture(ch.textureID);
+            this->rect->color(color);
 
             // Cut text
             float topSpace = fontSize - h;
@@ -81,11 +79,22 @@ namespace Birdy3d {
             if (newCutTop < 0) newCutTop = 0;
             float cutTopTex = newCutTop / h;
             float cutBottomTex = cutBottom / h;
+
+            if (i == highlightchar) {
+                this->rect->type = Rectangle::FILLED;
+                this->rect->size(UIVector(w, fontSize - cutTop - cutBottom));
+                this->rect->draw(move);
+
+                this->rect->color(bg_color);
+                this->rect->type = Rectangle::TEXT;
+            }
+
             this->rect->size(UIVector(w, h - newCutTop - cutBottom));
             this->rect->texCoords(glm::vec2(0, cutTopTex), glm::vec2(1, 1 - cutBottomTex));
 
             this->rect->draw(move);
             x += (ch.advance >> 6) * scale;
+            i++;
         }
     }
 
@@ -101,6 +110,13 @@ namespace Birdy3d {
             size.x += (ch.advance >> 6) * scale;
         }
         return size;
+    }
+
+    float TextRenderer::charWidth(char c, float fontSize) {
+        if (chars.count(c) == 0)
+            this->addChar(c);
+        Character ch = this->chars[c];
+        return (ch.advance >> 6) * (fontSize / this->fontSize);
     }
 
     void Text::calcPos(glm::vec2 parentSize) {

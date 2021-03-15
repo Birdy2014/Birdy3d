@@ -64,10 +64,6 @@ namespace Birdy3d {
                 break;
             }
         }
-
-        if (hover && Input::buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            return clickHandler();
-        }
         return false;
     }
 

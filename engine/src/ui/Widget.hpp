@@ -27,9 +27,6 @@ namespace Birdy3d {
         void addFilledTriangle(UIVector pos, UIVector size, Color color);
         void addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
         virtual void draw();
-        void setOnClick(bool (*clickHandler)()) {
-            this->clickHandler = clickHandler;
-        }
         virtual bool updateEvents();
 
         // Returns the position relative to the parent's origin in pixels
@@ -41,10 +38,11 @@ namespace Birdy3d {
 
         virtual void arrange(glm::mat4 move, glm::vec2 size);
 
+        bool isHovering() { return hover; }
+
     protected:
         std::vector<Shape*> shapes;
         std::vector<Text*> texts;
-        bool (*clickHandler)(); // FIXME: This will cause a segfault if not set. Replace with events
         glm::mat4 move;
         glm::vec2 actualSize;
         bool hover;

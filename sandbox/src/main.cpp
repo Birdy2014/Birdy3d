@@ -20,27 +20,22 @@ int main() {
     canvas.hidden = true;
 
     Layout menu(0_px, 100_p, Placement::CENTER);
-    menu.setOnClick([]() {
-        Logger::debug("Menu clicked");
-        return false;
-    });
     canvas.child = &menu;
 
     DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 20_p, 10);
     menu.addChild(&layout);
 
     Button closeButton(0_px, Placement::BOTTOM_LEFT, "Close", 20);
-    closeButton.setOnClick([]() {
+    closeButton.clickCallback = [](InputClickEvent* event) {
         glfwSetWindowShouldClose(Application::getWindow(), true);
-        return true;
-    });
+    };
     layout.addChild(&closeButton);
 
     Button testButton(0_px, Placement::BOTTOM_LEFT, "TestButton", 20, UIVector(200_px, 50_px));
     layout.addChild(&testButton);
 
     Textarea area(0_px, 100_px, Placement::BOTTOM_LEFT);
-    area.text = "Hallo Welt\nHallo Welt";
+    area.append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
     layout.addChild(&area);
 
     // GameObjects
