@@ -64,7 +64,7 @@ namespace Birdy3d {
                 break;
             }
         }
-        return false;
+        return hover;
     }
 
     glm::vec2 Widget::preferredPosition(glm::vec2 parentSize) {
