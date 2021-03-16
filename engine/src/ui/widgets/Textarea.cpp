@@ -31,6 +31,8 @@ namespace Birdy3d {
 
     void Textarea::draw() {
         Widget::draw();
+        if (selecting)
+            updateCursorEnd();
         int linec = actualSize.y / theme->fontSize;
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
@@ -45,7 +47,24 @@ namespace Birdy3d {
             int y = actualSize.y - (l + 1) * theme->fontSize + (tmpscroll - floor(tmpscroll)) * theme->fontSize;
             if (line >= 0 && line < lines.size()) {
                 float topOffset = actualSize.y - y - theme->fontSize;
-                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), topOffset < 0 ? -topOffset : 0, y < 0 ? -y : 0, line == textCursorY ? textCursorX : -1, theme->color_bg);
+                int highlightstart = -1;
+                int highlightend = -1;
+                if (selectionStart < selectionEnd) {
+                    if (line == selectionStartY)
+                        highlightstart = selectionStartX;
+                    if (line > selectionStartY && line <= selectionEndY)
+                        highlightstart = 0;
+                    if (line == selectionEndY)
+                        highlightend = selectionEndX;
+                } else if (selectionStart > selectionEnd) {
+                    if (line == selectionStartY)
+                        highlightend = selectionStartX;
+                    if (line <= selectionStartY && line > selectionEndY)
+                        highlightstart = 0;
+                    if (line == selectionEndY)
+                        highlightstart = selectionEndX;
+                }
+                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), topOffset < 0 ? -topOffset : 0, y < 0 ? -y : 0, line == textCursorY ? textCursorX : -1, highlightstart, highlightend, "#0000a050");
             }
         }
     }
@@ -86,6 +105,14 @@ namespace Birdy3d {
                 textCursorX = textCursor - pos;
                 textCursorY = lines.size();
             }
+            if (selectionStart >= pos && selectionStart < eol) {
+                selectionStartX = selectionStart - pos;
+                selectionStartY = lines.size();
+            }
+            if (selectionEnd >= pos && selectionEnd < eol) {
+                selectionEndX = selectionEnd - pos;
+                selectionEndY = lines.size();
+            }
             pos = eol + 1;
             lines.push_back(line);
         }
@@ -93,10 +120,60 @@ namespace Birdy3d {
     }
 
     void Textarea::onClick(InputClickEvent* event) {
+        if (!hover && event->action != GLFW_RELEASE)
+            return;
+        if (event->action != GLFW_PRESS && event->action != GLFW_RELEASE)
+            return;
+
+        glm::ivec3 charPos = cursorCharPos();
+
+        if (event->action == GLFW_PRESS) {
+            selecting = true;
+            selectionStart = charPos.z;
+            selectionStartX = charPos.x;
+            selectionStartY = charPos.y;
+            textCursor = -1;
+            textCursorX = -1;
+            textCursorY = -1;
+        } else if (event->action == GLFW_RELEASE && charPos.z == selectionStart) {
+            selecting = false;
+            textCursor = selectionStart;
+            textCursorX = selectionStartX;
+            textCursorY = selectionStartY;
+            selectionStart = -1;
+            selectionStartX = -1;
+            selectionStartY = -1;
+            selectionEnd = -1;
+            selectionEndX = -1;
+            selectionEndY = -1;
+        } else if (event->action == GLFW_RELEASE && charPos.z != selectionStart) {
+            selecting = false;
+            selectionEnd = charPos.z;
+            selectionEndX = charPos.x;
+            selectionEndY = charPos.y;
+        }
+    }
+
+    void Textarea::onScroll(InputScrollEvent* event) {
         if (!hover)
             return;
-        if (event->action != GLFW_PRESS)
+        scrollpos -= event->yoffset;
+        if (scrollpos < 0)
+            scrollpos = 0;
+    }
+
+    void Textarea::updateCursorEnd() {
+        if (!hover)
             return;
+
+        glm::ivec3 charPos = cursorCharPos();
+
+        selectionEnd = charPos.z;
+        selectionEndX = charPos.x;
+        selectionEndY = charPos.y;
+    }
+
+    glm::ivec3 Textarea::cursorCharPos() {
         glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         glm::vec2 localPos = Input::cursorPos() - absPos;
 
@@ -106,25 +183,25 @@ namespace Birdy3d {
         float width = 0;
         std::string& line = lines[y];
         for (int i = 0; i < line.length(); i++) {
-            width += Application::getTextRenderer()->charWidth(line[i], theme->fontSize);
-            if (width > localPos.x) {
+            float charWidth = Application::getTextRenderer()->charWidth(line[i], theme->fontSize);
+            width += charWidth;
+            // Correction for click between characters
+            if (width > localPos.x + charWidth / 2) {
                 x = i;
+                break;
+            }
+            if (width > localPos.x) {
+                x = i + 1;
                 break;
             }
         }
         if (x == -1)
-            x = line.length() - 1;
+            x = line.length();
 
-        textCursor = x;
+        int pos = x;
         for (int i = 0; i < y; i++)
-            textCursor += lines[i].length() + 1;
-    }
+            pos += lines[i].length() + 1;
 
-    void Textarea::onScroll(InputScrollEvent* event) {
-        if (!hover)
-            return;
-        scrollpos -= event->yoffset;
-        if (scrollpos < 0)
-            scrollpos = 0;
+        return glm::ivec3(x, y, pos);
     }
 }

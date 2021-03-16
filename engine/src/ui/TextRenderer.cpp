@@ -56,14 +56,23 @@ namespace Birdy3d {
         this->renderText(text, x, y, fontSize, color, m);
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop, float cutBottom, int highlightchar, Color bg_color) {
+    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop, float cutBottom, int cursorpos, int hlstart, int hlend, Color hlcolor) {
+        bool highlighting = false;
         float scale = (fontSize / this->fontSize);
-        int i = 0;
-        for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
-            if (chars.count(*c) == 0) {
-                this->addChar(*c);
+        char c;
+        for (size_t i = 0; i <= text.length(); i++) {
+            if (i < text.length()) c = text[i];
+            else c = ' ';
+
+            if (i == hlstart)
+                highlighting = true;
+            if (hlend >= 0 && i == hlend + 1)
+                highlighting = false;
+
+            if (chars.count(c) == 0) {
+                this->addChar(c);
             }
-            Character ch = this->chars[*c];
+            Character ch = this->chars[c];
             float xpos = x + ch.bearing.x * scale;
             float ypos = y;
             float w = ch.size.x * scale;
@@ -80,21 +89,31 @@ namespace Birdy3d {
             float cutTopTex = newCutTop / h;
             float cutBottomTex = cutBottom / h;
 
-            if (i == highlightchar) {
-                this->rect->type = Rectangle::FILLED;
-                this->rect->size(UIVector(w, fontSize - cutTop - cutBottom));
-                this->rect->draw(move);
-
-                this->rect->color(bg_color);
-                this->rect->type = Rectangle::TEXT;
-            }
-
             this->rect->size(UIVector(w, h - newCutTop - cutBottom));
             this->rect->texCoords(glm::vec2(0, cutTopTex), glm::vec2(1, 1 - cutBottomTex));
 
             this->rect->draw(move);
+
+            if (i == cursorpos) {
+                this->rect->type = Rectangle::FILLED;
+                this->rect->size(UIVector(2, fontSize - cutTop - cutBottom));
+                this->rect->position(UIVector(xpos - 2, ypos + cutBottom));
+                this->rect->draw(move);
+
+                this->rect->type = Rectangle::TEXT;
+            }
+
+            if (highlighting && i < text.length()) {
+                this->rect->type = Rectangle::FILLED;
+                this->rect->color(hlcolor);
+                this->rect->size(UIVector((ch.advance >> 6) * scale, fontSize - cutTop - cutBottom));
+                this->rect->draw(move);
+
+                this->rect->color(color);
+                this->rect->type = Rectangle::TEXT;
+            }
+
             x += (ch.advance >> 6) * scale;
-            i++;
         }
     }
 
