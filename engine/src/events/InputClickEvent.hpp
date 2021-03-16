@@ -1,3 +1,5 @@
+#pragma once
+
 #include "events/Event.hpp"
 
 namespace Birdy3d {
