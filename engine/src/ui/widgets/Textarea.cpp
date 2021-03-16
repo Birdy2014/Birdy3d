@@ -2,8 +2,7 @@
 
 #include "core/Application.hpp"
 #include "core/Input.hpp"
-#include "events/InputClickEvent.hpp"
-#include "events/InputScrollEvent.hpp"
+#include "events/InputEvents.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 
@@ -17,16 +16,18 @@ namespace Birdy3d {
         addFilledRectangle(0_px, 100_p, theme->color_bg);
         Application::eventBus->subscribe(this, &Textarea::onClick);
         Application::eventBus->subscribe(this, &Textarea::onScroll);
+        Application::eventBus->subscribe(this, &Textarea::onChar);
+        Application::eventBus->subscribe(this, &Textarea::onKey);
     }
 
     void Textarea::append(const std::string& text) {
         this->text += text;
-        lines = getLines();
+        updateLines();
     }
 
     void Textarea::arrange(glm::mat4 move, glm::vec2 size) {
         Widget::arrange(move, size);
-        lines = getLines();
+        updateLines();
     }
 
     void Textarea::draw() {
@@ -69,9 +70,9 @@ namespace Birdy3d {
         }
     }
 
-    std::vector<std::string> Textarea::getLines() {
+    void Textarea::updateLines() {
+        lines.clear();
         TextRenderer* renderer = Application::getTextRenderer();
-        std::vector<std::string> lines;
         std::string line;
         size_t pos = 0, eol = 0, nextspace = 0, prevspace = 0, length = 0;
         while (pos != std::string::npos && pos < text.length()) {
@@ -101,7 +102,7 @@ namespace Birdy3d {
                 }
                 eol = prevspace;
             }
-            if (textCursor >= pos && textCursor < eol) {
+            if (textCursor >= pos && textCursor <= eol) {
                 textCursorX = textCursor - pos;
                 textCursorY = lines.size();
             }
@@ -116,7 +117,6 @@ namespace Birdy3d {
             pos = eol + 1;
             lines.push_back(line);
         }
-        return lines;
     }
 
     void Textarea::onClick(InputClickEvent* event) {
@@ -162,6 +162,68 @@ namespace Birdy3d {
             scrollpos = 0;
     }
 
+    void Textarea::onChar(InputCharEvent* event) {
+        if (!hover)
+            return;
+        clearSelection();
+        const char* c = (char*)&event->codepoint; // FIXME: this is ugly and only handles ASCII, not unicode
+        text.insert(textCursor, c);
+        textCursor++;
+        updateLines();
+    }
+
+    // TODO: key repeat
+    void Textarea::onKey(InputKeyEvent* event) {
+        if (!hover || event->action != GLFW_PRESS)
+            return;
+        if (selectionStart >= 0 && selectionEnd >= 0) {
+            if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE) {
+                clearSelection();
+            }
+        } else {
+            switch (event->key) {
+            case GLFW_KEY_DELETE:
+                if (textCursor >= text.length())
+                    return;
+                text.erase(text.begin() + textCursor, text.begin() + textCursor + 1);
+                break;
+            case GLFW_KEY_BACKSPACE:
+                if (textCursor <= 0)
+                    return;
+                text.erase(text.begin() + textCursor - 1, text.begin() + textCursor);
+                textCursor--;
+                break;
+            case GLFW_KEY_LEFT:
+                if (textCursor <= 0)
+                    return;
+                textCursor--;
+                break;
+            case GLFW_KEY_RIGHT:
+                if (textCursor >= text.length())
+                    return;
+                textCursor++;
+                break;
+            // FIXME: key up and down don't respect newlines - maybe i shouldn't use lines but newline characters in text
+            case GLFW_KEY_UP:
+                textCursor -= textCursorY > 0 ? lines[textCursorY].size() : 0;
+                break;
+            case GLFW_KEY_DOWN:
+                textCursor += textCursorY < lines.size() ? lines[textCursorY + 1].size() : 0;
+                break;
+            }
+        }
+    }
+
+    void Textarea::clearSelection() {
+        if (selectionStart != -1 && selectionEnd != -1) {
+            text.erase(text.begin() + selectionStart, text.begin() + selectionEnd);
+            textCursor = selectionStart;
+            selectionStart = -1;
+            selectionEnd = -1;
+            selecting = false;
+        }
+    }
+
     void Textarea::updateCursorEnd() {
         if (!hover)
             return;
@@ -178,7 +240,8 @@ namespace Birdy3d {
         glm::vec2 localPos = Input::cursorPos() - absPos;
 
         int y = tmpscroll + (actualSize.y - localPos.y) / theme->fontSize;
-        if (y >= lines.size()) y = lines.size() - 1;
+        if (y >= lines.size())
+            y = lines.size() - 1;
         int x = -1;
         float width = 0;
         std::string& line = lines[y];

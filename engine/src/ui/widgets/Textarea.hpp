@@ -6,6 +6,8 @@ namespace Birdy3d {
 
     class InputClickEvent;
     class InputScrollEvent;
+    class InputCharEvent;
+    class InputKeyEvent;
 
     class Textarea : public Widget {
     public:
@@ -31,9 +33,12 @@ namespace Birdy3d {
         int selectionEndX = -1;
         int selectionEndY = -1;
 
-        std::vector<std::string> getLines();
+        void updateLines();
         void onClick(InputClickEvent* event);
         void onScroll(InputScrollEvent* event);
+        void onChar(InputCharEvent* event);
+        void onKey(InputKeyEvent* event);
+        void clearSelection();
         void updateCursorEnd();
         glm::ivec3 cursorCharPos();
     };

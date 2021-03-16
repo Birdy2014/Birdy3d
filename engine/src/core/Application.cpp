@@ -3,8 +3,7 @@
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
-#include "events/InputClickEvent.hpp"
-#include "events/InputScrollEvent.hpp"
+#include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "ui/TextRenderer.hpp"
 
@@ -48,6 +47,8 @@ namespace Birdy3d {
         glfwSetWindowFocusCallback(window, window_focus_callback);
         glfwSetScrollCallback(window, scroll_callback);
         glfwSetMouseButtonCallback(window, mouse_button_callback);
+        glfwSetKeyCallback(window, key_callback);
+        glfwSetCharCallback(window, character_callback);
 
         // Init variables
         eventBus = new EventBus();
@@ -76,6 +77,14 @@ namespace Birdy3d {
 
     void Application::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
         eventBus->emit(new InputClickEvent(button, action, mods));
+    }
+
+    void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+        eventBus->emit(new InputKeyEvent(key, scancode, action, mods));
+    }
+
+    void Application::character_callback(GLFWwindow* window, unsigned int codepoint) {
+        eventBus->emit(new InputCharEvent(codepoint));
     }
 
     GLFWwindow* Application::getWindow() {

@@ -13,7 +13,7 @@
 #include "events/CollisionEvent.hpp"
 #include "events/Event.hpp"
 #include "events/EventBus.hpp"
-#include "events/InputClickEvent.hpp"
+#include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 
 // Physics
