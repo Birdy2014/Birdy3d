@@ -21,15 +21,7 @@ namespace Birdy3d {
     }
 
     void Layout::arrange(glm::mat4 move, glm::vec2 size) {
-        this->move = move;
-
-        for (Shape* s : shapes) {
-            s->parentSize(size);
-        }
-
-        for (Text* t : texts) {
-            t->calcPos(size);
-        }
+        Widget::arrange(move, size);
 
         for (Widget* child : children) {
             glm::mat4 m = move;

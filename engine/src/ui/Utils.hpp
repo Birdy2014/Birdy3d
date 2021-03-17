@@ -47,6 +47,7 @@ namespace Birdy3d {
 
         UIVector();
         UIVector(const UIVector& v);
+        UIVector(const glm::vec2& v);
         UIVector(Unit x);
         UIVector(Unit x, Unit y);
         UIVector& operator=(const UIVector& other);

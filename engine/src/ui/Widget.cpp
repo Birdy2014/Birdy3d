@@ -68,7 +68,7 @@ namespace Birdy3d {
     }
 
     glm::vec2 Widget::preferredPosition(glm::vec2 parentSize) {
-        return Utils::getRelativePosition(this->pos, size, parentSize, this->placement);
+        return Utils::getRelativePosition(this->pos, actualSize, parentSize, this->placement);
     }
 
     glm::vec2 Widget::minimalSize() {

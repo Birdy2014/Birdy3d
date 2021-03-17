@@ -9,6 +9,8 @@ namespace Birdy3d {
     }
 
     void DirectionalLayout::arrange(glm::mat4 move, glm::vec2 size) {
+        Widget::arrange(move, size);
+
         // Initial values
         std::vector<Widget*> smallerWidgets = children;
         float widgetSize;

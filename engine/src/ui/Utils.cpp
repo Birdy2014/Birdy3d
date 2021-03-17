@@ -71,6 +71,10 @@ namespace Birdy3d {
         : x(v.x)
         , y(v.y) { }
 
+    UIVector::UIVector(const glm::vec2& v)
+        : x(v.x)
+        , y(v.y) { }
+
     UIVector::UIVector(Unit x)
         : x(x)
         , y(x) { }
