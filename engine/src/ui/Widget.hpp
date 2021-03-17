@@ -45,7 +45,7 @@ namespace Birdy3d {
         std::vector<Text*> texts;
         glm::mat4 move;
         glm::vec2 actualSize;
-        bool hover;
+        bool hover = false;
 
         glm::mat4 normalizedMove();
     };
