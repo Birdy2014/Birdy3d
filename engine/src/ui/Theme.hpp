@@ -12,6 +12,7 @@ namespace Birdy3d {
         const Color color_bg;
         const Color color_border;
         const unsigned int fontSize;
+        const unsigned int lineHeight;
 
         Theme(Color color_fg, Color color_bg, Color color_border, unsigned int fontSize);
 

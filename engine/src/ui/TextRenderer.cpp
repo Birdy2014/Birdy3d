@@ -57,8 +57,12 @@ namespace Birdy3d {
     }
 
     void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop, float cutBottom, int cursorpos, int hlstart, int hlend, Color hlcolor) {
+        if (cutTop < 0)
+            cutTop = 0;
+
         bool highlighting = false;
         float scale = (fontSize / this->fontSize);
+        float cursorHeight = (fontSize * 1.1);
         char c;
         for (size_t i = 0; i <= text.length(); i++) {
             if (i < text.length()) c = text[i];
@@ -73,31 +77,35 @@ namespace Birdy3d {
                 this->addChar(c);
             }
             Character ch = this->chars[c];
+            float bottomToOrigin = (ch.size.y - ch.bearing.y) / 1.5; // For some reason, the division by 1.5 is necessary.
+            float currentCutBottom = std::max(cutBottom, -bottomToOrigin);
             float xpos = x + ch.bearing.x * scale;
             float ypos = y;
             float w = ch.size.x * scale;
             float h = ch.size.y * scale;
 
-            this->rect->position(UIVector(xpos, ypos + cutBottom));
+            this->rect->position(UIVector(xpos, ypos + currentCutBottom));
             this->rect->texture(ch.textureID);
             this->rect->color(color);
 
             // Cut text
-            float topSpace = fontSize - h;
+            float topSpace = fontSize + bottomToOrigin - h;
             float newCutTop = cutTop - topSpace;
             if (newCutTop < 0) newCutTop = 0;
             float cutTopTex = newCutTop / h;
-            float cutBottomTex = cutBottom / h;
+            float cutBottomTex = (bottomToOrigin ? (currentCutBottom + bottomToOrigin) : currentCutBottom) / h;
 
-            this->rect->size(UIVector(w, h - newCutTop - cutBottom));
+            this->rect->size(UIVector(w, h - newCutTop - (bottomToOrigin ? currentCutBottom + bottomToOrigin : currentCutBottom)));
             this->rect->texCoords(glm::vec2(0, cutTopTex), glm::vec2(1, 1 - cutBottomTex));
 
             this->rect->draw(move);
 
+            currentCutBottom = std::max(cutBottom, -(cursorHeight / 6));
+
             if (i == cursorpos) {
                 this->rect->type = Rectangle::FILLED;
-                this->rect->size(UIVector(2, fontSize - cutTop - cutBottom));
-                this->rect->position(UIVector(xpos - 2, ypos + cutBottom));
+                this->rect->position(UIVector(xpos - 2, ypos + currentCutBottom));
+                this->rect->size(UIVector(2, std::min(cursorHeight - cutTop - currentCutBottom - (cursorHeight / 6), cursorHeight)));
                 this->rect->draw(move);
 
                 this->rect->type = Rectangle::TEXT;
@@ -106,7 +114,8 @@ namespace Birdy3d {
             if (highlighting && i < text.length()) {
                 this->rect->type = Rectangle::FILLED;
                 this->rect->color(hlcolor);
-                this->rect->size(UIVector((ch.advance >> 6) * scale, fontSize - cutTop - cutBottom));
+                this->rect->position(UIVector(xpos - 2, ypos + currentCutBottom));
+                this->rect->size(UIVector((ch.advance >> 6) * scale, std::min(cursorHeight - cutTop - currentCutBottom - (cursorHeight / 6), cursorHeight)));
                 this->rect->draw(move);
 
                 this->rect->color(color);

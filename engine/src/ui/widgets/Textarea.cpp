@@ -34,7 +34,7 @@ namespace Birdy3d {
         Widget::draw();
         if (selecting)
             updateCursorEnd();
-        int linec = actualSize.y / theme->fontSize;
+        int linec = actualSize.y / theme->lineHeight;
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
             // smooth scrolling
@@ -45,7 +45,7 @@ namespace Birdy3d {
 
             // draw lines
             line = l + floor(tmpscroll);
-            int y = actualSize.y - (l + 1) * theme->fontSize + (tmpscroll - floor(tmpscroll)) * theme->fontSize;
+            int y = actualSize.y - (l + 1) * theme->lineHeight + (tmpscroll - floor(tmpscroll)) * theme->lineHeight;
             if (line >= 0 && line < lines.size()) {
                 float topOffset = actualSize.y - y - theme->fontSize;
                 int highlightstart = -1;
@@ -65,7 +65,7 @@ namespace Birdy3d {
                     if (line == selectionEndY)
                         highlightstart = selectionEndX;
                 }
-                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), topOffset < 0 ? -topOffset : 0, y < 0 ? -y : 0, line == textCursorY ? textCursorX : -1, highlightstart, highlightend, "#0000a050");
+                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), -topOffset, -y, line == textCursorY ? textCursorX : -1, highlightstart, highlightend, "#0000a050");
             }
         }
     }
@@ -239,7 +239,7 @@ namespace Birdy3d {
         glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         glm::vec2 localPos = Input::cursorPos() - absPos;
 
-        int y = tmpscroll + (actualSize.y - localPos.y) / theme->fontSize;
+        int y = tmpscroll + (actualSize.y - localPos.y) / theme->lineHeight;
         if (y >= lines.size())
             y = lines.size() - 1;
         int x = -1;

@@ -8,5 +8,6 @@ namespace Birdy3d {
         : color_fg(color_fg)
         , color_bg(color_bg)
         , color_border(color_border)
-        , fontSize(fontSize) { }
+        , fontSize(fontSize)
+        , lineHeight(fontSize * 1.1) { }
 }
