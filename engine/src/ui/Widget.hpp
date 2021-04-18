@@ -42,7 +42,6 @@ namespace Birdy3d {
 
     protected:
         std::vector<Shape*> shapes;
-        std::vector<Text*> texts;
         glm::mat4 move;
         glm::vec2 actualSize;
         bool hover = false;

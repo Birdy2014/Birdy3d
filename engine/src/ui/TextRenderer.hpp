@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ui/Shape.hpp"
 #include "ui/Utils.hpp"
 #include <ft2build.h>
 #include <glm/glm.hpp>
@@ -38,24 +39,19 @@ namespace Birdy3d {
         bool addChar(char c);
     };
 
-    class Text {
+    class Text : public Shape {
     public:
-        UIVector pos;
         float fontSize;
         std::string text;
-        Color color;
-        Placement placement;
         TextRenderer* renderer;
 
         Text(UIVector pos, float fontSize, std::string text, Color color, Placement placement, TextRenderer* renderer)
-            : pos(pos)
+            : Shape(pos, 0_px, color, placement)
             , fontSize(fontSize)
             , text(text)
-            , color(color)
-            , placement(placement)
             , renderer(renderer) { }
-        void calcPos(glm::vec2 parentSize);
-        void render(glm::mat4 move);
+        void draw(glm::mat4 move) override;
+        bool contains(glm::vec2 point) override;
 
     private:
         glm::vec2 relativePos;

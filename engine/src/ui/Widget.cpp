@@ -32,7 +32,7 @@ namespace Birdy3d {
     }
 
     void Widget::addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
-        this->texts.push_back(new Text(pos, fontSize, text, color, placement, Application::getTextRenderer()));
+        this->shapes.push_back(new Text(pos, fontSize, text, color, placement, Application::getTextRenderer()));
     }
 
     void Widget::draw() {
@@ -43,10 +43,6 @@ namespace Birdy3d {
 
         for (Shape* s : this->shapes) {
             s->draw(move);
-        }
-
-        for (Text* t : this->texts) {
-            t->render(move);
         }
     }
 
@@ -85,10 +81,6 @@ namespace Birdy3d {
 
         for (Shape* s : shapes) {
             s->parentSize(size);
-        }
-
-        for (Text* t : texts) {
-            t->calcPos(size);
         }
     }
 

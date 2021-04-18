@@ -147,13 +147,17 @@ namespace Birdy3d {
         return (ch.advance >> 6) * (fontSize / this->fontSize);
     }
 
-    void Text::calcPos(glm::vec2 parentSize) {
-        UIVector textSize = renderer->textSize(text, fontSize);
-        relativePos = Utils::getRelativePosition(pos, textSize, parentSize, placement);
+    void Text::draw(glm::mat4 move) {
+        if (dirty) {
+            UIVector textSize = renderer->textSize(text, fontSize);
+            relativePos = Utils::getRelativePosition(_position, textSize, _parentSize, _placement);
+            dirty = false;
+        }
+        renderer->renderText(text, relativePos.x, relativePos.y, fontSize, _color, move);
     }
 
-    void Text::render(glm::mat4 move) {
-        renderer->renderText(text, relativePos.x, relativePos.y, fontSize, color, move);
+    bool Text::contains(glm::vec2 point) {
+        return false;
     }
 
 }
