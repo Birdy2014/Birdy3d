@@ -8,7 +8,6 @@
 namespace Birdy3d {
 
     class Shape;
-    class Text;
     class Theme;
 
     class Widget {
@@ -39,6 +38,18 @@ namespace Birdy3d {
         virtual void arrange(glm::mat4 move, glm::vec2 size);
 
         bool isHovering() { return hover; }
+
+        template<class T>
+        T* getShape(std::string name = "") {
+            for (Shape* s : this->shapes) {
+                if (name != "" && name != s->name)
+                    continue;
+                T* casted = dynamic_cast<T*>(s);
+                if (casted)
+                    return casted;
+            }
+            return nullptr;
+        }
 
     protected:
         std::vector<Shape*> shapes;

@@ -16,15 +16,17 @@ namespace Birdy3d {
             TEXTURE = 3
         };
 
+        std::string name;
         Type type;
 
-        Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1))
+        Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
             : _position(position)
             , _size(size)
             , _color(color)
             , _placement(placement)
             , texCoordA(texCoordA)
-            , texCoordB(texCoordB) { }
+            , texCoordB(texCoordB)
+            , name(name) { }
         UIVector position() { return _position; }
         UIVector position(UIVector position) {
             dirty = true;
