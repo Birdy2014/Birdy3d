@@ -20,6 +20,13 @@ namespace Birdy3d {
         Application::eventBus->subscribe(this, &Textarea::onKey);
     }
 
+    Textarea::~Textarea() {
+        Application::eventBus->unsubscribe(this, &Textarea::onClick);
+        Application::eventBus->unsubscribe(this, &Textarea::onScroll);
+        Application::eventBus->unsubscribe(this, &Textarea::onChar);
+        Application::eventBus->unsubscribe(this, &Textarea::onKey);
+    }
+
     void Textarea::append(const std::string& text) {
         this->text += text;
         updateLines();

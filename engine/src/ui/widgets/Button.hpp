@@ -23,6 +23,10 @@ namespace Birdy3d {
             Application::eventBus->subscribe(this, &Button::onClick);
         };
 
+        ~Button() {
+            Application::eventBus->unsubscribe(this, &Button::onClick);
+        }
+
         glm::vec2 minimalSize() override {
             glm::vec2 minSize = Application::getTextRenderer()->textSize(getShape<Text>()->text, getShape<Text>()->fontSize) + 2.0f;
             return glm::max(minSize, Widget::minimalSize());

@@ -14,6 +14,7 @@ namespace Birdy3d {
         float scrollpos;
 
         Textarea(UIVector pos, UIVector size, Placement placement);
+        ~Textarea();
         void append(const std::string& text);
         void arrange(glm::mat4 move, glm::vec2 size) override;
         void draw() override;

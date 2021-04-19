@@ -18,6 +18,11 @@ namespace Birdy3d {
         Input::setCursorHidden(true);
     }
 
+
+    void FPPlayerController::cleanup() {
+        Application::eventBus->unsubscribe(this, &FPPlayerController::onResize);
+    }
+
     void FPPlayerController::update() {
         // Keyboard
         if (Input::keyPressed(GLFW_KEY_ESCAPE)) {

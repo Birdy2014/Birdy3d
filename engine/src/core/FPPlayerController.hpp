@@ -11,6 +11,7 @@ namespace Birdy3d {
     public:
         FPPlayerController();
         void start() override;
+        void cleanup() override;
         void update() override;
 
     private:

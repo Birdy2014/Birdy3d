@@ -10,6 +10,8 @@
 
 namespace Birdy3d {
 
+    class EventBus;
+
     class HandlerFunctionBase {
     public:
         virtual void exec(Event* event) = 0;
@@ -33,6 +35,7 @@ namespace Birdy3d {
         }
 
     private:
+        friend EventBus;
         T* instance;
         MemberFunction memberFunction;
     };
@@ -54,6 +57,7 @@ namespace Birdy3d {
         }
 
     private:
+        friend EventBus;
         GameObject* target;
         HandlerFunction function;
     };
@@ -99,6 +103,42 @@ namespace Birdy3d {
             }
 
             handlers->push_back(new FunctionHandler<EventType>(func, target));
+        }
+
+        template<class T, class EventType>
+        void unsubscribe(T* instance, void (T::*memberFunction)(EventType*)) {
+            HandlerList* handlers = subscribers[typeid(EventType)];
+
+            if (handlers == nullptr)
+                return;
+
+            for (HandlerFunctionBase* handler : *handlers) {
+                MemberFunctionHandler<T, EventType>* casted = dynamic_cast<MemberFunctionHandler<T, EventType>*>(handler);
+                if (!casted)
+                    continue;
+                if (casted->instance != instance || casted->memberFunction != memberFunction)
+                    continue;
+                handlers->remove(handler);
+                return;
+            }
+        }
+
+        template<class EventType>
+        void unsubscribe(std::function<void(EventType*)> func, GameObject* target = nullptr) {
+            HandlerList* handlers = subscribers[typeid(EventType)];
+
+            if (handlers == nullptr)
+                return;
+
+            for (HandlerFunctionBase* handler : *handlers) {
+                FunctionHandler<EventType>* casted = dynamic_cast<FunctionHandler<EventType>*>(handler);
+                if (!casted)
+                    continue;
+                if (casted->function != func || casted->target != target)
+                    continue;
+                handlers->remove(handler);
+                return;
+            }
         }
 
     private:
