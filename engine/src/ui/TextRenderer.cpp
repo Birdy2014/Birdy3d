@@ -56,6 +56,7 @@ namespace Birdy3d {
         this->renderText(text, x, y, fontSize, color, m);
     }
 
+    // TODO: UTF-8 support
     void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, float cutTop, float cutBottom, int cursorpos, int hlstart, int hlend, Color hlcolor) {
         if (cutTop < 0)
             cutTop = 0;

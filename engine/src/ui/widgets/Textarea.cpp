@@ -173,7 +173,8 @@ namespace Birdy3d {
         if (!hover)
             return;
         clearSelection();
-        const char* c = (char*)&event->codepoint; // FIXME: this is ugly and only handles ASCII, not unicode
+        char c[5] = { 0, 0, 0, 0, 0};
+        event->utf8(c);
         text.insert(textCursor, c);
         textCursor++;
         updateLines();
