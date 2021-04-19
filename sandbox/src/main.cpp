@@ -68,9 +68,8 @@ int main() {
 
     bool collision = false;
     Application::eventBus->subscribe<CollisionEvent>([&](CollisionEvent* event) {
-        if (event->has(sphere1->getComponent<Collider>()))
-            collision = true;
-    });
+        collision = true;
+    }, sphere1);
 
     // Light
     GameObject* dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));

@@ -15,7 +15,10 @@ namespace Birdy3d {
             : colliderA(colliderA)
             , colliderB(colliderB) { }
 
-        bool has(Collider* collider) {
+        bool forObject(GameObject* object) override {
+            Collider* collider = object->getComponent<Collider>();
+            if (!collider)
+                return false;
             return colliderA == collider || colliderB == collider;
         }
 

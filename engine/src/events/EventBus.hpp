@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Component.hpp"
+#include "core/GameObject.hpp"
 #include "events/Event.hpp"
 #include <functional>
 #include <list>
@@ -23,12 +25,15 @@ namespace Birdy3d {
             , memberFunction { memberFunction } {};
 
         void exec(Event* event) override {
-            (instance->*memberFunction)(static_cast<EventType*>(event));
+            Component* component = dynamic_cast<Component*>(instance);
+            EventType* castedEvent = static_cast<EventType*>(event);
+            if (component && !castedEvent->forObject(component->object))
+                return;
+            (instance->*memberFunction)(castedEvent);
         }
 
     private:
         T* instance;
-
         MemberFunction memberFunction;
     };
 
@@ -37,14 +42,19 @@ namespace Birdy3d {
     public:
         typedef std::function<void(EventType*)> HandlerFunction;
 
-        FunctionHandler(HandlerFunction func)
-            : function(func) { }
+        FunctionHandler(HandlerFunction func, GameObject* target = nullptr)
+            : function(func)
+            , target(target) { }
 
         void exec(Event* event) override {
+            EventType* castedEvent = static_cast<EventType*>(event);
+            if (target && !castedEvent->forObject(target))
+                return;
             function(static_cast<EventType*>(event));
         }
 
     private:
+        GameObject* target;
         HandlerFunction function;
     };
 
@@ -80,7 +90,7 @@ namespace Birdy3d {
         }
 
         template<class EventType>
-        void subscribe(std::function<void(EventType*)> func) {
+        void subscribe(std::function<void(EventType*)> func, GameObject* target = nullptr) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
             if (handlers == nullptr) {
@@ -88,7 +98,7 @@ namespace Birdy3d {
                 subscribers[typeid(EventType)] = handlers;
             }
 
-            handlers->push_back(new FunctionHandler<EventType>(func));
+            handlers->push_back(new FunctionHandler<EventType>(func, target));
         }
 
     private:
