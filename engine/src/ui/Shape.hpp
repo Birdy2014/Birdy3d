@@ -60,12 +60,13 @@ namespace Birdy3d {
 
     protected:
         Shader* shader;
-        unsigned int vao, vbo = 0;
+        unsigned int vao = 0;
+        unsigned int vbo = 0;
         bool dirty = true;
         UIVector _position;
         UIVector _size;
         Color _color;
-        unsigned int _texture;
+        unsigned int _texture = 0;
         glm::vec2 texCoordA;
         glm::vec2 texCoordB;
         Placement _placement;

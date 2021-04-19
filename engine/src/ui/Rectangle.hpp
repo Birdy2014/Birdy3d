@@ -9,6 +9,7 @@ namespace Birdy3d {
     class Rectangle : public Shape {
     public:
         Rectangle(UIVector pos, UIVector size, Color color = glm::vec4(1), Type type = FILLED, Placement placement = Placement::BOTTOM_LEFT);
+        ~Rectangle();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
 

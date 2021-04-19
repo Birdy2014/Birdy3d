@@ -12,6 +12,11 @@ namespace Birdy3d {
         this->type = type;
     }
 
+    Rectangle::~Rectangle() {
+        glDeleteBuffers(1, &vbo);
+        glDeleteVertexArrays(1, &vao);
+    }
+
     void Rectangle::draw(glm::mat4 move) {
         if (!vao || !vbo)
             this->createBuffers();

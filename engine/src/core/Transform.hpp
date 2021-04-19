@@ -27,10 +27,10 @@ namespace Birdy3d {
 
     private:
         // Copies for change detection
-        glm::vec3 _position;
-        glm::vec3 _orientation;
-        glm::vec3 _scale;
-        glm::mat4 _parentMatrix;
+        glm::vec3 _position = glm::vec3(0);
+        glm::vec3 _orientation = glm::vec3(0);
+        glm::vec3 _scale = glm::vec3(0);
+        glm::mat4 _parentMatrix = glm::mat4(1);
     };
 
 }

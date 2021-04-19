@@ -7,6 +7,7 @@ namespace Birdy3d {
     class Triangle : public Shape {
     public:
         Triangle(UIVector position, UIVector size, Color color = Color::WHITE, Type type = FILLED, Placement placement = Placement::BOTTOM_LEFT);
+        ~Triangle();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
 

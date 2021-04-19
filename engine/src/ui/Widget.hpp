@@ -12,6 +12,7 @@ namespace Birdy3d {
 
     class Widget {
     public:
+        std::string name;
         bool hidden = false;
         UIVector pos;
         UIVector size;
@@ -19,7 +20,8 @@ namespace Birdy3d {
         Placement placement;
         Theme* theme;
 
-        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, float rotation = 0.0f, Theme* theme = Application::defaultTheme);
+        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, float rotation = 0.0f, Theme* theme = Application::defaultTheme, std::string name = "");
+        virtual ~Widget();
         void addRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
         void addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
         void addTriangle(UIVector pos, UIVector size, Color color);
@@ -53,8 +55,8 @@ namespace Birdy3d {
 
     protected:
         std::vector<Shape*> shapes;
-        glm::mat4 move;
-        glm::vec2 actualSize;
+        glm::mat4 move = glm::mat4(1);
+        glm::vec2 actualSize = glm::vec2(1);
         bool hover = false;
 
         glm::mat4 normalizedMove();

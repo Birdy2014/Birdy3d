@@ -7,12 +7,18 @@
 
 namespace Birdy3d {
 
-    Widget::Widget(UIVector pos, UIVector size, Placement placement, float rotation, Theme* theme) {
-        this->pos = pos;
-        this->size = size;
-        this->placement = placement;
-        this->rot = rotation;
-        this->theme = theme;
+    Widget::Widget(UIVector pos, UIVector size, Placement placement, float rotation, Theme* theme, std::string name)
+        : pos(pos)
+        , size(size)
+        , placement(placement)
+        , rot(rotation)
+        , theme(theme)
+        , name(name) { }
+
+    Widget::~Widget() {
+        for (Shape* s : shapes) {
+            delete s;
+        }
     }
 
     void Widget::addRectangle(UIVector pos, UIVector size, Color color, Placement placement) {

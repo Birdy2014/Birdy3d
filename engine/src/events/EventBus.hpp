@@ -79,6 +79,7 @@ namespace Birdy3d {
                     handler->exec(event);
                 }
             }
+            delete event;
         }
 
         template<class T, class EventType>
@@ -119,6 +120,7 @@ namespace Birdy3d {
                 if (casted->instance != instance || casted->memberFunction != memberFunction)
                     continue;
                 handlers->remove(handler);
+                delete handler;
                 return;
             }
         }
@@ -137,6 +139,7 @@ namespace Birdy3d {
                 if (casted->function != func || casted->target != target)
                     continue;
                 handlers->remove(handler);
+                delete handler;
                 return;
             }
         }
