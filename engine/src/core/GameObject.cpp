@@ -33,6 +33,9 @@ namespace Birdy3d {
     }
 
     void GameObject::update() {
+        if (hidden)
+            return;
+
         for (Component* c : this->components) {
             c->update();
         }

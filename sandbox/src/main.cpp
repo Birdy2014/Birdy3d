@@ -82,6 +82,11 @@ int main() {
     sLight->addComponent(new Spotlight(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f));
     scene->addChild(sLight);
 
+    Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent* event) {
+        if (event->key == GLFW_KEY_L && event->action == GLFW_PRESS)
+            pLight->hidden = !pLight->hidden;
+    });
+
     scene->setScene();
     scene->start();
 

@@ -68,7 +68,7 @@ namespace Birdy3d {
         glm::mat4 lightView = glm::lookAt(absPos, absPos + this->object->absForward(), glm::vec3(0.0f, 1.0f, 0.0f));
         lightSpaceMatrix = lightProjection * lightView;
         this->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        for (Model* m : this->object->scene->getComponents<Model>(true)) {
+        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
             m->renderDepth(this->depthShader);
         }
 

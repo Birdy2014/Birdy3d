@@ -13,6 +13,7 @@ namespace Birdy3d {
         Transform3d transform;
         GameObject* parent = nullptr;
         GameObject* scene = nullptr;
+        bool hidden = false;
 
         GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
         void addChild(GameObject* c);
@@ -26,8 +27,10 @@ namespace Birdy3d {
         void setScene(GameObject* scene = nullptr);
 
         template <class T>
-        std::vector<T*> getComponents(bool recursive = false) {
+        std::vector<T*> getComponents(bool hidden = true, bool recursive = false) {
             std::vector<T*> components;
+            if (this->hidden && !hidden)
+                return components;
             for (Component* c : this->components) {
                 T* casted = dynamic_cast<T*>(c);
                 if (casted) {
@@ -36,7 +39,7 @@ namespace Birdy3d {
             }
             if (recursive) {
                 for (GameObject* o : this->children) {
-                    std::vector<T*> childComponents = o->getComponents<T>(true);
+                    std::vector<T*> childComponents = o->getComponents<T>(hidden, recursive);
                     components.insert(components.end(), childComponents.begin(), childComponents.end());
                 }
             }
@@ -44,11 +47,20 @@ namespace Birdy3d {
         }
 
         template <class T>
-        T* getComponent() {
+        T* getComponent(bool hidden = true, bool recursive = false) {
+            if (this->hidden && !hidden)
+                return nullptr;
             for (Component* c : this->components) {
                 T* casted = dynamic_cast<T*>(c);
                 if (casted) {
                     return casted;
+                }
+            }
+            if (recursive) {
+                for (GameObject* o : this->children) {
+                    T* c = o->getComponent<T>(hidden, recursive);
+                    if (c)
+                        return c;
                 }
             }
             return nullptr;

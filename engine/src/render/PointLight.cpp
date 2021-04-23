@@ -86,7 +86,7 @@ namespace Birdy3d {
             this->depthShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
         this->depthShader->setFloat("far_plane", far);
         this->depthShader->setVec3("lightPos", absPos);
-        for (Model* m : this->object->scene->getComponents<Model>(true)) {
+        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
             m->renderDepth(this->depthShader);
         }
 

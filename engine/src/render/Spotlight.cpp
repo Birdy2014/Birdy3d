@@ -59,7 +59,7 @@ namespace Birdy3d {
 
         lightSpaceMatrix = lightProjection * lightView;
         this->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        for (Model* m : this->object->scene->getComponents<Model>(true)) {
+        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
             m->renderDepth(this->depthShader);
         }
 

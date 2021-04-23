@@ -179,7 +179,7 @@ namespace Birdy3d {
         glDisable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (Model* m : this->object->scene->getComponents<Model>(true)) {
+        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
             this->deferredGeometryShader->use();
             this->deferredGeometryShader->setMat4("projection", this->projectionMatrix);
             this->deferredGeometryShader->setMat4("view", view);
@@ -195,9 +195,9 @@ namespace Birdy3d {
         glBindTexture(GL_TEXTURE_2D, gNormal);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-        std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
-        std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
-        std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(true);
+        std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(false, true);
+        std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(false, true);
+        std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(false, true);
         this->deferredLightShader->use();
         this->deferredLightShader->setInt("nr_directional_lights", dirLights.size());
         this->deferredLightShader->setInt("nr_pointlights", pointLights.size());
@@ -222,9 +222,9 @@ namespace Birdy3d {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
-        std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
-        std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(true);
+        std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(false, true);
+        std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(false, true);
+        std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(false, true);
         this->forwardShader->use();
         this->forwardShader->setInt("nr_directional_lights", dirLights.size());
         this->forwardShader->setInt("nr_pointlights", pointLights.size());
@@ -249,13 +249,13 @@ namespace Birdy3d {
         this->forwardShader->setMat4("view", view);
         this->forwardShader->setVec3("viewPos", absPos);
         if (renderOpaque) {
-            for (Model* m : this->object->scene->getComponents<Model>(true)) {
+            for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
                 m->render(this->forwardShader, false);
             }
         }
 
         // Transparency
-        std::vector models = this->object->scene->getComponents<Model>(true);
+        std::vector models = this->object->scene->getComponents<Model>(false, true);
         std::map<float, Model*> sorted;
         for (Model* m : models) {
             float distance = glm::length(this->object->transform.position - m->object->transform.position);
