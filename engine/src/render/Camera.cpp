@@ -39,6 +39,25 @@ namespace Birdy3d {
         this->deferredLightShader->setInt("gPosition", 0);
         this->deferredLightShader->setInt("gNormal", 1);
         this->deferredLightShader->setInt("gAlbedoSpec", 2);
+        // Set the default shadowmaps to the first texture in the right format so that the shader doesn't crash
+        for (int i = 0; i < Shader::MAX_DIRECTIONAL_LIGHTS; i++) {
+            this->deferredLightShader->use();
+            this->deferredLightShader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 3);
+            this->forwardShader->use();
+            this->forwardShader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 3);
+        }
+        for (int i = 0; i < Shader::MAX_POINTLIGHTS; i++) {
+            this->deferredLightShader->use();
+            this->deferredLightShader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            this->forwardShader->use();
+            this->forwardShader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+        }
+        for (int i = 0; i < Shader::MAX_SPOTLIGHTS; i++) {
+            this->deferredLightShader->use();
+            this->deferredLightShader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            this->forwardShader->use();
+            this->forwardShader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+        }
     }
 
     void Camera::cleanup() {
@@ -50,7 +69,7 @@ namespace Birdy3d {
             this->width = width;
             this->height = height;
             projectionMatrix = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
-            deleteGBuffer();
+            deleteGBuffer(); // TODO: resize GBuffer instead of recreating it
             createGBuffer();
         }
     }
@@ -125,27 +144,13 @@ namespace Birdy3d {
     void Camera::renderQuad() {
         if (this->quadVAO == 0) {
             float quadVertices[] = {
+                // clang-format off
                 // positions        // texture Coords
-                -1.0f,
-                1.0f,
-                0.0f,
-                0.0f,
-                1.0f,
-                -1.0f,
-                -1.0f,
-                0.0f,
-                0.0f,
-                0.0f,
-                1.0f,
-                1.0f,
-                0.0f,
-                1.0f,
-                1.0f,
-                1.0f,
-                -1.0f,
-                0.0f,
-                1.0f,
-                0.0f,
+                -1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+                -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+                1.0f,  1.0f,  0.0f, 1.0f, 1.0f,
+                1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
+                // clang-format on
             };
             // setup plane VAO
             glGenVertexArrays(1, &this->quadVAO);
@@ -166,7 +171,6 @@ namespace Birdy3d {
     void Camera::renderDeferred() {
         glm::vec3 absPos = this->object->transform.worldPosition();
         glm::vec3 absForward = this->object->absForward();
-        glm::vec3 right = this->object->absRight();
         glm::vec3 up = this->object->absUp();
         glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
 
@@ -194,15 +198,17 @@ namespace Birdy3d {
         std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
         std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
         std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(true);
-        int textureId = 0;
-        for (int i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(this->deferredLightShader, i, textureId++);
-        for (int i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(this->deferredLightShader, i, textureId++);
-        for (int i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(this->deferredLightShader, i, textureId++);
-
         this->deferredLightShader->use();
+        this->deferredLightShader->setInt("nr_directional_lights", dirLights.size());
+        this->deferredLightShader->setInt("nr_pointlights", pointLights.size());
+        this->deferredLightShader->setInt("nr_spotlights", spotlights.size());
+        for (int i = 0; i < dirLights.size(); i++)
+            dirLights[i]->use(this->deferredLightShader, i, i);
+        for (int i = 0; i < pointLights.size(); i++)
+            pointLights[i]->use(this->deferredLightShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + i);
+        for (int i = 0; i < spotlights.size(); i++)
+            spotlights[i]->use(this->deferredLightShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+
         this->deferredLightShader->setVec3("viewPos", absPos);
         renderQuad();
     }
@@ -210,7 +216,6 @@ namespace Birdy3d {
     void Camera::renderForward(bool renderOpaque) {
         glm::vec3 absPos = this->object->transform.worldPosition();
         glm::vec3 absForward = this->object->absForward();
-        glm::vec3 right = this->object->absRight();
         glm::vec3 up = this->object->absUp();
         glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
 
@@ -220,13 +225,16 @@ namespace Birdy3d {
         std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(true);
         std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(true);
         std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(true);
-        int textureId = 0;
+        this->forwardShader->use();
+        this->forwardShader->setInt("nr_directional_lights", dirLights.size());
+        this->forwardShader->setInt("nr_pointlights", pointLights.size());
+        this->forwardShader->setInt("nr_spotlights", spotlights.size());
         for (int i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(this->forwardShader, i, textureId++);
+            dirLights[i]->use(this->forwardShader, i, i);
         for (int i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(this->forwardShader, i, textureId++);
+            pointLights[i]->use(this->forwardShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (int i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(this->forwardShader, i, textureId++);
+            spotlights[i]->use(this->forwardShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         if (renderOpaque) {

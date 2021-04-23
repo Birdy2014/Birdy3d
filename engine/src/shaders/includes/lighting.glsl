@@ -39,12 +39,12 @@ struct Spotlight {
     sampler2D shadowMap;
 };
 
-#define NR_DIRECTIONAL_LIGHS 1
-#define NR_POINT_LIGHTS 1
-#define NR_SPOTLIGHTS 1
-uniform DirectionalLight dirLights[NR_DIRECTIONAL_LIGHS];
-uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform Spotlight spotlights[NR_SPOTLIGHTS];
+uniform DirectionalLight dirLights[MAX_DIRECTIONAL_LIGHTS];
+uniform PointLight pointLights[MAX_POINTLIGHTS];
+uniform Spotlight spotlights[MAX_SPOTLIGHTS];
+uniform int nr_directional_lights;
+uniform int nr_pointlights;
+uniform int nr_spotlights;
 
 vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess) {
     vec3 lightDir = normalize(-light.direction);
@@ -155,13 +155,13 @@ vec3 calcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
 
 vec3 calcLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess) {
     vec3 lighting = vec3(0);
-    for (int i = 0; i < NR_DIRECTIONAL_LIGHS; i++)
+    for (int i = 0; i < nr_directional_lights; i++)
         lighting += calcDirLight(dirLights[i], normal, fragPos, viewDir, materialColor, shininess);
 
-    for (int i = 0; i < NR_POINT_LIGHTS; i++)
+    for (int i = 0; i < nr_pointlights; i++)
         lighting += calcPointLight(pointLights[i], normal, fragPos, viewDir, materialColor, shininess);
 
-    for (int i = 0; i < NR_SPOTLIGHTS; i++)
+    for (int i = 0; i < nr_spotlights; i++)
         lighting += calcSpotlight(spotlights[i], normal, fragPos, viewDir, materialColor, shininess);
 
     return lighting;

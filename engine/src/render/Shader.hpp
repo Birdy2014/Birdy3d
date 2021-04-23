@@ -12,6 +12,10 @@ namespace Birdy3d {
 
     class Shader {
     public:
+        static const int MAX_DIRECTIONAL_LIGHTS = 1;
+        static const int MAX_POINTLIGHTS = 5;
+        static const int MAX_SPOTLIGHTS = 2;
+
         unsigned int ID;
 
         Shader(const std::string& shaderSource, const std::string& name);

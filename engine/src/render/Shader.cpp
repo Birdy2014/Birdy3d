@@ -59,6 +59,18 @@ namespace Birdy3d {
             pos = shaderSource.find(includeToken, pos + 1);
         }
 
+        // constants
+        auto replaceAll = [&](std::string toSearch, std::string replaceStr) {
+            size_t pos = shaderSource.find(toSearch);
+            while (pos != std::string::npos) {
+                shaderSource.replace(pos, toSearch.size(), replaceStr);
+                pos = shaderSource.find(toSearch, pos + replaceStr.size());
+            }
+        };
+        replaceAll("MAX_DIRECTIONAL_LIGHTS", std::to_string(MAX_DIRECTIONAL_LIGHTS));
+        replaceAll("MAX_POINTLIGHTS", std::to_string(MAX_POINTLIGHTS));
+        replaceAll("MAX_SPOTLIGHTS", std::to_string(MAX_SPOTLIGHTS));
+
         // type
         std::unordered_map<GLenum, std::string> shaderSources;
         const char* typeToken = "#type";
