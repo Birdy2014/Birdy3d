@@ -10,6 +10,10 @@ namespace Birdy3d {
             return true;
         }
 
+        virtual bool checkOptions(int options) {
+            return true;
+        }
+
     protected:
         virtual ~Event() { }
     };

@@ -8,18 +8,30 @@ namespace Birdy3d {
 
     class CollisionEvent : public Event {
     public:
+        enum Type : int {
+            ENTER,
+            COLLIDING,
+            EXIT
+        };
+
         Collider* colliderA;
         Collider* colliderB;
+        Type type;
 
-        CollisionEvent(Collider* colliderA, Collider* colliderB)
+        CollisionEvent(Collider* colliderA, Collider* colliderB, Type type)
             : colliderA(colliderA)
-            , colliderB(colliderB) { }
+            , colliderB(colliderB)
+            , type(type) { }
 
         bool forObject(GameObject* object) override {
             Collider* collider = object->getComponent<Collider>();
             if (!collider)
                 return false;
             return colliderA == collider || colliderB == collider;
+        }
+
+        bool checkOptions(int options) override {
+            return options == type || (options == Type::COLLIDING && type == Type::ENTER);
         }
 
         Collider* other(Collider* current) {

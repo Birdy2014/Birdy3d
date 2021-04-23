@@ -2,6 +2,30 @@
 
 using namespace Birdy3d;
 
+class TestComponent : public Component {
+public:
+    void start() override {
+        Application::eventBus->subscribe(this, &TestComponent::onCollision);
+    }
+
+    void cleanup() override {
+        Application::eventBus->unsubscribe(this, &TestComponent::onCollision);
+    }
+
+    void onCollision(CollisionEvent* event) {
+        switch (event->type) {
+            case CollisionEvent::ENTER:
+                Logger::debug("ENTER");
+                break;
+            case CollisionEvent::COLLIDING:
+                break;
+            case CollisionEvent::EXIT:
+                Logger::debug("EXIT");
+                break;
+        }
+    }
+};
+
 GameObject* player;
 
 float deltaTime = 0.0f;
@@ -64,12 +88,13 @@ int main() {
     GameObject* sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
     sphere1->addComponent(new Model("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
     sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 1)));
+    sphere1->addComponent(new TestComponent());
     scene->addChild(sphere1);
 
     bool collision = false;
     Application::eventBus->subscribe<CollisionEvent>([&](CollisionEvent* event) {
         collision = true;
-    }, sphere1);
+    }, sphere1, CollisionEvent::COLLIDING);
 
     // Light
     GameObject* dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
@@ -83,9 +108,8 @@ int main() {
     scene->addChild(sLight);
 
     Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent* event) {
-        if (event->key == GLFW_KEY_L && event->action == GLFW_PRESS)
-            pLight->hidden = !pLight->hidden;
-    });
+        pLight->hidden = !pLight->hidden;
+    }, GLFW_KEY_L);
 
     scene->setScene();
     scene->start();
@@ -116,16 +140,14 @@ int main() {
                 lightup = true;
         }
 
-        if (!collision) {
-            if (sphereup) {
-                sphere1->transform.position.y += 0.4 * deltaTime;
-                if (sphere1->transform.position.y > 5)
-                    sphereup = false;
-            } else {
-                sphere1->transform.position.y -= 0.4 * deltaTime;
-                if (sphere1->transform.position.y < 1)
-                    sphereup = true;
-            }
+        if (sphereup) {
+            sphere1->transform.position.y += 0.4 * deltaTime;
+            if (sphere1->transform.position.y > 5)
+                sphereup = false;
+        } else {
+            sphere1->transform.position.y -= 0.4 * deltaTime;
+            if (sphere1->transform.position.y < 1)
+                sphereup = true;
         }
 
         // draw the object

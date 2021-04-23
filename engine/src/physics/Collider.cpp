@@ -55,21 +55,24 @@ namespace Birdy3d {
     }
 
     void Collider::update() {
-        Collider* otherCollider = nullptr;
         for (Collider* c : this->object->scene->getComponents<Collider>(false, true)) {
             if (c == this)
                 continue;
-            if (otherCollider)
-                break;
             for (CollisionShape* s : this->shapes) {
+                bool collided = std::find(collidedLastFrame.begin(), collidedLastFrame.end(), c) != collidedLastFrame.end();
                 if (c->collides(s)) {
-                    otherCollider = c;
-                    break;
+                    if (collided)
+                        Application::eventBus->emit(new CollisionEvent(this, c, CollisionEvent::COLLIDING));
+                    else
+                        Application::eventBus->emit(new CollisionEvent(this, c, CollisionEvent::ENTER));
+                    collidedLastFrame.push_back(c);
+                } else {
+                    if (collided)
+                        Application::eventBus->emit(new CollisionEvent(this, c, CollisionEvent::EXIT));
+                    collidedLastFrame.erase(std::remove(collidedLastFrame.begin(), collidedLastFrame.end(), c), collidedLastFrame.end());
                 }
             }
         }
-        if (otherCollider)
-            Application::eventBus->emit(new CollisionEvent(this, otherCollider));
     }
 
     bool Collider::collides(CollisionShape* a, CollisionShape* b) {

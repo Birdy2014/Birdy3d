@@ -38,6 +38,10 @@ namespace Birdy3d {
             , scancode(scancode)
             , action(action)
             , mods(mods) { }
+
+        bool checkOptions(int options) override {
+            return options == key && action == GLFW_PRESS;
+        }
     };
 
     class InputCharEvent : public Event {

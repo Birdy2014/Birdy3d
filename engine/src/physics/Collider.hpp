@@ -22,6 +22,7 @@ namespace Birdy3d {
         std::vector<CollisionShape*> shapes;
         glm::vec3 points[4];
         int n_points;
+        std::vector<Collider*> collidedLastFrame;
 
         bool collides(CollisionShape* a, CollisionShape* b);
         glm::vec3 support(CollisionShape* a, CollisionShape* b, glm::vec3 direction);

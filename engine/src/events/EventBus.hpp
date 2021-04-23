@@ -14,7 +14,13 @@ namespace Birdy3d {
 
     class HandlerFunctionBase {
     public:
+        HandlerFunctionBase(int options)
+            : options(options) { }
+
         virtual void exec(Event* event) = 0;
+
+    protected:
+        int options;
     };
 
     template<class T, class EventType>
@@ -22,11 +28,14 @@ namespace Birdy3d {
     public:
         typedef void (T::*MemberFunction)(EventType*);
 
-        MemberFunctionHandler(T* instance, MemberFunction memberFunction)
-            : instance { instance }
+        MemberFunctionHandler(T* instance, MemberFunction memberFunction, int options)
+            : HandlerFunctionBase(options)
+            , instance { instance }
             , memberFunction { memberFunction } {};
 
         void exec(Event* event) override {
+            if (options != -1 && !event->checkOptions(options))
+                return;
             Component* component = dynamic_cast<Component*>(instance);
             EventType* castedEvent = static_cast<EventType*>(event);
             if (component && !castedEvent->forObject(component->object))
@@ -45,11 +54,14 @@ namespace Birdy3d {
     public:
         typedef std::function<void(EventType*)> HandlerFunction;
 
-        FunctionHandler(HandlerFunction func, GameObject* target = nullptr)
-            : function(func)
+        FunctionHandler(HandlerFunction func, GameObject* target, int options)
+            : HandlerFunctionBase(options)
+            , function(func)
             , target(target) { }
 
         void exec(Event* event) override {
+            if (options != -1 && !event->checkOptions(options))
+                return;
             EventType* castedEvent = static_cast<EventType*>(event);
             if (target && !castedEvent->forObject(target))
                 return;
@@ -83,7 +95,7 @@ namespace Birdy3d {
         }
 
         template<class T, class EventType>
-        void subscribe(T* instance, void (T::*memberFunction)(EventType*)) {
+        void subscribe(T* instance, void (T::*memberFunction)(EventType*), int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
             if (handlers == nullptr) {
@@ -91,11 +103,11 @@ namespace Birdy3d {
                 subscribers[typeid(EventType)] = handlers;
             }
 
-            handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
+            handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction, options));
         }
 
         template<class EventType>
-        void subscribe(std::function<void(EventType*)> func, GameObject* target = nullptr) {
+        void subscribe(std::function<void(EventType*)> func, GameObject* target = nullptr, int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
             if (handlers == nullptr) {
@@ -103,11 +115,16 @@ namespace Birdy3d {
                 subscribers[typeid(EventType)] = handlers;
             }
 
-            handlers->push_back(new FunctionHandler<EventType>(func, target));
+            handlers->push_back(new FunctionHandler<EventType>(func, target, options));
+        }
+
+        template<class EventType>
+        void subscribe(std::function<void(EventType*)> func, int options) {
+            subscribe(func, nullptr, options);
         }
 
         template<class T, class EventType>
-        void unsubscribe(T* instance, void (T::*memberFunction)(EventType*)) {
+        void unsubscribe(T* instance, void (T::*memberFunction)(EventType*), int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
             if (handlers == nullptr)
@@ -119,6 +136,8 @@ namespace Birdy3d {
                     continue;
                 if (casted->instance != instance || casted->memberFunction != memberFunction)
                     continue;
+                if (options != -1 && casted->options != options)
+                    continue;
                 handlers->remove(handler);
                 delete handler;
                 return;
@@ -126,7 +145,7 @@ namespace Birdy3d {
         }
 
         template<class EventType>
-        void unsubscribe(std::function<void(EventType*)> func, GameObject* target = nullptr) {
+        void unsubscribe(std::function<void(EventType*)> func, GameObject* target = nullptr, int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
             if (handlers == nullptr)
@@ -138,10 +157,17 @@ namespace Birdy3d {
                     continue;
                 if (casted->function != func || casted->target != target)
                     continue;
+                if (options != -1 && casted->options != options)
+                    continue;
                 handlers->remove(handler);
                 delete handler;
                 return;
             }
+        }
+
+        template<class EventType>
+        void unsubscribe(std::function<void(EventType*)> func, int options) {
+            unsubscribe(func, nullptr, options);
         }
 
     private:
