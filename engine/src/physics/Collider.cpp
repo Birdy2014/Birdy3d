@@ -4,6 +4,7 @@
 #include "core/GameObject.hpp"
 #include "core/Logger.hpp"
 #include "events/CollisionEvent.hpp"
+#include "physics/Collision.hpp"
 #include "physics/CollisionMesh.hpp"
 #include "physics/CollisionShape.hpp"
 #include "render/Mesh.hpp"
@@ -31,6 +32,17 @@ namespace Birdy3d {
         return false;
     }
 
+    CollisionPoints Collider::collides(Collider* collider) {
+        CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
+        for (CollisionShape* shape : shapes) {
+            if (collider->collides(shape)) {
+                points.hasCollision = true;
+                break;
+            }
+        }
+        return points;
+    }
+
     void Collider::start() {
         if (shapes.empty()) {
             Model* model = object->getComponent<Model>();
@@ -50,27 +62,6 @@ namespace Birdy3d {
                 }
                 Logger::debug("generated collision mesh size: " + std::to_string(collisionMesh.size()));
                 addShape(new CollisionMesh(collisionMesh));
-            }
-        }
-    }
-
-    void Collider::update() {
-        for (Collider* c : this->object->scene->getComponents<Collider>(false, true)) {
-            if (c == this)
-                continue;
-            for (CollisionShape* s : this->shapes) {
-                bool collided = std::find(collidedLastFrame.begin(), collidedLastFrame.end(), c) != collidedLastFrame.end();
-                if (c->collides(s)) {
-                    if (collided)
-                        Application::eventBus->emit(new CollisionEvent(this, c, CollisionEvent::COLLIDING));
-                    else
-                        Application::eventBus->emit(new CollisionEvent(this, c, CollisionEvent::ENTER));
-                    collidedLastFrame.push_back(c);
-                } else {
-                    if (collided)
-                        Application::eventBus->emit(new CollisionEvent(this, c, CollisionEvent::EXIT));
-                    collidedLastFrame.erase(std::remove(collidedLastFrame.begin(), collidedLastFrame.end(), c), collidedLastFrame.end());
-                }
             }
         }
     }

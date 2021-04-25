@@ -113,6 +113,7 @@ int main() {
 
     scene->setScene();
     scene->start();
+    PhysicsWorld* physicsWorld = new PhysicsWorld(scene);
 
     PointLight* light = pLight->getComponent<PointLight>();
     bool lightup = true;
@@ -129,6 +130,7 @@ int main() {
         canvas.update();
 
         scene->update();
+        physicsWorld->update();
 
         if (lightup) {
             light->object->transform.position.y += 0.1 * deltaTime;

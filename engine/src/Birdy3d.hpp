@@ -20,6 +20,7 @@
 #include "physics/Collider.hpp"
 #include "physics/CollisionMesh.hpp"
 #include "physics/CollisionSphere.hpp"
+#include "physics/PhysicsWorld.hpp"
 
 // Renderer
 #include "render/Camera.hpp"

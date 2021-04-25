@@ -8,6 +8,7 @@
 namespace Birdy3d {
 
     class CollisionShape;
+    class CollisionPoints;
 
     class Collider : public Component {
     public:
@@ -15,14 +16,13 @@ namespace Birdy3d {
         Collider(CollisionShape* shape);
         void addShape(CollisionShape* shape);
         bool collides(CollisionShape* shape);
+        CollisionPoints collides(Collider* collider);
         void start() override;
-        void update() override;
 
     private:
         std::vector<CollisionShape*> shapes;
         glm::vec3 points[4];
         int n_points;
-        std::vector<Collider*> collidedLastFrame;
 
         bool collides(CollisionShape* a, CollisionShape* b);
         glm::vec3 support(CollisionShape* a, CollisionShape* b, glm::vec3 direction);
