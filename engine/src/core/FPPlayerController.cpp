@@ -3,9 +3,11 @@
 #include "core/Application.hpp"
 #include "core/GameObject.hpp"
 #include "core/Input.hpp"
+#include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "render/Camera.hpp"
 #include "ui/Canvas.hpp"
+#include "ui/Layout.hpp"
 
 namespace Birdy3d {
 
@@ -13,28 +15,27 @@ namespace Birdy3d {
     }
 
     void FPPlayerController::start() {
-        this->cam = this->object->getComponent<Camera>();
+        cam = object->getComponent<Camera>();
+        menu = cam->canvas->getWidget<Layout>("menu");
         Application::eventBus->subscribe(this, &FPPlayerController::onResize);
         Input::setCursorHidden(true);
+
+        if (menu) {
+            menu->hidden = true;
+            Application::eventBus->subscribe(this, &FPPlayerController::onKey);
+        }
     }
 
 
     void FPPlayerController::cleanup() {
         Application::eventBus->unsubscribe(this, &FPPlayerController::onResize);
+        if (menu) {
+            Application::eventBus->unsubscribe(this, &FPPlayerController::onKey);
+        }
     }
 
     void FPPlayerController::update() {
         // Keyboard
-        if (Input::keyPressed(GLFW_KEY_ESCAPE)) {
-            if (!this->hiddenStatusUpdated) {
-                hiddenStatusUpdated = true;
-                Input::toggleCursorHidden();
-                this->cam->canvas->hidden = !this->cam->canvas->hidden;
-            }
-        } else {
-            this->hiddenStatusUpdated = false;
-        }
-
         if (!Input::isCursorHidden())
             return;
 
@@ -73,6 +74,13 @@ namespace Birdy3d {
 
     void FPPlayerController::onResize(WindowResizeEvent* event) {
         this->cam->resize(event->width, event->height);
+    }
+
+    void FPPlayerController::onKey(InputKeyEvent* event) {
+        if (event->action != GLFW_PRESS || !(event->key == GLFW_KEY_ESCAPE || event->key == GLFW_KEY_CAPS_LOCK))
+            return;
+        Input::toggleCursorHidden();
+        menu->hidden = !menu->hidden;
     }
 
 }

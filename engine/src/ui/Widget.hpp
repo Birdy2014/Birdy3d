@@ -28,7 +28,7 @@ namespace Birdy3d {
         void addFilledTriangle(UIVector pos, UIVector size, Color color);
         void addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
         virtual void draw();
-        virtual bool updateEvents();
+        virtual bool updateEvents(bool hidden = false);
 
         // Returns the position relative to the parent's origin in pixels
         glm::vec2 preferredPosition(glm::vec2 parentSize);

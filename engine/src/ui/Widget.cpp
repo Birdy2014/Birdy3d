@@ -53,11 +53,12 @@ namespace Birdy3d {
     }
 
     // TODO: eventdispatcher to notify about the individual shapes separately
-    bool Widget::updateEvents() {
-        if (hidden)
+    bool Widget::updateEvents(bool hidden) {
+        hover = false;
+
+        if (hidden || this->hidden)
             return false;
 
-        hover = false;
         glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         glm::vec2 cursorPos = Input::cursorPos();
         for (Shape* s : this->shapes) {

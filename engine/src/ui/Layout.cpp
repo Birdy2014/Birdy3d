@@ -14,6 +14,8 @@ namespace Birdy3d {
     }
 
     void Layout::draw() {
+        if (hidden)
+            return;
         Widget::draw();
         for (Widget* w : children) {
             w->draw();
@@ -34,16 +36,13 @@ namespace Birdy3d {
         }
     }
 
-    bool Layout::updateEvents() {
-        if (hidden)
-            return false;
-
+    bool Layout::updateEvents(bool hidden) {
         for (Widget* w : this->children) {
-            if (w->updateEvents())
+            if (w->updateEvents(hidden || this->hidden))
                 return true;
         }
 
-        return Widget::updateEvents();
+        return Widget::updateEvents(hidden || this->hidden);
     }
 
 }

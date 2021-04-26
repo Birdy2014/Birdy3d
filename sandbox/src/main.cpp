@@ -41,26 +41,23 @@ int main() {
     Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", 22);
 
     Canvas canvas;
-    canvas.hidden = true;
 
-    Layout menu(0_px, 100_p, Placement::CENTER);
-    canvas.child = &menu;
-
-    DirectionalLayout layout(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 20_p, 10);
-    menu.addChild(&layout);
+    DirectionalLayout menu(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 20_p, 10);
+    menu.name = "menu";
+    canvas.addChild(&menu);
 
     Button closeButton(0_px, Placement::BOTTOM_LEFT, "Close", 20);
     closeButton.clickCallback = [](InputClickEvent* event) {
         glfwSetWindowShouldClose(Application::getWindow(), true);
     };
-    layout.addChild(&closeButton);
+    menu.addChild(&closeButton);
 
     Button testButton(0_px, Placement::BOTTOM_LEFT, "TestButton", 20, UIVector(200_px, 50_px));
-    layout.addChild(&testButton);
+    menu.addChild(&testButton);
 
     Textarea area(0_px, 100_px, Placement::BOTTOM_LEFT);
     area.append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
-    layout.addChild(&area);
+    menu.addChild(&area);
 
     // GameObjects
     GameObject* scene = new GameObject();

@@ -5,6 +5,8 @@
 namespace Birdy3d {
 
     class Camera;
+    class InputKeyEvent;
+    class Widget;
     class WindowResizeEvent;
 
     class FPPlayerController : public Component {
@@ -16,9 +18,10 @@ namespace Birdy3d {
 
     private:
         Camera* cam;
-        bool hiddenStatusUpdated = false;
+        Widget* menu;
 
         void onResize(WindowResizeEvent* event);
+        void onKey(InputKeyEvent* event);
     };
 
 }
