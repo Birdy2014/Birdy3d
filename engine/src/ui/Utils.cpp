@@ -165,12 +165,12 @@ namespace Birdy3d {
         if (placement == Placement::TOP_LEFT || placement == Placement::BOTTOM_LEFT || placement == Placement::CENTER_LEFT) {
             out.x = p.x;
         } else if (placement == Placement::TOP_RIGHT || placement == Placement::BOTTOM_RIGHT || placement == Placement::CENTER_RIGHT) {
-            out.x = parentSize.x + p.x;
+            out.x = parentSize.x + p.x - s.x;
         } else if (placement == Placement::TOP_CENTER || placement == Placement::BOTTOM_CENTER || placement == Placement::CENTER) {
             out.x = parentSize.x / 2 - s.x / 2 + p.x;
         }
         if (placement == Placement::TOP_LEFT || placement == Placement::TOP_RIGHT || placement == Placement::TOP_CENTER) {
-            out.y = parentSize.y + p.y;
+            out.y = parentSize.y + p.y - s.y;
         } else if (placement == Placement::BOTTOM_LEFT || placement == Placement::BOTTOM_RIGHT || placement == Placement::BOTTOM_CENTER) {
             out.y = p.y;
         } else if (placement == Placement::CENTER_LEFT || placement == Placement::CENTER_RIGHT || placement == Placement::CENTER) {

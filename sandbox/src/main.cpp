@@ -42,6 +42,9 @@ int main() {
 
     Canvas canvas;
 
+    FPSCounter counter(0_px, Placement::TOP_RIGHT);
+    canvas.addChild(&counter);
+
     DirectionalLayout menu(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 20_p, 10);
     menu.name = "menu";
     canvas.addChild(&menu);
@@ -152,7 +155,6 @@ int main() {
         // draw the object
         player->getComponent<Camera>()->render();
 
-        Application::getTextRenderer()->renderText("FPS: " + std::to_string((int)round(1 / deltaTime)), 0, 0, 10, glm::vec4(1));
         if (collision) {
             Application::getTextRenderer()->renderText("collision", 100, 0, 20, glm::vec4(1));
             collision = false;
