@@ -19,14 +19,14 @@ namespace Birdy3d {
         static EventBus* eventBus;
         static float deltaTime;
 
-        static bool init(const char* windowName, int width, int height, const std::string& font, unsigned int fontSize);
+        static bool init(const char* windowName, int width, int height, const std::string& font);
         static GLFWwindow* getWindow();
         static glm::vec2 getViewportSize();
         static TextRenderer* getTextRenderer();
 
     private:
         static GLFWwindow* window;
-        static TextRenderer* textRenderer;
+        static std::string defaultFont;
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);

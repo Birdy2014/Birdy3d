@@ -2,6 +2,7 @@
 
 #include "core/Logger.hpp"
 #include "render/Shader.hpp"
+#include "ui/TextRenderer.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -17,6 +18,7 @@
 namespace Birdy3d {
 
     std::unordered_map<std::string, Shader*> RessourceManager::shaders;
+    std::unordered_map<std::string, TextRenderer*> RessourceManager::textRenderers;
 
     Shader* RessourceManager::getShader(const std::string& name) {
         Shader* shader = shaders[name];
@@ -26,8 +28,14 @@ namespace Birdy3d {
         return shader;
     }
 
-    std::string RessourceManager::getFontPath(std::string name) {
-        return getRessourcePath(name, RessourceType::FONT);
+    TextRenderer* RessourceManager::getTextRenderer(const std::string& name) {
+        TextRenderer* renderer = textRenderers[name];
+        if (!renderer) {
+            std::string path = getRessourcePath(name, RessourceType::FONT);
+            renderer = new TextRenderer(path, 30);
+            textRenderers[name] = renderer;
+        }
+        return renderer;
     }
 
     Shader* RessourceManager::loadShader(std::string name) {
@@ -37,7 +45,7 @@ namespace Birdy3d {
         return s;
     }
 
-    std::string RessourceManager::getRessourcePath(std::string& name, RessourceType type) {
+    std::string RessourceManager::getRessourcePath(std::string name, RessourceType type) {
         if (name.size() == 0) {
             Logger::error("invalid ressource name");
             return nullptr;

@@ -6,6 +6,7 @@
 namespace Birdy3d {
 
     class Shader;
+    class TextRenderer;
 
     class RessourceManager {
     public:
@@ -17,12 +18,13 @@ namespace Birdy3d {
         };
 
         static Shader* getShader(const std::string& name);
-        static std::string getFontPath(std::string name);
-        static std::string getRessourcePath(std::string& name, RessourceType type);
+        static TextRenderer* getTextRenderer(const std::string& name);
+        static std::string getRessourcePath(std::string name, RessourceType type);
         static std::string readFile(const std::string& path, bool convertEOL = true);
 
     private:
         static std::unordered_map<std::string, Shader*> shaders;
+        static std::unordered_map<std::string, TextRenderer*> textRenderers;
 
         static Shader* loadShader(std::string name);
         static std::string getExecutableDir();
