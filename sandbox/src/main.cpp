@@ -32,7 +32,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 int main() {
-    if (!Application::init("Birdy3d", 800, 600, "TTF/DejaVuSans.ttf", 30)) {
+    if (!Application::init("Birdy3d", 800, 600, "TTF/DejaVuSans.ttf")) {
         return -1;
     }
     Input::init();
