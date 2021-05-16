@@ -2,7 +2,7 @@
 
 #include "core/GameObject.hpp"
 #include "core/RessourceManager.hpp"
-#include "render/Model.hpp"
+#include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -68,7 +68,7 @@ namespace Birdy3d {
         glm::mat4 lightView = glm::lookAt(absPos, absPos + this->object->absForward(), glm::vec3(0.0f, 1.0f, 0.0f));
         lightSpaceMatrix = lightProjection * lightView;
         this->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
+        for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
             m->renderDepth(this->depthShader);
         }
 

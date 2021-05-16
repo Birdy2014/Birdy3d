@@ -26,6 +26,7 @@
 #include "render/Camera.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/Model.hpp"
+#include "render/ModelComponent.hpp"
 #include "render/PointLight.hpp"
 #include "render/Shader.hpp"
 #include "render/Spotlight.hpp"

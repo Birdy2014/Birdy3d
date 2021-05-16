@@ -4,7 +4,7 @@
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/DirectionalLight.hpp"
-#include "render/Model.hpp"
+#include "render/ModelComponent.hpp"
 #include "render/PointLight.hpp"
 #include "render/Shader.hpp"
 #include "render/Spotlight.hpp"
@@ -179,7 +179,7 @@ namespace Birdy3d {
         glDisable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
+        for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
             this->deferredGeometryShader->use();
             this->deferredGeometryShader->setMat4("projection", this->projectionMatrix);
             this->deferredGeometryShader->setMat4("view", view);
@@ -249,20 +249,20 @@ namespace Birdy3d {
         this->forwardShader->setMat4("view", view);
         this->forwardShader->setVec3("viewPos", absPos);
         if (renderOpaque) {
-            for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
+            for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
                 m->render(this->forwardShader, false);
             }
         }
 
         // Transparency
-        std::vector models = this->object->scene->getComponents<Model>(false, true);
-        std::map<float, Model*> sorted;
-        for (Model* m : models) {
+        std::vector models = this->object->scene->getComponents<ModelComponent>(false, true);
+        std::map<float, ModelComponent*> sorted;
+        for (ModelComponent* m : models) {
             float distance = glm::length(this->object->transform.position - m->object->transform.position);
             sorted[distance] = m;
         }
 
-        for (std::map<float, Model*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++) {
+        for (std::map<float, ModelComponent*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++) {
             it->second->render(this->forwardShader, true);
         }
     }

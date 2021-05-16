@@ -71,22 +71,22 @@ int main() {
     scene->addChild(player);
 
     GameObject* obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-    obj->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 0.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+    obj->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 0.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
     obj->addComponent(new Collider());
     scene->addChild(obj);
 
     GameObject* obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-    obj2->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+    obj2->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
     scene->addChild(obj2);
 
     GameObject* obj3 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
-    obj3->addComponent(new Model("./ressources/testObjects/cube.obj", false, glm::vec4(0.0f, 1.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+    obj3->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(0.0f, 1.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
     obj3->addComponent(new Collider());
     scene->addChild(obj3);
 
     // Spheres
     GameObject* sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
-    sphere1->addComponent(new Model("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
+    sphere1->addComponent(new ModelComponent("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
     sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 1)));
     sphere1->addComponent(new TestComponent());
     scene->addChild(sphere1);

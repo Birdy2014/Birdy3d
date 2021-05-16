@@ -1,6 +1,7 @@
 #include "core/RessourceManager.hpp"
 
 #include "core/Logger.hpp"
+#include "render/Model.hpp"
 #include "render/Shader.hpp"
 #include "ui/TextRenderer.hpp"
 #include <algorithm>
@@ -19,6 +20,7 @@ namespace Birdy3d {
 
     std::unordered_map<std::string, Shader*> RessourceManager::shaders;
     std::unordered_map<std::string, TextRenderer*> RessourceManager::textRenderers;
+    std::unordered_map<std::string, Model*> RessourceManager::models;
 
     Shader* RessourceManager::getShader(const std::string& name) {
         Shader* shader = shaders[name];
@@ -36,6 +38,16 @@ namespace Birdy3d {
             textRenderers[name] = renderer;
         }
         return renderer;
+    }
+
+    Model* RessourceManager::getModel(const std::string& name) {
+        Model* model = models[name];
+        if (!model) {
+            const std::string& path = getRessourcePath(name, RessourceType::MODEL);
+            model = new Model(path);
+            models[name] = model;
+        }
+        return model;
     }
 
     Shader* RessourceManager::loadShader(std::string name) {

@@ -8,7 +8,7 @@
 #include "physics/CollisionMesh.hpp"
 #include "physics/CollisionShape.hpp"
 #include "render/Mesh.hpp"
-#include "render/Model.hpp"
+#include "render/ModelComponent.hpp"
 #include "render/Vertex.hpp"
 
 namespace Birdy3d {
@@ -45,8 +45,8 @@ namespace Birdy3d {
 
     void Collider::start() {
         if (shapes.empty()) {
-            Model* model = object->getComponent<Model>();
-            for (const Mesh& mesh : model->getMeshes()) {
+            ModelComponent* model = object->getComponent<ModelComponent>();
+            for (const Mesh& mesh : model->model->getMeshes()) {
                 // TODO: approximate convex decomposition
                 std::vector<glm::vec3> collisionMesh;
                 for (const Vertex& currentVertex : mesh.vertices) {

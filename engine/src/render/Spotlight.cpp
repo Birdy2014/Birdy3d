@@ -2,7 +2,7 @@
 
 #include "core/GameObject.hpp"
 #include "core/RessourceManager.hpp"
-#include "render/Model.hpp"
+#include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -59,7 +59,7 @@ namespace Birdy3d {
 
         lightSpaceMatrix = lightProjection * lightView;
         this->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
+        for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
             m->renderDepth(this->depthShader);
         }
 

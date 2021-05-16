@@ -11,26 +11,24 @@
 
 namespace Birdy3d {
 
-    Model::Model(std::string path, bool useTexture, glm::vec4 color, float specular, glm::vec3 emissive) {
-        this->path = path;
-        this->useTexture = useTexture;
-        this->color = color;
-        this->specular = specular;
-        this->emissive = emissive;
+    Model::Model(const std::string& path)
+        : path(path) {
+        Logger::debug("Loading model: " + path);
+        load();
     }
 
-    void Model::render(Shader* shader, bool transparent) {
-        glm::mat4 model = this->object->transform.matrix();
+    void Model::render(GameObject* object, ModelOptions options, Shader* shader, bool transparent) {
+        glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
         for (Mesh& m : this->meshes) {
-            if (transparent == m.hasTransparency())
-                m.render(shader);
+            if (transparent == m.hasTransparency(options))
+                m.render(shader, options);
         }
     }
 
-    void Model::renderDepth(Shader* shader) {
-        glm::mat4 model = this->object->transform.matrix();
+    void Model::renderDepth(GameObject* object, Shader* shader) {
+        glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
         for (Mesh m : meshes) {
@@ -42,9 +40,9 @@ namespace Birdy3d {
         return meshes;
     }
 
-    void Model::loadModel(std::string path) {
+    void Model::load() {
         Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace);
+        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             Logger::error(std::string("ASSIMP: ") + importer.GetErrorString());
@@ -75,28 +73,26 @@ namespace Birdy3d {
         // process vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             Vertex vertex;
-            glm::vec3 position, normal;
-            position.x = mesh->mVertices[i].x;
-            position.y = mesh->mVertices[i].y;
-            position.z = mesh->mVertices[i].z;
-            vertex.position = position;
-            normal.x = mesh->mNormals[i].x;
-            normal.y = mesh->mNormals[i].y;
-            normal.z = mesh->mNormals[i].z;
-            vertex.normal = normal;
-            if (mesh->mTextureCoords[0]) {
-                glm::vec2 texCoords;
-                texCoords.x = mesh->mTextureCoords[0][i].x;
-                texCoords.y = mesh->mTextureCoords[0][i].y;
-                vertex.texCoords = texCoords;
-                glm::vec3 tangent;
-                tangent.x = mesh->mTangents[i].x;
-                tangent.y = mesh->mTangents[i].y;
-                tangent.z = mesh->mTangents[i].z;
-                vertex.tangent = tangent;
-            } else {
-                vertex.texCoords = glm::vec2(0.0f, 0.0f);
-            }
+            if (mesh->HasPositions())
+                vertex.position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+            else
+                vertex.position = glm::vec3(0);
+
+            if (mesh->HasTextureCoords(0))
+                vertex.texCoords = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+            else
+                vertex.texCoords = glm::vec2(0);
+
+            if (mesh->HasNormals())
+                vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+            else
+                vertex.normal = glm::vec3(0);
+
+            if (mesh->HasTangentsAndBitangents())
+                vertex.tangent = glm::vec3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+            else
+                vertex.tangent = glm::vec3(0);
+
             vertices.push_back(vertex);
         }
 
@@ -108,7 +104,7 @@ namespace Birdy3d {
         }
 
         // process material
-        if (useTexture) {
+        if (options.useTexture) {
             aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
             std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
             textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
@@ -125,9 +121,9 @@ namespace Birdy3d {
             std::vector<Texture> emissiveMaps = loadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emissive");
             textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
 
-            return Mesh(vertices, indices, textures, specular, emissive);
+            return Mesh(vertices, indices, textures);
         } else {
-            return Mesh(vertices, indices, color, specular, emissive);
+            return Mesh(vertices, indices);
         }
     }
 
@@ -153,15 +149,10 @@ namespace Birdy3d {
         return textures;
     }
 
-    void Model::cleanup() {
+    Model::~Model() {
         for (Mesh& m : this->meshes) {
             m.cleanup();
         }
-    }
-
-    void Model::start() {
-        Logger::debug("Loading model: " + path);
-        loadModel(this->path);
     }
 
 }

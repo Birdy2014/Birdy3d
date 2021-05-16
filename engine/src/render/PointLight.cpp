@@ -2,7 +2,7 @@
 
 #include "core/GameObject.hpp"
 #include "core/RessourceManager.hpp"
-#include "render/Model.hpp"
+#include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -86,7 +86,7 @@ namespace Birdy3d {
             this->depthShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
         this->depthShader->setFloat("far_plane", far);
         this->depthShader->setVec3("lightPos", absPos);
-        for (Model* m : this->object->scene->getComponents<Model>(false, true)) {
+        for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
             m->renderDepth(this->depthShader);
         }
 

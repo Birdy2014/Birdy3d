@@ -1,22 +1,24 @@
 #pragma once
 
-#include "core/Component.hpp"
 #include "render/Mesh.hpp"
+#include "render/ModelOptions.hpp"
 #include <assimp/scene.h>
 #include <string>
 #include <vector>
 
 namespace Birdy3d {
 
+    class GameObject;
     class Texture;
 
-    class Model : public Component {
+    class Model {
     public:
-        Model(std::string path, bool useTexture = true, glm::vec4 color = glm::vec4(0.0f), float specular = 1, glm::vec3 emissive = glm::vec3(0.0f));
-        void cleanup() override;
-        void start() override;
-        void render(Shader* shader, bool transparent);
-        void renderDepth(Shader* shader);
+        ModelOptions options;
+
+        Model(const std::string& path);
+        ~Model();
+        void render(GameObject* object, ModelOptions options, Shader* shader, bool transparent);
+        void renderDepth(GameObject* object, Shader* shader);
         const std::vector<Mesh>& getMeshes();
 
     private:
@@ -24,12 +26,8 @@ namespace Birdy3d {
         std::vector<Mesh> meshes;
         std::string directory;
         std::vector<Texture> textures_loaded;
-        bool useTexture;
-        glm::vec4 color;
-        float specular;
-        glm::vec3 emissive;
 
-        void loadModel(std::string path);
+        void load();
         void processNode(aiNode* node, const aiScene* scene);
         Mesh processMesh(aiMesh* mesh, const aiScene* scene);
         std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);

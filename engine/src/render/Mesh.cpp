@@ -6,24 +6,17 @@
 
 namespace Birdy3d {
 
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, float specular, glm::vec3 emissive) {
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
-        this->useTexture = true;
-        this->specular = specular;
-        this->emissive = emissive;
 
         setupMesh();
     }
 
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, glm::vec4 color, float specular, glm::vec3 emissive) {
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices) {
         this->vertices = vertices;
         this->indices = indices;
-        this->color = color;
-        this->specular = specular;
-        this->emissive = emissive;
-        this->useTexture = false;
 
         setupMesh();
     }
@@ -61,9 +54,9 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
-    void Mesh::render(Shader* shader) {
-        shader->setBool("useTexture", useTexture);
-        if (useTexture) {
+    void Mesh::render(Shader* shader, const ModelOptions& options) {
+        shader->setBool("useTexture", options.useTexture);
+        if (options.useTexture) {
             unsigned int diffuseNr = 1;
             unsigned int specularNr = 1;
             unsigned int normalNr = 1;
@@ -92,7 +85,7 @@ namespace Birdy3d {
                 shader->setBool("hasSpecular", true);
             } else {
                 shader->setBool("hasSpecular", false);
-                shader->setFloat("specular", this->specular);
+                shader->setFloat("specular", options.specular);
             }
 
             if (normalNr > 1) {
@@ -105,16 +98,16 @@ namespace Birdy3d {
                 shader->setBool("hasEmissive", true);
             } else {
                 shader->setBool("hasEmissive", false);
-                shader->setVec3("emissive", this->emissive);
+                shader->setVec3("emissive", options.emissive);
             }
             glActiveTexture(GL_TEXTURE0);
         } else {
             shader->setBool("hasSpecular", false);
             shader->setBool("hasNormal", false);
             shader->setBool("hasEmissive", false);
-            shader->setVec4("color", this->color);
-            shader->setFloat("specular", this->specular);
-            shader->setVec3("emissive", this->emissive);
+            shader->setVec4("color", options.color);
+            shader->setFloat("specular", options.specular);
+            shader->setVec3("emissive", options.emissive);
         }
         // draw mesh
         glBindVertexArray(VAO);
@@ -134,15 +127,15 @@ namespace Birdy3d {
         glDeleteVertexArrays(1, &VAO);
     }
 
-    bool Mesh::hasTransparency() {
-        if (this->useTexture) {
+    bool Mesh::hasTransparency(const ModelOptions& options) {
+        if (options.useTexture) {
             for (Texture t : this->textures) {
                 if (t.nrChannels == 4)
                     return true;
             }
             return false;
         } else {
-            return color.a < 1;
+            return options.color.a < 1;
         }
     }
 
