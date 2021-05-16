@@ -32,13 +32,13 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 int main() {
-    if (!Application::init("Birdy3d", 800, 600, "TTF/DejaVuSans.ttf")) {
+    if (!Application::init("Birdy3d", 800, 600)) {
         return -1;
     }
     Input::init();
 
     // UI
-    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", 22);
+    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "TTF/DejaVuSans.ttf", 22);
 
     Canvas canvas;
 

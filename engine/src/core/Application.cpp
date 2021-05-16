@@ -5,6 +5,7 @@
 #include "core/RessourceManager.hpp"
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
+#include "ui/Theme.hpp"
 
 namespace Birdy3d {
 
@@ -12,9 +13,8 @@ namespace Birdy3d {
     EventBus* Application::eventBus = nullptr;
     float Application::deltaTime = 0;
     GLFWwindow* Application::window = nullptr;
-    std::string Application::defaultFont;
 
-    bool Application::init(const char* windowName, int width, int height, const std::string& font) {
+    bool Application::init(const char* windowName, int width, int height) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -51,7 +51,6 @@ namespace Birdy3d {
 
         // Init variables
         eventBus = new EventBus();
-        defaultFont = font;
 
         return true;
     }
@@ -97,7 +96,7 @@ namespace Birdy3d {
     }
 
     TextRenderer* Application::getTextRenderer() {
-        return RessourceManager::getTextRenderer(defaultFont);
+        return RessourceManager::getTextRenderer(defaultTheme->font);
     }
 
 }
