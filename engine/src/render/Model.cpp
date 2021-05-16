@@ -21,9 +21,9 @@ namespace Birdy3d {
         glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
-        for (Mesh& m : this->meshes) {
-            if (transparent == m.hasTransparency(options))
-                m.render(shader, options);
+        for (Mesh* m : this->meshes) {
+            if (transparent == m->hasTransparency(options))
+                m->render(shader, options);
         }
     }
 
@@ -31,12 +31,12 @@ namespace Birdy3d {
         glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
-        for (Mesh m : meshes) {
-            m.renderDepth();
+        for (Mesh* m : meshes) {
+            m->renderDepth();
         }
     }
 
-    const std::vector<Mesh>& Model::getMeshes() {
+    const std::vector<Mesh*>& Model::getMeshes() {
         return meshes;
     }
 
@@ -65,10 +65,10 @@ namespace Birdy3d {
         }
     }
 
-    Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
+    Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene) {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture> textures;
+        std::vector<Texture*> textures;
 
         // process vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -104,44 +104,41 @@ namespace Birdy3d {
         }
 
         // process material
-        if (options.useTexture) {
-            aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-            textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        std::vector<Texture*> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-            std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-            textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        std::vector<Texture*> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-            std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
-            textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+        std::vector<Texture*> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-            std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height");
-            textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        std::vector<Texture*> heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height");
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-            std::vector<Texture> emissiveMaps = loadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emissive");
-            textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
+        std::vector<Texture*> emissiveMaps = loadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emissive");
+        textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
 
-            return Mesh(vertices, indices, textures);
-        } else {
-            return Mesh(vertices, indices);
-        }
+        return new Mesh(vertices, indices, textures);
     }
 
-    std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
-        std::vector<Texture> textures;
+    // TODO: simplify texture loading
+    std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
+        std::vector<Texture*> textures;
         for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
             aiString str;
             mat->GetTexture(type, i, &str);
             bool skip = false;
             for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-                if (textures_loaded[j].path == std::string(str.C_Str())) {
+                if (textures_loaded[j]->path == std::string(str.C_Str())) {
                     textures.push_back(textures_loaded[j]);
                     skip = true;
                     break;
                 }
             }
             if (!skip) {
-                Texture texture(directory + "/" + std::string(str.C_Str()), typeName, std::string(str.C_Str()));
+                Texture* texture = new Texture(directory + "/" + std::string(str.C_Str()), typeName, std::string(str.C_Str()));
                 textures.push_back(texture);
                 textures_loaded.push_back(texture);
             }
@@ -150,8 +147,12 @@ namespace Birdy3d {
     }
 
     Model::~Model() {
-        for (Mesh& m : this->meshes) {
-            m.cleanup();
+        for (Mesh* m : this->meshes) {
+            delete m;
+        }
+
+        for (Texture* t : this->textures_loaded) {
+            delete t;
         }
     }
 

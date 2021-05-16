@@ -6,7 +6,7 @@
 
 namespace Birdy3d {
 
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures) {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
@@ -14,11 +14,10 @@ namespace Birdy3d {
         setupMesh();
     }
 
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices) {
-        this->vertices = vertices;
-        this->indices = indices;
-
-        setupMesh();
+    Mesh::~Mesh() {
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
     }
 
     void Mesh::setupMesh() {
@@ -66,7 +65,7 @@ namespace Birdy3d {
                 glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
                 // retrieve texture number (the N in diffuse_textureN)
                 std::string number;
-                std::string name = textures[i].type;
+                std::string name = textures[i]->type;
                 if (name == "texture_diffuse") // diffuse map -> normal texture
                     number = std::to_string(diffuseNr++);
                 else if (name == "texture_specular") // specular map -> light intensity
@@ -79,7 +78,7 @@ namespace Birdy3d {
                     number = std::to_string(normalNr++);
 
                 shader->setInt((name + number).c_str(), i);
-                glBindTexture(GL_TEXTURE_2D, textures[i].id);
+                glBindTexture(GL_TEXTURE_2D, textures[i]->id);
             }
             if (specularNr > 1) {
                 shader->setBool("hasSpecular", true);
@@ -121,16 +120,10 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
-    void Mesh::cleanup() {
-        glDeleteBuffers(1, &VBO);
-        glDeleteBuffers(1, &EBO);
-        glDeleteVertexArrays(1, &VAO);
-    }
-
     bool Mesh::hasTransparency(const ModelOptions& options) {
         if (options.useTexture) {
-            for (Texture t : this->textures) {
-                if (t.nrChannels == 4)
+            for (Texture* t : this->textures) {
+                if (t->nrChannels == 4)
                     return true;
             }
             return false;

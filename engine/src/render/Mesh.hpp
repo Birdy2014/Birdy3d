@@ -13,13 +13,12 @@ namespace Birdy3d {
     public:
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture> textures;
+        std::vector<Texture*> textures;
 
-        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures);
+        ~Mesh();
         void render(Shader* shader, const ModelOptions& options);
         void renderDepth();
-        void cleanup();
         bool hasTransparency(const ModelOptions& options);
 
     private:

@@ -46,10 +46,10 @@ namespace Birdy3d {
     void Collider::start() {
         if (shapes.empty()) {
             ModelComponent* model = object->getComponent<ModelComponent>();
-            for (const Mesh& mesh : model->model->getMeshes()) {
+            for (const Mesh* mesh : model->model->getMeshes()) {
                 // TODO: approximate convex decomposition
                 std::vector<glm::vec3> collisionMesh;
-                for (const Vertex& currentVertex : mesh.vertices) {
+                for (const Vertex& currentVertex : mesh->vertices) {
                     bool exists = false;
                     for (const glm::vec3& v : collisionMesh) {
                         if (currentVertex.position == v) {

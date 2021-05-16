@@ -13,24 +13,22 @@ namespace Birdy3d {
 
     class Model {
     public:
-        ModelOptions options;
-
         Model(const std::string& path);
         ~Model();
         void render(GameObject* object, ModelOptions options, Shader* shader, bool transparent);
         void renderDepth(GameObject* object, Shader* shader);
-        const std::vector<Mesh>& getMeshes();
+        const std::vector<Mesh*>& getMeshes();
 
     private:
         std::string path;
-        std::vector<Mesh> meshes;
+        std::vector<Mesh*> meshes;
         std::string directory;
-        std::vector<Texture> textures_loaded;
+        std::vector<Texture*> textures_loaded;
 
         void load();
         void processNode(aiNode* node, const aiScene* scene);
-        Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-        std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+        Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
+        std::vector<Texture*> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
     };
 
 }
