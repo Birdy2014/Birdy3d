@@ -3,6 +3,7 @@
 #include "core/Logger.hpp"
 #include "render/Model.hpp"
 #include "render/Shader.hpp"
+#include "render/Texture.hpp"
 #include "ui/TextRenderer.hpp"
 #include <algorithm>
 #include <filesystem>
@@ -21,11 +22,14 @@ namespace Birdy3d {
     std::unordered_map<std::string, Shader*> RessourceManager::shaders;
     std::unordered_map<std::string, TextRenderer*> RessourceManager::textRenderers;
     std::unordered_map<std::string, Model*> RessourceManager::models;
+    std::unordered_map<std::string, Texture*> RessourceManager::textures;
 
     Shader* RessourceManager::getShader(const std::string& name) {
         Shader* shader = shaders[name];
         if (!shader) {
-            shader = loadShader(name);
+            std::string path = getRessourcePath(name, RessourceType::SHADER);
+            shader = new Shader(readFile(path), name);
+            shaders[name] = shader;
         }
         return shader;
     }
@@ -43,18 +47,21 @@ namespace Birdy3d {
     Model* RessourceManager::getModel(const std::string& name) {
         Model* model = models[name];
         if (!model) {
-            const std::string& path = getRessourcePath(name, RessourceType::MODEL);
+            std::string path = getRessourcePath(name, RessourceType::MODEL);
             model = new Model(path);
             models[name] = model;
         }
         return model;
     }
 
-    Shader* RessourceManager::loadShader(std::string name) {
-        std::string path = getRessourcePath(name, RessourceType::SHADER);
-        Shader* s = new Shader(readFile(path), name);
-        shaders[name] = s;
-        return s;
+    Texture* RessourceManager::getTexture(const std::string& name, const std::string& type) {
+        Texture* texture = textures[name];
+        if (!texture) {
+            std::string path = getRessourcePath(name, RessourceType::TEXTURE);
+            texture = new Texture(path, type, name);
+            textures[name] = texture;
+        }
+        return texture;
     }
 
     std::string RessourceManager::getRessourcePath(std::string name, RessourceType type) {
@@ -107,8 +114,10 @@ namespace Birdy3d {
             return base_path + name + extension;
         if (std::filesystem::exists(default_dir + name + extension))
             return default_dir + name + extension;
+        if (std::filesystem::exists("/" + name + extension))
+            return "/" + name + extension;
 
-        Logger::error("can't find ressource " + name);
+        Logger::error("can't find ressource " + name + extension);
         return "";
     }
 

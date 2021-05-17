@@ -14,9 +14,9 @@ namespace Birdy3d {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
-    Texture::Texture(const std::string& filePath, const std::string& type, const std::string& path) {
-        this->type = type;
-        this->path = path;
+    Texture::Texture(const std::string& filePath, const std::string& type, const std::string& name)
+        : type(type)
+        , name(name) {
         unsigned char* data = stbi_load(filePath.data(), &this->width, &this->height, &this->nrChannels, 0);
 
         if (data) {

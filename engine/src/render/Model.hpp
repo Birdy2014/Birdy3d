@@ -9,7 +9,6 @@
 namespace Birdy3d {
 
     class GameObject;
-    class Texture;
 
     class Model {
     public:
@@ -23,12 +22,10 @@ namespace Birdy3d {
         std::string path;
         std::vector<Mesh*> meshes;
         std::string directory;
-        std::vector<Texture*> textures_loaded;
 
         void load();
         void processNode(aiNode* node, const aiScene* scene);
         Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
-        std::vector<Texture*> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
     };
 
 }

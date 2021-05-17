@@ -39,10 +39,13 @@ in vec2 TexCoords;
 in vec3 Normal;
 in mat3 TBN;
 
-uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_specular1;
-uniform sampler2D texture_normal1;
-uniform bool useTexture;
+uniform sampler2D texture_diffuse;
+uniform sampler2D texture_specular;
+uniform sampler2D texture_normal;
+uniform bool hasDiffuse;
+uniform bool hasSpecular;
+uniform bool hasNormal;
+uniform bool hasEmissive;
 uniform vec4 color;
 uniform float specular;
 uniform vec3 viewPos;
@@ -50,19 +53,10 @@ uniform vec3 viewPos;
 #include includes/lighting
 
 void main() {
-    vec4 var_diffuse;
-    float var_specular;
-    vec3 var_normal;
     vec3 viewDir = normalize(viewPos - FragPos);
-    if (useTexture) {
-        var_diffuse = texture(texture_diffuse1, TexCoords).rgba;
-        var_specular = texture(texture_specular1, TexCoords).r;
-        var_normal = normalize(TBN * texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
-    } else {
-        var_diffuse = color;
-        var_specular = specular;
-        var_normal = normalize(Normal);
-    }
+    vec4 var_diffuse = hasDiffuse ? texture(texture_diffuse, TexCoords).rgba : color;
+    float var_specular = hasSpecular ? texture(texture_specular, TexCoords).r : specular;
+    vec3 var_normal = hasNormal ? normalize(TBN * texture(texture_normal, TexCoords).rgb * 2.0 - 1.0) : Normal;
     if (var_diffuse.a < 0.1)
         discard;
 

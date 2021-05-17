@@ -54,60 +54,37 @@ namespace Birdy3d {
     }
 
     void Mesh::render(Shader* shader, const ModelOptions& options) {
-        shader->setBool("useTexture", options.useTexture);
+        shader->setVec4("color", options.color);
+        shader->setFloat("specular", options.specular);
+        shader->setVec3("emissive", options.emissive);
+        bool hasDiffuse = false;
+        bool hasSpecular = false;
+        bool hasNormal = false;
+        bool hasHeight = false;
+        bool hasEmissive = false;
         if (options.useTexture) {
-            unsigned int diffuseNr = 1;
-            unsigned int specularNr = 1;
-            unsigned int normalNr = 1;
-            unsigned int heightNr = 1;
-            unsigned int emissiveNr = 1;
             for (unsigned int i = 0; i < textures.size(); i++) {
-                glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
-                // retrieve texture number (the N in diffuse_textureN)
-                std::string number;
+                glActiveTexture(GL_TEXTURE0 + i);
                 std::string name = textures[i]->type;
                 if (name == "texture_diffuse") // diffuse map -> normal texture
-                    number = std::to_string(diffuseNr++);
+                    hasDiffuse = true;
                 else if (name == "texture_specular") // specular map -> light intensity
-                    number = std::to_string(specularNr++);
+                    hasSpecular = true;
                 else if (name == "texture_normal") // normal map -> stores normals, used to create smooth surfaces
-                    number = std::to_string(normalNr++);
+                    hasNormal = true;
                 else if (name == "texture_height") // height map -> store height information
-                    number = std::to_string(heightNr++);
+                    hasHeight = true;
                 else if (name == "texture_emissive") // emission map -> emit light (does not illuminate other objects)
-                    number = std::to_string(normalNr++);
-
-                shader->setInt((name + number).c_str(), i);
+                    hasEmissive = true;
+                shader->setInt(name, i);
                 glBindTexture(GL_TEXTURE_2D, textures[i]->id);
             }
-            if (specularNr > 1) {
-                shader->setBool("hasSpecular", true);
-            } else {
-                shader->setBool("hasSpecular", false);
-                shader->setFloat("specular", options.specular);
-            }
-
-            if (normalNr > 1) {
-                shader->setBool("hasNormal", true);
-            } else {
-                shader->setBool("hasNormal", false);
-            }
-
-            if (emissiveNr > 1) {
-                shader->setBool("hasEmissive", true);
-            } else {
-                shader->setBool("hasEmissive", false);
-                shader->setVec3("emissive", options.emissive);
-            }
             glActiveTexture(GL_TEXTURE0);
-        } else {
-            shader->setBool("hasSpecular", false);
-            shader->setBool("hasNormal", false);
-            shader->setBool("hasEmissive", false);
-            shader->setVec4("color", options.color);
-            shader->setFloat("specular", options.specular);
-            shader->setVec3("emissive", options.emissive);
         }
+        shader->setBool("hasDiffuse", hasDiffuse);
+        shader->setBool("hasSpecular", hasSpecular);
+        shader->setBool("hasNormal", hasNormal);
+        shader->setBool("hasEmissive", hasEmissive);
         // draw mesh
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
