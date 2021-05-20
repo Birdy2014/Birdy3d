@@ -3,6 +3,7 @@
 #include "core/Application.hpp"
 #include "core/Input.hpp"
 #include "events/InputEvents.hpp"
+#include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 
@@ -170,7 +171,7 @@ namespace Birdy3d {
     }
 
     void Textarea::onChar(InputCharEvent* event) {
-        if (!hover)
+        if (!hover || textCursor < 0)
             return;
         clearSelection();
         char c[5] = { 0, 0, 0, 0, 0};
@@ -182,7 +183,7 @@ namespace Birdy3d {
 
     // TODO: key repeat
     void Textarea::onKey(InputKeyEvent* event) {
-        if (!hover || event->action != GLFW_PRESS)
+        if (!hover || event->action != GLFW_PRESS || textCursor < 0)
             return;
         if (selectionStart >= 0 && selectionEnd >= 0) {
             if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE) {
@@ -211,13 +212,21 @@ namespace Birdy3d {
                     return;
                 textCursor++;
                 break;
-            // FIXME: key up and down don't respect newlines - maybe i shouldn't use lines but newline characters in text
             case GLFW_KEY_UP:
-                textCursor -= textCursorY > 0 ? lines[textCursorY].size() : 0;
+                if (textCursorY <= 0)
+                    return;
+                textCursor -= (lines[textCursorY - 1].size() + 1) > textCursorX ? (lines[textCursorY - 1].size() + 1) : textCursorX + 1;
                 break;
-            case GLFW_KEY_DOWN:
-                textCursor += textCursorY < lines.size() ? lines[textCursorY + 1].size() : 0;
+            case GLFW_KEY_DOWN: {
+                if (textCursorY >= lines.size())
+                    return;
+                int lineLength = lines[textCursorY].size();
+                if (lines[textCursorY + 1].size() + 1 > textCursorX)
+                    textCursor += lineLength + 1;
+                else
+                    textCursor += lineLength - textCursorX + 1 + lines[textCursorY + 1].size();
                 break;
+            }
             }
         }
     }
