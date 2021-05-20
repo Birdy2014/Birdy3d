@@ -9,10 +9,11 @@
 
 namespace Birdy3d {
 
-    Textarea::Textarea(UIVector pos, UIVector size, Placement placement)
+    Textarea::Textarea(UIVector pos, UIVector size, Placement placement, bool readonly)
         : Widget(pos, size, placement) {
         scrollpos = 0;
         tmpscroll = 0;
+        this->readonly = readonly;
         Theme* theme = Application::defaultTheme;
         addFilledRectangle(0_px, 100_p, theme->color_bg);
         Application::eventBus->subscribe(this, &Textarea::onClick);
@@ -128,9 +129,7 @@ namespace Birdy3d {
     }
 
     void Textarea::onClick(InputClickEvent* event) {
-        if (!hover && event->action != GLFW_RELEASE)
-            return;
-        if (event->action != GLFW_PRESS && event->action != GLFW_RELEASE)
+        if (readonly || !hover && event->action != GLFW_RELEASE)
             return;
 
         glm::ivec3 charPos = cursorCharPos();
@@ -156,9 +155,6 @@ namespace Birdy3d {
             selectionEndY = -1;
         } else if (event->action == GLFW_RELEASE && charPos.z != selectionStart) {
             selecting = false;
-            selectionEnd = charPos.z;
-            selectionEndX = charPos.x;
-            selectionEndY = charPos.y;
         }
     }
 
@@ -171,7 +167,7 @@ namespace Birdy3d {
     }
 
     void Textarea::onChar(InputCharEvent* event) {
-        if (!hover || textCursor < 0)
+        if (readonly || !hover || textCursor < 0)
             return;
         clearSelection();
         char c[5] = { 0, 0, 0, 0, 0};
@@ -183,7 +179,7 @@ namespace Birdy3d {
 
     // TODO: key repeat
     void Textarea::onKey(InputKeyEvent* event) {
-        if (!hover || event->action != GLFW_PRESS || textCursor < 0)
+        if (readonly || !hover || event->action != GLFW_PRESS || textCursor < 0)
             return;
         if (selectionStart >= 0 && selectionEnd >= 0) {
             if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE) {

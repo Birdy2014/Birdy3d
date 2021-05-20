@@ -12,8 +12,9 @@ namespace Birdy3d {
     class Textarea : public Widget {
     public:
         float scrollpos;
+        bool readonly;
 
-        Textarea(UIVector pos, UIVector size, Placement placement);
+        Textarea(UIVector pos, UIVector size, Placement placement, bool readonly = false);
         ~Textarea();
         void append(const std::string& text);
         void arrange(glm::mat4 move, glm::vec2 size) override;
