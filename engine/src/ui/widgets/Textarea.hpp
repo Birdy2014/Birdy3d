@@ -13,6 +13,7 @@ namespace Birdy3d {
     public:
         float scrollpos;
         bool readonly;
+        TextRenderer* renderer;
 
         Textarea(UIVector pos, UIVector size, Placement placement, bool readonly = false);
         ~Textarea();
@@ -22,8 +23,8 @@ namespace Birdy3d {
 
     private:
         float tmpscroll;
-        std::string text;
-        std::vector<std::string> lines;
+        std::u32string text;
+        std::vector<std::u32string> lines;
         bool selecting = false;
         int textCursor = -1;
         int textCursorX = -1;

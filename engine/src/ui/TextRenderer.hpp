@@ -2,8 +2,10 @@
 
 #include "ui/Shape.hpp"
 #include "ui/Utils.hpp"
+#include <codecvt>
 #include <ft2build.h>
 #include <glm/glm.hpp>
+#include <locale>
 #include <map>
 #include <string>
 #include FT_FREETYPE_H
@@ -21,13 +23,27 @@ namespace Birdy3d {
     };
 
     class TextRenderer {
+    private:
+        // What is this and why is it needed?
+        template <class Facet>
+        struct deletable_facet : Facet {
+            template <class... Args>
+            deletable_facet(Args&&... args)
+                : Facet(std::forward<Args>(args)...) { }
+            ~deletable_facet() { }
+        };
+
     public:
+        std::wstring_convert<deletable_facet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> converter;
+
         TextRenderer(std::string path, unsigned int fontSize);
         ~TextRenderer();
         void renderText(std::string text, float x, float y, float fontSize, Color color);
         void renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos = -1, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
+        void renderText(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos = -1, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
         UIVector textSize(std::string text, float fontSize);
-        float charWidth(char c, float fontSize);
+        UIVector textSize(std::u32string text, float fontSize);
+        float charWidth(char32_t c, float fontSize);
 
     private:
         std::map<char, Character> chars;
@@ -36,7 +52,7 @@ namespace Birdy3d {
         Rectangle* rect;
         unsigned int fontSize;
 
-        bool addChar(char c);
+        bool addChar(char32_t c);
     };
 
     class Text : public Shape {

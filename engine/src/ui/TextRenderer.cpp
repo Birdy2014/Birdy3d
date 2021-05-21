@@ -23,7 +23,7 @@ namespace Birdy3d {
         this->rect = new Rectangle(UIVector(0), UIVector(0), Color::WHITE, Rectangle::Type::TEXT);
     }
 
-    bool TextRenderer::addChar(char c) {
+    bool TextRenderer::addChar(char32_t c) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         if (FT_Load_Char(this->face, c, FT_LOAD_RENDER)) {
             Logger::warn("freetype: Failed to load Glyph " + (unsigned)c);
@@ -56,11 +56,15 @@ namespace Birdy3d {
         this->renderText(text, x, y, fontSize, color, m);
     }
 
-    // TODO: UTF-8 support
     void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, int hlstart, int hlend, Color hlcolor) {
+        std::u32string converted = converter.from_bytes(text);
+        renderText(converted, x, y, fontSize, color, move, cursorpos, hlstart, hlend, hlcolor);
+    }
+
+    void TextRenderer::renderText(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, int hlstart, int hlend, Color hlcolor) {
         bool highlighting = false;
         float scale = (fontSize / this->fontSize);
-        char c;
+        char16_t c;
         for (size_t i = 0; i <= text.length(); i++) {
             if (i < text.length()) c = text[i];
             else c = ' ';
@@ -114,9 +118,14 @@ namespace Birdy3d {
     }
 
     UIVector TextRenderer::textSize(std::string text, float fontSize) {
+        std::u32string converted = converter.from_bytes(text);
+        return textSize(converted, fontSize);
+    }
+
+    UIVector TextRenderer::textSize(std::u32string text, float fontSize) {
         float scale = (fontSize / this->fontSize);
         UIVector size(0_px);
-        for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
+        for (std::u32string::const_iterator c = text.begin(); c != text.end(); c++) {
             if (chars.count(*c) == 0)
                 this->addChar(*c);
             Character ch = this->chars[*c];
@@ -127,7 +136,7 @@ namespace Birdy3d {
         return size;
     }
 
-    float TextRenderer::charWidth(char c, float fontSize) {
+    float TextRenderer::charWidth(char32_t c, float fontSize) {
         if (chars.count(c) == 0)
             this->addChar(c);
         Character ch = this->chars[c];

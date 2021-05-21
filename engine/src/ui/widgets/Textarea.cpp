@@ -15,6 +15,7 @@ namespace Birdy3d {
         tmpscroll = 0;
         this->readonly = readonly;
         Theme* theme = Application::defaultTheme;
+        renderer = Application::getTextRenderer();
         addFilledRectangle(0_px, 100_p, theme->color_bg);
         Application::eventBus->subscribe(this, &Textarea::onClick);
         Application::eventBus->subscribe(this, &Textarea::onScroll);
@@ -30,7 +31,7 @@ namespace Birdy3d {
     }
 
     void Textarea::append(const std::string& text) {
-        this->text += text;
+        this->text += renderer->converter.from_bytes(text);
         updateLines();
     }
 
@@ -80,7 +81,7 @@ namespace Birdy3d {
                     if (line == selectionEndY)
                         highlightstart = selectionEndX;
                 }
-                Application::getTextRenderer()->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == textCursorY ? textCursorX : -1, highlightstart, highlightend, "#0000a050");
+                renderer->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == textCursorY ? textCursorX : -1, highlightstart, highlightend, "#0000a050");
             }
         }
         glDisable(GL_STENCIL_TEST);
@@ -88,12 +89,11 @@ namespace Birdy3d {
 
     void Textarea::updateLines() {
         lines.clear();
-        TextRenderer* renderer = Application::getTextRenderer();
-        std::string line;
+        std::u32string line;
         size_t pos = 0, eol = 0, nextspace = 0, prevspace = 0, length = 0;
-        while (pos != std::string::npos && pos < text.length()) {
+        while (pos != std::u32string::npos && pos < text.length()) {
             eol = text.find_first_of('\n', pos);
-            if (eol == std::string::npos)
+            if (eol == std::u32string::npos)
                 eol = text.length();
 
             line = text.substr(pos, eol - pos);
@@ -177,9 +177,7 @@ namespace Birdy3d {
         if (readonly || !hover || textCursor < 0)
             return;
         clearSelection();
-        char c[5] = { 0, 0, 0, 0, 0};
-        event->utf8(c);
-        text.insert(textCursor, c);
+        text.insert(textCursor, (char32_t*)&event->codepoint);
         textCursor++;
         updateLines();
     }
@@ -230,6 +228,11 @@ namespace Birdy3d {
                     textCursor += lineLength - textCursorX + 1 + lines[textCursorY + 1].size();
                 break;
             }
+            case GLFW_KEY_ENTER: {
+                text.insert(textCursor, U"\n");
+                textCursor++;
+                break;
+            }
             }
         }
     }
@@ -264,7 +267,7 @@ namespace Birdy3d {
             y = lines.size() - 1;
         int x = -1;
         float width = 0;
-        std::string& line = lines[y];
+        std::u32string line = lines[y];
         for (int i = 0; i < line.length(); i++) {
             float charWidth = Application::getTextRenderer()->charWidth(line[i], theme->fontSize);
             width += charWidth;
