@@ -45,7 +45,7 @@ int main() {
     FPSCounter counter(0_px, Placement::TOP_RIGHT);
     canvas.addChild(&counter);
 
-    DirectionalLayout menu(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 20_p, 10);
+    DirectionalLayout menu(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 30_p, 10);
     menu.name = "menu";
     canvas.addChild(&menu);
 
@@ -59,6 +59,7 @@ int main() {
     menu.addChild(&testButton);
 
     Textarea area(0_px, 100_px, Placement::BOTTOM_LEFT);
+    area.weight = 2;
     area.append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
     menu.addChild(&area);
 

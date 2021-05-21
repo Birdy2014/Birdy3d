@@ -11,86 +11,60 @@ namespace Birdy3d {
     void DirectionalLayout::arrange(glm::mat4 move, glm::vec2 size) {
         Widget::arrange(move, size);
 
-        // Initial values
         std::vector<Widget*> smallerWidgets = children;
-        float widgetSize;
         float gapps = gap * (children.size() - 1);
-        switch (dir) {
-        case Direction::RIGHT:
-        case Direction::LEFT:
-            widgetSize = (size.x - gapps) / children.size();
-            break;
-        case Direction::DOWN:
-        case Direction::UP:
-            widgetSize = (size.y - gapps) / children.size();
-            break;
-        }
+        float weights = 0;
+        float widgetSize;
+        bool horizontal = dir == Direction::LEFT || dir == Direction::RIGHT;
 
-        // Determine widgetSize
+        for (Widget* c : children)
+            weights += c->weight;
+
+        if (dir == Direction::LEFT || dir == Direction::RIGHT)
+            widgetSize = (size.x - gapps) / weights;
+        else if (dir == Direction::UP || dir == Direction::DOWN)
+            widgetSize = (size.y - gapps) / weights;
+
+        // Change widgetSize based on minimum size
         bool done = false;
         while (!done) {
             done = true;
             for (size_t i = 0; i < smallerWidgets.size(); i++) {
                 Widget* w = smallerWidgets[i];
-                switch (dir) {
-                case Direction::LEFT:
-                case Direction::RIGHT: {
-                    float width = w->minimalSize().x;
-                    if (widgetSize < width) {
-                        smallerWidgets.erase(smallerWidgets.begin() + i);
-                        i--;
-                        widgetSize -= (width - widgetSize) / smallerWidgets.size();
-                        done = false;
-                    }
-                    break;
-                }
-                case Direction::DOWN:
-                case Direction::UP: {
-                    float height = w->minimalSize().y;
-                    if (widgetSize < height) {
-                        smallerWidgets.erase(smallerWidgets.begin() + i);
-                        i--;
-                        widgetSize -= (height - widgetSize) / smallerWidgets.size();
-                        done = false;
-                    }
-                    break;
-                }
+                float currentWidgetSize = (horizontal ? w->minimalSize().x : w->minimalSize().y);
+                if (widgetSize * w->weight < currentWidgetSize) {
+                    smallerWidgets.erase(smallerWidgets.begin() + i);
+                    i--;
+                    weights -= w->weight;
+                    widgetSize -= ((currentWidgetSize - widgetSize * w->weight) / weights);
+                    done = false;
                 }
             }
         }
 
-        // Arrange widgets
         float offset = 0;
-        float width, height;
         for (Widget* w : children) {
+            float currentWidgetSize = std::max(widgetSize * w->weight, horizontal ? w->minimalSize().x : w->minimalSize().y);
             glm::mat4 m;
             switch (dir) {
             case Direction::RIGHT:
-                width = std::max(widgetSize, w->minimalSize().x);
                 m = glm::translate(move, glm::vec3(offset, 0, 0));
-                w->arrange(m, glm::vec2(width, size.y));
-                offset += width;
+                w->arrange(m, glm::vec2(currentWidgetSize, size.y));
                 break;
             case Direction::LEFT:
-                width = std::max(widgetSize, w->minimalSize().x);
-                m = glm::translate(move, glm::vec3(size.x - width - offset, 0, 0));
-                w->arrange(m, glm::vec2(width, size.y));
-                offset += width;
+                m = glm::translate(move, glm::vec3(size.x - currentWidgetSize - offset, 0, 0));
+                w->arrange(m, glm::vec2(currentWidgetSize, size.y));
                 break;
             case Direction::DOWN:
-                height = std::max(widgetSize, w->minimalSize().y);
-                m = glm::translate(move, glm::vec3(0, size.y - height - offset, 0));
-                w->arrange(m, glm::vec2(size.x, height));
-                offset += height;
+                m = glm::translate(move, glm::vec3(0, size.y - currentWidgetSize - offset, 0));
+                w->arrange(m, glm::vec2(size.x, currentWidgetSize));
                 break;
             case Direction::UP:
-                height = std::max(widgetSize, w->minimalSize().y);
                 m = glm::translate(move, glm::vec3(0, offset, 0));
-                w->arrange(m, glm::vec2(size.x, height));
-                offset += height;
+                w->arrange(m, glm::vec2(size.x, currentWidgetSize));
                 break;
             }
-            offset += gap;
+            offset += currentWidgetSize + gap;
         }
     }
 
