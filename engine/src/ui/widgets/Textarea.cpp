@@ -42,10 +42,10 @@ namespace Birdy3d {
 
     void Textarea::draw() {
         glEnable(GL_STENCIL_TEST);
-        glClear(GL_STENCIL_BUFFER_BIT);
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glStencilMask(0xFF);
+        glStencilMask(0xFF); // If glStencilMask(0xFF) is not called before glClear, stuff breaks
+        glClear(GL_STENCIL_BUFFER_BIT);
         Widget::draw();
         glStencilFunc(GL_EQUAL, 1, 0xFF);
         glStencilMask(0x00);
