@@ -112,6 +112,20 @@ int main() {
         pLight->hidden = !pLight->hidden;
     }, GLFW_KEY_L);
 
+    Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent* event) {
+        auto random = [](float min, float max) {
+            float zeroToOne = ((float)std::rand() / (float)RAND_MAX);
+            return zeroToOne * (std::abs(min) + std::abs(max)) + min;
+        };
+        float x = random(-30, 30);
+        float y = random(-30, 30);
+        float z = random(-30, 30);
+        GameObject* newCube = new GameObject(glm::vec3(x, y, z));
+        newCube->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f)));
+        scene->addChild(newCube);
+        Logger::debug("Created cube at x: " + std::to_string(x) + " y: " + std::to_string(y) + " z: " + std::to_string(z));
+    }, GLFW_KEY_N);
+
     scene->setScene();
     scene->start();
     PhysicsWorld* physicsWorld = new PhysicsWorld(scene);
@@ -132,6 +146,8 @@ int main() {
 
         scene->update();
         physicsWorld->update();
+
+        Application::eventBus->flush();
 
         if (lightup) {
             light->object->transform.position.y += 0.1 * deltaTime;
@@ -167,7 +183,7 @@ int main() {
     }
 
     scene->cleanup();
+    Application::cleanup();
 
-    glfwTerminate();
     return 0;
 }

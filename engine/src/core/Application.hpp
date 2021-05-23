@@ -20,6 +20,7 @@ namespace Birdy3d {
         static float deltaTime;
 
         static bool init(const char* windowName, int width, int height);
+        static void cleanup();
         static GLFWwindow* getWindow();
         static glm::vec2 getViewportSize();
         static TextRenderer* getTextRenderer();

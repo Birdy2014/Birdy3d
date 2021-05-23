@@ -14,7 +14,6 @@ namespace Birdy3d {
             return true;
         }
 
-    protected:
         virtual ~Event() { }
     };
 

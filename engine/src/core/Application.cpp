@@ -55,6 +55,10 @@ namespace Birdy3d {
         return true;
     }
 
+    void Application::cleanup() {
+        glfwTerminate();
+    }
+
     void Application::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);
         eventBus->emit(new WindowResizeEvent(width, height));

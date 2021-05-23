@@ -6,6 +6,7 @@
 #include <functional>
 #include <list>
 #include <map>
+#include <queue>
 #include <typeindex>
 
 namespace Birdy3d {
@@ -80,18 +81,13 @@ namespace Birdy3d {
     public:
         template<typename EventType>
         void emit(EventType* event) {
-            HandlerList* handlers = subscribers[typeid(EventType)];
+            eventQueue.push(event);
+        }
 
-            if (handlers == nullptr) {
-                return;
+        void flush(int amount = -1) {
+            for (int i = 0; (amount <= -1 || i < amount) && !eventQueue.empty(); i++) {
+                execFirst();
             }
-
-            for (auto& handler : *handlers) {
-                if (handler != nullptr) {
-                    handler->exec(event);
-                }
-            }
-            delete event;
         }
 
         template<class T, class EventType>
@@ -172,6 +168,26 @@ namespace Birdy3d {
 
     private:
         std::map<std::type_index, HandlerList*> subscribers;
+        std::queue<Event*> eventQueue;
+
+        void execFirst() {
+            if (eventQueue.empty())
+                return;
+            Event* event = eventQueue.front();
+            eventQueue.pop();
+            HandlerList* handlers = subscribers[typeid(*event)];
+
+            if (handlers == nullptr) {
+                return;
+            }
+
+            for (auto& handler : *handlers) {
+                if (handler != nullptr) {
+                    handler->exec(event);
+                }
+            }
+            delete event;
+        }
     };
 
 }

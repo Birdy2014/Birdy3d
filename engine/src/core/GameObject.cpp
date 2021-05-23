@@ -25,7 +25,7 @@ namespace Birdy3d {
 
     void GameObject::start() {
         for (Component* c : this->components) {
-            c->start();
+            c->_start();
         }
         for (GameObject* o : this->children) {
             o->start();
@@ -37,7 +37,7 @@ namespace Birdy3d {
             return;
 
         for (Component* c : this->components) {
-            c->update();
+            c->_update();
         }
         for (GameObject* o : this->children) {
             o->update();
@@ -46,7 +46,7 @@ namespace Birdy3d {
 
     void GameObject::cleanup() {
         for (Component* c : this->components) {
-            c->cleanup();
+            c->_cleanup();
         }
     }
 

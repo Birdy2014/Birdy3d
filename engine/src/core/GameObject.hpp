@@ -32,6 +32,8 @@ namespace Birdy3d {
             if (this->hidden && !hidden)
                 return components;
             for (Component* c : this->components) {
+                if (!c->isLoaded())
+                    continue;
                 T* casted = dynamic_cast<T*>(c);
                 if (casted) {
                     components.push_back(casted);
@@ -51,6 +53,8 @@ namespace Birdy3d {
             if (this->hidden && !hidden)
                 return nullptr;
             for (Component* c : this->components) {
+                if (!c->isLoaded())
+                    continue;
                 T* casted = dynamic_cast<T*>(c);
                 if (casted) {
                     return casted;

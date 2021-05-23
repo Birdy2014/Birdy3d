@@ -8,7 +8,14 @@ namespace Birdy3d {
     public:
         GameObject* object = nullptr;
 
-        Component() {};
+        void _start();
+        void _update();
+        void _cleanup();
+        bool isLoaded();
+
+    protected:
+        bool loaded = false;
+
         virtual void start() {};
         virtual void update() {};
         virtual void cleanup() {};
