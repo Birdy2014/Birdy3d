@@ -2,78 +2,82 @@
 
 namespace Birdy3d {
 
-    Unit::Unit(float value, Type type)
-        : value(value)
-        , type(type) { }
+    Unit::Unit(float pixels, float percent)
+        : pixels(pixels)
+        , percent(percent) { }
 
     void Unit::operator=(float value) {
-        this->value = value;
+        this->pixels = value;
     }
 
     Unit::operator float() {
-        return value;
+        return pixels;
     }
 
     float Unit::toPixels(float parentSize) {
-        switch (type) {
-        case PIXELS: {
-            return value;
-        }
-        case PERCENT: {
-            if (value == 0)
-                return parentSize;
-            return (value / 100) * parentSize;
-        }
-        }
+        return (percent / 100) * parentSize + pixels;
     }
 
     Unit Unit::operator+(const Unit& other) {
-        if (type != other.type)
-            Logger::error("Invalid type");
-        return Unit(value + other.value, type);
+        return Unit(pixels + other.pixels, percent + other.percent);
     }
 
     Unit& Unit::operator+=(const Unit& other) {
-        value += other.value;
+        pixels += other.pixels;
+        percent += other.percent;
         return *this;
     }
 
     Unit Unit::operator+(const float other) {
-        return Unit(value + other, type);
+        return Unit(pixels + other, percent);
     }
 
     Unit& Unit::operator+=(const float other) {
-        value += other;
+        pixels += other;
+        return *this;
+    }
+
+    Unit Unit::operator-() {
+        return Unit(-pixels, -percent);
+    }
+
+    Unit Unit::operator-(const Unit& other) {
+        return Unit(pixels - other.pixels, percent - other.percent);
+    }
+
+    Unit& Unit::operator-=(const Unit& other) {
+        pixels -= other.pixels;
+        percent -= other.percent;
         return *this;
     }
 
     Unit operator"" _px(long double value) {
-        return Unit(value, Unit::PIXELS);
+        return Unit(value, 0);
     }
 
     Unit operator"" _px(unsigned long long value) {
-        return Unit(value, Unit::PIXELS);
+        return Unit(value, 0);
     }
 
     Unit operator"" _p(long double value) {
-        return Unit(value, Unit::PERCENT);
+        return Unit(0, value);
     }
 
     Unit operator"" _p(unsigned long long value) {
-        return Unit(value, Unit::PERCENT);
+        return Unit(0, value);
     }
 
     UIVector::UIVector()
-        : x(Unit(0))
-        , y(Unit(0)) { }
+        : x(0, 0)
+        , y(0, 0) { }
 
     UIVector::UIVector(const UIVector& v)
         : x(v.x)
         , y(v.y) { }
 
     UIVector::UIVector(const glm::vec2& v)
-        : x(v.x)
-        , y(v.y) { }
+        : x(v.x, 0)
+        , y(v.y, 0) { }
 
     UIVector::UIVector(Unit x)
         : x(x)
@@ -95,6 +99,14 @@ namespace Birdy3d {
 
     UIVector UIVector::operator+(const float other) {
         return UIVector(x + other, y + other);
+    }
+
+    UIVector UIVector::operator-() {
+        return UIVector(-x, -y);
+    }
+
+    UIVector UIVector::operator-(const UIVector& other) {
+        return UIVector(x - other.x, y - other.y);
     }
 
     glm::vec2 UIVector::toPixels(glm::vec2 parentSize) {

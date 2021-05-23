@@ -19,13 +19,10 @@ namespace Birdy3d {
 
     class Unit {
     public:
-        enum Type { PIXELS,
-            PERCENT };
+        float pixels;
+        float percent;
 
-        float value;
-        Type type;
-
-        Unit(float value, Type type = PIXELS);
+        Unit(float pixels, float percent = 0.0f);
         void operator=(float value);
         operator float();
         float toPixels(float parentSize = 0);
@@ -33,6 +30,9 @@ namespace Birdy3d {
         Unit& operator+=(const Unit& other);
         Unit operator+(const float other);
         Unit& operator+=(const float other);
+        Unit operator-();
+        Unit operator-(const Unit& other);
+        Unit& operator-=(const Unit& other);
     };
 
     Unit operator"" _px(long double value);
@@ -53,6 +53,8 @@ namespace Birdy3d {
         UIVector& operator=(const UIVector& other);
         UIVector operator+(const UIVector& other);
         UIVector operator+(const float other);
+        UIVector operator-();
+        UIVector operator-(const UIVector& other);
         glm::vec2 toPixels(glm::vec2 parentSize = glm::vec2(0));
         operator glm::vec2();
     };
