@@ -19,13 +19,7 @@ namespace Birdy3d {
             addFilledRectangle(UIVector(0_px), UIVector(100_p), theme->color_bg, Placement::BOTTOM_LEFT);
             addRectangle(UIVector(0_px), UIVector(100_p), theme->color_border, Placement::BOTTOM_LEFT);
             addText(UIVector(0_px), fontSize, text, theme->color_fg, Placement::CENTER);
-
-            Application::eventBus->subscribe(this, &Button::onClick);
         };
-
-        ~Button() {
-            Application::eventBus->unsubscribe(this, &Button::onClick);
-        }
 
         glm::vec2 minimalSize() override {
             glm::vec2 minSize = Application::getTextRenderer()->textSize(getShape<Text>()->text, getShape<Text>()->fontSize) + 2.0f;
@@ -34,10 +28,13 @@ namespace Birdy3d {
 
         void (*clickCallback)(InputClickEvent*) = nullptr;
 
-    private:
-        void onClick(InputClickEvent* event) {
-            if (hover && clickCallback && event->action == GLFW_PRESS)
+    protected:
+        bool onClick(InputClickEvent* event, bool hover) override {
+            if (hover && clickCallback && event->action == GLFW_PRESS) {
                 clickCallback(event);
+                return true;
+            }
+            return false;
         }
     };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Application.hpp"
+#include "events/InputEvents.hpp"
 #include "ui/Utils.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
@@ -29,7 +30,7 @@ namespace Birdy3d {
         void addFilledTriangle(UIVector pos, UIVector size, Color color);
         void addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
         virtual void draw();
-        virtual bool updateEvents(bool hidden = false);
+        virtual void update();
 
         // Returns the position relative to the parent's origin in pixels
         glm::vec2 preferredPosition(glm::vec2 parentSize);
@@ -38,9 +39,7 @@ namespace Birdy3d {
         virtual glm::vec2 minimalSize();
         virtual glm::vec2 preferredSize(glm::vec2 parentSize);
 
-        virtual void arrange(glm::mat4 move, glm::vec2 size);
-
-        bool isHovering() { return hover; }
+        virtual void arrange(glm::vec2 pos, glm::vec2 size);
 
         template<class T>
         T* getShape(std::string name = "") {
@@ -54,13 +53,24 @@ namespace Birdy3d {
             return nullptr;
         }
 
+        // External Event calls
+        bool _onScroll(InputScrollEvent* event, bool hover);
+        bool _onClick(InputClickEvent* event, bool hover);
+        bool _onKey(InputKeyEvent* event, bool hover);
+        bool _onChar(InputCharEvent* event, bool hover);
+
     protected:
         std::vector<Shape*> shapes;
-        glm::mat4 move = glm::mat4(1);
         glm::vec2 actualSize = glm::vec2(1);
-        bool hover = false;
+        glm::vec2 actualPos = glm::vec2(1);
 
         glm::mat4 normalizedMove();
+
+        // Events
+        virtual bool onScroll(InputScrollEvent* event, bool hover);
+        virtual bool onClick(InputClickEvent* event, bool hover);
+        virtual bool onKey(InputKeyEvent* event, bool hover);
+        virtual bool onChar(InputCharEvent* event, bool hover);
     };
 
 }

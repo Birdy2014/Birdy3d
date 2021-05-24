@@ -52,23 +52,7 @@ namespace Birdy3d {
         }
     }
 
-    // TODO: eventdispatcher to notify about the individual shapes separately
-    bool Widget::updateEvents(bool hidden) {
-        hover = false;
-
-        if (hidden || this->hidden)
-            return false;
-
-        glm::vec2 absPos = move * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-        glm::vec2 cursorPos = Input::cursorPos();
-        for (Shape* s : this->shapes) {
-            if (s->contains(cursorPos - absPos)) {
-                hover = true;
-                break;
-            }
-        }
-        return hover;
-    }
+    void Widget::update() { }
 
     glm::vec2 Widget::preferredPosition(glm::vec2 parentSize) {
         return Utils::getRelativePosition(this->pos, actualSize, parentSize, this->placement);
@@ -82,8 +66,8 @@ namespace Birdy3d {
         return glm::max(size.toPixels(parentSize), minimalSize());
     }
 
-    void Widget::arrange(glm::mat4 move, glm::vec2 size) {
-        this->move = move;
+    void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
+        this->actualPos = pos;
         this->actualSize = size;
 
         for (Shape* s : shapes) {
@@ -93,7 +77,82 @@ namespace Birdy3d {
 
     glm::mat4 Widget::normalizedMove() {
         glm::vec2 viewportSize = Application::getViewportSize();
-        return glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y) * move;
+        glm::mat4 move = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
+        return glm::translate(move, glm::vec3(actualPos, 0.0f));
+    }
+
+    bool Widget::_onScroll(InputScrollEvent* event, bool hover) {
+        if (hover) {
+            if (shapes.empty())
+                return onScroll(event, true);
+            glm::vec2 cursorPos = Input::cursorPos();
+            for (Shape* s : this->shapes) {
+                if (s->contains(cursorPos - actualPos)) {
+                    return onScroll(event, true);
+                }
+            }
+        }
+        onScroll(event, false);
+        return false;
+    }
+
+    bool Widget::_onClick(InputClickEvent* event, bool hover) {
+        if (hover) {
+            if (shapes.empty())
+                return onClick(event, true);
+            glm::vec2 cursorPos = Input::cursorPos();
+            for (Shape* s : shapes) {
+                if (s->contains(cursorPos - actualPos)) {
+                    return onClick(event, true);
+                }
+            }
+        }
+        onClick(event, false);
+        return false;
+    }
+
+    bool Widget::_onKey(InputKeyEvent* event, bool hover) {
+        if (hover) {
+            if (shapes.empty())
+                return onKey(event, true);
+            glm::vec2 cursorPos = Input::cursorPos();
+            for (Shape* s : shapes) {
+                if (s->contains(cursorPos - actualPos)) {
+                    return onKey(event, true);
+                }
+            }
+        }
+        onKey(event, false);
+        return false;
+    }
+
+    bool Widget::_onChar(InputCharEvent* event, bool hover) {
+        for (Shape* s : this->shapes) {
+            if (shapes.empty())
+                return onChar(event, true);
+            glm::vec2 cursorPos = Input::cursorPos();
+            if (s->contains(cursorPos - actualPos)) {
+                return onChar(event, true);
+            }
+        }
+        onChar(event, false);
+        return false;
+    }
+
+    bool Widget::onScroll(InputScrollEvent* event, bool hover) {
+        return false;
+    }
+
+    bool Widget::onClick(InputClickEvent* event, bool hover) {
+        return false;
+    }
+
+    bool Widget::onKey(InputKeyEvent* event, bool hover) {
+        return false;
+    }
+
+    bool Widget::onChar(InputCharEvent* event, bool hover) {
+        return false;
     }
 
 }

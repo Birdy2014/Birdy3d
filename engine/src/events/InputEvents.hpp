@@ -40,7 +40,7 @@ namespace Birdy3d {
             , mods(mods) { }
 
         bool checkOptions(int options) override {
-            return options == key && action == GLFW_PRESS;
+            return options == key && action == 1; // GLFW_PRESS
         }
     };
 

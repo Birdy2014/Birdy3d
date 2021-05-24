@@ -16,10 +16,15 @@ namespace Birdy3d {
         TextRenderer* renderer;
 
         Textarea(UIVector pos, UIVector size, Placement placement, bool readonly = false);
-        ~Textarea();
         void append(const std::string& text);
-        void arrange(glm::mat4 move, glm::vec2 size) override;
+        void arrange(glm::vec2 pos, glm::vec2 size) override;
         void draw() override;
+
+    protected:
+        bool onClick(InputClickEvent* event, bool hover) override;
+        bool onScroll(InputScrollEvent* event, bool hover) override;
+        bool onChar(InputCharEvent* event, bool hover) override;
+        bool onKey(InputKeyEvent* event, bool hover) override;
 
     private:
         float tmpscroll;
@@ -37,10 +42,6 @@ namespace Birdy3d {
         int selectionEndY = -1;
 
         void updateLines();
-        void onClick(InputClickEvent* event);
-        void onScroll(InputScrollEvent* event);
-        void onChar(InputCharEvent* event);
-        void onKey(InputKeyEvent* event);
         void clearSelection();
         void updateCursorEnd();
         glm::ivec3 cursorCharPos();

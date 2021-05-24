@@ -6,11 +6,11 @@ namespace Birdy3d {
 
     class Layout : public Widget {
     public:
-        Layout(UIVector pos = UIVector(0), UIVector size = UIVector(0), Placement placement = Placement::BOTTOM_LEFT);
+        Layout(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, float rotation = 0.0f, Theme* theme = Application::defaultTheme, std::string name = "");
         void addChild(Widget* w);
         void draw() override;
-        virtual void arrange(glm::mat4 move, glm::vec2 size) override = 0;
-        bool updateEvents(bool hidden = false) override;
+        virtual void arrange(glm::vec2 pos, glm::vec2 size) override = 0;
+        virtual void update();
 
         template <class T>
         T* getWidget(const std::string& name, bool hidden = true) {
@@ -33,6 +33,12 @@ namespace Birdy3d {
 
     protected:
         std::vector<Widget*> children;
+
+        // Events
+        virtual bool onScroll(InputScrollEvent* event, bool hover) override;
+        virtual bool onClick(InputClickEvent* event, bool hover) override;
+        virtual bool onKey(InputKeyEvent* event, bool hover) override;
+        virtual bool onChar(InputCharEvent* event, bool hover) override;
     };
 
 }

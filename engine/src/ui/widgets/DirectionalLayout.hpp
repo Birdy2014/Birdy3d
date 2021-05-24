@@ -17,7 +17,7 @@ namespace Birdy3d {
         float gap;
 
         DirectionalLayout(Direction dir, Placement placement, UIVector size = UIVector(0), float gap = 0);
-        void arrange(glm::mat4 move, glm::vec2 size) override;
+        void arrange(glm::vec2 pos, glm::vec2 size) override;
         glm::vec2 minimalSize() override;
     };
 

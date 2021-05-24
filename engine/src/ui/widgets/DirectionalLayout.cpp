@@ -8,8 +8,8 @@ namespace Birdy3d {
         , gap(gap) {
     }
 
-    void DirectionalLayout::arrange(glm::mat4 move, glm::vec2 size) {
-        Widget::arrange(move, size);
+    void DirectionalLayout::arrange(glm::vec2 pos, glm::vec2 size) {
+        Widget::arrange(pos, size);
 
         std::vector<Widget*> smallerWidgets = children;
         float gapps = gap * (children.size() - 1);
@@ -48,20 +48,16 @@ namespace Birdy3d {
             glm::mat4 m;
             switch (dir) {
             case Direction::RIGHT:
-                m = glm::translate(move, glm::vec3(offset, 0, 0));
-                w->arrange(m, glm::vec2(currentWidgetSize, size.y));
+                w->arrange(pos + glm::vec2(offset, 0), glm::vec2(currentWidgetSize, size.y));
                 break;
             case Direction::LEFT:
-                m = glm::translate(move, glm::vec3(size.x - currentWidgetSize - offset, 0, 0));
-                w->arrange(m, glm::vec2(currentWidgetSize, size.y));
+                w->arrange(pos + glm::vec2(size.x - currentWidgetSize - offset, 0), glm::vec2(currentWidgetSize, size.y));
                 break;
             case Direction::DOWN:
-                m = glm::translate(move, glm::vec3(0, size.y - currentWidgetSize - offset, 0));
-                w->arrange(m, glm::vec2(size.x, currentWidgetSize));
+                w->arrange(pos + glm::vec2(0, size.y - currentWidgetSize - offset), glm::vec2(size.x, currentWidgetSize));
                 break;
             case Direction::UP:
-                m = glm::translate(move, glm::vec3(0, offset, 0));
-                w->arrange(m, glm::vec2(size.x, currentWidgetSize));
+                w->arrange(pos + glm::vec2(0, offset), glm::vec2(size.x, currentWidgetSize));
                 break;
             }
             offset += currentWidgetSize + gap;
