@@ -6,7 +6,7 @@
 namespace Birdy3d {
 
     Window::Window(UIVector pos, UIVector size, Theme* theme, std::string name)
-        : Widget(pos, size, Placement::BOTTOM_LEFT, 0, theme, name) {
+        : Widget(pos, size, Placement::BOTTOM_LEFT, theme, name) {
         addFilledRectangle(0_px, 100_p, theme->color_bg);
         addRectangle(0_px, 100_p, theme->color_border);
         closeButton = new Rectangle(-2_px, 6_px, "#FF0000", Shape::Type::FILLED, Placement::TOP_RIGHT);
@@ -34,6 +34,12 @@ namespace Birdy3d {
         }
     }
 
+    bool Window::onScroll(InputScrollEvent* event, bool hover) {
+        if (child)
+            child->_onScroll(event, hover);
+        return true;
+    }
+
     bool Window::onClick(InputClickEvent* event, bool hover) {
         if (child && child->_onClick(event, hover))
             hover = false;
@@ -48,6 +54,18 @@ namespace Birdy3d {
             dragging = false;
         }
 
+        return true;
+    }
+
+    bool Window::onKey(InputKeyEvent* event, bool hover) {
+        if (child)
+            child->_onKey(event, hover);
+        return true;
+    }
+
+    bool Window::onChar(InputCharEvent* event, bool hover) {
+        if (child)
+            child->_onChar(event, hover);
         return true;
     }
 

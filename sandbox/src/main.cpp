@@ -63,6 +63,13 @@ int main() {
     area.append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
     menu.addChild(&area);
 
+    Window testWindow(0_px, 500_px);
+    canvas.addChild(&testWindow);
+
+    Textarea area2(0_px, 100_px, Placement::BOTTOM_LEFT);
+    area2.append("Dies ist ein Fenster");
+    testWindow.child = &area2;
+
     // GameObjects
     GameObject* scene = new GameObject();
 

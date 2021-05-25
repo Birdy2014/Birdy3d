@@ -7,11 +7,10 @@
 
 namespace Birdy3d {
 
-    Widget::Widget(UIVector pos, UIVector size, Placement placement, float rotation, Theme* theme, std::string name)
+    Widget::Widget(UIVector pos, UIVector size, Placement placement, Theme* theme, std::string name)
         : pos(pos)
         , size(size)
         , placement(placement)
-        , rot(rotation)
         , theme(theme)
         , name(name) { }
 
@@ -83,12 +82,14 @@ namespace Birdy3d {
 
     bool Widget::_onScroll(InputScrollEvent* event, bool hover) {
         if (hover) {
+            if (hidden)
+                hover = false;
             if (shapes.empty())
-                return onScroll(event, true);
+                return onScroll(event, hover);
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : this->shapes) {
                 if (s->contains(cursorPos - actualPos)) {
-                    return onScroll(event, true);
+                    return onScroll(event, hover);
                 }
             }
         }
@@ -98,12 +99,14 @@ namespace Birdy3d {
 
     bool Widget::_onClick(InputClickEvent* event, bool hover) {
         if (hover) {
+            if (hidden)
+                hover = false;
             if (shapes.empty())
-                return onClick(event, true);
+                return onClick(event, hover);
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : shapes) {
                 if (s->contains(cursorPos - actualPos)) {
-                    return onClick(event, true);
+                    return onClick(event, hover);
                 }
             }
         }
@@ -113,12 +116,14 @@ namespace Birdy3d {
 
     bool Widget::_onKey(InputKeyEvent* event, bool hover) {
         if (hover) {
+            if (hidden)
+                hover = false;
             if (shapes.empty())
-                return onKey(event, true);
+                return onKey(event, hover);
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : shapes) {
                 if (s->contains(cursorPos - actualPos)) {
-                    return onKey(event, true);
+                    return onKey(event, hover);
                 }
             }
         }
@@ -127,12 +132,16 @@ namespace Birdy3d {
     }
 
     bool Widget::_onChar(InputCharEvent* event, bool hover) {
-        for (Shape* s : this->shapes) {
+        if (hover) {
+            if (hidden)
+                hover = false;
             if (shapes.empty())
-                return onChar(event, true);
+                return onChar(event, hover);
             glm::vec2 cursorPos = Input::cursorPos();
-            if (s->contains(cursorPos - actualPos)) {
-                return onChar(event, true);
+            for (Shape* s : this->shapes) {
+                if (s->contains(cursorPos - actualPos)) {
+                    return onChar(event, hover);
+                }
             }
         }
         onChar(event, false);

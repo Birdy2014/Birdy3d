@@ -34,7 +34,7 @@ namespace Birdy3d {
                 clickCallback(event);
                 return true;
             }
-            return false;
+            return true;
         }
     };
 

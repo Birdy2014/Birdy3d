@@ -6,8 +6,8 @@
 
 namespace Birdy3d {
 
-    Layout::Layout(UIVector pos, UIVector size, Placement placement, float rotation, Theme* theme, std::string name)
-        : Widget(pos, size, placement, rotation, theme, name) { }
+    Layout::Layout(UIVector pos, UIVector size, Placement placement, Theme* theme, std::string name)
+        : Widget(pos, size, placement, theme, name) { }
 
     void Layout::addChild(Widget* w) {
         children.push_back(w);

@@ -18,7 +18,10 @@ namespace Birdy3d {
         void update() override;
 
     protected:
+        bool onScroll(InputScrollEvent* event, bool hover) override;
         bool onClick(InputClickEvent* event, bool hover) override;
+        bool onKey(InputKeyEvent* event, bool hover) override;
+        bool onChar(InputCharEvent* event, bool hover) override;
 
     private:
         Rectangle* closeButton;

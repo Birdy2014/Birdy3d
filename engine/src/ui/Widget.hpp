@@ -17,12 +17,11 @@ namespace Birdy3d {
         bool hidden = false;
         UIVector pos;
         UIVector size;
-        float rot;
         Placement placement;
         Theme* theme;
         float weight = 1; // Size ratio in DirectionalLayout. 0 means stay on minimum size
 
-        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, float rotation = 0.0f, Theme* theme = Application::defaultTheme, std::string name = "");
+        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Theme* theme = Application::defaultTheme, std::string name = "");
         virtual ~Widget();
         void addRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
         void addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
