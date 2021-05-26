@@ -70,7 +70,7 @@ namespace Birdy3d {
                     if (line == selectionEndY)
                         highlightstart = selectionEndX;
                 }
-                renderer->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == textCursorY ? textCursorX : -1, highlightstart, highlightend, "#0000a050");
+                renderer->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == textCursorY ? textCursorX : -1, highlightstart, highlightend - 1, "#0000a050");
             }
         }
         glDisable(GL_STENCIL_TEST);
@@ -176,13 +176,13 @@ namespace Birdy3d {
 
     // TODO: key repeat
     bool Textarea::onKey(InputKeyEvent* event, bool hover) {
-        if (readonly || !hover || event->action != GLFW_PRESS || textCursor < 0)
+        if (readonly || !hover || event->action != GLFW_PRESS)
             return true;
         if (selectionStart >= 0 && selectionEnd >= 0) {
             if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE) {
                 clearSelection();
             }
-        } else {
+        } else if (textCursor > 0) {
             switch (event->key) {
             case GLFW_KEY_DELETE:
                 if (textCursor >= text.length())
