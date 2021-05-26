@@ -10,7 +10,6 @@ namespace Birdy3d {
         void addChild(Widget* w);
         void draw() override;
         virtual void arrange(glm::vec2 pos, glm::vec2 size) override = 0;
-        virtual void update();
 
         template <class T>
         T* getWidget(const std::string& name, bool hidden = true) {
@@ -35,6 +34,7 @@ namespace Birdy3d {
         std::vector<Widget*> children;
 
         // Events
+        virtual bool update(bool hover) override;
         virtual bool onScroll(InputScrollEvent* event, bool hover) override;
         virtual bool onClick(InputClickEvent* event, bool hover) override;
         virtual bool onKey(InputKeyEvent* event, bool hover) override;

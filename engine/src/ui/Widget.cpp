@@ -51,8 +51,6 @@ namespace Birdy3d {
         }
     }
 
-    void Widget::update() { }
-
     glm::vec2 Widget::preferredPosition(glm::vec2 parentSize) {
         return Utils::getRelativePosition(this->pos, actualSize, parentSize, this->placement);
     }
@@ -78,6 +76,23 @@ namespace Birdy3d {
         glm::vec2 viewportSize = Application::getViewportSize();
         glm::mat4 move = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
         return glm::translate(move, glm::vec3(actualPos, 0.0f));
+    }
+
+    bool Widget::_update(bool hover) {
+        if (hover) {
+            if (hidden)
+                hover = false;
+            if (shapes.empty())
+                return update(hover);
+            glm::vec2 cursorPos = Input::cursorPos();
+            for (Shape* s : this->shapes) {
+                if (s->contains(cursorPos - actualPos)) {
+                    return update(hover);
+                }
+            }
+        }
+        update(false);
+        return false;
     }
 
     bool Widget::_onScroll(InputScrollEvent* event, bool hover) {
@@ -145,6 +160,10 @@ namespace Birdy3d {
             }
         }
         onChar(event, false);
+        return false;
+    }
+
+    bool Widget::update(bool hover) {
         return false;
     }
 

@@ -1,25 +1,29 @@
 #include "core/Input.hpp"
 
-#include "core/Application.hpp"
-
 namespace Birdy3d {
 
     bool Input::cursorHidden = false;
     glm::vec2 Input::currentCursorPos = glm::vec2(0);
     glm::vec2 Input::lastCursorPos = glm::vec2(0);
+    GLFWcursor* Input::cursors[Cursor::CURSOR_LAST];
 
     void Input::init() {
         double x, y;
         glfwGetCursorPos(Application::getWindow(), &x, &y);
         Input::lastCursorPos = glm::vec2(x, y);
         Input::currentCursorPos = glm::vec2(x, y);
+        cursors[Cursor::CURSOR_DEFAULT] = nullptr;
+        cursors[Cursor::CURSOR_ARROW] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+        cursors[Cursor::CURSOR_MOVE] = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+        cursors[Cursor::CURSOR_HRESIZE] = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
+        cursors[Cursor::CURSOR_VRESIZE] = glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR);
     }
 
     void Input::update() {
         double x, y;
         glfwGetCursorPos(Application::getWindow(), &x, &y);
         Input::lastCursorPos = Input::currentCursorPos;
-        Input::currentCursorPos = glm::vec2(x, Application::getViewportSize().y - y);
+        Input::currentCursorPos = glm::vec2(x + 2, Application::getViewportSize().y - y);
     }
 
     bool Input::keyPressed(int key) {
@@ -55,6 +59,10 @@ namespace Birdy3d {
 
     bool Input::isCursorHidden() {
         return Input::cursorHidden;
+    }
+
+    void Input::setCursor(Cursor cursor) {
+        glfwSetCursor(Application::getWindow(), cursors[cursor]);
     }
 
 }

@@ -22,11 +22,6 @@ namespace Birdy3d {
         }
     }
 
-    void Layout::update() {
-        for (Widget* w : this->children)
-            w->update();
-    }
-
     bool Layout::onScroll(InputScrollEvent* event, bool hover) {
         for (std::vector<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
             if ((*it)->_onScroll(event, hover))
@@ -61,6 +56,13 @@ namespace Birdy3d {
         }
 
         return Widget::onChar(event, hover);
+    }
+
+    bool Layout::update(bool hover) {
+        for (std::vector<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
+            if ((*it)->_update(hover))
+                hover = false;
+        }
     }
 
 }

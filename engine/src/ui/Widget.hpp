@@ -29,7 +29,6 @@ namespace Birdy3d {
         void addFilledTriangle(UIVector pos, UIVector size, Color color);
         void addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
         virtual void draw();
-        virtual void update();
 
         // Returns the position relative to the parent's origin in pixels
         glm::vec2 preferredPosition(glm::vec2 parentSize);
@@ -53,6 +52,7 @@ namespace Birdy3d {
         }
 
         // External Event calls
+        bool _update(bool hover);
         bool _onScroll(InputScrollEvent* event, bool hover);
         bool _onClick(InputClickEvent* event, bool hover);
         bool _onKey(InputKeyEvent* event, bool hover);
@@ -66,6 +66,7 @@ namespace Birdy3d {
         glm::mat4 normalizedMove();
 
         // Events
+        virtual bool update(bool hover);
         virtual bool onScroll(InputScrollEvent* event, bool hover);
         virtual bool onClick(InputClickEvent* event, bool hover);
         virtual bool onKey(InputKeyEvent* event, bool hover);
