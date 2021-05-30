@@ -31,7 +31,7 @@ namespace Birdy3d {
         virtual void draw();
 
         // Returns the position relative to the parent's origin in pixels
-        glm::vec2 preferredPosition(glm::vec2 parentSize);
+        glm::vec2 preferredPosition(glm::vec2 parentSize, glm::vec2 size);
 
         // Returns the size in pixels
         virtual glm::vec2 minimalSize();

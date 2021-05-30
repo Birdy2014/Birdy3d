@@ -26,6 +26,12 @@ namespace Birdy3d {
             child->draw();
     }
 
+    glm::vec2 Window::minimalSize() {
+        glm::vec2 minSelf = glm::vec2(BAR_HEIGHT + BORDER_SIZE + 10);
+        glm::vec2 minChild = child->minimalSize();
+        return glm::vec2(std::max(minSelf.x, minChild.x), std::max(minSelf.y, minChild.y));
+    }
+
     bool Window::update(bool hover) {
         glm::vec2 localCursorPos = Input::cursorPos() - actualPos;
 
@@ -61,28 +67,35 @@ namespace Birdy3d {
             Input::setCursor(Input::CURSOR_DEFAULT);
 
         // Move and resize
-        int maxSize = BAR_HEIGHT + BORDER_SIZE + 10;
         if (dragging) {
             pos = pos + Input::cursorPosOffset();
         }
         if (resizeXL) {
+            float diffold = size.x - minimalSize().x;
             size.x -= Input::cursorPosOffset().x;
-            if (size.x < maxSize)
-                size.x = maxSize;
-            else
+            float diffnew = size.x - minimalSize().x;
+            if (diffold >= 0 && diffnew >= 0) {
                 pos.x += Input::cursorPosOffset().x;
+            } else if (diffold >= 0 && diffnew < 0) {
+                pos.x += diffold;
+            } else if (diffold < 0 && diffnew >= 0) {
+                pos.x -= diffnew;
+            }
         }
         if (resizeXR) {
             size.x += Input::cursorPosOffset().x;
-            if (size.x < maxSize)
-                size.x = maxSize;
         }
         if (resizeY) {
+            float diffold = size.y - minimalSize().x;
             size.y -= Input::cursorPosOffset().y;
-            if (size.y < maxSize)
-                size.y = maxSize;
-            else
+            float diffnew = size.y - minimalSize().x;
+            if (diffold >= 0 && diffnew >= 0) {
                 pos.y += Input::cursorPosOffset().y;
+            } else if (diffold >= 0 && diffnew < 0) {
+                pos.y += diffold;
+            } else if (diffold < 0 && diffnew >= 0) {
+                pos.y -= diffnew;
+            }
         }
     }
 
@@ -110,6 +123,7 @@ namespace Birdy3d {
             resizeXL = false;
             resizeXR = false;
             resizeY = false;
+            size = actualSize;
             return true;
         }
 

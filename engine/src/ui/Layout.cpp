@@ -63,6 +63,8 @@ namespace Birdy3d {
             if ((*it)->_update(hover))
                 hover = false;
         }
+
+        return Widget::update(hover);
     }
 
 }

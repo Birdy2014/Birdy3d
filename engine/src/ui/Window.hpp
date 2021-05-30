@@ -15,6 +15,7 @@ namespace Birdy3d {
         Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Theme* theme = Application::defaultTheme, std::string name = "");
         void arrange(glm::vec2 pos, glm::vec2 size) override;
         void draw() override;
+        glm::vec2 minimalSize() override;
 
     protected:
         bool update(bool hover) override;

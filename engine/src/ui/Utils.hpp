@@ -33,6 +33,8 @@ namespace Birdy3d {
         Unit operator-();
         Unit operator-(const Unit& other);
         Unit& operator-=(const Unit& other);
+        Unit operator-(const float other);
+        Unit& operator-=(const float other);
     };
 
     Unit operator"" _px(long double value);

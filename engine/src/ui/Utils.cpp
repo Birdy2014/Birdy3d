@@ -51,6 +51,15 @@ namespace Birdy3d {
         return *this;
     }
 
+    Unit Unit::operator-(const float other) {
+        return Unit(pixels - other, percent);
+    }
+
+    Unit& Unit::operator-=(const float other) {
+        pixels -= other;
+        return *this;
+    }
+
     Unit operator"" _px(long double value) {
         return Unit(value, 0);
     }
