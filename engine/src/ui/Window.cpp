@@ -121,9 +121,6 @@ namespace Birdy3d {
         if (child && child->_onClick(event, hover))
             hover = false;
 
-        if (event->action == GLFW_RELEASE)
-            Input::setCursor(Input::CURSOR_DEFAULT);
-
         if (event->button != GLFW_MOUSE_BUTTON_LEFT || (!hover && event->action != GLFW_RELEASE))
             return true;
 
@@ -133,12 +130,13 @@ namespace Birdy3d {
             return true;
         }
 
-        if (event->action == GLFW_RELEASE) {
+        if (event->action == GLFW_RELEASE && (dragging || resizeXL || resizeXR || resizeY)) {
             dragging = false;
             resizeXL = false;
             resizeXR = false;
             resizeY = false;
             size = actualSize;
+            Input::setCursor(Input::CURSOR_DEFAULT);
             return true;
         }
 
