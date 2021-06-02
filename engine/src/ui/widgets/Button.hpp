@@ -36,6 +36,14 @@ namespace Birdy3d {
             }
             return true;
         }
+
+        void onMouseEnter() override {
+            Input::setCursor(Input::CURSOR_HAND);
+        }
+
+        void onMouseLeave() override {
+            Input::setCursor(Input::CURSOR_DEFAULT);
+        }
     };
 
 }

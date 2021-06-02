@@ -230,6 +230,16 @@ namespace Birdy3d {
         return true;
     }
 
+    void Textarea::onMouseEnter() {
+        if (!readonly)
+            Input::setCursor(Input::CURSOR_TEXT);
+    }
+
+    void Textarea::onMouseLeave() {
+        if (!readonly)
+            Input::setCursor(Input::CURSOR_DEFAULT);
+    }
+
     void Textarea::clearSelection() {
         if (selectionStart != -1 && selectionEnd != -1) {
             text.erase(text.begin() + selectionStart, text.begin() + selectionEnd);

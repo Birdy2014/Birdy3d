@@ -23,6 +23,7 @@ namespace Birdy3d {
                 updated = true;
                 glm::vec2 viewport = Application::getViewportSize();
                 AbsoluteLayout::_update(true);
+                AbsoluteLayout::lateUpdate();
                 AbsoluteLayout::arrange(glm::vec2(0), viewport);
             }
         }

@@ -10,6 +10,8 @@ namespace Birdy3d {
         enum Cursor {
             CURSOR_DEFAULT,
             CURSOR_ARROW,
+            CURSOR_HAND,
+            CURSOR_TEXT,
             CURSOR_MOVE,
             CURSOR_HRESIZE,
             CURSOR_VRESIZE,

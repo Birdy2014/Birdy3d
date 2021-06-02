@@ -25,6 +25,8 @@ namespace Birdy3d {
         bool onScroll(InputScrollEvent* event, bool hover) override;
         bool onChar(InputCharEvent* event, bool hover) override;
         bool onKey(InputKeyEvent* event, bool hover) override;
+        void onMouseEnter() override;
+        void onMouseLeave() override;
 
     private:
         float tmpscroll;

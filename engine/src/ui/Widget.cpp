@@ -87,11 +87,19 @@ namespace Birdy3d {
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : this->shapes) {
                 if (s->contains(cursorPos - actualPos)) {
+                    if (!hoveredLastFrame) {
+                        runMouseEnter = true;
+                        hoveredLastFrame = true;
+                    }
                     return update(hover);
                 }
             }
         }
         update(false);
+        if (hoveredLastFrame) {
+            onMouseLeave();
+            hoveredLastFrame = false;
+        }
         return false;
     }
 
@@ -163,24 +171,33 @@ namespace Birdy3d {
         return false;
     }
 
+    void Widget::lateUpdate() {
+        if (runMouseEnter) {
+            onMouseEnter();
+            runMouseEnter = false;
+        }
+    }
+
     bool Widget::update(bool hover) {
-        return false;
+        return true;
     }
 
     bool Widget::onScroll(InputScrollEvent* event, bool hover) {
-        return false;
+        return true;
     }
 
     bool Widget::onClick(InputClickEvent* event, bool hover) {
-        return false;
+        return true;
     }
 
     bool Widget::onKey(InputKeyEvent* event, bool hover) {
-        return false;
+        return true;
     }
 
     bool Widget::onChar(InputCharEvent* event, bool hover) {
-        return false;
+        return true;
     }
 
+    void Widget::onMouseEnter() { }
+    void Widget::onMouseLeave() { }
 }

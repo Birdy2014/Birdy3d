@@ -32,7 +32,17 @@ namespace Birdy3d {
         return glm::vec2(std::max(minSelf.x, minChild.x), std::max(minSelf.y, minChild.y));
     }
 
+    void Window::lateUpdate() {
+        Widget::lateUpdate();
+        if (child)
+            child->lateUpdate();
+    }
+
     bool Window::update(bool hover) {
+        if (child && !dragging && !resizeXL && !resizeXR && !resizeY)
+            if (child->_update(hover))
+                return true;
+
         glm::vec2 localCursorPos = Input::cursorPos() - actualPos;
 
         hoverDrag = false;
@@ -63,7 +73,7 @@ namespace Birdy3d {
             Input::setCursor(Input::CURSOR_HRESIZE);
         else if (hoverResizeY || resizeY)
             Input::setCursor(Input::CURSOR_VRESIZE);
-        else
+        else if (hover)
             Input::setCursor(Input::CURSOR_DEFAULT);
 
         // Move and resize
@@ -97,6 +107,8 @@ namespace Birdy3d {
                 pos.y -= diffnew;
             }
         }
+
+        return true;
     }
 
     bool Window::onScroll(InputScrollEvent* event, bool hover) {
@@ -108,6 +120,9 @@ namespace Birdy3d {
     bool Window::onClick(InputClickEvent* event, bool hover) {
         if (child && child->_onClick(event, hover))
             hover = false;
+
+        if (event->action == GLFW_RELEASE)
+            Input::setCursor(Input::CURSOR_DEFAULT);
 
         if (event->button != GLFW_MOUSE_BUTTON_LEFT || (!hover && event->action != GLFW_RELEASE))
             return true;
@@ -154,6 +169,10 @@ namespace Birdy3d {
         if (child)
             child->_onChar(event, hover);
         return true;
+    }
+
+    void Window::onMouseLeave() {
+        Input::setCursor(Input::CURSOR_DEFAULT);
     }
 
 }

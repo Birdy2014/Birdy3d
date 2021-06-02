@@ -14,6 +14,8 @@ namespace Birdy3d {
         Input::currentCursorPos = glm::vec2(x, y);
         cursors[Cursor::CURSOR_DEFAULT] = nullptr;
         cursors[Cursor::CURSOR_ARROW] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+        cursors[Cursor::CURSOR_HAND] = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+        cursors[Cursor::CURSOR_TEXT] = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
         cursors[Cursor::CURSOR_MOVE] = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
         cursors[Cursor::CURSOR_HRESIZE] = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
         cursors[Cursor::CURSOR_VRESIZE] = glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR);

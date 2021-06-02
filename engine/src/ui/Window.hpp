@@ -17,12 +17,15 @@ namespace Birdy3d {
         void draw() override;
         glm::vec2 minimalSize() override;
 
+        void lateUpdate() override;
+
     protected:
         bool update(bool hover) override;
         bool onScroll(InputScrollEvent* event, bool hover) override;
         bool onClick(InputClickEvent* event, bool hover) override;
         bool onKey(InputKeyEvent* event, bool hover) override;
         bool onChar(InputCharEvent* event, bool hover) override;
+        void onMouseLeave() override;
 
     private:
         Rectangle* closeButton;

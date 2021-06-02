@@ -58,6 +58,8 @@ namespace Birdy3d {
         bool _onKey(InputKeyEvent* event, bool hover);
         bool _onChar(InputCharEvent* event, bool hover);
 
+        virtual void lateUpdate();
+
     protected:
         std::vector<Shape*> shapes;
         glm::vec2 actualSize = glm::vec2(1);
@@ -71,6 +73,12 @@ namespace Birdy3d {
         virtual bool onClick(InputClickEvent* event, bool hover);
         virtual bool onKey(InputKeyEvent* event, bool hover);
         virtual bool onChar(InputCharEvent* event, bool hover);
+        virtual void onMouseEnter();
+        virtual void onMouseLeave();
+
+    private:
+        bool hoveredLastFrame = false;
+        bool runMouseEnter = false;
     };
 
 }

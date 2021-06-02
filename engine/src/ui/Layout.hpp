@@ -33,6 +33,8 @@ namespace Birdy3d {
     protected:
         std::vector<Widget*> children;
 
+        virtual void lateUpdate();
+
         // Events
         virtual bool update(bool hover) override;
         virtual bool onScroll(InputScrollEvent* event, bool hover) override;
