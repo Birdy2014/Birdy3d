@@ -64,11 +64,16 @@ int main() {
     menu.addChild(&area);
 
     Window testWindow(0_px, 500_px);
+    testWindow.hidden = true;
     canvas.addChild(&testWindow);
 
     Textarea area2(0_px, 100_px, Placement::BOTTOM_LEFT);
     area2.append("Dies ist ein Fenster");
     testWindow.child = &area2;
+
+    testButton.clickCallback = [&testWindow](InputClickEvent*) {
+        testWindow.hidden = !testWindow.hidden;
+    };
 
     // GameObjects
     GameObject* scene = new GameObject();

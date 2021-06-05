@@ -83,7 +83,7 @@ namespace Birdy3d {
             if (hidden)
                 hover = false;
             if (shapes.empty())
-                return update(hover);
+                return !(hidden || !update(hover));
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : this->shapes) {
                 if (s->contains(cursorPos - actualPos)) {
@@ -91,7 +91,7 @@ namespace Birdy3d {
                         runMouseEnter = true;
                         hoveredLastFrame = true;
                     }
-                    return update(hover);
+                    return !(hidden || !update(hover));
                 }
             }
         }
@@ -108,11 +108,11 @@ namespace Birdy3d {
             if (hidden)
                 hover = false;
             if (shapes.empty())
-                return onScroll(event, hover);
+                return !(hidden || !onScroll(event, hover));
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : this->shapes) {
                 if (s->contains(cursorPos - actualPos)) {
-                    return onScroll(event, hover);
+                    return !(hidden || !onScroll(event, hover));
                 }
             }
         }
@@ -125,11 +125,11 @@ namespace Birdy3d {
             if (hidden)
                 hover = false;
             if (shapes.empty())
-                return onClick(event, hover);
+                return !(hidden || !onClick(event, hover));
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : shapes) {
                 if (s->contains(cursorPos - actualPos)) {
-                    return onClick(event, hover);
+                    return !(hidden || !onClick(event, hover));
                 }
             }
         }
@@ -142,11 +142,11 @@ namespace Birdy3d {
             if (hidden)
                 hover = false;
             if (shapes.empty())
-                return onKey(event, hover);
+                return !(hidden || !onKey(event, hover));
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : shapes) {
                 if (s->contains(cursorPos - actualPos)) {
-                    return onKey(event, hover);
+                    return !(hidden || !onKey(event, hover));
                 }
             }
         }
@@ -159,11 +159,11 @@ namespace Birdy3d {
             if (hidden)
                 hover = false;
             if (shapes.empty())
-                return onChar(event, hover);
+                return !(hidden || !onChar(event, hover));
             glm::vec2 cursorPos = Input::cursorPos();
             for (Shape* s : this->shapes) {
                 if (s->contains(cursorPos - actualPos)) {
-                    return onChar(event, hover);
+                    return !(hidden || !onChar(event, hover));
                 }
             }
         }

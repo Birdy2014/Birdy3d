@@ -4,6 +4,7 @@
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 #include "ui/Widget.hpp"
+#include <functional>
 
 namespace Birdy3d {
 
@@ -26,7 +27,7 @@ namespace Birdy3d {
             return glm::max(minSize, Widget::minimalSize());
         }
 
-        void (*clickCallback)(InputClickEvent*) = nullptr;
+        std::function<void(InputClickEvent*)> clickCallback;
 
     protected:
         bool onClick(InputClickEvent* event, bool hover) override {

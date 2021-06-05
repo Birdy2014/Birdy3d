@@ -21,6 +21,8 @@ namespace Birdy3d {
     }
 
     void Window::draw() {
+        if (hidden)
+            return;
         Widget::draw();
         if (child)
             child->draw();
@@ -51,7 +53,7 @@ namespace Birdy3d {
         hoverResizeY = false;
 
         if (hover && !closeButton->contains(localCursorPos)) {
-            if (localCursorPos.y > actualSize.y - BAR_HEIGHT)
+            if (localCursorPos.y >= actualSize.y - BAR_HEIGHT)
                 hoverDrag = true;
 
             if (localCursorPos.y < actualSize.y - BAR_HEIGHT) {
