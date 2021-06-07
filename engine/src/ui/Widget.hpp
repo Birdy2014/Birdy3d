@@ -13,6 +13,14 @@ namespace Birdy3d {
 
     class Widget {
     public:
+        enum class EventType {
+            UPDATE,
+            SCROLL,
+            CLICK,
+            KEY,
+            CHAR
+        };
+
         std::string name;
         bool hidden = false;
         UIVector pos;
@@ -52,12 +60,7 @@ namespace Birdy3d {
         }
 
         // External Event calls
-        bool _update(bool hover);
-        bool _onScroll(InputScrollEvent* event, bool hover);
-        bool _onClick(InputClickEvent* event, bool hover);
-        bool _onKey(InputKeyEvent* event, bool hover);
-        bool _onChar(InputCharEvent* event, bool hover);
-
+        bool notifyEvent(EventType type, Event* event, bool hover);
         virtual void lateUpdate();
 
     protected:

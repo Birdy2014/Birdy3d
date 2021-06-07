@@ -42,7 +42,7 @@ namespace Birdy3d {
 
     bool Window::update(bool hover) {
         if (child && !dragging && !resizeXL && !resizeXR && !resizeY)
-            if (child->_update(hover))
+            if (child->notifyEvent(EventType::UPDATE, nullptr, hover))
                 return true;
 
         glm::vec2 localCursorPos = Input::cursorPos() - actualPos;
@@ -115,12 +115,12 @@ namespace Birdy3d {
 
     bool Window::onScroll(InputScrollEvent* event, bool hover) {
         if (child)
-            child->_onScroll(event, hover);
+            child->notifyEvent(EventType::SCROLL, event, hover);
         return true;
     }
 
     bool Window::onClick(InputClickEvent* event, bool hover) {
-        if (child && child->_onClick(event, hover))
+        if (child && child->notifyEvent(EventType::CLICK, event, hover))
             hover = false;
 
         if (event->button != GLFW_MOUSE_BUTTON_LEFT || (!hover && event->action != GLFW_RELEASE))
@@ -161,13 +161,13 @@ namespace Birdy3d {
 
     bool Window::onKey(InputKeyEvent* event, bool hover) {
         if (child)
-            child->_onKey(event, hover);
+            child->notifyEvent(EventType::KEY, event, hover);
         return true;
     }
 
     bool Window::onChar(InputCharEvent* event, bool hover) {
         if (child)
-            child->_onChar(event, hover);
+            child->notifyEvent(EventType::CHAR, event, hover);
         return true;
     }
 

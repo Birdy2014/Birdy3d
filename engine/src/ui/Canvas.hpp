@@ -22,7 +22,7 @@ namespace Birdy3d {
             if (!hidden) {
                 updated = true;
                 glm::vec2 viewport = Application::getViewportSize();
-                AbsoluteLayout::_update(true);
+                AbsoluteLayout::notifyEvent(EventType::UPDATE, nullptr, true);
                 AbsoluteLayout::lateUpdate();
                 AbsoluteLayout::arrange(glm::vec2(0), viewport);
             }
@@ -35,19 +35,19 @@ namespace Birdy3d {
 
     private:
         void onScroll(InputScrollEvent* event) {
-            Layout::_onScroll(event, true);
+            Layout::notifyEvent(EventType::SCROLL, event, true);
         }
 
         void onClick(InputClickEvent* event) {
-            Layout::_onClick(event, true);
+            Layout::notifyEvent(EventType::CLICK, event, true);
         }
 
         void onKey(InputKeyEvent* event) {
-            Layout::_onKey(event, true);
+            Layout::notifyEvent(EventType::KEY, event, true);
         }
 
         void onChar(InputCharEvent* event) {
-            Layout::_onChar(event, true);
+            Layout::notifyEvent(EventType::CHAR, event, true);
         }
     };
 

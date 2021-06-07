@@ -78,96 +78,40 @@ namespace Birdy3d {
         return glm::translate(move, glm::vec3(actualPos, 0.0f));
     }
 
-    bool Widget::_update(bool hover) {
+    bool Widget::notifyEvent(EventType type, Event* event, bool hover) {
+        auto callHandler = [&]() {
+            switch (type) {
+            case EventType::UPDATE:
+                return update(hover);
+            case EventType::SCROLL:
+                return onScroll((InputScrollEvent*)event, hover);
+            case EventType::CLICK:
+                return onClick((InputClickEvent*)event, hover);
+            case EventType::KEY:
+                return onKey((InputKeyEvent*)event, hover);
+            case EventType::CHAR:
+                return onChar((InputCharEvent*)event, hover);
+            }
+        };
+
         if (hover) {
             if (hidden)
                 hover = false;
-            if (shapes.empty())
-                return !(hidden || !update(hover));
             glm::vec2 cursorPos = Input::cursorPos();
-            for (Shape* s : this->shapes) {
-                if (s->contains(cursorPos - actualPos)) {
-                    if (!hoveredLastFrame) {
+            if (cursorPos.x > actualPos.x && cursorPos.y > actualPos.y && cursorPos.x < actualPos.x + actualSize.x && cursorPos.y < actualPos.y + actualSize.y) {
+                    if (type == EventType::UPDATE && !hoveredLastFrame) {
                         runMouseEnter = true;
                         hoveredLastFrame = true;
                     }
-                    return !(hidden || !update(hover));
-                }
+                    return !(hidden || !callHandler());
             }
         }
-        update(false);
-        if (hoveredLastFrame) {
+        hover = false;
+        callHandler();
+        if (type == EventType::UPDATE && hoveredLastFrame) {
             onMouseLeave();
             hoveredLastFrame = false;
         }
-        return false;
-    }
-
-    bool Widget::_onScroll(InputScrollEvent* event, bool hover) {
-        if (hover) {
-            if (hidden)
-                hover = false;
-            if (shapes.empty())
-                return !(hidden || !onScroll(event, hover));
-            glm::vec2 cursorPos = Input::cursorPos();
-            for (Shape* s : this->shapes) {
-                if (s->contains(cursorPos - actualPos)) {
-                    return !(hidden || !onScroll(event, hover));
-                }
-            }
-        }
-        onScroll(event, false);
-        return false;
-    }
-
-    bool Widget::_onClick(InputClickEvent* event, bool hover) {
-        if (hover) {
-            if (hidden)
-                hover = false;
-            if (shapes.empty())
-                return !(hidden || !onClick(event, hover));
-            glm::vec2 cursorPos = Input::cursorPos();
-            for (Shape* s : shapes) {
-                if (s->contains(cursorPos - actualPos)) {
-                    return !(hidden || !onClick(event, hover));
-                }
-            }
-        }
-        onClick(event, false);
-        return false;
-    }
-
-    bool Widget::_onKey(InputKeyEvent* event, bool hover) {
-        if (hover) {
-            if (hidden)
-                hover = false;
-            if (shapes.empty())
-                return !(hidden || !onKey(event, hover));
-            glm::vec2 cursorPos = Input::cursorPos();
-            for (Shape* s : shapes) {
-                if (s->contains(cursorPos - actualPos)) {
-                    return !(hidden || !onKey(event, hover));
-                }
-            }
-        }
-        onKey(event, false);
-        return false;
-    }
-
-    bool Widget::_onChar(InputCharEvent* event, bool hover) {
-        if (hover) {
-            if (hidden)
-                hover = false;
-            if (shapes.empty())
-                return !(hidden || !onChar(event, hover));
-            glm::vec2 cursorPos = Input::cursorPos();
-            for (Shape* s : this->shapes) {
-                if (s->contains(cursorPos - actualPos)) {
-                    return !(hidden || !onChar(event, hover));
-                }
-            }
-        }
-        onChar(event, false);
         return false;
     }
 

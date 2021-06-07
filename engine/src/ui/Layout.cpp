@@ -32,7 +32,7 @@ namespace Birdy3d {
 
     bool Layout::onScroll(InputScrollEvent* event, bool hover) {
         for (std::vector<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->_onScroll(event, hover))
+            if ((*it)->notifyEvent(EventType::SCROLL, event, hover))
                 hover = false;
         }
 
@@ -41,7 +41,7 @@ namespace Birdy3d {
 
     bool Layout::onClick(InputClickEvent* event, bool hover) {
         for (std::vector<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->_onClick(event, hover))
+            if ((*it)->notifyEvent(EventType::CLICK, event, hover))
                 hover = false;
         }
 
@@ -50,7 +50,7 @@ namespace Birdy3d {
 
     bool Layout::onKey(InputKeyEvent* event, bool hover) {
         for (std::vector<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->_onKey(event, hover))
+            if ((*it)->notifyEvent(EventType::KEY, event, hover))
                 hover = false;
         }
 
@@ -59,7 +59,7 @@ namespace Birdy3d {
 
     bool Layout::onChar(InputCharEvent* event, bool hover) {
         for (std::vector<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->_onChar(event, hover))
+            if ((*it)->notifyEvent(EventType::CHAR, event, hover))
                 hover = false;
         }
 
@@ -68,7 +68,7 @@ namespace Birdy3d {
 
     bool Layout::update(bool hover) {
         for (std::vector<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->_update(hover))
+            if ((*it)->notifyEvent(EventType::UPDATE, nullptr, hover))
                 hover = false;
         }
 
