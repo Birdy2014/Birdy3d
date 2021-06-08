@@ -28,6 +28,7 @@ namespace Birdy3d {
         Placement placement;
         Theme* theme;
         float weight = 1; // Size ratio in DirectionalLayout. 0 means stay on minimum size
+        Widget* parent;
 
         Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Theme* theme = Application::defaultTheme, std::string name = "");
         virtual ~Widget();

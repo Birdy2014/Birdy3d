@@ -8,6 +8,7 @@ namespace Birdy3d {
     public:
         Layout(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Theme* theme = Application::defaultTheme, std::string name = "");
         void addChild(Widget* w);
+        void toForeground(Widget* w);
         void draw() override;
         virtual void arrange(glm::vec2 pos, glm::vec2 size) override = 0;
 
@@ -31,7 +32,7 @@ namespace Birdy3d {
         }
 
     protected:
-        std::vector<Widget*> children;
+        std::list<Widget*> children;
 
         virtual void lateUpdate();
 

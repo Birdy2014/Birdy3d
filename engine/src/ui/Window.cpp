@@ -1,6 +1,7 @@
 #include "ui/Window.hpp"
 
 #include "core/Input.hpp"
+#include "ui/Layout.hpp"
 #include "ui/Theme.hpp"
 
 namespace Birdy3d {
@@ -20,6 +21,12 @@ namespace Birdy3d {
         }
     }
 
+    void Window::toForeground() {
+        Layout* layout = dynamic_cast<Layout*>(parent);
+        if (layout)
+            layout->toForeground(this);
+    }
+
     void Window::draw() {
         if (hidden)
             return;
@@ -30,7 +37,9 @@ namespace Birdy3d {
 
     glm::vec2 Window::minimalSize() {
         glm::vec2 minSelf = glm::vec2(BAR_HEIGHT + BORDER_SIZE + 10);
-        glm::vec2 minChild = child->minimalSize();
+        glm::vec2 minChild(0);
+        if (child)
+            minChild = child->minimalSize();
         return glm::vec2(std::max(minSelf.x, minChild.x), std::max(minSelf.y, minChild.y));
     }
 
@@ -120,6 +129,9 @@ namespace Birdy3d {
     }
 
     bool Window::onClick(InputClickEvent* event, bool hover) {
+        if (hover && event->button == GLFW_MOUSE_BUTTON_LEFT && event->action == GLFW_PRESS)
+            toForeground();
+
         if (child && child->notifyEvent(EventType::CLICK, event, hover))
             hover = false;
 
@@ -132,7 +144,7 @@ namespace Birdy3d {
             return true;
         }
 
-        if (event->action == GLFW_RELEASE && (dragging || resizeXL || resizeXR || resizeY)) {
+        if (event->action == GLFW_RELEASE) {
             dragging = false;
             resizeXL = false;
             resizeXR = false;

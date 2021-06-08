@@ -11,7 +11,7 @@ namespace Birdy3d {
     void DirectionalLayout::arrange(glm::vec2 pos, glm::vec2 size) {
         Widget::arrange(pos, size);
 
-        std::vector<Widget*> smallerWidgets = children;
+        std::list<Widget*> smallerWidgets = children;
         float gapps = gap * (children.size() - 1);
         float weights = 0;
         float widgetSize;
@@ -29,16 +29,20 @@ namespace Birdy3d {
         bool done = false;
         while (!done) {
             done = true;
-            for (size_t i = 0; i < smallerWidgets.size(); i++) {
-                Widget* w = smallerWidgets[i];
+            size_t i = 0;
+            for (std::list<Widget*>::iterator it = smallerWidgets.begin(); it != smallerWidgets.end();) {
+                Widget* w = *it;
                 float currentWidgetSize = (horizontal ? w->minimalSize().x : w->minimalSize().y);
                 if (widgetSize * w->weight < currentWidgetSize) {
-                    smallerWidgets.erase(smallerWidgets.begin() + i);
+                    smallerWidgets.erase(it++);
                     i--;
                     weights -= w->weight;
                     widgetSize -= ((currentWidgetSize - widgetSize * w->weight) / weights);
                     done = false;
+                } else {
+                    it++;
                 }
+                i++;
             }
         }
 
