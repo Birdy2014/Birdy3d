@@ -30,14 +30,7 @@ namespace Birdy3d {
     }
 
     void Textarea::draw() {
-        glEnable(GL_STENCIL_TEST);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glStencilMask(0xFF); // If glStencilMask(0xFF) is not called before glClear, stuff breaks
-        glClear(GL_STENCIL_BUFFER_BIT);
         Widget::draw();
-        glStencilFunc(GL_EQUAL, 1, 0xFF);
-        glStencilMask(0x00);
         if (selecting)
             updateCursorEnd();
         int linec = actualSize.y / theme->lineHeight;
@@ -73,7 +66,6 @@ namespace Birdy3d {
                 renderer->renderText(lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == textCursorY ? textCursorX : -1, highlightstart, highlightend - 1, "#0000a050");
             }
         }
-        glDisable(GL_STENCIL_TEST);
     }
 
     void Textarea::updateLines() {

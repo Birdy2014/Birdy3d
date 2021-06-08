@@ -44,6 +44,8 @@ namespace Birdy3d {
         if (hidden)
             return;
 
+        glScissor(actualPos.x, actualPos.y, actualSize.x, actualSize.y);
+
         glm::mat4 move = normalizedMove();
 
         for (Shape* s : this->shapes) {

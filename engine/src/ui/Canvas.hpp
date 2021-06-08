@@ -29,8 +29,11 @@ namespace Birdy3d {
         }
 
         void draw() override {
-            if (updated)
+            if (updated) {
+                glEnable(GL_SCISSOR_TEST);
                 AbsoluteLayout::draw();
+                glDisable(GL_SCISSOR_TEST);
+            }
         }
 
     private:
