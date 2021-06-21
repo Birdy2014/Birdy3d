@@ -3,8 +3,8 @@
 #include "core/Component.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+#include "render/Material.hpp"
 #include "render/Model.hpp"
-#include "render/ModelOptions.hpp"
 #include <string>
 
 namespace Birdy3d {
@@ -13,12 +13,11 @@ namespace Birdy3d {
     public:
         Model* model;
         std::string name;
-        ModelOptions options;
+        Material* material;
 
-        ModelComponent(const std::string& name, bool useTexture = true, glm::vec4 color = glm::vec4(0), float specular = 1, glm::vec3 emissive = glm::vec3(0))
-            : name(name) {
-            this->options = ModelOptions(useTexture, color, specular, emissive);
-        }
+        ModelComponent(const std::string& name, Material* material)
+            : name(name)
+            , material(material) { }
 
         void start() override {
             this->model = RessourceManager::getModel(name);
@@ -26,7 +25,7 @@ namespace Birdy3d {
 
         void render(Shader* shader, bool transparent) {
             if (this->model)
-                this->model->render(this->object, options, shader, transparent);
+                this->model->render(this->object, *material, shader, transparent);
             else
                 Logger::error("No model specified");
         }

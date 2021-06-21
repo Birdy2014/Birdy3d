@@ -58,7 +58,7 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDi
 
     // specular lighting
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess * 32) * shininess;
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess) * 0.3;
     vec3 specular = light.diffuse * spec;
 
     vec3 lighting = diffuse + specular;
@@ -104,7 +104,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
 
     // specular lighting
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess * 32) * shininess;
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess) * 0.3;
     vec3 specular = light.diffuse * spec;
 
     vec3 lighting = diffuse + specular;
@@ -135,7 +135,7 @@ vec3 calcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
 
     // specular lighting
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess * 32) * shininess;
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess) * 0.3;
     vec3 specular = light.diffuse * spec * intensity * attenuation;
 
     vec3 lighting = diffuse + specular;

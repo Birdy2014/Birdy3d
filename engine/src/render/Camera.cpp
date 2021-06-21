@@ -44,19 +44,19 @@ namespace Birdy3d {
             this->deferredLightShader->use();
             this->deferredLightShader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 3);
             this->forwardShader->use();
-            this->forwardShader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 3);
+            this->forwardShader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 4);
         }
         for (int i = 0; i < Shader::MAX_POINTLIGHTS; i++) {
             this->deferredLightShader->use();
             this->deferredLightShader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
             this->forwardShader->use();
-            this->forwardShader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            this->forwardShader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         }
         for (int i = 0; i < Shader::MAX_SPOTLIGHTS; i++) {
             this->deferredLightShader->use();
             this->deferredLightShader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
             this->forwardShader->use();
-            this->forwardShader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            this->forwardShader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
         }
     }
 
@@ -203,11 +203,11 @@ namespace Birdy3d {
         this->deferredLightShader->setInt("nr_pointlights", pointLights.size());
         this->deferredLightShader->setInt("nr_spotlights", spotlights.size());
         for (int i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(this->deferredLightShader, i, i);
+            dirLights[i]->use(this->deferredLightShader, i, 3 + i);
         for (int i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(this->deferredLightShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            pointLights[i]->use(this->deferredLightShader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (int i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(this->deferredLightShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            spotlights[i]->use(this->deferredLightShader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         this->deferredLightShader->setVec3("viewPos", absPos);
         renderQuad();
@@ -230,11 +230,11 @@ namespace Birdy3d {
         this->forwardShader->setInt("nr_pointlights", pointLights.size());
         this->forwardShader->setInt("nr_spotlights", spotlights.size());
         for (int i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(this->forwardShader, i, i);
+            dirLights[i]->use(this->forwardShader, i, 4 + i);
         for (int i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(this->forwardShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            pointLights[i]->use(this->forwardShader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (int i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(this->forwardShader, i, Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            spotlights[i]->use(this->forwardShader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         if (renderOpaque) {

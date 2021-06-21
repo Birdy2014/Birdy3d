@@ -23,6 +23,7 @@ namespace Birdy3d {
     std::unordered_map<std::string, TextRenderer*> RessourceManager::textRenderers;
     std::unordered_map<std::string, Model*> RessourceManager::models;
     std::unordered_map<std::string, Texture*> RessourceManager::textures;
+    std::map<Color, Texture*> RessourceManager::m_color_textures;
 
     Shader* RessourceManager::getShader(const std::string& name) {
         Shader* shader = shaders[name];
@@ -54,12 +55,21 @@ namespace Birdy3d {
         return model;
     }
 
-    Texture* RessourceManager::getTexture(const std::string& name, const std::string& type) {
+    Texture* RessourceManager::getTexture(const std::string& name) {
         Texture* texture = textures[name];
         if (!texture) {
             std::string path = getRessourcePath(name, RessourceType::TEXTURE);
-            texture = new Texture(path, type, name);
+            texture = new Texture(path);
             textures[name] = texture;
+        }
+        return texture;
+    }
+
+    Texture* RessourceManager::getColorTexture(const Color& color) {
+        Texture* texture = m_color_textures[color];
+        if (!texture) {
+            texture = new Texture(color);
+            m_color_textures[color] = texture;
         }
         return texture;
     }

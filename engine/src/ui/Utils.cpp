@@ -126,58 +126,6 @@ namespace Birdy3d {
         return glm::vec2(x, y);
     }
 
-    Color::Color() {
-        value = glm::vec4(0, 0, 0, 1);
-    }
-
-    Color::Color(const std::string& color) {
-        value = parse(color);
-    }
-
-    Color::Color(const char* color) {
-        value = parse(std::string(color));
-    }
-
-    Color::Color(glm::vec4 color) {
-        value = color;
-    }
-
-    Color::operator glm::vec4() {
-        return value;
-    }
-
-    Color& Color::operator=(const std::string& color) {
-        value = parse(color);
-        return *this;
-    }
-
-    glm::vec4 Color::parse(const std::string& colorString) {
-        bool hasHash = false;
-        if (colorString.at(0) == '#')
-            hasHash = true;
-
-        size_t colorLength;
-        if (colorString.length() == 6 + hasHash || colorString.length() == 8 + hasHash) {
-            colorLength = 2;
-        } else if (colorString.length() == 3 + hasHash) {
-            colorLength = 1;
-        } else {
-            Logger::warn("Invalid color: " + colorString);
-            return glm::vec4(1);
-        }
-
-        glm::vec4 color(1);
-
-        for (size_t pos = hasHash; pos < colorString.length(); pos += colorLength) {
-            int nr = std::stoi(colorString.substr(pos, colorLength), nullptr, 16);
-            color[pos / colorLength] = nr / std::pow(16, colorLength);
-        }
-        return color;
-    }
-
-    Color Color::WHITE = Color("#FFFFFFFF");
-    Color Color::BLACK = Color("#000000FF");
-
     glm::vec2 Utils::getRelativePosition(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement) {
         glm::vec2 p = pos.toPixels(parentSize);
         glm::vec2 s = size.toPixels(parentSize);

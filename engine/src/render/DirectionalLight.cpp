@@ -45,10 +45,10 @@ namespace Birdy3d {
         lightShader->setVec3(name + "direction", this->object->absForward());
         lightShader->setVec3(name + "ambient", ambient);
         lightShader->setVec3(name + "diffuse", diffuse);
-        glActiveTexture(GL_TEXTURE3 + textureid);
+        glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_2D, depthMap);
         lightShader->setMat4(name + "lightSpaceMatrix", lightSpaceMatrix);
-        lightShader->setInt(name + "shadowMap", 3 + textureid);
+        lightShader->setInt(name + "shadowMap", textureid);
     }
 
     void DirectionalLight::genShadowMap(Shader* lightShader, int id, int textureid) {

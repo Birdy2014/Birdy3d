@@ -42,21 +42,16 @@ in mat3 TBN;
 uniform sampler2D texture_diffuse;
 uniform sampler2D texture_specular;
 uniform sampler2D texture_normal;
-uniform bool hasDiffuse;
-uniform bool hasSpecular;
-uniform bool hasNormal;
-uniform bool hasEmissive;
-uniform vec4 color;
-uniform float specular;
 uniform vec3 viewPos;
 
 #include includes/lighting
+#include includes/material.glsl
 
 void main() {
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec4 var_diffuse = hasDiffuse ? texture(texture_diffuse, TexCoords).rgba : color;
-    float var_specular = hasSpecular ? texture(texture_specular, TexCoords).r : specular;
-    vec3 var_normal = hasNormal ? normalize(TBN * texture(texture_normal, TexCoords).rgb * 2.0 - 1.0) : Normal;
+    vec4 var_diffuse = texture(material.diffuse_map, TexCoords).rgba;
+    float var_specular = texture(material.specular_map, TexCoords).r * 255;
+    vec3 var_normal = material.has_normal_map ? normalize(TBN * texture(material.normal_map, TexCoords).rgb * 2.0 - 1.0) : Normal;
     if (var_diffuse.a < 0.1)
         discard;
 

@@ -85,10 +85,10 @@ namespace Birdy3d {
         lightShader->setFloat(name + "outerCutOff", glm::cos(this->outerCutOff));
         lightShader->setFloat(name + "linear", this->linear);
         lightShader->setFloat(name + "quadratic", this->quadratic);
-        glActiveTexture(GL_TEXTURE3 + textureid);
+        glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_2D, depthMap);
         lightShader->setMat4(name + "lightSpaceMatrix", lightSpaceMatrix);
-        lightShader->setInt(name + "shadowMap", 3 + textureid);
+        lightShader->setInt(name + "shadowMap", textureid);
     }
 
 }

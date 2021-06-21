@@ -41,33 +41,16 @@ in vec3 FragPos;
 in vec3 Normal;
 in mat3 TBN;
 
-uniform sampler2D texture_diffuse;
-uniform sampler2D texture_specular;
-uniform sampler2D texture_normal;
-uniform bool hasDiffuse;
-uniform bool hasSpecular;
-uniform bool hasNormal;
-uniform bool hasEmissive;
-uniform vec4 color;
-uniform float specular;
+#include includes/material.glsl
 
 void main() {
     gPosition = FragPos;
-    if (hasDiffuse)
-        gAlbedoSpec.rgb = texture(texture_diffuse, TexCoords).rgb;
-    else
-        gAlbedoSpec.rgb = color.rgb;
+    gAlbedoSpec.rgb = texture(material.diffuse_map, TexCoords).rgb;
 
-    if (hasNormal)
-        gNormal = normalize(TBN * texture(texture_normal, TexCoords).rgb * 2.0 - 1.0);
+    if (material.has_normal_map)
+        gNormal = normalize(TBN * texture(material.normal_map, TexCoords).rgb * 2.0 - 1.0);
     else
         gNormal = normalize(Normal);
 
-    if (hasSpecular)
-        gAlbedoSpec.a = texture(texture_specular, TexCoords).r;
-    else
-        gAlbedoSpec.a = specular;
-
-    if (gAlbedoSpec.a < 0.1)
-        discard;
+    gAlbedoSpec.a = texture(material.specular_map, TexCoords).r;
 }

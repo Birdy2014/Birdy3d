@@ -52,9 +52,9 @@ namespace Birdy3d {
         lightShader->setVec3(name + "diffuse", diffuse);
         lightShader->setFloat(name + "linear", linear);
         lightShader->setFloat(name + "quadratic", quadratic);
-        glActiveTexture(GL_TEXTURE3 + textureid);
+        glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
-        lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", 3 + textureid);
+        lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", textureid);
         lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
     }
 

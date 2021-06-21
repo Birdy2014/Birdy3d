@@ -18,13 +18,13 @@ namespace Birdy3d {
         load();
     }
 
-    void Model::render(GameObject* object, ModelOptions options, Shader* shader, bool transparent) {
+    void Model::render(GameObject* object, const Material& material, Shader* shader, bool transparent) {
         glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
         for (Mesh* m : this->meshes) {
-            if (transparent == m->hasTransparency(options))
-                m->render(shader, options);
+            if (transparent == material.transparent())
+                m->render(shader, material);
         }
     }
 
@@ -105,6 +105,7 @@ namespace Birdy3d {
         }
 
         // process material
+        /*
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         aiString path;
 
@@ -132,8 +133,9 @@ namespace Birdy3d {
             material->GetTexture(aiTextureType_EMISSIVE, 0, &path);
             textures.push_back(RessourceManager::getTexture(directory + "/" + path.C_Str(), "texture_emissive"));
         }
+        */
 
-        return new Mesh(vertices, indices, textures);
+        return new Mesh(vertices, indices);
     }
 
     Model::~Model() {

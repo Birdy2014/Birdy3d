@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/ModelOptions.hpp"
+#include "render/Material.hpp"
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
 #include <vector>
@@ -13,13 +13,11 @@ namespace Birdy3d {
     public:
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture*> textures;
 
-        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures);
+        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
         ~Mesh();
-        void render(Shader* shader, const ModelOptions& options);
+        void render(Shader* shader, const Material& material);
         void renderDepth();
-        bool hasTransparency(const ModelOptions& options);
 
     private:
         unsigned int VAO, VBO, EBO;

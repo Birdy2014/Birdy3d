@@ -28,7 +28,7 @@ void main() {
     vec3 fragPos = texture(gPosition, TexCoord).rgb;
     vec3 normal = texture(gNormal, TexCoord).rgb;
     vec3 diffuse = texture(gAlbedoSpec, TexCoord).rgb;
-    float specular = texture(gAlbedoSpec, TexCoord).a;
+    float specular = texture(gAlbedoSpec, TexCoord).a * 255;
     vec3 viewDir = normalize(viewPos - fragPos);
 
     vec3 lighting = calcLights(normal, fragPos, viewDir, diffuse, specular);

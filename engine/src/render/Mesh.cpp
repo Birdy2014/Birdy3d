@@ -6,10 +6,9 @@
 
 namespace Birdy3d {
 
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures) {
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices) {
         this->vertices = vertices;
         this->indices = indices;
-        this->textures = textures;
 
         setupMesh();
     }
@@ -53,38 +52,24 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
-    void Mesh::render(Shader* shader, const ModelOptions& options) {
-        shader->setVec4("color", options.color);
-        shader->setFloat("specular", options.specular);
-        shader->setVec3("emissive", options.emissive);
-        bool hasDiffuse = false;
-        bool hasSpecular = false;
-        bool hasNormal = false;
-        bool hasHeight = false;
-        bool hasEmissive = false;
-        if (options.useTexture) {
-            for (unsigned int i = 0; i < textures.size(); i++) {
-                glActiveTexture(GL_TEXTURE0 + i);
-                std::string name = textures[i]->type;
-                if (name == "texture_diffuse") // diffuse map -> normal texture
-                    hasDiffuse = true;
-                else if (name == "texture_specular") // specular map -> light intensity
-                    hasSpecular = true;
-                else if (name == "texture_normal") // normal map -> stores normals, used to create smooth surfaces
-                    hasNormal = true;
-                else if (name == "texture_height") // height map -> store height information
-                    hasHeight = true;
-                else if (name == "texture_emissive") // emission map -> emit light (does not illuminate other objects)
-                    hasEmissive = true;
-                shader->setInt(name, i);
-                glBindTexture(GL_TEXTURE_2D, textures[i]->id);
-            }
-            glActiveTexture(GL_TEXTURE0);
-        }
-        shader->setBool("hasDiffuse", hasDiffuse);
-        shader->setBool("hasSpecular", hasSpecular);
-        shader->setBool("hasNormal", hasNormal);
-        shader->setBool("hasEmissive", hasEmissive);
+    void Mesh::render(Shader* shader, const Material& material) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, material.diffuse_map()->id);
+        shader->setInt("material.diffuse_map", 0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, material.specular_map()->id);
+        shader->setInt("material.specular_map", 1);
+
+        shader->setBool("material.has_normal_map", material.m_has_normal_map);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, material.normal_map()->id);
+        shader->setInt("material.normal_map", 2);
+
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, material.emissive_map()->id);
+        shader->setInt("material.emissive_map", 3);
+
         // draw mesh
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -95,18 +80,6 @@ namespace Birdy3d {
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-    }
-
-    bool Mesh::hasTransparency(const ModelOptions& options) {
-        if (options.useTexture) {
-            for (Texture* t : this->textures) {
-                if (t->nrChannels == 4)
-                    return true;
-            }
-            return false;
-        } else {
-            return options.color.a < 1;
-        }
     }
 
 }

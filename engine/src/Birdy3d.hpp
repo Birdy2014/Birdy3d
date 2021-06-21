@@ -24,7 +24,9 @@
 
 // Renderer
 #include "render/Camera.hpp"
+#include "render/Color.hpp"
 #include "render/DirectionalLight.hpp"
+#include "render/Material.hpp"
 #include "render/Model.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/PointLight.hpp"

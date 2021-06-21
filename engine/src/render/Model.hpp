@@ -1,7 +1,7 @@
 #pragma once
 
+#include "render/Material.hpp"
 #include "render/Mesh.hpp"
-#include "render/ModelOptions.hpp"
 #include <assimp/scene.h>
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@ namespace Birdy3d {
     public:
         Model(const std::string& path);
         ~Model();
-        void render(GameObject* object, ModelOptions options, Shader* shader, bool transparent);
+        void render(GameObject* object, const Material& material, Shader* shader, bool transparent);
         void renderDepth(GameObject* object, Shader* shader);
         const std::vector<Mesh*>& getMeshes();
 

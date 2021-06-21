@@ -1,7 +1,9 @@
 #pragma once
 
+#include "render/Color.hpp"
 #include <string>
 #include <unordered_map>
+#include <map>
 
 namespace Birdy3d {
 
@@ -22,7 +24,8 @@ namespace Birdy3d {
         static Shader* getShader(const std::string& name);
         static TextRenderer* getTextRenderer(const std::string& name);
         static Model* getModel(const std::string& name);
-        static Texture* getTexture(const std::string& name, const std::string& type);
+        static Texture* getTexture(const std::string& name);
+        static Texture* getColorTexture(const Color& color);
         static std::string getRessourcePath(std::string name, RessourceType type);
         static std::string readFile(const std::string& path, bool convertEOL = true);
 
@@ -31,6 +34,7 @@ namespace Birdy3d {
         static std::unordered_map<std::string, TextRenderer*> textRenderers;
         static std::unordered_map<std::string, Model*> models;
         static std::unordered_map<std::string, Texture*> textures;
+        static std::map<Color, Texture*> m_color_textures;
 
         static std::string getExecutableDir();
     };

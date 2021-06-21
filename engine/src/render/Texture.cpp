@@ -12,11 +12,10 @@ namespace Birdy3d {
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, pixelType, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        m_transparent = format == GL_RGBA;
     }
 
-    Texture::Texture(const std::string& filePath, const std::string& type, const std::string& name)
-        : type(type)
-        , name(name) {
+    Texture::Texture(const std::string& filePath) {
         unsigned char* data = stbi_load(filePath.data(), &this->width, &this->height, &this->nrChannels, 0);
 
         if (data) {
@@ -31,6 +30,8 @@ namespace Birdy3d {
                 format = GL_RGBA;
             else
                 Logger::error("Invalid number of texture channels: " + nrChannels);
+
+            m_transparent = format == GL_RGBA;
 
             glGenTextures(1, &id);
             glActiveTexture(GL_TEXTURE0);
@@ -48,14 +49,14 @@ namespace Birdy3d {
         stbi_image_free(data);
     }
 
-    // TODO: test this function and use it for Models without texture and solid color
-    Texture::Texture(unsigned char r, unsigned char g, unsigned char b, unsigned char a, const std::string& type) {
-        this->type = type;
-        unsigned char data[4] = { r, g, b, a };
+    Texture::Texture(const Color& color) {
+        glm::vec4 vec = color.value;
+        m_transparent = vec.a < 1;
+        float data[4] = { vec.r, vec.g, vec.b, vec.a };
         glGenTextures(1, &id);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, id);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -65,6 +66,10 @@ namespace Birdy3d {
 
     Texture::~Texture() {
         glDeleteTextures(1, &id);
+    }
+
+    bool Texture::transparent() {
+        return m_transparent;
     }
 
 }

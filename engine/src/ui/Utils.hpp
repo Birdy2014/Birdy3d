@@ -61,23 +61,6 @@ namespace Birdy3d {
         operator glm::vec2();
     };
 
-    class Color {
-    public:
-        static Color WHITE;
-        static Color BLACK;
-
-        Color();
-        Color(const std::string& color);
-        Color(const char* color);
-        Color(glm::vec4 color);
-        operator glm::vec4();
-        Color& operator=(const std::string& color);
-        static glm::vec4 parse(const std::string& colorString);
-
-    private:
-        glm::vec4 value;
-    };
-
     class Utils {
     public:
         static glm::vec2 getRelativePosition(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement);

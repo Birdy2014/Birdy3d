@@ -83,23 +83,29 @@ int main() {
     player->addComponent(new FPPlayerController());
     scene->addChild(player);
 
+    Material defaultMaterial;
+    Material redTransparentMaterial;
+    redTransparentMaterial.diffuse_color(glm::vec4(1.0f, 0.0f, 1.0f, 0.5f));
+    Material blueTransparentMaterial;
+    blueTransparentMaterial.diffuse_color(glm::vec4(0.0f, 1.0f, 1.0f, 0.5f));
+
     GameObject* obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-    obj->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 0.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+    obj->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", &redTransparentMaterial));
     obj->addComponent(new Collider());
     scene->addChild(obj);
 
     GameObject* obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-    obj2->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+    obj2->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", &defaultMaterial));
     scene->addChild(obj2);
 
     GameObject* obj3 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
-    obj3->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(0.0f, 1.0f, 1.0f, 0.5f), 1, glm::vec3(0.0f, 0.0f, 0.0f)));
+    obj3->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", &blueTransparentMaterial));
     obj3->addComponent(new Collider());
     scene->addChild(obj3);
 
     // Spheres
     GameObject* sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
-    sphere1->addComponent(new ModelComponent("./ressources/testObjects/sphere.obj", false, glm::vec4(1)));
+    sphere1->addComponent(new ModelComponent("./ressources/testObjects/sphere.obj", &defaultMaterial));
     sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 1)));
     sphere1->addComponent(new TestComponent());
     scene->addChild(sphere1);
@@ -132,8 +138,10 @@ int main() {
         float x = random(-30, 30);
         float y = random(-30, 30);
         float z = random(-30, 30);
+        Material* newMaterial = new Material();
+        newMaterial->diffuse_color(glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f));
         GameObject* newCube = new GameObject(glm::vec3(x, y, z));
-        newCube->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", false, glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f)));
+        newCube->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", newMaterial));
         scene->addChild(newCube);
         Logger::debug("Created cube at x: " + std::to_string(x) + " y: " + std::to_string(y) + " z: " + std::to_string(z));
     }, GLFW_KEY_N);
