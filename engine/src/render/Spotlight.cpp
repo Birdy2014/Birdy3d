@@ -39,7 +39,7 @@ namespace Birdy3d {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Spotlight::genShadowMap(Shader* lightShader, int id, int textureid) {
+    void Spotlight::genShadowMap() {
         glm::vec3 absPos = this->object->transform.worldPosition();
 
         GLint m_viewport[4];
@@ -72,7 +72,7 @@ namespace Birdy3d {
 
     void Spotlight::use(Shader* lightShader, int id, int textureid) {
         if (!shadowMapUpdated) {
-            genShadowMap(lightShader, id, textureid);
+            genShadowMap();
             shadowMapUpdated = true;
         }
         std::string name = "spotlights[" + std::to_string(id) + "].";

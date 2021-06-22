@@ -29,19 +29,19 @@ namespace Birdy3d {
         void onMouseLeave() override;
 
     private:
-        float tmpscroll;
-        std::u32string text;
-        std::vector<std::u32string> lines;
-        bool selecting = false;
-        int textCursor = -1;
-        int textCursorX = -1;
-        int textCursorY = -1;
-        int selectionStart = -1;
-        int selectionStartX = -1;
-        int selectionStartY = -1;
-        int selectionEnd = -1;
-        int selectionEndX = -1;
-        int selectionEndY = -1;
+        float m_tmpscroll;
+        std::u32string m_text;
+        std::vector<std::u32string> m_lines;
+        bool m_selecting = false;
+        int m_textCursor = -1;
+        int m_textCursorX = -1;
+        int m_textCursorY = -1;
+        int m_selectionStart = -1;
+        int m_selectionStartX = -1;
+        int m_selectionStartY = -1;
+        int m_selectionEnd = -1;
+        int m_selectionEndX = -1;
+        int m_selectionEndY = -1;
 
         void updateLines();
         void clearSelection();

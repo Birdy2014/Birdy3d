@@ -11,10 +11,10 @@
 #include <string>
 
 #ifdef __linux__
-#include <limits.h>
-#include <unistd.h>
+    #include <limits.h>
+    #include <unistd.h>
 #elif _WIN32
-#include <windows.h>
+    #include <windows.h>
 #endif
 
 namespace Birdy3d {

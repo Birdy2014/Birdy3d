@@ -1,9 +1,9 @@
 #pragma once
 
 #include "render/Color.hpp"
+#include <map>
 #include <string>
 #include <unordered_map>
-#include <map>
 
 namespace Birdy3d {
 

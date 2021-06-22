@@ -8,11 +8,11 @@
 namespace Birdy3d {
 
     Widget::Widget(UIVector pos, UIVector size, Placement placement, Theme* theme, std::string name)
-        : pos(pos)
+        : name(name)
+        , pos(pos)
         , size(size)
         , placement(placement)
-        , theme(theme)
-        , name(name) { }
+        , theme(theme) { }
 
     Widget::~Widget() {
         for (Shape* s : shapes) {
@@ -94,6 +94,7 @@ namespace Birdy3d {
             case EventType::CHAR:
                 return onChar((InputCharEvent*)event, hover);
             }
+            return false;
         };
 
         if (hover) {
@@ -101,11 +102,11 @@ namespace Birdy3d {
                 hover = false;
             glm::vec2 cursorPos = Input::cursorPos();
             if (cursorPos.x > actualPos.x && cursorPos.y > actualPos.y && cursorPos.x < actualPos.x + actualSize.x && cursorPos.y < actualPos.y + actualSize.y) {
-                    if (type == EventType::UPDATE && !hoveredLastFrame) {
-                        runMouseEnter = true;
-                        hoveredLastFrame = true;
-                    }
-                    return !(hidden || !callHandler());
+                if (type == EventType::UPDATE && !hoveredLastFrame) {
+                    runMouseEnter = true;
+                    hoveredLastFrame = true;
+                }
+                return !(hidden || !callHandler());
             }
         }
         hover = false;
@@ -124,23 +125,23 @@ namespace Birdy3d {
         }
     }
 
-    bool Widget::update(bool hover) {
+    bool Widget::update(bool) {
         return true;
     }
 
-    bool Widget::onScroll(InputScrollEvent* event, bool hover) {
+    bool Widget::onScroll(InputScrollEvent*, bool) {
         return true;
     }
 
-    bool Widget::onClick(InputClickEvent* event, bool hover) {
+    bool Widget::onClick(InputClickEvent*, bool) {
         return true;
     }
 
-    bool Widget::onKey(InputKeyEvent* event, bool hover) {
+    bool Widget::onKey(InputKeyEvent*, bool) {
         return true;
     }
 
-    bool Widget::onChar(InputCharEvent* event, bool hover) {
+    bool Widget::onChar(InputCharEvent*, bool) {
         return true;
     }
 

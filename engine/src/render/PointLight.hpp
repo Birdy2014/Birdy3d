@@ -8,7 +8,7 @@ namespace Birdy3d {
     public:
         PointLight(glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic);
         void setupShadowMap() override;
-        void genShadowMap(Shader* lightShader, int id, int textureid) override;
+        void genShadowMap() override;
         void use(Shader* lightShader, int id, int textureid) override;
 
     private:

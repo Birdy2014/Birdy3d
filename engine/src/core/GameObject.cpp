@@ -1,6 +1,5 @@
 #include "core/GameObject.hpp"
 
-#include "core/Component.hpp"
 #include "core/RessourceManager.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 

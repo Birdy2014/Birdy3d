@@ -49,7 +49,6 @@ namespace Birdy3d {
         float offset = 0;
         for (Widget* w : children) {
             float currentWidgetSize = std::max(widgetSize * w->weight, horizontal ? w->minimalSize().x : w->minimalSize().y);
-            glm::mat4 m;
             switch (dir) {
             case Direction::RIGHT:
                 w->arrange(pos + glm::vec2(offset, 0), glm::vec2(currentWidgetSize, size.y));

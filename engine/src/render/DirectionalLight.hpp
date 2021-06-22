@@ -8,7 +8,7 @@ namespace Birdy3d {
     public:
         DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse);
         void setupShadowMap() override;
-        void genShadowMap(Shader* lightShader, int id, int textureid) override;
+        void genShadowMap() override;
         void use(Shader* lightShader, int id, int textureid) override;
 
     private:

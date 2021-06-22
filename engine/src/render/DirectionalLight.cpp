@@ -36,7 +36,7 @@ namespace Birdy3d {
 
     void DirectionalLight::use(Shader* lightShader, int id, int textureid) {
         if (!shadowMapUpdated) {
-            genShadowMap(lightShader, id, textureid);
+            genShadowMap();
             shadowMapUpdated = true;
         }
         std::string name = "dirLights[" + std::to_string(id) + "].";
@@ -51,7 +51,7 @@ namespace Birdy3d {
         lightShader->setInt(name + "shadowMap", textureid);
     }
 
-    void DirectionalLight::genShadowMap(Shader* lightShader, int id, int textureid) {
+    void DirectionalLight::genShadowMap() {
         glm::vec3 absPos = this->object->transform.worldPosition();
 
         GLint m_viewport[4];

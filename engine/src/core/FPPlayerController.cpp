@@ -26,7 +26,6 @@ namespace Birdy3d {
         }
     }
 
-
     void FPPlayerController::cleanup() {
         Application::eventBus->unsubscribe(this, &FPPlayerController::onResize);
         if (menu) {

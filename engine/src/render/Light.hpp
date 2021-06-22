@@ -11,12 +11,12 @@ namespace Birdy3d {
     public:
         Light(Shader* depthShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, float innerCutOff, float outerCutOff);
         Light();
-        virtual void use(Shader* lightShader, int id, int textureid) {};
-        virtual void setupShadowMap() { }
-        virtual void genShadowMap(Shader* lightShader, int id, int textureid) { }
+        virtual void use(Shader* lightShader, int id, int textureid) = 0;
+        virtual void setupShadowMap() = 0;
+        virtual void genShadowMap() = 0;
         void start() override;
         void update() override;
-        void cleanup() override { }
+        void cleanup() override;
 
     protected:
         Shader* depthShader;

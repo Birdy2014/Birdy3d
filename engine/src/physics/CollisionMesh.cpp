@@ -16,7 +16,7 @@ namespace Birdy3d {
         float max = std::numeric_limits<float>::min();
         glm::vec3 furthestVertex = glm::vec3(transform * glm::vec4(vertices[0], 1.0f));
         glm::vec3 worldVertex;
-        for (int i = 0; i < vertices.size(); i++) {
+        for (size_t i = 0; i < vertices.size(); i++) {
             worldVertex = glm::vec3(transform * glm::vec4(vertices[i], 1.0f));
             float dot = glm::dot(worldVertex - absPos, direction);
             if (dot > max) {

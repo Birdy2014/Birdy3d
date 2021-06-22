@@ -1,11 +1,11 @@
 #pragma once
 
+#include "core/Component.hpp"
 #include "core/Transform.hpp"
 #include <vector>
 
 namespace Birdy3d {
 
-    class Component;
     class Shader;
 
     class GameObject {

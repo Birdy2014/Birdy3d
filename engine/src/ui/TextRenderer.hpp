@@ -46,11 +46,11 @@ namespace Birdy3d {
         float charWidth(char32_t c, float fontSize);
 
     private:
-        std::map<char, Character> chars;
-        FT_Library ft;
-        FT_Face face;
-        Rectangle* rect;
-        unsigned int fontSize;
+        std::map<char, Character> m_chars;
+        FT_Library m_ft;
+        FT_Face m_face;
+        Rectangle* m_rect;
+        unsigned int m_fontSize;
 
         bool addChar(char32_t c);
     };
@@ -70,7 +70,7 @@ namespace Birdy3d {
         bool contains(glm::vec2 point) override;
 
     private:
-        glm::vec2 relativePos;
+        glm::vec2 m_relativePos;
     };
 
 }

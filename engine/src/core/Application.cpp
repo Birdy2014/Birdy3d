@@ -59,7 +59,7 @@ namespace Birdy3d {
         glfwTerminate();
     }
 
-    void Application::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    void Application::framebuffer_size_callback(GLFWwindow*, int width, int height) {
         glViewport(0, 0, width, height);
         eventBus->emit(new WindowResizeEvent(width, height));
     }
@@ -73,19 +73,19 @@ namespace Birdy3d {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
-    void Application::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    void Application::scroll_callback(GLFWwindow*, double xoffset, double yoffset) {
         eventBus->emit(new InputScrollEvent(xoffset, yoffset));
     }
 
-    void Application::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    void Application::mouse_button_callback(GLFWwindow*, int button, int action, int mods) {
         eventBus->emit(new InputClickEvent(button, action, mods));
     }
 
-    void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    void Application::key_callback(GLFWwindow*, int key, int scancode, int action, int mods) {
         eventBus->emit(new InputKeyEvent(key, scancode, action, mods));
     }
 
-    void Application::character_callback(GLFWwindow* window, unsigned int codepoint) {
+    void Application::character_callback(GLFWwindow*, unsigned int codepoint) {
         eventBus->emit(new InputCharEvent(codepoint));
     }
 

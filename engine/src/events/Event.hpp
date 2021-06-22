@@ -6,11 +6,11 @@ namespace Birdy3d {
 
     class Event {
     public:
-        virtual bool forObject(GameObject* obj) {
+        virtual bool forObject(GameObject* obj [[maybe_unused]]) {
             return true;
         }
 
-        virtual bool checkOptions(int options) {
+        virtual bool checkOptions(int options [[maybe_unused]]) {
             return true;
         }
 

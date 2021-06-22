@@ -12,11 +12,11 @@ namespace Birdy3d {
 
         Canvas()
             : AbsoluteLayout(0_px, 100_p) {
-                Application::eventBus->subscribe(this, &Canvas::onScroll);
-                Application::eventBus->subscribe(this, &Canvas::onClick);
-                Application::eventBus->subscribe(this, &Canvas::onKey);
-                Application::eventBus->subscribe(this, &Canvas::onChar);
-            };
+            Application::eventBus->subscribe(this, &Canvas::onScroll);
+            Application::eventBus->subscribe(this, &Canvas::onClick);
+            Application::eventBus->subscribe(this, &Canvas::onKey);
+            Application::eventBus->subscribe(this, &Canvas::onChar);
+        };
 
         void update() {
             if (!hidden) {

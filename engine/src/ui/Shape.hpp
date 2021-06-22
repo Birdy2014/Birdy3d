@@ -21,57 +21,58 @@ namespace Birdy3d {
         Type type;
 
         Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
-            : _position(position)
-            , _size(size)
-            , _color(color)
-            , _placement(placement)
-            , texCoordA(texCoordA)
-            , texCoordB(texCoordB)
-            , name(name) { }
-        UIVector position() { return _position; }
+            : name(name)
+            , m_position(position)
+            , m_size(size)
+            , m_color(color)
+            , m_placement(placement)
+            , m_texCoordA(texCoordA)
+            , m_texCoordB(texCoordB) { }
+        virtual ~Shape() {};
+        UIVector position() { return m_position; }
         UIVector position(UIVector position) {
-            dirty = true;
-            return _position = position;
+            m_dirty = true;
+            return m_position = position;
         }
-        UIVector size() { return _size; }
+        UIVector size() { return m_size; }
         UIVector size(UIVector size) {
-            dirty = true;
-            return _size = size;
+            m_dirty = true;
+            return m_size = size;
         }
-        Color color() { return _color; }
-        Color color(Color color) { return _color = color; }
-        Placement placement() { return _placement; }
+        Color color() { return m_color; }
+        Color color(Color color) { return m_color = color; }
+        Placement placement() { return m_placement; }
         Placement placement(Placement placement) {
-            dirty = true;
-            return _placement = placement;
+            m_dirty = true;
+            return m_placement = placement;
         }
         glm::vec2 parentSize(glm::vec2 parentSize) {
-            dirty = true;
-            return _parentSize = parentSize;
+            m_dirty = true;
+            return m_parentSize = parentSize;
         }
-        unsigned int texture() { return _texture; }
-        unsigned int texture(unsigned int texture) { return _texture = texture; }
+        unsigned int texture() { return m_texture; }
+        unsigned int texture(unsigned int texture) { return m_texture = texture; }
         void texCoords(glm::vec2 a, glm::vec2 b) {
-            dirty = true;
-            texCoordA = a;
-            texCoordB = b;
+            m_dirty = true;
+            m_texCoordA = a;
+            m_texCoordB = b;
         }
         virtual void draw(glm::mat4 move) = 0;
         virtual bool contains(glm::vec2 point) = 0;
 
     protected:
-        Shader* shader;
-        unsigned int vao = 0;
-        unsigned int vbo = 0;
-        bool dirty = true;
-        UIVector _position;
-        UIVector _size;
-        Color _color;
-        unsigned int _texture = 0;
-        glm::vec2 texCoordA;
-        glm::vec2 texCoordB;
-        Placement _placement;
-        glm::vec2 _parentSize;
+        Shader* m_shader;
+        unsigned int m_vao = 0;
+        unsigned int m_vbo = 0;
+        bool m_dirty = true;
+        UIVector m_position;
+        UIVector m_size;
+        Color m_color;
+        Placement m_placement;
+        unsigned int m_texture = 0;
+        glm::vec2 m_texCoordA;
+        glm::vec2 m_texCoordB;
+        glm::vec2 m_parentSize;
     };
 
 }

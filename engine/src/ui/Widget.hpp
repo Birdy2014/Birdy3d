@@ -3,13 +3,13 @@
 #include "core/Application.hpp"
 #include "events/InputEvents.hpp"
 #include "render/Color.hpp"
+#include "ui/Shape.hpp"
 #include "ui/Utils.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
 namespace Birdy3d {
 
-    class Shape;
     class Theme;
 
     class Widget {
@@ -49,7 +49,7 @@ namespace Birdy3d {
 
         virtual void arrange(glm::vec2 pos, glm::vec2 size);
 
-        template<class T>
+        template <class T>
         T* getShape(std::string name = "") {
             for (Shape* s : this->shapes) {
                 if (name != "" && name != s->name)

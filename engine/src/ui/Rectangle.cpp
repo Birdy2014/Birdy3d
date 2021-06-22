@@ -8,35 +8,35 @@ namespace Birdy3d {
 
     Rectangle::Rectangle(UIVector pos, UIVector size, Color color, Type type, Placement placement)
         : Shape(pos, size, color, placement) {
-        this->shader = RessourceManager::getShader("ui");
+        m_shader = RessourceManager::getShader("ui");
         this->type = type;
     }
 
     Rectangle::~Rectangle() {
-        glDeleteBuffers(1, &vbo);
-        glDeleteVertexArrays(1, &vao);
+        glDeleteBuffers(1, &m_vbo);
+        glDeleteVertexArrays(1, &m_vao);
     }
 
     void Rectangle::draw(glm::mat4 move) {
-        if (!vao || !vbo)
-            this->createBuffers();
+        if (!m_vao || !m_vbo)
+            createBuffers();
 
-        if (dirty) {
-            dirty = false;
-            this->updateVBO();
+        if (m_dirty) {
+            m_dirty = false;
+            updateVBO();
         }
 
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->_texture);
-        this->shader->use();
-        this->shader->setInt("type", this->type);
-        this->shader->setMat4("move", move);
-        this->shader->setVec4("color", this->_color);
-        this->shader->setInt("rectTexture", 0);
-        glBindVertexArray(this->vao);
+        glBindTexture(GL_TEXTURE_2D, m_texture);
+        m_shader->use();
+        m_shader->setInt("type", type);
+        m_shader->setMat4("move", move);
+        m_shader->setVec4("color", m_color);
+        m_shader->setInt("rectTexture", 0);
+        glBindVertexArray(m_vao);
         if (type == Shape::OUTLINE)
             glDrawArrays(GL_LINE_LOOP, 0, 4);
         else
@@ -44,8 +44,8 @@ namespace Birdy3d {
     }
 
     bool Rectangle::contains(glm::vec2 point) {
-        glm::vec2 bottomLeft = Utils::getRelativePosition(_position, _size, _parentSize, _placement);
-        glm::vec2 size = _size.toPixels(_parentSize);
+        glm::vec2 bottomLeft = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 size = m_size.toPixels(m_parentSize);
         glm::vec2 topRight = bottomLeft + size;
         return point.x > bottomLeft.x && point.x < topRight.x && point.y > bottomLeft.y && point.y < topRight.y;
     }
@@ -53,11 +53,11 @@ namespace Birdy3d {
     void Rectangle::createBuffers() {
         float vertices[4 * 4];
         // Create buffers
-        glGenVertexArrays(1, &this->vao);
-        glGenBuffers(1, &this->vbo);
+        glGenVertexArrays(1, &m_vao);
+        glGenBuffers(1, &m_vbo);
         // Write to buffers
-        glBindVertexArray(this->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+        glBindVertexArray(m_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
         // vertex positions
         glEnableVertexAttribArray(0);
@@ -68,18 +68,18 @@ namespace Birdy3d {
     }
 
     void Rectangle::updateVBO() {
-        glBindVertexArray(this->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glm::vec2 pos = Utils::getRelativePosition(_position, _size, _parentSize, _placement);
+        glBindVertexArray(m_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glm::vec2 pos = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
         float x = pos.x;
         float y = pos.y;
-        glm::vec2 size = _size.toPixels(_parentSize);
+        glm::vec2 size = m_size.toPixels(m_parentSize);
         float w = size.x;
         float h = size.y;
-        float ua = texCoordA.x;
-        float va = texCoordA.y;
-        float ub = texCoordB.x;
-        float vb = texCoordB.y;
+        float ua = m_texCoordA.x;
+        float va = m_texCoordA.y;
+        float ub = m_texCoordB.x;
+        float vb = m_texCoordB.y;
         // clang-format off
         if (type == Shape::OUTLINE) {
             float vertices[] = {

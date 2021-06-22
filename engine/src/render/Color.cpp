@@ -36,14 +36,12 @@ namespace Birdy3d {
     }
 
     glm::vec4 Color::parse(const std::string& colorString) {
-        bool hasHash = false;
-        if (colorString.at(0) == '#')
-            hasHash = true;
+        bool hasHash = colorString.at(0) == '#';
 
-        size_t colorLength;
-        if (colorString.length() == 6 + hasHash || colorString.length() == 8 + hasHash) {
+        int colorLength;
+        if ((int)colorString.length() == 6 + hasHash || (int)colorString.length() == 8 + hasHash) {
             colorLength = 2;
-        } else if (colorString.length() == 3 + hasHash) {
+        } else if ((int)colorString.length() == 3 + hasHash) {
             colorLength = 1;
         } else {
             Logger::warn("Invalid color: " + colorString);

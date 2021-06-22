@@ -1,6 +1,5 @@
-#pragma once
-
 #include "ui/Layout.hpp"
+
 #include "ui/Shape.hpp"
 #include "ui/TextRenderer.hpp"
 

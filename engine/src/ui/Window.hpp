@@ -1,8 +1,8 @@
 #pragma once
 
 #include "events/InputEvents.hpp"
-#include "ui/Widget.hpp"
 #include "ui/Rectangle.hpp"
+#include "ui/Widget.hpp"
 
 namespace Birdy3d {
 
@@ -10,7 +10,7 @@ namespace Birdy3d {
     public:
         const int BORDER_SIZE = 4;
         const int BAR_HEIGHT = 14;
-        Widget* child;
+        Widget* child = nullptr;
 
         Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Theme* theme = Application::defaultTheme, std::string name = "");
         void arrange(glm::vec2 pos, glm::vec2 size) override;

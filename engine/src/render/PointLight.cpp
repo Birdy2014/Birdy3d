@@ -42,7 +42,7 @@ namespace Birdy3d {
 
     void PointLight::use(Shader* lightShader, int id, int textureid) {
         if (!shadowMapUpdated) {
-            genShadowMap(lightShader, id, textureid);
+            genShadowMap();
             shadowMapUpdated = true;
         }
         std::string name = "pointLights[" + std::to_string(id) + "].";
@@ -58,7 +58,7 @@ namespace Birdy3d {
         lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
     }
 
-    void PointLight::genShadowMap(Shader* lightShader, int id, int textureid) {
+    void PointLight::genShadowMap() {
         glm::vec3 absPos = this->object->transform.worldPosition();
 
         GLint m_viewport[4];

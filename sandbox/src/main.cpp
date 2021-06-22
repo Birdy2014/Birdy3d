@@ -1,4 +1,10 @@
 #include "Birdy3d.hpp"
+#include <cstdlib>
+#include <execinfo.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 using namespace Birdy3d;
 
@@ -14,14 +20,14 @@ public:
 
     void onCollision(CollisionEvent* event) {
         switch (event->type) {
-            case CollisionEvent::ENTER:
-                Logger::debug("ENTER");
-                break;
-            case CollisionEvent::COLLIDING:
-                break;
-            case CollisionEvent::EXIT:
-                Logger::debug("EXIT");
-                break;
+        case CollisionEvent::ENTER:
+            Logger::debug("ENTER");
+            break;
+        case CollisionEvent::COLLIDING:
+            break;
+        case CollisionEvent::EXIT:
+            Logger::debug("EXIT");
+            break;
         }
     }
 };
@@ -31,7 +37,22 @@ GameObject* player;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+void handler(int sig) {
+    void* array[10];
+    size_t size;
+
+    // get void*'s for all entries on the stack
+    size = backtrace(array, 10);
+
+    // print out all the frames to stderr
+    fprintf(stderr, "Error: signal %d:\n", sig);
+    backtrace_symbols_fd(array, size, STDERR_FILENO);
+    exit(1);
+}
+
 int main() {
+    signal(SIGSEGV, handler);
+
     if (!Application::init("Birdy3d", 800, 600)) {
         return -1;
     }
@@ -50,7 +71,7 @@ int main() {
     canvas.addChild(&menu);
 
     Button closeButton(0_px, Placement::BOTTOM_LEFT, "Close", 20);
-    closeButton.clickCallback = [](InputClickEvent* event) {
+    closeButton.clickCallback = [](InputClickEvent*) {
         glfwSetWindowShouldClose(Application::getWindow(), true);
     };
     menu.addChild(&closeButton);
@@ -111,9 +132,10 @@ int main() {
     scene->addChild(sphere1);
 
     bool collision = false;
-    Application::eventBus->subscribe<CollisionEvent>([&](CollisionEvent* event) {
+    Application::eventBus->subscribe<CollisionEvent>([&](CollisionEvent*) {
         collision = true;
-    }, sphere1, CollisionEvent::COLLIDING);
+    },
+        sphere1, CollisionEvent::COLLIDING);
 
     // Light
     GameObject* dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
@@ -126,11 +148,12 @@ int main() {
     sLight->addComponent(new Spotlight(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f));
     scene->addChild(sLight);
 
-    Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent* event) {
+    Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
         pLight->hidden = !pLight->hidden;
-    }, GLFW_KEY_L);
+    },
+        GLFW_KEY_L);
 
-    Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent* event) {
+    Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
         auto random = [](float min, float max) {
             float zeroToOne = ((float)std::rand() / (float)RAND_MAX);
             return zeroToOne * (std::abs(min) + std::abs(max)) + min;
@@ -144,7 +167,8 @@ int main() {
         newCube->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", newMaterial));
         scene->addChild(newCube);
         Logger::debug("Created cube at x: " + std::to_string(x) + " y: " + std::to_string(y) + " z: " + std::to_string(z));
-    }, GLFW_KEY_N);
+    },
+        GLFW_KEY_N);
 
     scene->setScene();
     scene->start();

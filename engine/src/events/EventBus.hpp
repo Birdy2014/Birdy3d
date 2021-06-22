@@ -18,13 +18,15 @@ namespace Birdy3d {
         HandlerFunctionBase(int options)
             : options(options) { }
 
+        virtual ~HandlerFunctionBase() {};
+
         virtual void exec(Event* event) = 0;
 
     protected:
         int options;
     };
 
-    template<class T, class EventType>
+    template <class T, class EventType>
     class MemberFunctionHandler : public HandlerFunctionBase {
     public:
         typedef void (T::*MemberFunction)(EventType*);
@@ -50,7 +52,7 @@ namespace Birdy3d {
         MemberFunction memberFunction;
     };
 
-    template<class EventType>
+    template <class EventType>
     class FunctionHandler : public HandlerFunctionBase {
     public:
         typedef std::function<void(EventType*)> HandlerFunction;
@@ -71,15 +73,15 @@ namespace Birdy3d {
 
     private:
         friend EventBus;
-        GameObject* target;
         HandlerFunction function;
+        GameObject* target;
     };
 
     typedef std::list<HandlerFunctionBase*> HandlerList;
 
     class EventBus {
     public:
-        template<typename EventType>
+        template <typename EventType>
         void emit(EventType* event) {
             eventQueue.push(event);
         }
@@ -90,7 +92,7 @@ namespace Birdy3d {
             }
         }
 
-        template<class T, class EventType>
+        template <class T, class EventType>
         void subscribe(T* instance, void (T::*memberFunction)(EventType*), int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
@@ -102,7 +104,7 @@ namespace Birdy3d {
             handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction, options));
         }
 
-        template<class EventType>
+        template <class EventType>
         void subscribe(std::function<void(EventType*)> func, GameObject* target = nullptr, int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
@@ -114,12 +116,12 @@ namespace Birdy3d {
             handlers->push_back(new FunctionHandler<EventType>(func, target, options));
         }
 
-        template<class EventType>
+        template <class EventType>
         void subscribe(std::function<void(EventType*)> func, int options) {
             subscribe(func, nullptr, options);
         }
 
-        template<class T, class EventType>
+        template <class T, class EventType>
         void unsubscribe(T* instance, void (T::*memberFunction)(EventType*), int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
@@ -140,7 +142,7 @@ namespace Birdy3d {
             }
         }
 
-        template<class EventType>
+        template <class EventType>
         void unsubscribe(std::function<void(EventType*)> func, GameObject* target = nullptr, int options = -1) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
@@ -161,7 +163,7 @@ namespace Birdy3d {
             }
         }
 
-        template<class EventType>
+        template <class EventType>
         void unsubscribe(std::function<void(EventType*)> func, int options) {
             unsubscribe(func, nullptr, options);
         }

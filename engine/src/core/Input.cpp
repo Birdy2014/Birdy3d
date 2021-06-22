@@ -41,7 +41,7 @@ namespace Birdy3d {
     }
 
     bool Input::buttonPressed(int button) {
-        glfwGetMouseButton(Application::getWindow(), button) == GLFW_PRESS;
+        return glfwGetMouseButton(Application::getWindow(), button) == GLFW_PRESS;
     }
 
     void Input::setCursorHidden(bool hidden) {

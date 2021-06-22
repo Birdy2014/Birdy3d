@@ -32,4 +32,6 @@ namespace Birdy3d {
         shadowMapUpdated = false;
     }
 
+    void Light::cleanup() { }
+
 }
