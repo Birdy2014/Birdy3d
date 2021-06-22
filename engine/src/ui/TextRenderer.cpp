@@ -26,7 +26,7 @@ namespace Birdy3d {
     bool TextRenderer::addChar(char32_t c) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         if (FT_Load_Char(m_face, c, FT_LOAD_RENDER)) {
-            Logger::warn("freetype: Failed to load Glyph " + (unsigned)c);
+            Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
             return false;
         }
         // generate texture

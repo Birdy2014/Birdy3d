@@ -60,7 +60,7 @@ namespace Birdy3d {
                     if (!exists)
                         collisionMesh.push_back(currentVertex.position);
                 }
-                Logger::debug("generated collision mesh size: " + std::to_string(collisionMesh.size()));
+                Logger::debug("generated collision mesh size: ", collisionMesh.size());
                 addShape(new CollisionMesh(collisionMesh));
             }
         }
@@ -74,14 +74,14 @@ namespace Birdy3d {
 
         while (true) {
             if (direction == glm::vec3(0))
-                Logger::error("direction ist 0 in loop. n_points: " + std::to_string(n_points));
+                Logger::error("direction ist 0 in loop. n_points: ", n_points);
             s = support(a, b, direction);
 
             if (glm::dot(s, direction) <= 0)
                 return false;
 
             if (points[0] == s)
-                Logger::error("points are the same collides 1 nr:" + std::to_string(n_points));
+                Logger::error("points are the same collides 1 nr:", n_points);
             push_front(s);
 
             if (nextSimplex(direction))

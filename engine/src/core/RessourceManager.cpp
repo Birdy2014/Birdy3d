@@ -127,7 +127,7 @@ namespace Birdy3d {
         if (std::filesystem::exists("/" + name + extension))
             return "/" + name + extension;
 
-        Logger::error("can't find ressource " + name + extension);
+        Logger::error("can't find ressource ", name, extension);
         return "";
     }
 
@@ -152,7 +152,7 @@ namespace Birdy3d {
             if (convertEOL)
                 content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
         } catch (std::ifstream::failure& e) {
-            Logger::error("Failed to read file " + path);
+            Logger::error("Failed to read file ", path);
         }
         return content;
     }

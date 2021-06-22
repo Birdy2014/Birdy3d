@@ -1,27 +1,53 @@
 #pragma once
 
 #include <iostream>
+#include <glm/gtx/string_cast.hpp>
 
 namespace Birdy3d {
 
     class Logger {
     public:
-        static void debug(const std::string& message) {
-            std::cout << "DEBUG: " << message << std::endl;
+        template <typename... Args>
+        static void debug(Args... args) {
+            std::cout << "DEBUG: ";
+            print(true, std::cout, args...);
         }
 
-        static void warn(const std::string& message) {
-            std::cerr << "WARNING: " << message << std::endl;
+        template <typename... Args>
+        static void warn(Args... args) {
+            std::cerr << "WARNING: ";
+            print(true, std::cerr, args...);
         }
 
-        static void error(const std::string& message) {
-            std::cerr << "ERROR: " << message << std::endl;
+        template <typename... Args>
+        static void error(Args... args) {
+            std::cerr << "ERROR: ";
+            print(true, std::cerr, args...);
             std::abort();
         }
 
-        static void assertNotNull(void* obj, const std::string& message) {
+        template <typename T>
+        static void assertNotNull(void* obj, const T& message) {
             if (obj == nullptr)
-                Logger::error("Assert not null failed: " + message);
+                Logger::error("Assert not null failed: ", message);
+        }
+
+    private:
+        template <typename T>
+        static void print(bool lineend, std::ostream& stream, const T& message) {
+            if constexpr (std::is_same<T, glm::vec4>::value || std::is_same<T, glm::vec3>::value || std::is_same<T, glm::vec2>::value)
+                stream << glm::to_string(message);
+            else
+                stream << message;
+
+            if (lineend)
+                stream << std::endl;
+        }
+
+        template <typename T, typename... Args>
+        static void print(bool, std::ostream& stream, const T& message, Args... args) {
+            print(false, stream, message);
+            print(true, stream, args...);
         }
     };
 

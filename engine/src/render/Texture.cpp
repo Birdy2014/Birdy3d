@@ -29,7 +29,7 @@ namespace Birdy3d {
             else if (nrChannels == 4)
                 format = GL_RGBA;
             else
-                Logger::error("Invalid number of texture channels: " + nrChannels);
+                Logger::error("Invalid number of texture channels: ", nrChannels);
 
             m_transparent = format == GL_RGBA;
 
@@ -44,7 +44,7 @@ namespace Birdy3d {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         } else {
-            Logger::warn("Failed to load texture at: " + filePath);
+            Logger::warn("Failed to load texture at: ", filePath);
         }
         stbi_image_free(data);
     }

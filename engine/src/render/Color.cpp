@@ -44,7 +44,7 @@ namespace Birdy3d {
         } else if ((int)colorString.length() == 3 + hasHash) {
             colorLength = 1;
         } else {
-            Logger::warn("Invalid color: " + colorString);
+            Logger::warn("Invalid color: ", colorString);
             return glm::vec4(1);
         }
 
