@@ -31,7 +31,7 @@ fi
 
 case $1 in
     run)
-        build && ./build/sandbox
+        build && ./build/out/bin/sandbox
         ;;
     build)
         build

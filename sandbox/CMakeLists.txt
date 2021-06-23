@@ -22,6 +22,12 @@ add_custom_command(
 
 add_custom_command(
     TARGET sandbox POST_BUILD
+    COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/out
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/compile_commands.json ${CMAKE_CURRENT_LIST_DIR}/compile_commands.json
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${ENGINE_DIR}/build/shaders ${CMAKE_CURRENT_LIST_DIR}/shaders
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${ENGINE_DIR}/build/shaders ${CMAKE_BINARY_DIR}/out/shaders
+    COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/out/bin
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/libBirdy3d.so ${CMAKE_BINARY_DIR}/out/bin
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/sandbox ${CMAKE_BINARY_DIR}/out/bin
+    COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/out/ressources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/ressources ${CMAKE_BINARY_DIR}/out/ressources
 )
