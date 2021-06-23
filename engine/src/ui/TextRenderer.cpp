@@ -3,29 +3,35 @@
 #include "core/Application.hpp"
 #include "core/Logger.hpp"
 #include "ui/Rectangle.hpp"
+#include <ft2build.h>
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include FT_FREETYPE_H
 
 namespace Birdy3d {
 
     TextRenderer::~TextRenderer() {
-        FT_Done_Face(m_face);
-        FT_Done_FreeType(m_ft);
+        FT_Done_Face(*m_face);
+        FT_Done_FreeType(*m_ft);
+        free(m_face);
+        free(m_ft);
     }
 
     TextRenderer::TextRenderer(std::string path, unsigned int fontSize) {
         m_fontSize = fontSize;
-        if (FT_Init_FreeType(&m_ft))
+        m_ft = (FT_Library*)malloc(sizeof(FT_Library));
+        m_face = (FT_Face*)malloc(sizeof(FT_Face));
+        if (FT_Init_FreeType(m_ft))
             Logger::error("freetype: Could not init FreeType Library");
-        if (FT_New_Face(m_ft, path.c_str(), 0, &m_face))
+        if (FT_New_Face(*m_ft, path.c_str(), 0, m_face))
             Logger::error("freetype: Failed to load font");
-        FT_Set_Pixel_Sizes(m_face, 0, fontSize);
+        FT_Set_Pixel_Sizes(*m_face, 0, fontSize);
         m_rect = new Rectangle(UIVector(0), UIVector(0), Color::WHITE, Rectangle::Type::TEXT);
     }
 
     bool TextRenderer::addChar(char32_t c) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        if (FT_Load_Char(m_face, c, FT_LOAD_RENDER)) {
+        if (FT_Load_Char(*m_face, c, FT_LOAD_RENDER)) {
             Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
             return false;
         }
@@ -33,7 +39,7 @@ namespace Birdy3d {
         unsigned int texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_face->glyph->bitmap.width, m_face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, m_face->glyph->bitmap.buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, (*m_face)->glyph->bitmap.width, (*m_face)->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, (*m_face)->glyph->bitmap.buffer);
         // set texture options
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -42,9 +48,9 @@ namespace Birdy3d {
         // store character
         Character character = {
             texture,
-            glm::ivec2(m_face->glyph->bitmap.width, m_face->glyph->bitmap.rows),
-            glm::ivec2(m_face->glyph->bitmap_left, m_face->glyph->bitmap_top),
-            m_face->glyph->advance.x
+            glm::ivec2((*m_face)->glyph->bitmap.width, (*m_face)->glyph->bitmap.rows),
+            glm::ivec2((*m_face)->glyph->bitmap_left, (*m_face)->glyph->bitmap_top),
+            (*m_face)->glyph->advance.x
         };
         m_chars.insert(std::pair<char, Character>(c, character));
         return true;

@@ -9,6 +9,7 @@
 #include "render/Vertex.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 namespace Birdy3d {
 

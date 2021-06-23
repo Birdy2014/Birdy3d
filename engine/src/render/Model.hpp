@@ -2,9 +2,12 @@
 
 #include "render/Material.hpp"
 #include "render/Mesh.hpp"
-#include <assimp/scene.h>
 #include <string>
 #include <vector>
+
+struct aiMesh;
+struct aiNode;
+struct aiScene;
 
 namespace Birdy3d {
 

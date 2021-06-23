@@ -3,12 +3,13 @@
 #include "ui/Shape.hpp"
 #include "ui/Utils.hpp"
 #include <codecvt>
-#include <ft2build.h>
 #include <glm/glm.hpp>
 #include <locale>
 #include <map>
 #include <string>
-#include FT_FREETYPE_H
+
+typedef struct FT_LibraryRec_* FT_Library;
+typedef struct FT_FaceRec_* FT_Face;
 
 namespace Birdy3d {
 
@@ -47,8 +48,8 @@ namespace Birdy3d {
 
     private:
         std::map<char, Character> m_chars;
-        FT_Library m_ft;
-        FT_Face m_face;
+        FT_Library* m_ft;
+        FT_Face* m_face;
         Rectangle* m_rect;
         unsigned int m_fontSize;
 
