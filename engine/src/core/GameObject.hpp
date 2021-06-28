@@ -6,25 +6,26 @@
 
 namespace Birdy3d {
 
+    class Scene;
     class Shader;
 
     class GameObject {
     public:
         Transform3d transform;
         GameObject* parent = nullptr;
-        GameObject* scene = nullptr;
+        Scene* scene = nullptr;
         bool hidden = false;
 
         GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
         void addChild(GameObject* c);
         void addComponent(Component* c);
-        void start();
+        virtual void start();
         void update();
         void cleanup();
         glm::vec3 absForward();
         glm::vec3 absRight();
         glm::vec3 absUp();
-        void setScene(GameObject* scene = nullptr);
+        void setScene(Scene* scene);
 
         template <class T>
         std::vector<T*> getComponents(bool hidden = true, bool recursive = false) {

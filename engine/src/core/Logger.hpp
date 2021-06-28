@@ -35,7 +35,7 @@ namespace Birdy3d {
     private:
         template <typename T>
         static void print(bool lineend, std::ostream& stream, const T& message) {
-            if constexpr (std::is_same<T, glm::vec4>::value || std::is_same<T, glm::vec3>::value || std::is_same<T, glm::vec2>::value)
+            if constexpr (std::is_same<T, glm::vec4>::value || std::is_same<T, glm::vec3>::value || std::is_same<T, glm::vec2>::value || std::is_same<T, glm::mat4>::value)
                 stream << glm::to_string(message);
             else
                 stream << message;

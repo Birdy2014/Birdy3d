@@ -8,6 +8,7 @@
 #include "render/PointLight.hpp"
 #include "render/Shader.hpp"
 #include "render/Spotlight.hpp"
+#include "scene/Scene.hpp"
 #include "ui/Canvas.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -75,6 +76,7 @@ namespace Birdy3d {
     }
 
     void Camera::render() {
+        object->scene->m_current_camera = this;
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
         if (this->deferred) {
@@ -255,7 +257,7 @@ namespace Birdy3d {
         }
 
         // Transparency
-        std::vector models = this->object->scene->getComponents<ModelComponent>(false, true);
+        std::vector<ModelComponent*> models = this->object->scene->getComponents<ModelComponent>(false, true);
         std::map<float, ModelComponent*> sorted;
         for (ModelComponent* m : models) {
             float distance = glm::length(this->object->transform.position - m->object->transform.position);

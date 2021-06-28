@@ -2,8 +2,10 @@
 
 #include "core/GameObject.hpp"
 #include "core/RessourceManager.hpp"
+#include "render/Camera.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
+#include "scene/Scene.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Birdy3d {
@@ -13,6 +15,7 @@ namespace Birdy3d {
         this->depthShader = RessourceManager::getShader("directional_light_depth");
         this->ambient = ambient;
         this->diffuse = diffuse;
+        this->camOffset = 10;
     }
 
     void DirectionalLight::setupShadowMap() {
@@ -24,8 +27,10 @@ namespace Birdy3d {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         // bind framebuffer
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
@@ -41,7 +46,7 @@ namespace Birdy3d {
         }
         std::string name = "dirLights[" + std::to_string(id) + "].";
         lightShader->use();
-        lightShader->setVec3(name + "position", this->object->transform.worldPosition());
+        lightShader->setVec3(name + "position", this->object->scene->m_current_camera->object->transform.worldPosition() - this->object->absForward() * camOffset);
         lightShader->setVec3(name + "direction", this->object->absForward());
         lightShader->setVec3(name + "ambient", ambient);
         lightShader->setVec3(name + "diffuse", diffuse);
@@ -52,7 +57,7 @@ namespace Birdy3d {
     }
 
     void DirectionalLight::genShadowMap() {
-        glm::vec3 absPos = this->object->transform.worldPosition();
+        glm::vec3 absPos = this->object->scene->m_current_camera->object->transform.worldPosition() - this->object->absForward() * camOffset;
 
         GLint m_viewport[4];
         glGetIntegerv(GL_VIEWPORT, m_viewport);
@@ -63,9 +68,9 @@ namespace Birdy3d {
         glEnable(GL_DEPTH_TEST);
 
         this->depthShader->use();
-        float nearPlane = 1.0f, farPlane = 7.5f;
+        float nearPlane = 1.0f, farPlane = 100.0f;
         glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, nearPlane, farPlane);
-        glm::mat4 lightView = glm::lookAt(absPos, absPos + this->object->absForward(), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 lightView = glm::lookAt(absPos, absPos + this->object->absForward(), this->object->absUp());
         lightSpaceMatrix = lightProjection * lightView;
         this->depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
         for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {

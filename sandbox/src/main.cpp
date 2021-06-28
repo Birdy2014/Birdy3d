@@ -97,7 +97,7 @@ int main() {
     };
 
     // GameObjects
-    GameObject* scene = new GameObject();
+    Scene* scene = new Scene();
 
     player = new GameObject(glm::vec3(0, 0, 3));
     player->addComponent(new Camera(800, 600, true, &canvas));
@@ -166,11 +166,10 @@ int main() {
         GameObject* newCube = new GameObject(glm::vec3(x, y, z));
         newCube->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", newMaterial));
         scene->addChild(newCube);
-        Logger::debug("Created cube at x: " + std::to_string(x) + " y: " + std::to_string(y) + " z: " + std::to_string(z));
+        Logger::debug("Created cube at x: ", x, " y: ", y, " z: ", z);
     },
         GLFW_KEY_N);
 
-    scene->setScene();
     scene->start();
     PhysicsWorld* physicsWorld = new PhysicsWorld(scene);
 

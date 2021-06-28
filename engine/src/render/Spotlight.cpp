@@ -4,6 +4,7 @@
 #include "core/RessourceManager.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
+#include "scene/Scene.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 

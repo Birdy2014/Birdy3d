@@ -4,6 +4,7 @@
 #include "core/RessourceManager.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
+#include "scene/Scene.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Birdy3d {

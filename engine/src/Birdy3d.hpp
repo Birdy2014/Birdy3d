@@ -34,6 +34,9 @@
 #include "render/Spotlight.hpp"
 #include "render/Texture.hpp"
 
+// Scene
+#include "scene/Scene.hpp"
+
 // UI
 #include "ui/Canvas.hpp"
 #include "ui/Layout.hpp"

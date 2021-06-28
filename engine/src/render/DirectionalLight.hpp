@@ -12,6 +12,7 @@ namespace Birdy3d {
         void use(Shader* lightShader, int id, int textureid) override;
 
     private:
+        float camOffset;
         glm::mat4 lightSpaceMatrix;
     };
 

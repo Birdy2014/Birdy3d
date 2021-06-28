@@ -14,6 +14,7 @@ namespace Birdy3d {
     void GameObject::addChild(GameObject* c) {
         c->parent = this;
         c->transform.setParentTransform(&transform);
+        c->setScene(scene);
         this->children.push_back(c);
     }
 
@@ -66,9 +67,7 @@ namespace Birdy3d {
         return glm::normalize(glm::cross(this->absRight(), this->absForward()));
     }
 
-    void GameObject::setScene(GameObject* scene) {
-        if (scene == nullptr)
-            scene = this;
+    void GameObject::setScene(Scene* scene) {
         this->scene = scene;
         for (GameObject* c : this->children) {
             c->setScene(scene);
