@@ -88,9 +88,15 @@ int main() {
     testWindow.hidden = true;
     canvas.addChild(&testWindow);
 
-    Textarea area2(0_px, 100_px, Placement::BOTTOM_LEFT);
+    AbsoluteLayout winLayout(0_px, 100_p);
+    testWindow.child = &winLayout;
+
+    Textarea area2(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
     area2.append("Dies ist ein Fenster");
-    testWindow.child = &area2;
+    winLayout.addChild(&area2);
+
+    CheckBox testCheckBox(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Test");
+    winLayout.addChild(&testCheckBox);
 
     testButton.clickCallback = [&testWindow](InputClickEvent*) {
         testWindow.hidden = !testWindow.hidden;

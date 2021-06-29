@@ -47,6 +47,7 @@
 #include "ui/Window.hpp"
 #include "ui/widgets/AbsoluteLayout.hpp"
 #include "ui/widgets/Button.hpp"
+#include "ui/widgets/CheckBox.hpp"
 #include "ui/widgets/DirectionalLayout.hpp"
 #include "ui/widgets/FPSCounter.hpp"
 #include "ui/widgets/Textarea.hpp"

@@ -29,6 +29,8 @@ namespace Birdy3d {
             , m_texCoordA(texCoordA)
             , m_texCoordB(texCoordB) { }
         virtual ~Shape() {};
+        bool hidden() { return m_hidden; }
+        bool hidden(bool hidden) { return m_hidden = hidden; }
         UIVector position() { return m_position; }
         UIVector position(UIVector position) {
             m_dirty = true;
@@ -65,6 +67,7 @@ namespace Birdy3d {
         unsigned int m_vao = 0;
         unsigned int m_vbo = 0;
         bool m_dirty = true;
+        bool m_hidden = false;
         UIVector m_position;
         UIVector m_size;
         Color m_color;

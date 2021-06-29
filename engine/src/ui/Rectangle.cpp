@@ -18,6 +18,9 @@ namespace Birdy3d {
     }
 
     void Rectangle::draw(glm::mat4 move) {
+        if (m_hidden)
+            return;
+
         if (!m_vao || !m_vbo)
             createBuffers();
 

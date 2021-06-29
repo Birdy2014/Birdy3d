@@ -152,6 +152,9 @@ namespace Birdy3d {
     }
 
     void Text::draw(glm::mat4 move) {
+        if (m_hidden)
+            return;
+
         if (m_dirty) {
             UIVector textSize = renderer->textSize(text, fontSize);
             m_relativePos = Utils::getRelativePosition(m_position, textSize, m_parentSize, m_placement);

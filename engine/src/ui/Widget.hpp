@@ -10,7 +10,10 @@
 
 namespace Birdy3d {
 
+    class Rectangle;
+    class Text;
     class Theme;
+    class Triangle;
 
     class Widget {
     public:
@@ -33,11 +36,11 @@ namespace Birdy3d {
 
         Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Theme* theme = Application::defaultTheme, std::string name = "");
         virtual ~Widget();
-        void addRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
-        void addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
-        void addTriangle(UIVector pos, UIVector size, Color color);
-        void addFilledTriangle(UIVector pos, UIVector size, Color color);
-        void addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
+        Rectangle* addRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
+        Rectangle* addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
+        Triangle* addTriangle(UIVector pos, UIVector size, Color color);
+        Triangle* addFilledTriangle(UIVector pos, UIVector size, Color color);
+        Text* addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
         virtual void draw();
 
         // Returns the position relative to the parent's origin in pixels

@@ -20,31 +20,42 @@ namespace Birdy3d {
         }
     }
 
-    void Widget::addRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
-        this->shapes.push_back(new Rectangle(pos, size, color, Shape::OUTLINE, placement));
+    Rectangle* Widget::addRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        Rectangle* rectangle = new Rectangle(pos, size, color, Shape::OUTLINE, placement);
+        this->shapes.push_back(rectangle);
+        return rectangle;
     }
 
-    void Widget::addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
-        this->shapes.push_back(new Rectangle(pos, size, color, Shape::FILLED, placement));
+    Rectangle* Widget::addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        Rectangle* rectangle = new Rectangle(pos, size, color, Shape::FILLED, placement);
+        this->shapes.push_back(rectangle);
+        return rectangle;
     }
 
-    void Widget::addTriangle(UIVector pos, UIVector size, Color color) {
-        this->shapes.push_back(new Triangle(pos, size, color, Shape::OUTLINE));
+    Triangle* Widget::addTriangle(UIVector pos, UIVector size, Color color) {
+        Triangle* triangle = new Triangle(pos, size, color, Shape::OUTLINE);
+        this->shapes.push_back(triangle);
+        return triangle;
     }
 
-    void Widget::addFilledTriangle(UIVector pos, UIVector size, Color color) {
-        this->shapes.push_back(new Triangle(pos, size, color, Shape::FILLED));
+    Triangle* Widget::addFilledTriangle(UIVector pos, UIVector size, Color color) {
+        Triangle* triangle = new Triangle(pos, size, color, Shape::FILLED);
+        this->shapes.push_back(triangle);
+        return triangle;
     }
 
-    void Widget::addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
-        this->shapes.push_back(new Text(pos, fontSize, text, color, placement, Application::getTextRenderer()));
+    Text* Widget::addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
+        Text* shape = new Text(pos, fontSize, text, color, placement, Application::getTextRenderer());
+        this->shapes.push_back(shape);
+        return shape;
     }
 
     void Widget::draw() {
         if (hidden)
             return;
 
-        glScissor(actualPos.x, actualPos.y, actualSize.x, actualSize.y);
+        // FIXME: the -1 and +2 should not be necessary and don't completely fix the problem, that widget borders are sometimes invisible.
+        glScissor(actualPos.x - 1, actualPos.y - 1, actualSize.x + 2, actualSize.y + 2);
 
         glm::mat4 move = normalizedMove();
 

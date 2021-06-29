@@ -14,7 +14,7 @@ namespace Birdy3d {
 
             for (Widget* child : children) {
                 glm::vec2 childSize = child->preferredSize(size);
-                glm::vec2 childPos = child->preferredPosition(size, childSize);
+                glm::vec2 childPos = pos + child->preferredPosition(size, childSize);
                 if (childSize.x == 0 || childSize.y == 0)
                     childSize = size;
                 child->arrange(childPos, childSize);
