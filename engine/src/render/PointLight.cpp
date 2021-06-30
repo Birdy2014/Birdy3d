@@ -9,21 +9,15 @@
 
 namespace Birdy3d {
 
-    PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic)
-        : Light() {
-        this->depthShader = RessourceManager::getShader("point_light_depth");
-        this->ambient = ambient;
-        this->diffuse = diffuse;
-        this->linear = linear;
-        this->quadratic = quadratic;
-    }
+    PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled)
+        : Light(RessourceManager::getShader("point_light_depth"), ambient, diffuse, linear, quadratic, shadow_enabled) { }
 
     void PointLight::setupShadowMap() {
         // framebuffer
-        glGenFramebuffers(1, &depthMapFBO);
+        glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map
-        glGenTextures(1, &depthMap);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
+        glGenTextures(1, &m_depthMap);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthMap);
         for (unsigned int i = 0; i < 6; i++)
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -31,30 +25,29 @@ namespace Birdy3d {
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        //float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-        //glTexParameterfv(texture_type, GL_TEXTURE_BORDER_COLOR, borderColor);
         // bind framebuffer
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthMap, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_depthMap, 0);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void PointLight::use(Shader* lightShader, int id, int textureid) {
-        if (!shadowMapUpdated) {
+        if (!m_shadowMapUpdated) {
             genShadowMap();
-            shadowMapUpdated = true;
+            m_shadowMapUpdated = true;
         }
         std::string name = "pointLights[" + std::to_string(id) + "].";
         lightShader->use();
+        lightShader->setBool(name + "shadow_enabled", shadow_enabled);
         lightShader->setVec3(name + "position", this->object->transform.worldPosition());
         lightShader->setVec3(name + "ambient", ambient);
         lightShader->setVec3(name + "diffuse", diffuse);
         lightShader->setFloat(name + "linear", linear);
         lightShader->setFloat(name + "quadratic", quadratic);
         glActiveTexture(GL_TEXTURE0 + textureid);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthMap);
         lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", textureid);
         lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
     }
@@ -62,15 +55,15 @@ namespace Birdy3d {
     void PointLight::genShadowMap() {
         glm::vec3 absPos = this->object->transform.worldPosition();
 
-        GLint m_viewport[4];
-        glGetIntegerv(GL_VIEWPORT, m_viewport);
+        GLint viewport[4];
+        glGetIntegerv(GL_VIEWPORT, viewport);
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
         glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_FRONT);
         glEnable(GL_DEPTH_TEST);
 
-        this->depthShader->use();
+        m_depthShader->use();
         float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
         float near = 1.0f;
         far = 25.0f;
@@ -84,16 +77,16 @@ namespace Birdy3d {
         shadowTransforms.push_back(shadowProj * glm::lookAt(absPos, absPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
         shadowTransforms.push_back(shadowProj * glm::lookAt(absPos, absPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
         for (unsigned int i = 0; i < 6; i++)
-            this->depthShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
-        this->depthShader->setFloat("far_plane", far);
-        this->depthShader->setVec3("lightPos", absPos);
+            m_depthShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+        m_depthShader->setFloat("far_plane", far);
+        m_depthShader->setVec3("lightPos", absPos);
         for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
-            m->renderDepth(this->depthShader);
+            m->renderDepth(m_depthShader);
         }
 
         // reset framebuffer and viewport
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, m_viewport[2], m_viewport[3]);
+        glViewport(0, 0, viewport[2], viewport[3]);
         glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_BACK);
     }

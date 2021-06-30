@@ -1,4 +1,6 @@
 struct DirectionalLight {
+    bool shadow_enabled;
+
     vec3 position;
     vec3 direction;
 
@@ -10,6 +12,8 @@ struct DirectionalLight {
 };
 
 struct PointLight {
+    bool shadow_enabled;
+
     vec3 position;
 
     vec3 ambient;
@@ -24,6 +28,8 @@ struct PointLight {
 };
 
 struct Spotlight {
+    bool shadow_enabled;
+
     vec3 position;
     vec3 direction;
     float innerCutOff;
@@ -62,6 +68,9 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDi
     vec3 specular = light.diffuse * spec;
 
     vec3 lighting = diffuse + specular;
+
+    if (!light.shadow_enabled)
+        return lighting;
 
     // SHADOW
     vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos, 1.0);
@@ -109,6 +118,9 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
 
     vec3 lighting = diffuse + specular;
 
+    if (!light.shadow_enabled)
+        return lighting;
+
     // SHADOW
     vec3 fragToLight = fragPos - light.position;
     float currentDepth = length(fragToLight);
@@ -139,6 +151,9 @@ vec3 calcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     vec3 specular = light.diffuse * spec * intensity * attenuation;
 
     vec3 lighting = diffuse + specular;
+
+    if (!light.shadow_enabled)
+        return lighting;
 
     // SHADOW
     vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos, 1.0);

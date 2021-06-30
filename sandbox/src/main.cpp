@@ -154,6 +154,16 @@ int main() {
     sLight->addComponent(new Spotlight(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f));
     scene->addChild(sLight);
 
+    GameObject* flashLight = new GameObject(glm::vec3(0), glm::vec3(0));
+    flashLight->addComponent(new Spotlight(glm::vec3(0), glm::vec3(1), glm::radians(30.0f), glm::radians(40.0f), 0.08f, 0.02f, false));
+    flashLight->hidden = true;
+    player->addChild(flashLight);
+
+    Application::eventBus->subscribe<InputKeyEvent>([&flashLight](InputKeyEvent*) {
+        flashLight->hidden = !flashLight->hidden;
+    },
+        GLFW_KEY_F);
+
     Application::eventBus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
         pLight->hidden = !pLight->hidden;
     },
