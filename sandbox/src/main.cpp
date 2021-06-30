@@ -112,9 +112,9 @@ int main() {
 
     Material defaultMaterial;
     Material redTransparentMaterial;
-    redTransparentMaterial.diffuse_color(glm::vec4(1.0f, 0.0f, 1.0f, 0.5f));
+    redTransparentMaterial.diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
     Material blueTransparentMaterial;
-    blueTransparentMaterial.diffuse_color(glm::vec4(0.0f, 1.0f, 1.0f, 0.5f));
+    blueTransparentMaterial.diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
 
     GameObject* obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
     obj->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", &redTransparentMaterial));
@@ -168,7 +168,7 @@ int main() {
         float y = random(-30, 30);
         float z = random(-30, 30);
         Material* newMaterial = new Material();
-        newMaterial->diffuse_color(glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f));
+        newMaterial->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
         GameObject* newCube = new GameObject(glm::vec3(x, y, z));
         newCube->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", newMaterial));
         scene->addChild(newCube);

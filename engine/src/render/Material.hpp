@@ -8,61 +8,27 @@ namespace Birdy3d {
 
     class Material {
     public:
-        bool m_has_normal_map = false;
+        bool diffuse_map_enabled = false;
+        Color diffuse_color = Color::WHITE;
+        Texture* diffuse_map = RessourceManager::getColorTexture(Color::WHITE);
 
-        Texture* diffuse_map() const {
-            return m_diffuse_map;
-        }
+        bool specular_map_enabled = false;
+        float specular_value = 32.0f / 255.0f;
+        Texture* specular_map = RessourceManager::getColorTexture(glm::vec4(32.0f / 255.0f));
 
-        void diffuse_color(Color value) {
-            m_diffuse_map = RessourceManager::getColorTexture(value);
-        }
+        bool normal_map_enabled = false;
+        Texture* normal_map = RessourceManager::getColorTexture(Color::WHITE);
 
-        void diffuse_map(const std::string& name) {
-            m_diffuse_map = RessourceManager::getTexture(name);
-        }
-
-        Texture* specular_map() const {
-            return m_specular_map;
-        }
-
-        void specular(float value) {
-            m_specular_map = RessourceManager::getColorTexture(glm::vec4(value, 0, 0, 0));
-        }
-
-        void specular_map(const std::string& name) {
-            m_specular_map = RessourceManager::getTexture(name);
-        }
-
-        Texture* normal_map() const {
-            return m_normal_map;
-        }
-
-        void normal_map(const std::string& name) {
-            m_normal_map = RessourceManager::getTexture(name);
-        }
-
-        Texture* emissive_map() const {
-            return m_emissive_map;
-        }
-
-        void emissive_color(Color value) {
-            m_emissive_map = RessourceManager::getColorTexture(value);
-        }
-
-        void emissive_map(const std::string& name) {
-            m_emissive_map = RessourceManager::getTexture(name);
-        }
+        bool emissive_map_enabled = false;
+        Color emissive_color = Color::BLACK;
+        Texture* emissive_map = RessourceManager::getColorTexture(Color::BLACK);
 
         bool transparent() const {
-            return m_diffuse_map->transparent();
+            if (diffuse_map_enabled)
+                return diffuse_map->transparent();
+            else
+                return diffuse_color.value.a < 1;
         }
-
-    private:
-        Texture* m_diffuse_map = RessourceManager::getColorTexture(Color::WHITE);
-        Texture* m_specular_map = RessourceManager::getColorTexture(glm::vec4(32.0f / 255.0f));
-        Texture* m_normal_map = RessourceManager::getColorTexture(Color::WHITE);
-        Texture* m_emissive_map = RessourceManager::getColorTexture(Color::BLACK);
     };
 
 }

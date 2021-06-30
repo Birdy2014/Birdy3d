@@ -45,12 +45,12 @@ in mat3 TBN;
 
 void main() {
     gPosition = FragPos;
-    gAlbedoSpec.rgb = texture(material.diffuse_map, TexCoords).rgb;
+    gAlbedoSpec.rgb = material.diffuse_map_enabled ? texture(material.diffuse_map, TexCoords).rgb : material.diffuse_color.rgb;
 
-    if (material.has_normal_map)
+    if (material.normal_map_enabled)
         gNormal = normalize(TBN * texture(material.normal_map, TexCoords).rgb * 2.0 - 1.0);
     else
         gNormal = normalize(Normal);
 
-    gAlbedoSpec.a = texture(material.specular_map, TexCoords).r;
+    gAlbedoSpec.a = material.specular_map_enabled ? texture(material.specular_map, TexCoords).r : material.specular_value;
 }
