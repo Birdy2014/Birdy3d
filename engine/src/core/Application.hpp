@@ -23,7 +23,6 @@ namespace Birdy3d {
         static void cleanup();
         static GLFWwindow* getWindow();
         static glm::vec2 getViewportSize();
-        static TextRenderer* getTextRenderer();
 
     private:
         static GLFWwindow* window;

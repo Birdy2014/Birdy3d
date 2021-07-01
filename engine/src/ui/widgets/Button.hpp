@@ -23,7 +23,7 @@ namespace Birdy3d {
         };
 
         glm::vec2 minimalSize() override {
-            glm::vec2 minSize = Application::getTextRenderer()->textSize(getShape<Text>()->text, getShape<Text>()->fontSize) + 2.0f;
+            glm::vec2 minSize = theme->text_renderer()->textSize(getShape<Text>()->text, getShape<Text>()->fontSize) + 2.0f;
             return glm::max(minSize, Widget::minimalSize());
         }
 

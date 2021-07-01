@@ -41,7 +41,7 @@ namespace Birdy3d {
         std::string name = "pointLights[" + std::to_string(id) + "].";
         lightShader->use();
         lightShader->setBool(name + "shadow_enabled", shadow_enabled);
-        lightShader->setVec3(name + "position", this->object->transform.worldPosition());
+        lightShader->setVec3(name + "position", object->transform.worldPosition());
         lightShader->setVec3(name + "ambient", ambient);
         lightShader->setVec3(name + "diffuse", diffuse);
         lightShader->setFloat(name + "linear", linear);
@@ -49,11 +49,11 @@ namespace Birdy3d {
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthMap);
         lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", textureid);
-        lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", far);
+        lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", m_far);
     }
 
     void PointLight::genShadowMap() {
-        glm::vec3 absPos = this->object->transform.worldPosition();
+        glm::vec3 absPos = object->transform.worldPosition();
 
         GLint viewport[4];
         glGetIntegerv(GL_VIEWPORT, viewport);
@@ -66,8 +66,7 @@ namespace Birdy3d {
         m_depthShader->use();
         float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
         float near = 1.0f;
-        far = 25.0f;
-        glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+        glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, m_far);
 
         std::vector<glm::mat4> shadowTransforms;
         shadowTransforms.push_back(shadowProj * glm::lookAt(absPos, absPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
@@ -78,10 +77,10 @@ namespace Birdy3d {
         shadowTransforms.push_back(shadowProj * glm::lookAt(absPos, absPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
         for (unsigned int i = 0; i < 6; i++)
             m_depthShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
-        m_depthShader->setFloat("far_plane", far);
+        m_depthShader->setFloat("far_plane", m_far);
         m_depthShader->setVec3("lightPos", absPos);
-        for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
-            m->renderDepth(m_depthShader);
+        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+            m->renderDepth(m_depthShader.get());
         }
 
         // reset framebuffer and viewport

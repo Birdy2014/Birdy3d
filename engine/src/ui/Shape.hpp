@@ -1,8 +1,10 @@
 #pragma once
 
+#include "core/RessourceManager.hpp"
 #include "render/Color.hpp"
 #include "ui/Utils.hpp"
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace Birdy3d {
 
@@ -22,6 +24,7 @@ namespace Birdy3d {
 
         Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
             : name(name)
+            , m_shader(RessourceManager::getShader("ui"))
             , m_position(position)
             , m_size(size)
             , m_color(color)
@@ -63,7 +66,7 @@ namespace Birdy3d {
         virtual bool contains(glm::vec2 point) = 0;
 
     protected:
-        Shader* m_shader;
+        std::shared_ptr<Shader> m_shader;
         unsigned int m_vao = 0;
         unsigned int m_vbo = 0;
         bool m_dirty = true;

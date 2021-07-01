@@ -8,7 +8,7 @@
 namespace Birdy3d {
 
     Shader::Shader(const std::string& shaderSource, const std::string& name)
-        : name(name) {
+        : m_name(name) {
         std::unordered_map<GLenum, std::string> shaderSources = preprocess(shaderSource);
         compile(shaderSources);
     }
@@ -31,14 +31,14 @@ namespace Birdy3d {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if (!success) {
                 glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-                Logger::warn("shader compilation error: name: ", name + " type: ", typeString, "\n", infoLog);
+                Logger::warn("shader compilation error: name: ", m_name + " type: ", typeString, "\n", infoLog);
                 return true;
             }
         } else {
             glGetProgramiv(shader, GL_LINK_STATUS, &success);
             if (!success) {
                 glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-                Logger::warn("program linking error: name: ", name, "\n", infoLog);
+                Logger::warn("program linking error: name: ", m_name, "\n", infoLog);
                 return true;
             }
         }

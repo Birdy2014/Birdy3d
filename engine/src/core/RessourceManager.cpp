@@ -19,56 +19,56 @@
 
 namespace Birdy3d {
 
-    std::unordered_map<std::string, Shader*> RessourceManager::shaders;
-    std::unordered_map<std::string, TextRenderer*> RessourceManager::textRenderers;
-    std::unordered_map<std::string, Model*> RessourceManager::models;
-    std::unordered_map<std::string, Texture*> RessourceManager::textures;
-    std::map<Color, Texture*> RessourceManager::m_color_textures;
+    std::unordered_map<std::string, std::shared_ptr<Shader>> RessourceManager::shaders;
+    std::unordered_map<std::string, std::shared_ptr<TextRenderer>> RessourceManager::textRenderers;
+    std::unordered_map<std::string, std::shared_ptr<Model>> RessourceManager::models;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> RessourceManager::textures;
+    std::map<Color, std::shared_ptr<Texture>> RessourceManager::m_color_textures;
 
-    Shader* RessourceManager::getShader(const std::string& name) {
-        Shader* shader = shaders[name];
+    std::shared_ptr<Shader> RessourceManager::getShader(const std::string& name) {
+        std::shared_ptr<Shader> shader = shaders[name];
         if (!shader) {
             std::string path = getRessourcePath(name, RessourceType::SHADER);
-            shader = new Shader(readFile(path), name);
+            shader = std::make_shared<Shader>(readFile(path), name);
             shaders[name] = shader;
         }
         return shader;
     }
 
-    TextRenderer* RessourceManager::getTextRenderer(const std::string& name) {
-        TextRenderer* renderer = textRenderers[name];
+    std::shared_ptr<TextRenderer> RessourceManager::getTextRenderer(const std::string& name) {
+        std::shared_ptr<TextRenderer> renderer = textRenderers[name];
         if (!renderer) {
             std::string path = getRessourcePath(name, RessourceType::FONT);
-            renderer = new TextRenderer(path, 30);
+            renderer = std::make_shared<TextRenderer>(path, 30);
             textRenderers[name] = renderer;
         }
         return renderer;
     }
 
-    Model* RessourceManager::getModel(const std::string& name) {
-        Model* model = models[name];
+    std::shared_ptr<Model> RessourceManager::getModel(const std::string& name) {
+        std::shared_ptr<Model> model = models[name];
         if (!model) {
             std::string path = getRessourcePath(name, RessourceType::MODEL);
-            model = new Model(path);
+            model = std::make_shared<Model>(path);
             models[name] = model;
         }
         return model;
     }
 
-    Texture* RessourceManager::getTexture(const std::string& name) {
-        Texture* texture = textures[name];
+    std::shared_ptr<Texture> RessourceManager::getTexture(const std::string& name) {
+        std::shared_ptr<Texture> texture = textures[name];
         if (!texture) {
             std::string path = getRessourcePath(name, RessourceType::TEXTURE);
-            texture = new Texture(path);
+            texture = std::make_shared<Texture>(path);
             textures[name] = texture;
         }
         return texture;
     }
 
-    Texture* RessourceManager::getColorTexture(const Color& color) {
-        Texture* texture = m_color_textures[color];
+    std::shared_ptr<Texture> RessourceManager::getColorTexture(const Color& color) {
+        std::shared_ptr<Texture> texture = m_color_textures[color];
         if (!texture) {
-            texture = new Texture(color);
+            texture = std::make_shared<Texture>(color);
             m_color_textures[color] = texture;
         }
         return texture;

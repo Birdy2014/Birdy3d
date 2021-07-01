@@ -17,47 +17,45 @@
 
 namespace Birdy3d {
 
-    Camera::Camera(int width, int height, bool deferred) {
-        this->width = width;
-        this->height = height;
-        this->deferred = deferred;
-    }
+    Camera::Camera(int width, int height, bool deferred)
+        : m_width(width)
+        , m_height(height)
+        , m_deferred_enabled(deferred) { }
 
-    Camera::Camera(int width, int height, bool deferred, Canvas* canvas) {
-        this->width = width;
-        this->height = height;
-        this->deferred = deferred;
-        this->canvas = canvas;
-    }
+    Camera::Camera(int width, int height, bool deferred, Canvas* canvas)
+        : canvas(canvas)
+        , m_width(width)
+        , m_height(height)
+        , m_deferred_enabled(deferred) { }
 
     void Camera::start() {
-        projectionMatrix = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
+        m_projection = glm::perspective(glm::radians(80.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
         createGBuffer();
-        this->deferredGeometryShader = RessourceManager::getShader("geometry_buffer");
-        this->deferredLightShader = RessourceManager::getShader("deferred_lighting");
-        this->forwardShader = RessourceManager::getShader("forward_lighting");
-        this->deferredLightShader->use();
-        this->deferredLightShader->setInt("gPosition", 0);
-        this->deferredLightShader->setInt("gNormal", 1);
-        this->deferredLightShader->setInt("gAlbedoSpec", 2);
+        m_deferred_geometry_shader = RessourceManager::getShader("geometry_buffer");
+        m_deferred_light_shader = RessourceManager::getShader("deferred_lighting");
+        m_forward_shader = RessourceManager::getShader("forward_lighting");
+        m_deferred_light_shader->use();
+        m_deferred_light_shader->setInt("gPosition", 0);
+        m_deferred_light_shader->setInt("gNormal", 1);
+        m_deferred_light_shader->setInt("gAlbedoSpec", 2);
         // Set the default shadowmaps to the first texture in the right format so that the shader doesn't crash
         for (int i = 0; i < Shader::MAX_DIRECTIONAL_LIGHTS; i++) {
-            this->deferredLightShader->use();
-            this->deferredLightShader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 3);
-            this->forwardShader->use();
-            this->forwardShader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 4);
+            m_deferred_light_shader->use();
+            m_deferred_light_shader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 3);
+            m_forward_shader->use();
+            m_forward_shader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 4);
         }
         for (int i = 0; i < Shader::MAX_POINTLIGHTS; i++) {
-            this->deferredLightShader->use();
-            this->deferredLightShader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
-            this->forwardShader->use();
-            this->forwardShader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            m_deferred_light_shader->use();
+            m_deferred_light_shader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            m_forward_shader->use();
+            m_forward_shader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         }
         for (int i = 0; i < Shader::MAX_SPOTLIGHTS; i++) {
-            this->deferredLightShader->use();
-            this->deferredLightShader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
-            this->forwardShader->use();
-            this->forwardShader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            m_deferred_light_shader->use();
+            m_deferred_light_shader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            m_forward_shader->use();
+            m_forward_shader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
         }
     }
 
@@ -66,10 +64,10 @@ namespace Birdy3d {
     }
 
     void Camera::resize(int width, int height) {
-        if (this->width != width || this->height != height) {
-            this->width = width;
-            this->height = height;
-            projectionMatrix = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
+        if (m_width != width || m_height != height) {
+            m_width = width;
+            m_height = height;
+            m_projection = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
             deleteGBuffer(); // TODO: resize GBuffer instead of recreating it
             createGBuffer();
         }
@@ -79,7 +77,7 @@ namespace Birdy3d {
         object->scene->m_current_camera = this;
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
-        if (this->deferred) {
+        if (m_deferred_enabled) {
             renderDeferred();
             renderForward(false);
         } else {
@@ -87,49 +85,49 @@ namespace Birdy3d {
         }
 
         // GUI
-        if (this->canvas) {
+        if (canvas) {
             glClear(GL_DEPTH_BUFFER_BIT);
             this->canvas->draw();
         }
     }
 
     void Camera::createGBuffer() {
-        glGenFramebuffers(1, &gBuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+        glGenFramebuffers(1, &m_gbuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
 
         // - position color buffer
-        glGenTextures(1, &gPosition);
-        glBindTexture(GL_TEXTURE_2D, gPosition);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+        glGenTextures(1, &m_gbuffer_position);
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_position);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_gbuffer_position, 0);
 
         // - normal color buffer
-        glGenTextures(1, &gNormal);
-        glBindTexture(GL_TEXTURE_2D, gNormal);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+        glGenTextures(1, &m_gbuffer_normal);
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_gbuffer_normal, 0);
 
         // - color + specular color buffer
-        glGenTextures(1, &gAlbedoSpec);
-        glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        glGenTextures(1, &m_gbuffer_albedo_spec);
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_albedo_spec);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, m_gbuffer_albedo_spec, 0);
 
         // - tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
         unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
         glDrawBuffers(3, attachments);
 
         // create and attach depth buffer (renderbuffer)
-        glGenRenderbuffers(1, &rboDepth);
-        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+        glGenRenderbuffers(1, &m_rbo_depth);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_rbo_depth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo_depth);
         // finally check if framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             Logger::error("Framebuffer not complete!");
@@ -137,14 +135,14 @@ namespace Birdy3d {
     }
 
     void Camera::deleteGBuffer() {
-        unsigned int textures[3] = { gPosition, gNormal, gAlbedoSpec };
+        unsigned int textures[3] = { m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo_spec };
         glDeleteTextures(3, textures);
-        glDeleteRenderbuffers(1, &this->rboDepth);
-        glDeleteFramebuffers(1, &this->gBuffer);
+        glDeleteRenderbuffers(1, &m_rbo_depth);
+        glDeleteFramebuffers(1, &m_gbuffer);
     }
 
     void Camera::renderQuad() {
-        if (this->quadVAO == 0) {
+        if (m_quad_vao == 0) {
             float quadVertices[] = {
                 // clang-format off
                 // positions        // texture Coords
@@ -155,117 +153,117 @@ namespace Birdy3d {
                 // clang-format on
             };
             // setup plane VAO
-            glGenVertexArrays(1, &this->quadVAO);
-            glGenBuffers(1, &this->quadVBO);
-            glBindVertexArray(this->quadVAO);
-            glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
+            glGenVertexArrays(1, &m_quad_vao);
+            glGenBuffers(1, &m_quad_vbo);
+            glBindVertexArray(m_quad_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_quad_vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         }
-        glBindVertexArray(this->quadVAO);
+        glBindVertexArray(m_quad_vao);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
     }
 
     void Camera::renderDeferred() {
-        glm::vec3 absPos = this->object->transform.worldPosition();
-        glm::vec3 absForward = this->object->absForward();
-        glm::vec3 up = this->object->absUp();
+        glm::vec3 absPos = object->transform.worldPosition();
+        glm::vec3 absForward = object->absForward();
+        glm::vec3 up = object->absUp();
         glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
 
         // 1. geometry pass: render all geometric/color data to g-buffer
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
-        glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
-            this->deferredGeometryShader->use();
-            this->deferredGeometryShader->setMat4("projection", this->projectionMatrix);
-            this->deferredGeometryShader->setMat4("view", view);
-            m->render(this->deferredGeometryShader, false);
+        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+            m_deferred_geometry_shader->use();
+            m_deferred_geometry_shader->setMat4("projection", m_projection);
+            m_deferred_geometry_shader->setMat4("view", view);
+            m->render(m_deferred_geometry_shader.get(), false);
         }
 
         // 2. lighting pass
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, gPosition);
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_position);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gNormal);
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-        std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(false, true);
-        std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(false, true);
-        std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(false, true);
-        this->deferredLightShader->use();
-        this->deferredLightShader->setInt("nr_directional_lights", dirLights.size());
-        this->deferredLightShader->setInt("nr_pointlights", pointLights.size());
-        this->deferredLightShader->setInt("nr_spotlights", spotlights.size());
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_albedo_spec);
+        std::vector<DirectionalLight*> dirLights = object->scene->getComponents<DirectionalLight>(false, true);
+        std::vector<PointLight*> pointLights = object->scene->getComponents<PointLight>(false, true);
+        std::vector<Spotlight*> spotlights = object->scene->getComponents<Spotlight>(false, true);
+        m_deferred_light_shader->use();
+        m_deferred_light_shader->setInt("nr_directional_lights", dirLights.size());
+        m_deferred_light_shader->setInt("nr_pointlights", pointLights.size());
+        m_deferred_light_shader->setInt("nr_spotlights", spotlights.size());
         for (size_t i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(this->deferredLightShader, i, 3 + i);
+            dirLights[i]->use(m_deferred_light_shader.get(), i, 3 + i);
         for (size_t i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(this->deferredLightShader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            pointLights[i]->use(m_deferred_light_shader.get(), i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (size_t i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(this->deferredLightShader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            spotlights[i]->use(m_deferred_light_shader.get(), i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
-        this->deferredLightShader->setVec3("viewPos", absPos);
+        m_deferred_light_shader->setVec3("viewPos", absPos);
         renderQuad();
     }
 
     void Camera::renderForward(bool renderOpaque) {
-        glm::vec3 absPos = this->object->transform.worldPosition();
-        glm::vec3 absForward = this->object->absForward();
-        glm::vec3 up = this->object->absUp();
+        glm::vec3 absPos = object->transform.worldPosition();
+        glm::vec3 absForward = object->absForward();
+        glm::vec3 up = object->absUp();
         glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        std::vector<DirectionalLight*> dirLights = this->object->scene->getComponents<DirectionalLight>(false, true);
-        std::vector<PointLight*> pointLights = this->object->scene->getComponents<PointLight>(false, true);
-        std::vector<Spotlight*> spotlights = this->object->scene->getComponents<Spotlight>(false, true);
-        this->forwardShader->use();
-        this->forwardShader->setInt("nr_directional_lights", dirLights.size());
-        this->forwardShader->setInt("nr_pointlights", pointLights.size());
-        this->forwardShader->setInt("nr_spotlights", spotlights.size());
+        std::vector<DirectionalLight*> dirLights = object->scene->getComponents<DirectionalLight>(false, true);
+        std::vector<PointLight*> pointLights = object->scene->getComponents<PointLight>(false, true);
+        std::vector<Spotlight*> spotlights = object->scene->getComponents<Spotlight>(false, true);
+        m_forward_shader->use();
+        m_forward_shader->setInt("nr_directional_lights", dirLights.size());
+        m_forward_shader->setInt("nr_pointlights", pointLights.size());
+        m_forward_shader->setInt("nr_spotlights", spotlights.size());
         for (size_t i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(this->forwardShader, i, 4 + i);
+            dirLights[i]->use(m_forward_shader.get(), i, 4 + i);
         for (size_t i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(this->forwardShader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            pointLights[i]->use(m_forward_shader.get(), i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (size_t i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(this->forwardShader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            spotlights[i]->use(m_forward_shader.get(), i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         if (renderOpaque) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } else {
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, this->gBuffer);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_gbuffer);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            glBlitFramebuffer(0, 0, this->width, this->height, 0, 0, this->width, this->height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+            glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width, m_height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         }
 
-        this->forwardShader->setMat4("projection", this->projectionMatrix);
-        this->forwardShader->setMat4("view", view);
-        this->forwardShader->setVec3("viewPos", absPos);
+        m_forward_shader->setMat4("projection", m_projection);
+        m_forward_shader->setMat4("view", view);
+        m_forward_shader->setVec3("viewPos", absPos);
         if (renderOpaque) {
-            for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
-                m->render(this->forwardShader, false);
+            for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+                m->render(m_forward_shader.get(), false);
             }
         }
 
         // Transparency
-        std::vector<ModelComponent*> models = this->object->scene->getComponents<ModelComponent>(false, true);
+        std::vector<ModelComponent*> models = object->scene->getComponents<ModelComponent>(false, true);
         std::map<float, ModelComponent*> sorted;
         for (ModelComponent* m : models) {
-            float distance = glm::length(this->object->transform.position - m->object->transform.position);
+            float distance = glm::length(object->transform.position - m->object->transform.position);
             sorted[distance] = m;
         }
 
         for (std::map<float, ModelComponent*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++) {
-            it->second->render(this->forwardShader, true);
+            it->second->render(m_forward_shader.get(), true);
         }
     }
 

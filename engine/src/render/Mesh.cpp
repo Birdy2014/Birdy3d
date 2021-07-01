@@ -6,36 +6,35 @@
 
 namespace Birdy3d {
 
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices) {
-        this->vertices = vertices;
-        this->indices = indices;
-
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
+        : vertices(vertices)
+        , indices(indices) {
         setupMesh();
     }
 
     Mesh::~Mesh() {
-        glDeleteBuffers(1, &VBO);
-        glDeleteBuffers(1, &EBO);
-        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &m_vbo);
+        glDeleteBuffers(1, &m_ebo);
+        glDeleteVertexArrays(1, &m_vao);
     }
 
     void Mesh::setupMesh() {
-        // generate VAO, VBO and EBO
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
+        // generate vao, vbo and ebo
+        glGenVertexArrays(1, &m_vao);
+        glGenBuffers(1, &m_vbo);
+        glGenBuffers(1, &m_ebo);
 
-        glBindVertexArray(VAO);
+        glBindVertexArray(m_vao);
 
-        // load vertices into VBO
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        // load vertices into vbo
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-        // load indices into EBO
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        // load indices into ebo
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-        // inform OpenGL how to interpret the vertex data inside the VBO
+        // inform OpenGL how to interpret the vertex data inside the vbo
         // vertex positions
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -77,13 +76,13 @@ namespace Birdy3d {
         shader->setInt("material.emissive_map", 3);
 
         // draw mesh
-        glBindVertexArray(VAO);
+        glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
     void Mesh::renderDepth() {
-        glBindVertexArray(VAO);
+        glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }

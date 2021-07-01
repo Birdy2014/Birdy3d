@@ -14,7 +14,7 @@
 namespace Birdy3d {
 
     Model::Model(const std::string& path)
-        : path(path) {
+        : m_path(path) {
         Logger::debug("Loading model: ", path);
         load();
     }
@@ -23,7 +23,7 @@ namespace Birdy3d {
         glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
-        for (Mesh* m : this->meshes) {
+        for (Mesh* m : m_meshes) {
             if (transparent == material.transparent())
                 m->render(shader, material);
         }
@@ -33,24 +33,24 @@ namespace Birdy3d {
         glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
-        for (Mesh* m : meshes) {
+        for (Mesh* m : m_meshes) {
             m->renderDepth();
         }
     }
 
     const std::vector<Mesh*>& Model::getMeshes() {
-        return meshes;
+        return m_meshes;
     }
 
     void Model::load() {
         Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+        const aiScene* scene = importer.ReadFile(m_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             Logger::error("ASSIMP: ", importer.GetErrorString());
             return;
         }
-        directory = path.substr(0, path.find_last_of('/'));
+        m_directory = m_path.substr(0, m_path.find_last_of('/'));
 
         processNode(scene->mRootNode, scene);
     }
@@ -59,7 +59,7 @@ namespace Birdy3d {
         // process own meshes
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            meshes.push_back(processMesh(mesh, scene));
+            m_meshes.push_back(processMesh(mesh, scene));
         }
         // children
         for (unsigned int i = 0; i < node->mNumChildren; i++) {
@@ -140,7 +140,7 @@ namespace Birdy3d {
     }
 
     Model::~Model() {
-        for (Mesh* m : this->meshes) {
+        for (Mesh* m : m_meshes) {
             delete m;
         }
     }

@@ -2,6 +2,7 @@
 
 #include "core/Component.hpp"
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace Birdy3d {
 
@@ -15,7 +16,7 @@ namespace Birdy3d {
         float linear;
         float quadratic;
 
-        Light(Shader* depthShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled);
+        Light(std::shared_ptr<Shader> depthShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled);
         virtual void use(Shader* lightShader, int id, int textureid) = 0;
         virtual void setupShadowMap() = 0;
         virtual void genShadowMap() = 0;
@@ -24,7 +25,7 @@ namespace Birdy3d {
         void cleanup() override;
 
     protected:
-        Shader* m_depthShader;
+        std::shared_ptr<Shader> m_depthShader;
         unsigned int m_depthMapFBO, m_depthMap;
         const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
         bool m_shadowMapUpdated = false;

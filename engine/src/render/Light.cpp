@@ -2,7 +2,7 @@
 
 namespace Birdy3d {
 
-    Light::Light(Shader* depthShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled)
+    Light::Light(std::shared_ptr<Shader> depthShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled)
         : Component()
         , shadow_enabled(shadow_enabled)
         , ambient(ambient)

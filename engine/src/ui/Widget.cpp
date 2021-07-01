@@ -3,6 +3,7 @@
 #include "core/Input.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
+#include "ui/Theme.hpp"
 #include "ui/Triangle.hpp"
 
 namespace Birdy3d {
@@ -45,7 +46,7 @@ namespace Birdy3d {
     }
 
     Text* Widget::addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
-        Text* shape = new Text(pos, fontSize, text, color, placement, Application::getTextRenderer());
+        Text* shape = new Text(pos, fontSize, text, color, placement, theme->text_renderer());
         this->shapes.push_back(shape);
         return shape;
     }

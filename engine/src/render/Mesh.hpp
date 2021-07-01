@@ -20,7 +20,7 @@ namespace Birdy3d {
         void renderDepth();
 
     private:
-        unsigned int VAO, VBO, EBO;
+        unsigned int m_vao, m_vbo, m_ebo;
 
         void setupMesh();
     };

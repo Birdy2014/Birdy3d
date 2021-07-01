@@ -2,6 +2,7 @@
 
 #include "core/Component.hpp"
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace Birdy3d {
 
@@ -21,14 +22,13 @@ namespace Birdy3d {
         void reloadModels();
 
     private:
-        unsigned int gBuffer, gPosition, gNormal, gAlbedoSpec, rboDepth;
-        int width, height;
-        glm::mat4 projectionMatrix;
-        unsigned int quadVAO = 0;
-        unsigned int quadVBO;
-        Shader *deferredGeometryShader, *deferredLightShader, *forwardShader;
-        glm::vec3 worldUp = glm::vec3(0, 1, 0);
-        bool deferred;
+        unsigned int m_gbuffer, m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo_spec, m_rbo_depth;
+        int m_width, m_height;
+        glm::mat4 m_projection;
+        unsigned int m_quad_vao = 0;
+        unsigned int m_quad_vbo;
+        std::shared_ptr<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader;
+        bool m_deferred_enabled;
 
         void createGBuffer();
         void deleteGBuffer();

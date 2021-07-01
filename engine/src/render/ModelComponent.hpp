@@ -11,7 +11,7 @@ namespace Birdy3d {
 
     class ModelComponent : public Component {
     public:
-        Model* model;
+        std::shared_ptr<Model> model;
         std::string name;
         Material* material;
 
@@ -20,19 +20,19 @@ namespace Birdy3d {
             , material(material) { }
 
         void start() override {
-            this->model = RessourceManager::getModel(name);
+            model = RessourceManager::getModel(name);
         }
 
         void render(Shader* shader, bool transparent) {
-            if (this->model)
-                this->model->render(this->object, *material, shader, transparent);
+            if (model)
+                model->render(object, *material, shader, transparent);
             else
                 Logger::error("No model specified");
         }
 
         void renderDepth(Shader* shader) {
-            if (this->model)
-                this->model->renderDepth(this->object, shader);
+            if (model)
+                model->renderDepth(object, shader);
         }
     };
 

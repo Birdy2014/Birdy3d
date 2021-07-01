@@ -32,12 +32,12 @@ namespace Birdy3d {
                 collision->points = points;
                 if (points.hasCollision) {
                     if (collidedLastFrame)
-                        Application::eventBus->emit(new CollisionEvent(c1, c2, CollisionEvent::COLLIDING));
+                        Application::eventBus->emit<CollisionEvent>(c1, c2, CollisionEvent::COLLIDING);
                     else
-                        Application::eventBus->emit(new CollisionEvent(c1, c2, CollisionEvent::ENTER));
+                        Application::eventBus->emit<CollisionEvent>(c1, c2, CollisionEvent::ENTER);
                 } else {
                     if (collidedLastFrame) {
-                        Application::eventBus->emit(new CollisionEvent(c1, c2, CollisionEvent::EXIT));
+                        Application::eventBus->emit<CollisionEvent>(c1, c2, CollisionEvent::EXIT);
                     }
                 }
             }

@@ -8,7 +8,6 @@ namespace Birdy3d {
 
     Rectangle::Rectangle(UIVector pos, UIVector size, Color color, Type type, Placement placement)
         : Shape(pos, size, color, placement) {
-        m_shader = RessourceManager::getShader("ui");
         this->type = type;
     }
 

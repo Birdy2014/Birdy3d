@@ -14,13 +14,11 @@ namespace Birdy3d {
         scrollpos = 0;
         m_tmpscroll = 0;
         this->readonly = readonly;
-        Theme* theme = Application::defaultTheme;
-        renderer = Application::getTextRenderer();
         addFilledRectangle(0_px, 100_p, theme->color_bg);
     }
 
     void Textarea::append(const std::string& text) {
-        m_text += renderer->converter.from_bytes(text);
+        m_text += theme->text_renderer()->converter.from_bytes(text);
         updateLines();
     }
 
@@ -63,7 +61,7 @@ namespace Birdy3d {
                     if (line == m_selectionEndY)
                         highlightstart = m_selectionEndX;
                 }
-                renderer->renderText(m_lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == m_textCursorY ? m_textCursorX : -1, highlightstart, highlightend - 1, "#0000a050");
+                theme->text_renderer()->renderText(m_lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == m_textCursorY ? m_textCursorX : -1, highlightstart, highlightend - 1, "#0000a050");
             }
         }
     }
@@ -79,7 +77,7 @@ namespace Birdy3d {
 
             line = m_text.substr(pos, eol - pos);
             // Line is too long
-            length = renderer->textSize(line, theme->fontSize).x;
+            length = theme->text_renderer()->textSize(line, theme->fontSize).x;
             if (length > actualSize.x) {
                 nextspace = pos;
                 while (nextspace < eol) {
@@ -88,7 +86,7 @@ namespace Birdy3d {
                     line = m_text.substr(pos, nextspace - pos);
 
                     // reached the space too far right
-                    length = renderer->textSize(line, theme->fontSize).x;
+                    length = theme->text_renderer()->textSize(line, theme->fontSize).x;
                     if (length > actualSize.x) {
                         // the line can't be broken using a space
                         if (prevspace == pos)
@@ -260,7 +258,7 @@ namespace Birdy3d {
         float width = 0;
         std::u32string line = m_lines[y];
         for (int i = 0; i < line.length(); i++) {
-            float charWidth = Application::getTextRenderer()->charWidth(line[i], theme->fontSize);
+            float charWidth = theme->text_renderer()->charWidth(line[i], theme->fontSize);
             width += charWidth;
             // Correction for click between characters
             if (width > localPos.x + charWidth / 2) {

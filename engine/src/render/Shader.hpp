@@ -34,7 +34,7 @@ namespace Birdy3d {
         void setMat4(const std::string& name, const glm::mat4& mat) const;
 
     private:
-        std::string name;
+        std::string m_name;
 
         bool checkCompileErrors(GLuint shader, GLenum type);
         std::unordered_map<GLenum, std::string> preprocess(std::string shaderSource);

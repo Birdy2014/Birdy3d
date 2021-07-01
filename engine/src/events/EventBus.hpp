@@ -6,6 +6,7 @@
 #include <functional>
 #include <list>
 #include <map>
+#include <memory>
 #include <queue>
 #include <typeindex>
 
@@ -81,9 +82,9 @@ namespace Birdy3d {
 
     class EventBus {
     public:
-        template <typename EventType>
-        void emit(EventType* event) {
-            eventQueue.push(event);
+        template <typename EventType, typename... Args>
+        void emit(Args... args) {
+            eventQueue.push(std::make_unique<EventType>(args...));
         }
 
         void flush(int amount = -1) {
@@ -94,11 +95,12 @@ namespace Birdy3d {
 
         template <class T, class EventType>
         void subscribe(T* instance, void (T::*memberFunction)(EventType*), int options = -1) {
-            HandlerList* handlers = subscribers[typeid(EventType)];
+            HandlerList* handlers = subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr) {
-                handlers = new HandlerList();
-                subscribers[typeid(EventType)] = handlers;
+                std::unique_ptr<HandlerList> handler_list = std::make_unique<HandlerList>();
+                handlers = handler_list.get();
+                subscribers[typeid(EventType)] = std::move(handler_list);
             }
 
             handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction, options));
@@ -106,11 +108,12 @@ namespace Birdy3d {
 
         template <class EventType>
         void subscribe(std::function<void(EventType*)> func, GameObject* target = nullptr, int options = -1) {
-            HandlerList* handlers = subscribers[typeid(EventType)];
+            HandlerList* handlers = subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr) {
-                handlers = new HandlerList();
-                subscribers[typeid(EventType)] = handlers;
+                std::unique_ptr<HandlerList> handler_list = std::make_unique<HandlerList>();
+                handlers = handler_list.get();
+                subscribers[typeid(EventType)] = std::move(handler_list);
             }
 
             handlers->push_back(new FunctionHandler<EventType>(func, target, options));
@@ -123,7 +126,7 @@ namespace Birdy3d {
 
         template <class T, class EventType>
         void unsubscribe(T* instance, void (T::*memberFunction)(EventType*), int options = -1) {
-            HandlerList* handlers = subscribers[typeid(EventType)];
+            HandlerList* handlers = subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr)
                 return;
@@ -169,15 +172,14 @@ namespace Birdy3d {
         }
 
     private:
-        std::map<std::type_index, HandlerList*> subscribers;
-        std::queue<Event*> eventQueue;
+        std::map<std::type_index, std::unique_ptr<HandlerList>> subscribers;
+        std::queue<std::unique_ptr<Event>> eventQueue;
 
         void execFirst() {
             if (eventQueue.empty())
                 return;
-            Event* event = eventQueue.front();
-            eventQueue.pop();
-            HandlerList* handlers = subscribers[typeid(*event)];
+            Event* event = eventQueue.front().get();
+            HandlerList* handlers = subscribers[typeid(*event)].get();
 
             if (handlers == nullptr) {
                 return;
@@ -188,7 +190,7 @@ namespace Birdy3d {
                     handler->exec(event);
                 }
             }
-            delete event;
+            eventQueue.pop();
         }
     };
 

@@ -12,10 +12,10 @@ namespace Birdy3d {
         void use(Shader* lightShader, int id, int textureid) override;
 
     private:
-        float far = 25.0f;
-        glm::mat4 lightSpaceMatrix;
-        float innerCutOff;
-        float outerCutOff;
+        float m_far = 25.0f;
+        glm::mat4 m_lightSpaceMatrix;
+        float m_innerCutOff;
+        float m_outerCutOff;
     };
 
 }

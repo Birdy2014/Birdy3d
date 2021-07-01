@@ -26,7 +26,7 @@ namespace Birdy3d {
         if (FT_New_Face(*m_ft, path.c_str(), 0, m_face))
             Logger::error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, fontSize);
-        m_rect = new Rectangle(UIVector(0), UIVector(0), Color::WHITE, Rectangle::Type::TEXT);
+        m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::WHITE, Rectangle::Type::TEXT);
     }
 
     bool TextRenderer::addChar(char32_t c) {

@@ -232,7 +232,7 @@ int main() {
         player->getComponent<Camera>()->render();
 
         if (collision) {
-            Application::getTextRenderer()->renderText("collision", 100, 0, 20, glm::vec4(1));
+            Application::defaultTheme->text_renderer()->renderText("collision", 100, 0, 20, glm::vec4(1));
             collision = false;
         }
 

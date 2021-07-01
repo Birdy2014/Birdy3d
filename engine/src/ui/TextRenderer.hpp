@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <locale>
 #include <map>
+#include <memory>
 #include <string>
 
 typedef struct FT_LibraryRec_* FT_Library;
@@ -50,7 +51,7 @@ namespace Birdy3d {
         std::map<char, Character> m_chars;
         FT_Library* m_ft;
         FT_Face* m_face;
-        Rectangle* m_rect;
+        std::unique_ptr<Rectangle> m_rect;
         unsigned int m_fontSize;
 
         bool addChar(char32_t c);

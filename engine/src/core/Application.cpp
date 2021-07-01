@@ -2,7 +2,6 @@
 
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
-#include "core/RessourceManager.hpp"
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "ui/Theme.hpp"
@@ -61,7 +60,7 @@ namespace Birdy3d {
 
     void Application::framebuffer_size_callback(GLFWwindow*, int width, int height) {
         glViewport(0, 0, width, height);
-        eventBus->emit(new WindowResizeEvent(width, height));
+        eventBus->emit<WindowResizeEvent>(width, height);
     }
 
     void Application::window_focus_callback(GLFWwindow* window, int focused) {
@@ -74,19 +73,19 @@ namespace Birdy3d {
     }
 
     void Application::scroll_callback(GLFWwindow*, double xoffset, double yoffset) {
-        eventBus->emit(new InputScrollEvent(xoffset, yoffset));
+        eventBus->emit<InputScrollEvent>(xoffset, yoffset);
     }
 
     void Application::mouse_button_callback(GLFWwindow*, int button, int action, int mods) {
-        eventBus->emit(new InputClickEvent(button, action, mods));
+        eventBus->emit<InputClickEvent>(button, action, mods);
     }
 
     void Application::key_callback(GLFWwindow*, int key, int scancode, int action, int mods) {
-        eventBus->emit(new InputKeyEvent(key, scancode, action, mods));
+        eventBus->emit<InputKeyEvent>(key, scancode, action, mods);
     }
 
     void Application::character_callback(GLFWwindow*, unsigned int codepoint) {
-        eventBus->emit(new InputCharEvent(codepoint));
+        eventBus->emit<InputCharEvent>(codepoint);
     }
 
     GLFWwindow* Application::getWindow() {
@@ -97,10 +96,6 @@ namespace Birdy3d {
         GLint viewport[4];
         glGetIntegerv(GL_VIEWPORT, viewport);
         return glm::vec2(viewport[2], viewport[3]);
-    }
-
-    TextRenderer* Application::getTextRenderer() {
-        return RessourceManager::getTextRenderer(defaultTheme->font);
     }
 
 }

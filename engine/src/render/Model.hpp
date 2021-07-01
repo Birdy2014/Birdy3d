@@ -22,9 +22,9 @@ namespace Birdy3d {
         const std::vector<Mesh*>& getMeshes();
 
     private:
-        std::string path;
-        std::vector<Mesh*> meshes;
-        std::string directory;
+        std::string m_path;
+        std::vector<Mesh*> m_meshes;
+        std::string m_directory;
 
         void load();
         void processNode(aiNode* node, const aiScene* scene);

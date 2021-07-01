@@ -13,7 +13,6 @@ namespace Birdy3d {
     public:
         float scrollpos;
         bool readonly;
-        TextRenderer* renderer;
 
         Textarea(UIVector pos, UIVector size, Placement placement, bool readonly = false);
         void append(const std::string& text);

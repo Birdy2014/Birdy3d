@@ -1,6 +1,7 @@
 #include "ui/Theme.hpp"
 
 #include "core/Logger.hpp"
+#include "core/RessourceManager.hpp"
 
 namespace Birdy3d {
 
@@ -11,4 +12,8 @@ namespace Birdy3d {
         , font(font)
         , fontSize(fontSize)
         , lineHeight(fontSize * 1.1) { }
+
+    TextRenderer* Theme::text_renderer() {
+        return RessourceManager::getTextRenderer(font).get();
+    }
 }

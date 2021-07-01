@@ -8,7 +8,6 @@ namespace Birdy3d {
 
     Triangle::Triangle(UIVector position, UIVector size, Color color, Type type, Placement placement)
         : Shape(position, size, color, placement) {
-        m_shader = RessourceManager::getShader("ui");
         this->type = type;
     }
 

@@ -12,8 +12,8 @@ namespace Birdy3d {
 
     Spotlight::Spotlight(glm::vec3 ambient, glm::vec3 diffuse, float innerCutOff, float outerCutOff, float linear, float quadratic, bool shadow_enabled)
         : Light(RessourceManager::getShader("directional_light_depth"), ambient, diffuse, linear, quadratic, shadow_enabled)
-        , innerCutOff(innerCutOff)
-        , outerCutOff(outerCutOff) { }
+        , m_innerCutOff(innerCutOff)
+        , m_outerCutOff(outerCutOff) { }
 
     void Spotlight::setupShadowMap() {
         // framebuffer
@@ -35,7 +35,7 @@ namespace Birdy3d {
     }
 
     void Spotlight::genShadowMap() {
-        glm::vec3 absPos = this->object->transform.worldPosition();
+        glm::vec3 absPos = object->transform.worldPosition();
 
         GLint viewport[4];
         glGetIntegerv(GL_VIEWPORT, viewport);
@@ -48,14 +48,14 @@ namespace Birdy3d {
         m_depthShader->use();
         float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
         float near = 1.0f;
-        far = 25.0f;
-        glm::mat4 lightProjection = glm::perspective(outerCutOff * 2, aspect, near, far);
-        glm::mat4 lightView = glm::lookAt(absPos, absPos + this->object->absForward(), this->object->absUp());
+        m_far = 25.0f;
+        glm::mat4 lightProjection = glm::perspective(m_outerCutOff * 2, aspect, near, m_far);
+        glm::mat4 lightView = glm::lookAt(absPos, absPos + object->absForward(), object->absUp());
 
-        lightSpaceMatrix = lightProjection * lightView;
-        m_depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        for (ModelComponent* m : this->object->scene->getComponents<ModelComponent>(false, true)) {
-            m->renderDepth(m_depthShader);
+        m_lightSpaceMatrix = lightProjection * lightView;
+        m_depthShader->setMat4("lightSpaceMatrix", m_lightSpaceMatrix);
+        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+            m->renderDepth(m_depthShader.get());
         }
 
         // reset framebuffer and viewport
@@ -73,17 +73,17 @@ namespace Birdy3d {
         std::string name = "spotlights[" + std::to_string(id) + "].";
         lightShader->use();
         lightShader->setBool(name + "shadow_enabled", shadow_enabled);
-        lightShader->setVec3(name + "position", this->object->transform.worldPosition());
-        lightShader->setVec3(name + "direction", this->object->absForward());
-        lightShader->setVec3(name + "ambient", this->ambient);
-        lightShader->setVec3(name + "diffuse", this->diffuse);
-        lightShader->setFloat(name + "innerCutOff", glm::cos(this->innerCutOff));
-        lightShader->setFloat(name + "outerCutOff", glm::cos(this->outerCutOff));
-        lightShader->setFloat(name + "linear", this->linear);
-        lightShader->setFloat(name + "quadratic", this->quadratic);
+        lightShader->setVec3(name + "position", object->transform.worldPosition());
+        lightShader->setVec3(name + "direction", object->absForward());
+        lightShader->setVec3(name + "ambient", ambient);
+        lightShader->setVec3(name + "diffuse", diffuse);
+        lightShader->setFloat(name + "innerCutOff", glm::cos(m_innerCutOff));
+        lightShader->setFloat(name + "outerCutOff", glm::cos(m_outerCutOff));
+        lightShader->setFloat(name + "linear", linear);
+        lightShader->setFloat(name + "quadratic", quadratic);
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_2D, m_depthMap);
-        lightShader->setMat4(name + "lightSpaceMatrix", lightSpaceMatrix);
+        lightShader->setMat4(name + "lightSpaceMatrix", m_lightSpaceMatrix);
         lightShader->setInt(name + "shadowMap", textureid);
     }
 
