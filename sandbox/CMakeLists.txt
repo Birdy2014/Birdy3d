@@ -34,3 +34,6 @@ add_custom_command(
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -fdiagnostics-color=always")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+
+set_target_properties(sandbox PROPERTIES DEBUG_POSTFIX "")
+set_target_properties(sandbox PROPERTIES RELEASE_POSTFIX "")

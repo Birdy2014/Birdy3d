@@ -22,3 +22,6 @@ add_dependencies(Birdy3d copy_assets)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -fdiagnostics-color=always")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+
+set_target_properties(Birdy3d PROPERTIES DEBUG_POSTFIX "")
+set_target_properties(Birdy3d PROPERTIES RELEASE_POSTFIX "")
