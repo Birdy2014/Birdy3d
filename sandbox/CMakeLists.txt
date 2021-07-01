@@ -31,3 +31,6 @@ add_custom_command(
     COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/out/ressources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/ressources ${CMAKE_BINARY_DIR}/out/ressources
 )
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -fdiagnostics-color=always")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")

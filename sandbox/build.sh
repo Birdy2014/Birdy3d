@@ -10,31 +10,35 @@ build() {
     cd ../engine
     mkdir -p build
     cd build
-    cmake .. -G Ninja
-    ninja
+    cmake .. "-DCMAKE_BUILD_TYPE=$1" -G Ninja
+    ninja || exit 1
 
     # Build sandbox
     cd ../../sandbox
     mkdir -p build
     cd build
-    cmake .. -G Ninja
-    ninja
+    [[ -f sandbox ]] && rm sandbox
+    cmake .. "-DCMAKE_BUILD_TYPE=$1" -G Ninja
+    ninja || exit 1
 
     # Return to starting directory
     cd ..
 }
 
 if [[ ! -v 1 ]]; then
-    build
+    build Release
     exit
 fi
 
 case $1 in
     run)
-        build && ./build/out/bin/sandbox
+        build Debug && ./build/out/bin/sandbox
         ;;
     build)
-        build
+        build Debug
+        ;;
+    release)
+        build Release
         ;;
     clean)
         rm -rf ../engine/build
