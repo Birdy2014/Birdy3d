@@ -98,6 +98,9 @@ int main() {
     CheckBox testCheckBox(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Test");
     winLayout.addChild(&testCheckBox);
 
+    NumberInput numberInput(UIVector(0_px, -80), Placement::TOP_LEFT, 0);
+    winLayout.addChild(&numberInput);
+
     testButton.clickCallback = [&testWindow](InputClickEvent*) {
         testWindow.hidden = !testWindow.hidden;
     };
