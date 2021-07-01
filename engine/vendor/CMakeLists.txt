@@ -28,6 +28,10 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glfw)
 
+set(ASSIMP_BUILD_TESTS CACHE INTERNAL OFF)
+set(BUILD_SHARED_LIBS CACHE INTERNAL OFF)
+set(ASSIMP_BUILD_ASSIMP_TOOLS CACHE INTERNAL OFF)
+
 FetchContent_Declare(
     assimp
     GIT_REPOSITORY https://github.com/assimp/assimp
