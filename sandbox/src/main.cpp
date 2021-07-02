@@ -190,7 +190,6 @@ int main() {
         GLFW_KEY_N);
 
     scene->start();
-    PhysicsWorld* physicsWorld = new PhysicsWorld(scene);
 
     PointLight* light = pLight->getComponent<PointLight>();
     bool lightup = true;
@@ -207,7 +206,6 @@ int main() {
         canvas.update();
 
         scene->update();
-        physicsWorld->update();
 
         Application::eventBus->flush();
 

@@ -20,7 +20,7 @@ namespace Birdy3d {
         void addChild(GameObject* c);
         void addComponent(Component* c);
         virtual void start();
-        void update();
+        virtual void update();
         void cleanup();
         glm::vec3 absForward();
         glm::vec3 absRight();
