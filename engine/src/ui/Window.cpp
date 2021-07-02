@@ -150,7 +150,8 @@ namespace Birdy3d {
             resizeXR = false;
             resizeY = false;
             size = actualSize;
-            Input::setCursor(Input::CURSOR_DEFAULT);
+            if (hover)
+                Input::setCursor(Input::CURSOR_DEFAULT);
             return true;
         }
 
