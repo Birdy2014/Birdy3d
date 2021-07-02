@@ -68,6 +68,14 @@ namespace Birdy3d {
     }
 
     void TextRenderer::renderText(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, int hlstart, int hlend, Color hlcolor) {
+        if (hlstart == -1 || hlend == -1)
+            hlstart = hlend = -1;
+
+        if (hlstart > hlend) {
+            std::swap(hlstart, hlend);
+            hlend--;
+        }
+
         bool highlighting = false;
         float scale = (fontSize / m_fontSize);
         char16_t c;
@@ -149,6 +157,17 @@ namespace Birdy3d {
             addChar(c);
         Character ch = m_chars[c];
         return (ch.advance >> 6) * (fontSize / m_fontSize);
+    }
+
+    int TextRenderer::char_index(std::u32string text, float font_size, float x_pos, bool between_chars) {
+        float width = 0;
+        float current_char_width;
+        for (size_t i = 0; i < text.size(); i++) {
+            width += current_char_width = charWidth(text[i], font_size);
+            if ((between_chars && x_pos < width - current_char_width / 2) || (!between_chars && x_pos < width))
+                return i;
+        }
+        return text.size();
     }
 
     void Text::draw(glm::mat4 move) {

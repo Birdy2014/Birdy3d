@@ -46,6 +46,7 @@ namespace Birdy3d {
         UIVector textSize(std::string text, float fontSize);
         UIVector textSize(std::u32string text, float fontSize);
         float charWidth(char32_t c, float fontSize);
+        int char_index(std::u32string text, float font_size, float x_pos, bool between_chars = false);
 
     private:
         std::map<char, Character> m_chars;

@@ -101,6 +101,10 @@ int main() {
     NumberInput numberInput(UIVector(0_px, -80), Placement::TOP_LEFT, 0);
     winLayout.addChild(&numberInput);
 
+    TextField textField(UIVector(0_px, -120), UIVector(100_p, 30_px), Placement::TOP_LEFT);
+    textField.text("Hallo Welt!");
+    winLayout.addChild(&textField);
+
     testButton.clickCallback = [&testWindow](InputClickEvent*) {
         testWindow.hidden = !testWindow.hidden;
     };
