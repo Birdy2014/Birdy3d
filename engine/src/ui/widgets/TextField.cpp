@@ -50,12 +50,12 @@ namespace Birdy3d {
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;
-        } else if (event->action == GLFW_RELEASE && m_selection_start == m_selection_end) {
+        } else if (event->action == GLFW_RELEASE && m_selection_end == -1) {
             m_selecting = false;
             m_cursor_pos = m_selection_start;
             m_selection_start = -1;
             m_selection_end = -1;
-        } else if (event->action == GLFW_RELEASE && m_selection_start != m_selection_end) {
+        } else if (event->action == GLFW_RELEASE) {
             m_selecting = false;
         }
         return true;
@@ -71,7 +71,7 @@ namespace Birdy3d {
             return true;
         }
 
-        if (m_cursor_pos > 0) {
+        if (m_cursor_pos >= 0) {
             switch (event->key) {
             case GLFW_KEY_DELETE:
                 if (m_cursor_pos == (int) m_text.length())
@@ -100,9 +100,14 @@ namespace Birdy3d {
     }
 
     bool TextField::onChar(InputCharEvent* event, bool hover) {
-        if (readonly || !hover || m_cursor_pos < 0 || m_cursor_pos > (int) m_text.size())
+        if (readonly || !hover)
             return true;
+
         clear_selection();
+
+        if (m_cursor_pos < 0 || m_cursor_pos > (int) m_text.size())
+            return true;
+
         char32_t c[2];
         c[0] = event->codepoint;
         c[1] = 0;
