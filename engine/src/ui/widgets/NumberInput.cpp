@@ -24,6 +24,19 @@ namespace Birdy3d {
         text(stream.str());
     }
 
+    bool NumberInput::update(bool hover) {
+        if (m_dragging) {
+            glm::vec2 offsets = Input::cursorPosOffset();
+            float change = offsets.x + offsets.y;
+            if (!Input::keyPressed(GLFW_KEY_LEFT_CONTROL))
+                change *= 0.1;
+            if (Input::keyPressed(GLFW_KEY_LEFT_SHIFT))
+                change *= 0.01;
+            value(value() + change);
+        }
+        return TextField::update(hover);
+    }
+
     bool NumberInput::onScroll(InputScrollEvent* event, bool hover) {
         if (!hover)
             return true;
@@ -39,7 +52,15 @@ namespace Birdy3d {
     }
 
     bool NumberInput::onClick(InputClickEvent* event, bool hover) {
-        TextField::onClick(event, hover);
+        if (event->button != GLFW_MOUSE_BUTTON_RIGHT)
+            return TextField::onClick(event, hover);
+
+        if (hover && event->action == GLFW_PRESS)
+            m_dragging = true;
+
+        if (event->action == GLFW_RELEASE)
+            m_dragging = false;
+
         return true;
     }
 

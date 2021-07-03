@@ -12,7 +12,9 @@ namespace Birdy3d {
 
     private:
         float m_value;
+        bool m_dragging = false;
 
+        bool update(bool hover) override;
         bool onScroll(InputScrollEvent* event, bool hover) override;
         bool onClick(InputClickEvent* event, bool hover) override;
         bool onKey(InputKeyEvent* event, bool hover) override;
