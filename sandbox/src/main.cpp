@@ -89,7 +89,7 @@ int main() {
     canvas.addChild(&testWindow);
 
     AbsoluteLayout winLayout(0_px, 100_p);
-    testWindow.child = &winLayout;
+    testWindow.set_child(&winLayout);
 
     Textarea area2(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
     area2.append("Dies ist ein Fenster");

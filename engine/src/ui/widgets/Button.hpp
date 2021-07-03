@@ -30,19 +30,17 @@ namespace Birdy3d {
         std::function<void(InputClickEvent*)> clickCallback;
 
     protected:
-        bool onClick(InputClickEvent* event, bool hover) override {
-            if (hover && clickCallback && event->action == GLFW_PRESS) {
+        void on_click(InputClickEvent* event) override {
+            if (clickCallback && event->action == GLFW_PRESS) {
                 clickCallback(event);
-                return true;
             }
-            return true;
         }
 
-        void onMouseEnter() override {
+        void on_mouse_enter() override {
             Input::setCursor(Input::CURSOR_HAND);
         }
 
-        void onMouseLeave() override {
+        void on_mouse_leave() override {
             Input::setCursor(Input::CURSOR_DEFAULT);
         }
     };

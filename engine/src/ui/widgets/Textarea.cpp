@@ -10,10 +10,10 @@
 namespace Birdy3d {
 
     Textarea::Textarea(UIVector pos, UIVector size, Placement placement, bool readonly)
-        : Widget(pos, size, placement) {
+        : Widget(pos, size, placement)
+        , readonly(readonly) {
         scrollpos = 0;
         m_tmpscroll = 0;
-        this->readonly = readonly;
         addFilledRectangle(0_px, 100_p, theme->color_bg);
     }
 
@@ -114,13 +114,14 @@ namespace Birdy3d {
         }
     }
 
-    bool Textarea::onClick(InputClickEvent* event, bool hover) {
-        if (readonly || !hover && event->action != GLFW_RELEASE)
-            return true;
+    void Textarea::on_click(InputClickEvent* event) {
+        if (readonly)
+            return;
 
         glm::ivec3 charPos = cursorCharPos();
 
         if (event->action == GLFW_PRESS) {
+            grab_cursor();
             m_selecting = true;
             m_selectionStart = charPos.z;
             m_selectionStartX = charPos.x;
@@ -129,6 +130,7 @@ namespace Birdy3d {
             m_textCursorX = -1;
             m_textCursorY = -1;
         } else if (event->action == GLFW_RELEASE && charPos.z == m_selectionStart) {
+            ungrab_cursor();
             m_selecting = false;
             m_textCursor = m_selectionStart;
             m_textCursorX = m_selectionStartX;
@@ -140,34 +142,30 @@ namespace Birdy3d {
             m_selectionEndX = -1;
             m_selectionEndY = -1;
         } else if (event->action == GLFW_RELEASE && charPos.z != m_selectionStart) {
+            ungrab_cursor();
             m_selecting = false;
         }
-        return true;
     }
 
-    bool Textarea::onScroll(InputScrollEvent* event, bool hover) {
-        if (!hover)
-            return true;
+    void Textarea::on_scroll(InputScrollEvent* event) {
         scrollpos -= event->yoffset;
         if (scrollpos < 0)
             scrollpos = 0;
-        return true;
     }
 
-    bool Textarea::onChar(InputCharEvent* event, bool hover) {
-        if (readonly || !hover || m_selectionStart < 0 && m_textCursor < 0)
-            return true;
+    void Textarea::on_char(InputCharEvent* event) {
+        if (readonly || m_selectionStart < 0 && m_textCursor < 0)
+            return;
         clearSelection();
         m_text.insert(m_textCursor, (char32_t*)&event->codepoint);
         m_textCursor++;
         updateLines();
-        return true;
     }
 
     // TODO: key repeat
-    bool Textarea::onKey(InputKeyEvent* event, bool hover) {
-        if (readonly || !hover || event->action != GLFW_PRESS)
-            return true;
+    void Textarea::on_key(InputKeyEvent* event) {
+        if (readonly || event->action != GLFW_PRESS)
+            return;
         if (m_selectionStart >= 0 && m_selectionEnd >= 0) {
             if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE) {
                 clearSelection();
@@ -217,15 +215,14 @@ namespace Birdy3d {
             }
             }
         }
-        return true;
     }
 
-    void Textarea::onMouseEnter() {
+    void Textarea::on_mouse_enter() {
         if (!readonly)
             Input::setCursor(Input::CURSOR_TEXT);
     }
 
-    void Textarea::onMouseLeave() {
+    void Textarea::on_mouse_leave() {
         if (!readonly)
             Input::setCursor(Input::CURSOR_DEFAULT);
     }

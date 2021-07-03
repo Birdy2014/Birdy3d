@@ -18,12 +18,13 @@ namespace Birdy3d {
 
     protected:
         // Events
-        virtual bool update(bool hover) override;
-        virtual bool onClick(InputClickEvent* event, bool hover) override;
-        virtual bool onKey(InputKeyEvent* event, bool hover) override;
-        virtual bool onChar(InputCharEvent* event, bool hover) override;
-        virtual void onMouseEnter() override;
-        virtual void onMouseLeave() override;
+        virtual void on_update() override;
+        virtual void on_click(InputClickEvent* event) override;
+        virtual void on_key(InputKeyEvent* event) override;
+        virtual void on_char(InputCharEvent* event) override;
+        virtual void on_mouse_enter() override;
+        virtual void on_mouse_leave() override;
+        virtual void on_focus_lost() override;
 
         // Helpers
         void clear_selection();
@@ -36,7 +37,7 @@ namespace Birdy3d {
         int m_selection_end = -1;
         bool m_changed = false;
 
-        void lateUpdate() override;
+        void late_update() override;
     };
 
 }

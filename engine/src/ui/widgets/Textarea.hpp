@@ -9,7 +9,7 @@ namespace Birdy3d {
     class InputCharEvent;
     class InputKeyEvent;
 
-    class Textarea : public Widget {
+    class Textarea : public Widget { // TODO: Inherit from TextField
     public:
         float scrollpos;
         bool readonly;
@@ -20,12 +20,12 @@ namespace Birdy3d {
         void draw() override;
 
     protected:
-        bool onClick(InputClickEvent* event, bool hover) override;
-        bool onScroll(InputScrollEvent* event, bool hover) override;
-        bool onChar(InputCharEvent* event, bool hover) override;
-        bool onKey(InputKeyEvent* event, bool hover) override;
-        void onMouseEnter() override;
-        void onMouseLeave() override;
+        void on_click(InputClickEvent* event) override;
+        void on_scroll(InputScrollEvent* event) override;
+        void on_char(InputCharEvent* event) override;
+        void on_key(InputKeyEvent* event) override;
+        void on_mouse_enter() override;
+        void on_mouse_leave() override;
 
     private:
         float m_tmpscroll;

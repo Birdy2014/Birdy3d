@@ -11,12 +11,15 @@ namespace Birdy3d {
         void toForeground(Widget* w);
         void draw() override;
         virtual void arrange(glm::vec2 pos, glm::vec2 size) override = 0;
+        bool update_hover(bool hover) override;
+        virtual void late_update() override;
+        void set_canvas(Canvas*) override;
 
         template <class T>
         T* getWidget(const std::string& name, bool hidden = true) {
             if (this->hidden && !hidden)
                 return nullptr;
-            for (Widget* child : this->children) {
+            for (Widget* child : m_children) {
                 T* casted = dynamic_cast<T*>(child);
                 if (casted && child->name == name) {
                     return casted;
@@ -32,16 +35,9 @@ namespace Birdy3d {
         }
 
     protected:
-        std::list<Widget*> children;
+        std::list<Widget*> m_children;
 
-        virtual void lateUpdate();
-
-        // Events
-        virtual bool update(bool hover) override;
-        virtual bool onScroll(InputScrollEvent* event, bool hover) override;
-        virtual bool onClick(InputClickEvent* event, bool hover) override;
-        virtual bool onKey(InputKeyEvent* event, bool hover) override;
-        virtual bool onChar(InputCharEvent* event, bool hover) override;
+        virtual void on_update() override;
     };
 
 }

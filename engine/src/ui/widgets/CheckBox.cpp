@@ -19,14 +19,14 @@ namespace Birdy3d {
         Widget::draw();
     }
 
-    bool CheckBox::onClick(InputClickEvent* event, bool hover) {
-        if (!hover || event->button != GLFW_MOUSE_BUTTON_LEFT || event->action != GLFW_PRESS)
-            return true;
+    void CheckBox::on_click(InputClickEvent* event) {
+        if (event->button != GLFW_MOUSE_BUTTON_LEFT || event->action != GLFW_PRESS)
+            return;
 
         checked = !checked;
         if (change_callback)
             change_callback(checked);
-        return true;
+        return;
     }
 
     std::string CheckBox::text() {

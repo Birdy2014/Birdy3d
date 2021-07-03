@@ -10,6 +10,7 @@
 
 namespace Birdy3d {
 
+    class Canvas;
     class Rectangle;
     class Text;
     class Theme;
@@ -17,14 +18,6 @@ namespace Birdy3d {
 
     class Widget {
     public:
-        enum class EventType {
-            UPDATE,
-            SCROLL,
-            CLICK,
-            KEY,
-            CHAR
-        };
-
         std::string name;
         bool hidden = false;
         UIVector pos;
@@ -32,7 +25,8 @@ namespace Birdy3d {
         Placement placement;
         Theme* theme;
         float weight = 1; // Size ratio in DirectionalLayout. 0 means stay on minimum size
-        Widget* parent;
+        Widget* parent = nullptr;
+        Canvas* canvas = nullptr;
 
         Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Theme* theme = Application::defaultTheme, std::string name = "");
         virtual ~Widget();
@@ -48,9 +42,10 @@ namespace Birdy3d {
 
         // Returns the size in pixels
         virtual glm::vec2 minimalSize();
-        virtual glm::vec2 preferredSize(glm::vec2 parentSize);
+        glm::vec2 preferredSize(glm::vec2 parentSize);
 
         virtual void arrange(glm::vec2 pos, glm::vec2 size);
+        virtual void set_canvas(Canvas*);
 
         template <class T>
         T* getShape(std::string name = "") {
@@ -64,11 +59,20 @@ namespace Birdy3d {
             return nullptr;
         }
 
+        bool is_hovering();
+        bool is_focused();
+        void focus();
+        void grab_cursor();
+        void ungrab_cursor();
+
         // External Event calls
-        bool notifyEvent(EventType type, Event* event, bool hover);
-        virtual void lateUpdate();
+        virtual bool update_hover(bool hover);
+        virtual void late_update();
+        virtual void on_update() { }
 
     protected:
+        friend class Canvas;
+
         std::vector<Shape*> shapes;
         glm::vec2 actualSize = glm::vec2(1);
         glm::vec2 actualPos = glm::vec2(1);
@@ -76,17 +80,17 @@ namespace Birdy3d {
         glm::mat4 normalizedMove();
 
         // Events
-        virtual bool update(bool hover);
-        virtual bool onScroll(InputScrollEvent* event, bool hover);
-        virtual bool onClick(InputClickEvent* event, bool hover);
-        virtual bool onKey(InputKeyEvent* event, bool hover);
-        virtual bool onChar(InputCharEvent* event, bool hover);
-        virtual void onMouseEnter();
-        virtual void onMouseLeave();
+        virtual void on_scroll(InputScrollEvent* event) { }
+        virtual void on_click(InputClickEvent* event) { }
+        virtual void on_key(InputKeyEvent* event) { }
+        virtual void on_char(InputCharEvent* event) { }
+        virtual void on_mouse_enter() { }
+        virtual void on_mouse_leave() { }
+        virtual void on_focus() { }
+        virtual void on_focus_lost() { }
 
     private:
-        bool hoveredLastFrame = false;
-        bool runMouseEnter = false;
+        bool m_hovered_last_frame = false;
     };
 
 }

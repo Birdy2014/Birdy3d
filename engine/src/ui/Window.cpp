@@ -16,8 +16,8 @@ namespace Birdy3d {
 
     void Window::arrange(glm::vec2 pos, glm::vec2 size) {
         Widget::arrange(pos, size);
-        if (child) {
-            child->arrange(pos + glm::vec2(BORDER_SIZE, BORDER_SIZE), glm::vec2(size.x - 2 * BORDER_SIZE, size.y - BORDER_SIZE - BAR_HEIGHT));
+        if (m_child) {
+            m_child->arrange(pos + glm::vec2(BORDER_SIZE, BORDER_SIZE), glm::vec2(size.x - 2 * BORDER_SIZE, size.y - BORDER_SIZE - BAR_HEIGHT));
         }
     }
 
@@ -31,28 +31,53 @@ namespace Birdy3d {
         if (hidden)
             return;
         Widget::draw();
-        if (child)
-            child->draw();
+        if (m_child)
+            m_child->draw();
     }
 
     glm::vec2 Window::minimalSize() {
         glm::vec2 minSelf = glm::vec2(BAR_HEIGHT + BORDER_SIZE + 10);
         glm::vec2 minChild(0);
-        if (child)
-            minChild = child->minimalSize();
+        if (m_child)
+            minChild = m_child->minimalSize();
         return glm::vec2(std::max(minSelf.x, minChild.x), std::max(minSelf.y, minChild.y));
     }
 
-    void Window::lateUpdate() {
-        Widget::lateUpdate();
-        if (child)
-            child->lateUpdate();
+    void Window::set_child(Widget* child) {
+        child->set_canvas(canvas);
+        m_child = child;
     }
 
-    bool Window::update(bool hover) {
-        if (child && !dragging && !resizeXL && !resizeXR && !resizeY)
-            if (child->notifyEvent(EventType::UPDATE, nullptr, hover))
-                return true;
+    void Window::set_canvas(Canvas* c) {
+        Widget::set_canvas(c);
+
+        if (m_child)
+            m_child->set_canvas(c);
+    }
+
+    bool Window::update_hover(bool hover) {
+        bool success = false;
+        if (hidden)
+            hover = false;
+        if (m_child->update_hover(hover)) {
+            hover = false;
+            success = true;
+        }
+        return Widget::update_hover(hover) || success;
+    }
+
+    void Window::late_update() {
+        if (m_child)
+            m_child->late_update();
+        Widget::late_update();
+    }
+
+    void Window::on_update() {
+        if (m_child)
+            m_child->on_update();
+
+        if (!is_hovering())
+            return;
 
         glm::vec2 localCursorPos = Input::cursorPos() - actualPos;
 
@@ -61,18 +86,19 @@ namespace Birdy3d {
         hoverResizeXR = false;
         hoverResizeY = false;
 
-        if (hover && !closeButton->contains(localCursorPos)) {
-            if (localCursorPos.y >= actualSize.y - BAR_HEIGHT)
-                hoverDrag = true;
+        if (closeButton->contains(localCursorPos))
+            return;
 
-            if (localCursorPos.y < actualSize.y - BAR_HEIGHT) {
-                if (localCursorPos.x < BORDER_SIZE)
-                    hoverResizeXL = true;
-                if (localCursorPos.x > actualSize.x - BORDER_SIZE)
-                    hoverResizeXR = true;
-                if (localCursorPos.y < BORDER_SIZE)
-                    hoverResizeY = true;
-            }
+        if (localCursorPos.y >= actualSize.y - BAR_HEIGHT)
+            hoverDrag = true;
+
+        if (localCursorPos.y < actualSize.y - BAR_HEIGHT) {
+            if (localCursorPos.x < BORDER_SIZE)
+                hoverResizeXL = true;
+            if (localCursorPos.x > actualSize.x - BORDER_SIZE)
+                hoverResizeXR = true;
+            if (localCursorPos.y < BORDER_SIZE)
+                hoverResizeY = true;
         }
 
         // Set cursor
@@ -84,7 +110,7 @@ namespace Birdy3d {
             Input::setCursor(Input::CURSOR_HRESIZE);
         else if (hoverResizeY || resizeY)
             Input::setCursor(Input::CURSOR_VRESIZE);
-        else if (hover)
+        else
             Input::setCursor(Input::CURSOR_DEFAULT);
 
         // Move and resize
@@ -118,47 +144,36 @@ namespace Birdy3d {
                 pos.y -= diffnew;
             }
         }
-
-        return true;
     }
 
-    bool Window::onScroll(InputScrollEvent* event, bool hover) {
-        if (child)
-            child->notifyEvent(EventType::SCROLL, event, hover);
-        return true;
-    }
+    void Window::on_click(InputClickEvent* event) {
+        if (event->button != GLFW_MOUSE_BUTTON_LEFT)
+            return;
 
-    bool Window::onClick(InputClickEvent* event, bool hover) {
-        if (hover && event->button == GLFW_MOUSE_BUTTON_LEFT && event->action == GLFW_PRESS)
+        if (event->action == GLFW_PRESS)
             toForeground();
-
-        if (child && child->notifyEvent(EventType::CLICK, event, hover))
-            hover = false;
-
-        if (event->button != GLFW_MOUSE_BUTTON_LEFT || (!hover && event->action != GLFW_RELEASE))
-            return true;
 
         glm::vec2 localCursorPos = Input::cursorPos() - actualPos;
 
-        if (closeButton->contains(localCursorPos)) {
-            return true;
-        }
+        if (closeButton->contains(localCursorPos))
+            return;
 
         if (event->action == GLFW_RELEASE) {
+            ungrab_cursor();
             dragging = false;
             resizeXL = false;
             resizeXR = false;
             resizeY = false;
             size = actualSize;
-            if (hover)
-                Input::setCursor(Input::CURSOR_DEFAULT);
-            return true;
+            return;
         }
+
+        grab_cursor();
 
         // Moving
         if (hoverDrag) {
             dragging = true;
-            return true;
+            return;
         }
 
         // Resizing
@@ -168,23 +183,9 @@ namespace Birdy3d {
             resizeXR = true;
         if (hoverResizeY)
             resizeY = true;
-
-        return true;
     }
 
-    bool Window::onKey(InputKeyEvent* event, bool hover) {
-        if (child)
-            child->notifyEvent(EventType::KEY, event, hover);
-        return true;
-    }
-
-    bool Window::onChar(InputCharEvent* event, bool hover) {
-        if (child)
-            child->notifyEvent(EventType::CHAR, event, hover);
-        return true;
-    }
-
-    void Window::onMouseLeave() {
+    void Window::on_mouse_leave() {
         Input::setCursor(Input::CURSOR_DEFAULT);
     }
 

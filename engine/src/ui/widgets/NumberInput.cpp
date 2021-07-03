@@ -24,7 +24,7 @@ namespace Birdy3d {
         text(stream.str());
     }
 
-    bool NumberInput::update(bool hover) {
+    void NumberInput::on_update() {
         if (m_dragging) {
             glm::vec2 offsets = Input::cursorPosOffset();
             float change = offsets.x + offsets.y;
@@ -34,13 +34,10 @@ namespace Birdy3d {
                 change *= 0.01;
             value(value() + change);
         }
-        return TextField::update(hover);
+        TextField::on_update();
     }
 
-    bool NumberInput::onScroll(InputScrollEvent* event, bool hover) {
-        if (!hover)
-            return true;
-
+    void NumberInput::on_scroll(InputScrollEvent* event) {
         float change = event->yoffset;
         if (!Input::keyPressed(GLFW_KEY_LEFT_CONTROL))
             change *= 0.1;
@@ -48,34 +45,36 @@ namespace Birdy3d {
             change *= 0.01;
 
         value(m_value + change);
-        return true;
     }
 
-    bool NumberInput::onClick(InputClickEvent* event, bool hover) {
+    void NumberInput::on_click(InputClickEvent* event) {
         if (event->button != GLFW_MOUSE_BUTTON_RIGHT)
-            return TextField::onClick(event, hover);
+            return TextField::on_click(event);
 
-        if (hover && event->action == GLFW_PRESS)
+        if (event->action == GLFW_PRESS) {
+            grab_cursor();
             m_dragging = true;
-
-        if (event->action == GLFW_RELEASE)
+        } else {
+            ungrab_cursor();
             m_dragging = false;
-
-        return true;
+        }
     }
 
-    bool NumberInput::onKey(InputKeyEvent* event, bool hover) {
-        TextField::onKey(event, hover);
+    void NumberInput::on_key(InputKeyEvent* event) {
+        TextField::on_key(event);
         value(std::stof(text()));
-        return true;
     }
 
-    bool NumberInput::onChar(InputCharEvent* event, bool hover) {
+    void NumberInput::on_char(InputCharEvent* event) {
         if (event->codepoint < '0' || event->codepoint > '9')
-            return true;
-        TextField::onChar(event, hover);
+            return;
+        TextField::on_char(event);
         value(std::stof(text()));
-        return true;
+    }
+
+    void NumberInput::on_focus_lost() {
+        TextField::on_focus_lost();
+        m_dragging = false;
     }
 
 }

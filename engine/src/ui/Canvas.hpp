@@ -12,19 +12,22 @@ namespace Birdy3d {
 
         Canvas()
             : AbsoluteLayout(0_px, 100_p) {
-            Application::eventBus->subscribe(this, &Canvas::onScroll);
-            Application::eventBus->subscribe(this, &Canvas::onClick);
-            Application::eventBus->subscribe(this, &Canvas::onKey);
-            Application::eventBus->subscribe(this, &Canvas::onChar);
+            canvas = this;
+            Application::eventBus->subscribe(this, &Canvas::on_scroll);
+            Application::eventBus->subscribe(this, &Canvas::on_click);
+            Application::eventBus->subscribe(this, &Canvas::on_key);
+            Application::eventBus->subscribe(this, &Canvas::on_char);
         };
 
         void update() {
             if (!hidden) {
                 updated = true;
                 glm::vec2 viewport = Application::getViewportSize();
-                AbsoluteLayout::notifyEvent(EventType::UPDATE, nullptr, true);
-                AbsoluteLayout::lateUpdate();
                 AbsoluteLayout::arrange(glm::vec2(0), viewport);
+                if (!m_cursor_grabbed)
+                    AbsoluteLayout::update_hover(true);
+                AbsoluteLayout::on_update();
+                AbsoluteLayout::late_update();
             }
         }
 
@@ -37,20 +40,40 @@ namespace Birdy3d {
         }
 
     private:
-        void onScroll(InputScrollEvent* event) {
-            Layout::notifyEvent(EventType::SCROLL, event, true);
+        friend class Widget;
+
+        Widget* m_hovering_widget = nullptr;
+        Widget* m_focused_widget = nullptr;
+        bool m_cursor_grabbed = false;
+
+        void on_scroll(InputScrollEvent* event) {
+            if (m_cursor_grabbed) {
+                if (m_focused_widget && m_focused_widget != this)
+                    m_focused_widget->on_scroll(event);
+            } else if (m_hovering_widget && m_hovering_widget != this) {
+                m_hovering_widget->on_scroll(event);
+            }
         }
 
-        void onClick(InputClickEvent* event) {
-            Layout::notifyEvent(EventType::CLICK, event, true);
+        void on_click(InputClickEvent* event) {
+            if (m_cursor_grabbed) {
+                if (m_focused_widget && m_focused_widget != this)
+                    m_focused_widget->on_click(event);
+            } else if (m_hovering_widget && m_hovering_widget != this) {
+                if (m_hovering_widget != m_focused_widget && event->action == GLFW_PRESS)
+                    m_hovering_widget->focus();
+                m_hovering_widget->on_click(event);
+            }
         }
 
-        void onKey(InputKeyEvent* event) {
-            Layout::notifyEvent(EventType::KEY, event, true);
+        void on_key(InputKeyEvent* event) {
+            if (m_focused_widget && m_focused_widget != this)
+                m_focused_widget->on_key(event);
         }
 
-        void onChar(InputCharEvent* event) {
-            Layout::notifyEvent(EventType::CHAR, event, true);
+        void on_char(InputCharEvent* event) {
+            if (m_focused_widget && m_focused_widget != this)
+                m_focused_widget->on_char(event);
         }
     };
 

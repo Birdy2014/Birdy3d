@@ -11,13 +11,13 @@ namespace Birdy3d {
     void DirectionalLayout::arrange(glm::vec2 pos, glm::vec2 size) {
         Widget::arrange(pos, size);
 
-        std::list<Widget*> smallerWidgets = children;
-        float gapps = gap * (children.size() - 1);
+        std::list<Widget*> smallerWidgets = m_children;
+        float gapps = gap * (m_children.size() - 1);
         float weights = 0;
         float widgetSize;
         bool horizontal = dir == Direction::LEFT || dir == Direction::RIGHT;
 
-        for (Widget* c : children)
+        for (Widget* c : m_children)
             weights += c->weight;
 
         if (dir == Direction::LEFT || dir == Direction::RIGHT)
@@ -47,7 +47,7 @@ namespace Birdy3d {
         }
 
         float offset = 0;
-        for (Widget* w : children) {
+        for (Widget* w : m_children) {
             float currentWidgetSize = std::max(widgetSize * w->weight, horizontal ? w->minimalSize().x : w->minimalSize().y);
             switch (dir) {
             case Direction::RIGHT:
@@ -72,23 +72,23 @@ namespace Birdy3d {
         switch (dir) {
         case Direction::RIGHT:
         case Direction::LEFT:
-            for (Widget* child : children) {
+            for (Widget* child : m_children) {
                 glm::vec2 csize = child->minimalSize();
                 minsize.x += csize.x;
                 if (csize.y > minsize.y)
                     minsize.y = csize.y;
             }
-            minsize.x += gap * (children.size() - 1);
+            minsize.x += gap * (m_children.size() - 1);
             break;
         case Direction::DOWN:
         case Direction::UP:
-            for (Widget* child : children) {
+            for (Widget* child : m_children) {
                 glm::vec2 csize = child->minimalSize();
                 if (csize.x > minsize.x)
                     minsize.x = csize.x;
                 minsize.y += csize.y;
             }
-            minsize.y += gap * (children.size() - 1);
+            minsize.y += gap * (m_children.size() - 1);
             break;
         }
         glm::vec2 size = this->Widget::minimalSize();

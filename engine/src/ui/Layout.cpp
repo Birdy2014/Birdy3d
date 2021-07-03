@@ -10,74 +10,58 @@ namespace Birdy3d {
 
     void Layout::addChild(Widget* w) {
         w->parent = this;
-        children.push_back(w);
+        w->set_canvas(canvas);
+        m_children.push_back(w);
     }
 
     void Layout::toForeground(Widget* w) {
-        std::list<Widget*>::iterator element = std::find(children.begin(), children.end(), w);
-        children.splice(children.end(), children, element);
+        std::list<Widget*>::iterator element = std::find(m_children.begin(), m_children.end(), w);
+        m_children.splice(m_children.end(), m_children, element);
     }
 
     void Layout::draw() {
         if (hidden)
             return;
         Widget::draw();
-        for (Widget* w : children) {
+        for (Widget* w : m_children) {
             w->draw();
         }
     }
 
-    void Layout::lateUpdate() {
-        for (std::list<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            (*it)->lateUpdate();
-        }
+    void Layout::set_canvas(Canvas* c) {
+        Widget::set_canvas(c);
 
-        Widget::lateUpdate();
+        for (Widget* child : m_children)
+            child->set_canvas(c);
     }
 
-    bool Layout::onScroll(InputScrollEvent* event, bool hover) {
-        for (std::list<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->notifyEvent(EventType::SCROLL, event, hover))
+    bool Layout::update_hover(bool hover) {
+        bool success = false;
+        if (hidden)
+            hover = false;
+        for (std::list<Widget*>::reverse_iterator it = m_children.rbegin(); it != m_children.rend(); it++) {
+            if ((*it)->update_hover(hover)) {
                 hover = false;
+                success = true;
+            }
         }
-
-        return !hover;
+        return Widget::update_hover(hover) || success;
     }
 
-    bool Layout::onClick(InputClickEvent* event, bool hover) {
-        for (std::list<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->notifyEvent(EventType::CLICK, event, hover))
-                hover = false;
+    void Layout::late_update() {
+        for (std::list<Widget*>::reverse_iterator it = m_children.rbegin(); it != m_children.rend(); it++) {
+            (*it)->late_update();
         }
 
-        return !hover;
+        Widget::late_update();
     }
 
-    bool Layout::onKey(InputKeyEvent* event, bool hover) {
-        for (std::list<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->notifyEvent(EventType::KEY, event, hover))
-                hover = false;
+    void Layout::on_update() {
+        for (std::list<Widget*>::reverse_iterator it = m_children.rbegin(); it != m_children.rend(); it++) {
+            (*it)->on_update();
         }
 
-        return !hover;
-    }
-
-    bool Layout::onChar(InputCharEvent* event, bool hover) {
-        for (std::list<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->notifyEvent(EventType::CHAR, event, hover))
-                hover = false;
-        }
-
-        return !hover;
-    }
-
-    bool Layout::update(bool hover) {
-        for (std::list<Widget*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++) {
-            if ((*it)->notifyEvent(EventType::UPDATE, nullptr, hover))
-                hover = false;
-        }
-
-        return !hover;
+        Widget::on_update();
     }
 
 }

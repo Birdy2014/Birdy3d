@@ -14,11 +14,12 @@ namespace Birdy3d {
         float m_value;
         bool m_dragging = false;
 
-        bool update(bool hover) override;
-        bool onScroll(InputScrollEvent* event, bool hover) override;
-        bool onClick(InputClickEvent* event, bool hover) override;
-        bool onKey(InputKeyEvent* event, bool hover) override;
-        bool onChar(InputCharEvent* event, bool hover) override;
+        void on_update() override;
+        void on_scroll(InputScrollEvent* event) override;
+        void on_click(InputClickEvent* event) override;
+        void on_key(InputKeyEvent* event) override;
+        void on_char(InputCharEvent* event) override;
+        void on_focus_lost() override;
     };
 
 }

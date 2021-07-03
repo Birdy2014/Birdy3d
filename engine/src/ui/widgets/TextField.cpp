@@ -32,7 +32,7 @@ namespace Birdy3d {
         theme->text_renderer()->renderText(m_text, 0, actualSize.y - theme->fontSize, theme->fontSize, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start, m_selection_end, "#0000a050");
     }
 
-    bool TextField::update(bool hover) {
+    void TextField::on_update() {
         if (m_selecting) {
             glm::vec2 local_pos = Input::cursorPos() - actualPos;
             int char_pos = theme->text_renderer()->char_index(m_text, theme->fontSize, local_pos.x, true);
@@ -41,38 +41,39 @@ namespace Birdy3d {
             else
                 m_selection_end = char_pos + (m_selection_start < char_pos ? -1 : 0);
         }
-        return true;
     }
 
-    bool TextField::onClick(InputClickEvent* event, bool hover) {
-        if (readonly || event->button != GLFW_MOUSE_BUTTON_LEFT || (!hover && event->action != GLFW_RELEASE))
-            return true;
+    void TextField::on_click(InputClickEvent* event) {
+        if (readonly || event->button != GLFW_MOUSE_BUTTON_LEFT)
+            return;
 
         if (event->action == GLFW_PRESS) {
+            grab_cursor();
             glm::vec2 local_pos = Input::cursorPos() - actualPos;
             int char_pos = theme->text_renderer()->char_index(m_text, theme->fontSize, local_pos.x, true);
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;
         } else if (event->action == GLFW_RELEASE && m_selection_end == -1) {
+            ungrab_cursor();
             m_selecting = false;
             m_cursor_pos = m_selection_start;
             m_selection_start = -1;
             m_selection_end = -1;
         } else if (event->action == GLFW_RELEASE) {
+            ungrab_cursor();
             m_selecting = false;
         }
-        return true;
     }
 
-    bool TextField::onKey(InputKeyEvent* event, bool hover) {
-        if (readonly || !hover || event->action != GLFW_PRESS)
-            return true;
+    void TextField::on_key(InputKeyEvent* event) {
+        if (readonly || event->action != GLFW_PRESS)
+            return;
 
         if (m_selection_start >= 0 && m_selection_end >= 0) {
             if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE)
                 clear_selection();
-            return true;
+            return;
         }
 
         if (m_cursor_pos >= 0) {
@@ -100,34 +101,36 @@ namespace Birdy3d {
                 break;
             }
         }
-        return true;
     }
 
-    bool TextField::onChar(InputCharEvent* event, bool hover) {
-        if (readonly || !hover)
-            return true;
+    void TextField::on_char(InputCharEvent* event) {
+        if (readonly)
+            return;
 
         clear_selection();
 
         if (m_cursor_pos < 0 || m_cursor_pos > (int) m_text.size())
-            return true;
+            return;
 
         char32_t c[2];
         c[0] = event->codepoint;
         c[1] = 0;
         m_text.insert(m_cursor_pos, c);
         m_cursor_pos++;
-        return true;
     }
 
-    void TextField::onMouseEnter() {
+    void TextField::on_mouse_enter() {
         if (!readonly)
             Input::setCursor(Input::CURSOR_TEXT);
     }
 
-    void TextField::onMouseLeave() {
+    void TextField::on_mouse_leave() {
         if (!readonly)
             Input::setCursor(Input::CURSOR_DEFAULT);
+    }
+
+    void TextField::on_focus_lost() {
+        m_cursor_pos = -1;
     }
 
     void TextField::clear_selection() {
@@ -142,8 +145,8 @@ namespace Birdy3d {
         }
     }
 
-    void TextField::lateUpdate() {
-        Widget::lateUpdate();
+    void TextField::late_update() {
+        Widget::late_update();
         if (m_changed && on_change) {
             on_change();
             m_changed = false;
