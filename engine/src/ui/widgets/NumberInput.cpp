@@ -8,9 +8,8 @@
 
 namespace Birdy3d {
 
-    NumberInput::NumberInput(UIVector position, Placement placement, float val)
-        : Widget(position, 0_px, placement) {
-        m_value_text = addText(0_px, theme->fontSize, std::to_string(m_value), theme->color_fg, Placement::CENTER_LEFT);
+    NumberInput::NumberInput(UIVector position, UIVector size, Placement placement, float val)
+        : TextField(position, size, placement) {
         value(val);
     }
 
@@ -22,8 +21,7 @@ namespace Birdy3d {
         m_value = value;
         std::stringstream stream;
         stream << std::fixed << std::setprecision(3) << m_value;
-        m_value_text->text = stream.str();
-        size = theme->text_renderer()->textSize(m_value_text->text, m_value_text->fontSize);
+        text(stream.str());
     }
 
     bool NumberInput::onScroll(InputScrollEvent* event, bool hover) {
@@ -41,6 +39,21 @@ namespace Birdy3d {
     }
 
     bool NumberInput::onClick(InputClickEvent* event, bool hover) {
+        TextField::onClick(event, hover);
+        return true;
+    }
+
+    bool NumberInput::onKey(InputKeyEvent* event, bool hover) {
+        TextField::onKey(event, hover);
+        value(std::stof(text()));
+        return true;
+    }
+
+    bool NumberInput::onChar(InputCharEvent* event, bool hover) {
+        if (event->codepoint < '0' || event->codepoint > '9')
+            return true;
+        TextField::onChar(event, hover);
+        value(std::stof(text()));
         return true;
     }
 

@@ -98,7 +98,10 @@ int main() {
     CheckBox testCheckBox(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Test");
     winLayout.addChild(&testCheckBox);
 
-    NumberInput numberInput(UIVector(0_px, -80), Placement::TOP_LEFT, 0);
+    NumberInput numberInput(UIVector(0_px, -80), UIVector(100_p, 30_px), Placement::TOP_LEFT, 0);
+    numberInput.on_change = [&] {
+        Logger::debug(numberInput.value());
+    };
     winLayout.addChild(&numberInput);
 
     TextField textField(UIVector(0_px, -120), UIVector(100_p, 30_px), Placement::TOP_LEFT);

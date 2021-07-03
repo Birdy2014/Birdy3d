@@ -16,10 +16,14 @@ namespace Birdy3d {
     }
 
     void TextField::text(std::string text) {
-        m_text = theme->text_renderer()->converter.from_bytes(text);
+        std::u32string new_text = theme->text_renderer()->converter.from_bytes(text);
+        if (new_text != m_text)
+            m_changed = true;
+        m_text = new_text;
     }
 
     void TextField::append(std::string text) {
+        m_changed = true;
         m_text += theme->text_renderer()->converter.from_bytes(text);
     }
 
@@ -135,6 +139,14 @@ namespace Birdy3d {
             m_selection_start = -1;
             m_selection_end = -1;
             m_selecting = false;
+        }
+    }
+
+    void TextField::lateUpdate() {
+        Widget::lateUpdate();
+        if (m_changed && on_change) {
+            on_change();
+            m_changed = false;
         }
     }
 
