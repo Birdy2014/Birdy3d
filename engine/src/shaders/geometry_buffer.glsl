@@ -48,7 +48,7 @@ void main() {
     gAlbedoSpec.rgb = material.diffuse_map_enabled ? texture(material.diffuse_map, TexCoords).rgb : material.diffuse_color.rgb;
 
     if (material.normal_map_enabled)
-        gNormal = normalize(TBN * texture(material.normal_map, TexCoords).rgb * 2.0 - 1.0);
+        gNormal = normalize(TBN * (texture(material.normal_map, TexCoords).rgb * 2.0 - 1.0));
     else
         gNormal = normalize(Normal);
 
