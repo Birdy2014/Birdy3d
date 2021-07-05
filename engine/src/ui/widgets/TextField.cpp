@@ -137,6 +137,8 @@ namespace Birdy3d {
         if (m_selection_start != -1 && m_selection_end != -1) {
             if (m_selection_start > m_selection_end)
                 std::swap(m_selection_start, m_selection_end);
+            else
+                m_selection_end++;
             m_text.erase(m_text.begin() + m_selection_start, m_text.begin() + m_selection_end);
             m_cursor_pos = m_selection_start;
             m_selection_start = -1;
