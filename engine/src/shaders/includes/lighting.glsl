@@ -76,21 +76,19 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDi
     vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos, 1.0);
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
-    float closestDepth = texture(light.shadowMap, projCoords.xy).r;
     float currentDepth = projCoords.z;
-    lightDir = normalize(light.position - fragPos);
-    //float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-    float bias = 0;
+    float bias = max(0.0001 * (1.0 - dot(normal, lightDir)), 0.0);
 
     float shadow = 0;
     vec2 texelSize = 1.0 / textureSize(light.shadowMap, 0);
-    for (int x = -1; x <= 1; x++) {
-        for (int y = -1; y <= 1; y++) {
+    texelSize *= 0.4;
+    for (int x = -2; x <= 2; x++) {
+        for (int y = -2; y <= 2; y++) {
             float pcfDepth = texture(light.shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+            shadow += ((currentDepth - bias) > pcfDepth) ? 1.0 : 0.0;
         }
     }
-    shadow /= 9.0;
+    shadow /= 25.0;
 
     if (projCoords.z > 1.0)
         shadow = 0.0;

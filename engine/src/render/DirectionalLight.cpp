@@ -12,7 +12,7 @@ namespace Birdy3d {
 
     DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, bool shadow_enabled)
         : Light(RessourceManager::getShader("directional_light_depth"), ambient, diffuse, 1.0f, 1.0f, shadow_enabled) {
-        camOffset = 10;
+        camOffset = 30;
     }
 
     void DirectionalLight::setupShadowMap() {
@@ -22,8 +22,8 @@ namespace Birdy3d {
         glGenTextures(1, &m_depthMap);
         glBindTexture(GL_TEXTURE_2D, m_depthMap);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
         glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -52,6 +52,7 @@ namespace Birdy3d {
         glBindTexture(GL_TEXTURE_2D, m_depthMap);
         lightShader->setMat4(name + "lightSpaceMatrix", lightSpaceMatrix);
         lightShader->setInt(name + "shadowMap", textureid);
+        // TODO: cascaded shadow map
     }
 
     void DirectionalLight::genShadowMap() {
@@ -67,7 +68,7 @@ namespace Birdy3d {
 
         m_depthShader->use();
         float nearPlane = 1.0f, farPlane = 100.0f;
-        glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, nearPlane, farPlane);
+        glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
         glm::mat4 lightView = glm::lookAt(absPos, absPos + object->absForward(), object->absUp());
         lightSpaceMatrix = lightProjection * lightView;
         m_depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
