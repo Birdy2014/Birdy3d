@@ -25,7 +25,7 @@ namespace Birdy3d {
 
         void render(Shader* shader, bool transparent) {
             if (model)
-                model->render(object, *material, shader, transparent);
+                model->render(object, material, shader, transparent);
             else
                 Logger::error("No model specified");
         }

@@ -19,13 +19,15 @@ namespace Birdy3d {
         load();
     }
 
-    void Model::render(GameObject* object, const Material& material, Shader* shader, bool transparent) {
+    void Model::render(GameObject* object, const Material* material, Shader* shader, bool transparent) {
+        if (material == nullptr)
+            material = &m_embedded_material;
         glm::mat4 model = object->transform.matrix();
         shader->use();
         shader->setMat4("model", model);
         for (Mesh* m : m_meshes) {
-            if (transparent == material.transparent())
-                m->render(shader, material);
+            if (transparent == material->transparent())
+                m->render(shader, *material);
         }
     }
 
@@ -106,35 +108,32 @@ namespace Birdy3d {
         }
 
         // process material
-        /*
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         aiString path;
 
         if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-            textures.push_back(RessourceManager::getTexture(directory + "/" + path.C_Str(), "texture_diffuse"));
+            m_embedded_material.diffuse_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.diffuse_map_enabled = true;
         }
 
         if (material->GetTextureCount(aiTextureType_SPECULAR) > 0) {
             material->GetTexture(aiTextureType_SPECULAR, 0, &path);
-            textures.push_back(RessourceManager::getTexture(directory + "/" + path.C_Str(), "texture_specular"));
+            m_embedded_material.specular_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.specular_map_enabled = true;
         }
 
         if (material->GetTextureCount(aiTextureType_NORMALS) > 0) {
             material->GetTexture(aiTextureType_NORMALS, 0, &path);
-            textures.push_back(RessourceManager::getTexture(directory + "/" + path.C_Str(), "texture_normal"));
-        }
-
-        if (material->GetTextureCount(aiTextureType_HEIGHT) > 0) {
-            material->GetTexture(aiTextureType_HEIGHT, 0, &path);
-            textures.push_back(RessourceManager::getTexture(directory + "/" + path.C_Str(), "texture_height"));
+            m_embedded_material.normal_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.normal_map_enabled = true;
         }
 
         if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0) {
             material->GetTexture(aiTextureType_EMISSIVE, 0, &path);
-            textures.push_back(RessourceManager::getTexture(directory + "/" + path.C_Str(), "texture_emissive"));
+            m_embedded_material.emissive_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.emissive_map_enabled = true;
         }
-        */
 
         return new Mesh(vertices, indices);
     }

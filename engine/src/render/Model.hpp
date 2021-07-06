@@ -17,7 +17,7 @@ namespace Birdy3d {
     public:
         Model(const std::string& path);
         ~Model();
-        void render(GameObject* object, const Material& material, Shader* shader, bool transparent);
+        void render(GameObject* object, const Material* material, Shader* shader, bool transparent);
         void renderDepth(GameObject* object, Shader* shader);
         const std::vector<Mesh*>& getMeshes();
 
@@ -25,6 +25,7 @@ namespace Birdy3d {
         std::string m_path;
         std::vector<Mesh*> m_meshes;
         std::string m_directory;
+        Material m_embedded_material;
 
         void load();
         void processNode(aiNode* node, const aiScene* scene);

@@ -120,7 +120,6 @@ int main() {
     player->addComponent(new FPPlayerController());
     scene->addChild(player);
 
-    Material defaultMaterial;
     Material redTransparentMaterial;
     redTransparentMaterial.diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
     Material blueTransparentMaterial;
@@ -132,7 +131,7 @@ int main() {
     scene->addChild(obj);
 
     GameObject* obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-    obj2->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", &defaultMaterial));
+    obj2->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", nullptr));
     scene->addChild(obj2);
 
     GameObject* obj3 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
@@ -142,7 +141,7 @@ int main() {
 
     // Spheres
     GameObject* sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
-    sphere1->addComponent(new ModelComponent("./ressources/testObjects/sphere.obj", &defaultMaterial));
+    sphere1->addComponent(new ModelComponent("./ressources/testObjects/sphere.obj", nullptr));
     sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 1)));
     sphere1->addComponent(new TestComponent());
     scene->addChild(sphere1);
