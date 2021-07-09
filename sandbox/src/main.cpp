@@ -59,7 +59,7 @@ int main() {
     Input::init();
 
     // UI
-    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "TTF/DejaVuSans.ttf", 22);
+    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "#1d2021", "TTF/DejaVuSans.ttf", 22);
 
     Canvas canvas;
 

@@ -13,7 +13,6 @@ namespace Birdy3d {
         : TextField(pos, size, placement) {
         scrollpos = 0;
         m_tmpscroll = 0;
-        addFilledRectangle(0_px, 100_p, theme->color_bg);
     }
 
     void Textarea::arrange(glm::vec2 pos, glm::vec2 size) {

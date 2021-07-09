@@ -8,7 +8,7 @@ namespace Birdy3d {
 
     TextField::TextField(UIVector position, UIVector size, Placement placement)
         : Widget(position, size, placement) {
-        addRectangle(0_px, 100_p, theme->color_border);
+        addFilledRectangle(0_px, 100_p, theme->color_input_bg);
     }
 
     std::string TextField::text() {
