@@ -29,7 +29,7 @@ namespace Birdy3d {
 
     void TextField::draw() {
         Widget::draw();
-        theme->text_renderer()->renderText(m_text, 0, actualSize.y - theme->fontSize, theme->fontSize, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start, m_selection_end, "#0000a050");
+        theme->text_renderer()->renderText(m_text, 0, actualSize.y - theme->fontSize, theme->fontSize, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, "#0000a050");
     }
 
     void TextField::on_update() {

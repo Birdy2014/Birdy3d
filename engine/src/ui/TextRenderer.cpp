@@ -62,21 +62,18 @@ namespace Birdy3d {
         renderText(text, x, y, fontSize, color, m);
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, int hlstart, int hlend, Color hlcolor) {
+    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color hlcolor) {
         std::u32string converted = converter.from_bytes(text);
-        renderText(converted, x, y, fontSize, color, move, cursorpos, hlstart, hlend, hlcolor);
+        renderText(converted, x, y, fontSize, color, move, cursorpos, highlight, hlstart, hlend, hlcolor);
     }
 
-    void TextRenderer::renderText(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, int hlstart, int hlend, Color hlcolor) {
-        if (hlstart == -1 || hlend == -1)
-            hlstart = hlend = -1;
-
+    void TextRenderer::renderText(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color hlcolor) {
         if (hlstart > hlend) {
             std::swap(hlstart, hlend);
             hlend--;
         }
 
-        bool highlighting = false;
+        bool highlighting = highlight && hlstart < 0;
         float scale = (fontSize / m_fontSize);
         char16_t c;
         for (int i = 0; i <= (int)text.length(); i++) {
@@ -85,7 +82,7 @@ namespace Birdy3d {
             else
                 c = ' ';
 
-            if (i == hlstart)
+            if (highlight && i == hlstart)
                 highlighting = true;
             if (hlend >= 0 && i == hlend + 1)
                 highlighting = false;

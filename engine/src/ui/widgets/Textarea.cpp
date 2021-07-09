@@ -9,17 +9,11 @@
 
 namespace Birdy3d {
 
-    Textarea::Textarea(UIVector pos, UIVector size, Placement placement, bool readonly)
-        : Widget(pos, size, placement)
-        , readonly(readonly) {
+    Textarea::Textarea(UIVector pos, UIVector size, Placement placement)
+        : TextField(pos, size, placement) {
         scrollpos = 0;
         m_tmpscroll = 0;
         addFilledRectangle(0_px, 100_p, theme->color_bg);
-    }
-
-    void Textarea::append(const std::string& text) {
-        m_text += theme->text_renderer()->converter.from_bytes(text);
-        updateLines();
     }
 
     void Textarea::arrange(glm::vec2 pos, glm::vec2 size) {
@@ -29,8 +23,6 @@ namespace Birdy3d {
 
     void Textarea::draw() {
         Widget::draw();
-        if (m_selecting)
-            updateCursorEnd();
         int linec = actualSize.y / theme->lineHeight;
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
@@ -43,25 +35,12 @@ namespace Birdy3d {
             // draw lines
             line = l + floor(m_tmpscroll);
             int y = actualSize.y - (l + 1) * theme->lineHeight + (m_tmpscroll - floor(m_tmpscroll)) * theme->lineHeight;
+            int selection_start = m_selection_start <= m_selection_end ? m_selection_start : m_selection_end;
+            int selection_end = m_selection_start <= m_selection_end ? m_selection_end + 1 : m_selection_start;
+            selection_end--;
             if (line >= 0 && line < m_lines.size()) {
-                int highlightstart = -1;
-                int highlightend = -1;
-                if (m_selectionStart < m_selectionEnd) {
-                    if (line == m_selectionStartY)
-                        highlightstart = m_selectionStartX;
-                    if (line > m_selectionStartY && line <= m_selectionEndY)
-                        highlightstart = 0;
-                    if (line == m_selectionEndY)
-                        highlightend = m_selectionEndX;
-                } else if (m_selectionStart > m_selectionEnd) {
-                    if (line == m_selectionStartY)
-                        highlightend = m_selectionStartX;
-                    if (line <= m_selectionStartY && line > m_selectionEndY)
-                        highlightstart = 0;
-                    if (line == m_selectionEndY)
-                        highlightstart = m_selectionEndX;
-                }
-                theme->text_renderer()->renderText(m_lines[line], 0, y, theme->fontSize, theme->color_fg, normalizedMove(), line == m_textCursorY ? m_textCursorX : -1, highlightstart, highlightend - 1, "#0000a050");
+                size_t line_start = line > 0 ? m_lines[line - 1] : 0;
+                theme->text_renderer()->renderText(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, theme->fontSize, theme->color_fg, normalizedMove(), m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, "#0000a050");
             }
         }
     }
@@ -69,6 +48,7 @@ namespace Birdy3d {
     void Textarea::updateLines() {
         m_lines.clear();
         std::u32string line;
+        size_t line_end;
         size_t pos = 0, eol = 0, nextspace = 0, prevspace = 0, length = 0;
         while (pos != std::u32string::npos && pos < m_text.length()) {
             eol = m_text.find_first_of('\n', pos);
@@ -76,6 +56,7 @@ namespace Birdy3d {
                 eol = m_text.length();
 
             line = m_text.substr(pos, eol - pos);
+            line_end = eol;
             // Line is too long
             length = theme->text_renderer()->textSize(line, theme->fontSize).x;
             if (length > actualSize.x) {
@@ -84,6 +65,7 @@ namespace Birdy3d {
                     prevspace = nextspace;
                     nextspace = m_text.find_first_of(' ', prevspace + 1);
                     line = m_text.substr(pos, nextspace - pos);
+                    line_end = nextspace;
 
                     // reached the space too far right
                     length = theme->text_renderer()->textSize(line, theme->fontSize).x;
@@ -92,25 +74,24 @@ namespace Birdy3d {
                         if (prevspace == pos)
                             prevspace = eol;
                         line = m_text.substr(pos, prevspace - pos);
+                        line_end = prevspace;
                         break;
                     }
                 }
                 eol = prevspace;
             }
-            if (m_textCursor >= pos && m_textCursor <= eol) {
-                m_textCursorX = m_textCursor - pos;
-                m_textCursorY = m_lines.size();
-            }
-            if (m_selectionStart >= pos && m_selectionStart < eol) {
-                m_selectionStartX = m_selectionStart - pos;
-                m_selectionStartY = m_lines.size();
-            }
-            if (m_selectionEnd >= pos && m_selectionEnd < eol) {
-                m_selectionEndX = m_selectionEnd - pos;
-                m_selectionEndY = m_lines.size();
-            }
             pos = eol + 1;
-            m_lines.push_back(line);
+            m_lines.push_back(line_end + 1);
+        }
+    }
+
+    void Textarea::on_update() {
+        if (m_selecting) {
+            int char_pos = cursorCharPos();
+            if (m_selection_start == char_pos)
+                m_selection_end = -1;
+            else
+                m_selection_end = char_pos + (m_selection_start < char_pos ? -1 : 0);
         }
     }
 
@@ -118,30 +99,20 @@ namespace Birdy3d {
         if (readonly)
             return;
 
-        glm::ivec3 charPos = cursorCharPos();
+        size_t char_pos = cursorCharPos();
 
         if (event->action == GLFW_PRESS) {
             grab_cursor();
             m_selecting = true;
-            m_selectionStart = charPos.z;
-            m_selectionStartX = charPos.x;
-            m_selectionStartY = charPos.y;
-            m_textCursor = -1;
-            m_textCursorX = -1;
-            m_textCursorY = -1;
-        } else if (event->action == GLFW_RELEASE && charPos.z == m_selectionStart) {
+            m_selection_start  = char_pos;
+            m_cursor_pos = -1;
+        } else if (event->action == GLFW_RELEASE && char_pos == m_selection_start) {
             ungrab_cursor();
             m_selecting = false;
-            m_textCursor = m_selectionStart;
-            m_textCursorX = m_selectionStartX;
-            m_textCursorY = m_selectionStartY;
-            m_selectionStart = -1;
-            m_selectionStartX = -1;
-            m_selectionStartY = -1;
-            m_selectionEnd = -1;
-            m_selectionEndX = -1;
-            m_selectionEndY = -1;
-        } else if (event->action == GLFW_RELEASE && charPos.z != m_selectionStart) {
+            m_cursor_pos = m_selection_start;
+            m_selection_start  = -1;
+            m_selection_end  = -1;
+        } else if (event->action == GLFW_RELEASE && char_pos != m_selection_start) {
             ungrab_cursor();
             m_selecting = false;
         }
@@ -154,126 +125,69 @@ namespace Birdy3d {
     }
 
     void Textarea::on_char(InputCharEvent* event) {
-        if (readonly || m_selectionStart < 0 && m_textCursor < 0)
-            return;
-        clearSelection();
-        m_text.insert(m_textCursor, (char32_t*)&event->codepoint);
-        m_textCursor++;
+        TextField::on_char(event);
         updateLines();
     }
 
     // TODO: key repeat
     void Textarea::on_key(InputKeyEvent* event) {
-        if (readonly || event->action != GLFW_PRESS)
+        TextField::on_key(event);
+        if (readonly || event->action != GLFW_PRESS || m_cursor_pos <= 0)
             return;
-        if (m_selectionStart >= 0 && m_selectionEnd >= 0) {
-            if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE) {
-                clearSelection();
-            }
-        } else if (m_textCursor > 0) {
-            switch (event->key) {
-            case GLFW_KEY_DELETE:
-                if (m_textCursor >= m_text.length())
-                    break;
-                m_text.erase(m_text.begin() + m_textCursor, m_text.begin() + m_textCursor + 1);
+        glm::ivec2 pos = get_2d_pos(m_cursor_pos);
+        switch (event->key) {
+        case GLFW_KEY_UP: {
+            if (m_cursor_pos < m_lines[0])
                 break;
-            case GLFW_KEY_BACKSPACE:
-                if (m_textCursor <= 0)
-                    break;
-                m_text.erase(m_text.begin() + m_textCursor - 1, m_text.begin() + m_textCursor);
-                m_textCursor--;
-                break;
-            case GLFW_KEY_LEFT:
-                if (m_textCursor <= 0)
-                    break;
-                m_textCursor--;
-                break;
-            case GLFW_KEY_RIGHT:
-                if (m_textCursor >= m_text.length())
-                    break;
-                m_textCursor++;
-                break;
-            case GLFW_KEY_UP:
-                if (m_textCursorY <= 0)
-                    break;
-                m_textCursor -= (m_lines[m_textCursorY - 1].size() + 1) > m_textCursorX ? (m_lines[m_textCursorY - 1].size() + 1) : m_textCursorX + 1;
-                break;
-            case GLFW_KEY_DOWN: {
-                if (m_textCursorY >= m_lines.size())
-                    break;
-                int lineLength = m_lines[m_textCursorY].size();
-                if (m_lines[m_textCursorY + 1].size() + 1 > m_textCursorX)
-                    m_textCursor += lineLength + 1;
-                else
-                    m_textCursor += lineLength - m_textCursorX + 1 + m_lines[m_textCursorY + 1].size();
-                break;
-            }
-            case GLFW_KEY_ENTER: {
-                m_text.insert(m_textCursor, U"\n");
-                m_textCursor++;
-                break;
-            }
-            }
+            int prev_line_length = m_lines[pos.y - 1] - (pos.y == 1 ? 0 : m_lines[pos.y - 2]) - 1;
+            if (prev_line_length > pos.x)
+                m_cursor_pos -= prev_line_length + 1;
+            else
+                m_cursor_pos -= pos.x + 1;
+            break;
         }
-    }
-
-    void Textarea::on_mouse_enter() {
-        if (!readonly)
-            Input::setCursor(Input::CURSOR_TEXT);
-    }
-
-    void Textarea::on_mouse_leave() {
-        if (!readonly)
-            Input::setCursor(Input::CURSOR_DEFAULT);
-    }
-
-    void Textarea::clearSelection() {
-        if (m_selectionStart != -1 && m_selectionEnd != -1) {
-            m_text.erase(m_text.begin() + m_selectionStart, m_text.begin() + m_selectionEnd);
-            m_textCursor = m_selectionStart;
-            m_selectionStart = -1;
-            m_selectionEnd = -1;
-            m_selecting = false;
+        case GLFW_KEY_DOWN: {
+            if (pos.y >= m_lines.size())
+                break;
+            int line_length = m_lines[pos.y] - m_lines[pos.y - 1] - 1;
+            int next_line_length = m_lines[pos.y + 1] - m_lines[pos.y] - 1;
+            if (next_line_length > pos.x)
+                m_cursor_pos += line_length + 1;
+            else
+                m_cursor_pos += line_length - pos.x + next_line_length + 1;
+            break;
         }
+        case GLFW_KEY_ENTER: {
+            m_text.insert(m_cursor_pos, U"\n");
+            m_cursor_pos++;
+            break;
+        }
+        }
+        updateLines();
     }
 
-    void Textarea::updateCursorEnd() {
-        glm::ivec3 charPos = cursorCharPos();
+    size_t Textarea::cursorCharPos() {
+        glm::vec2 local_pos = Input::cursorPos() - actualPos;
 
-        m_selectionEnd = charPos.z;
-        m_selectionEndX = charPos.x;
-        m_selectionEndY = charPos.y;
-    }
-
-    glm::ivec3 Textarea::cursorCharPos() {
-        glm::vec2 localPos = Input::cursorPos() - actualPos;
-
-        int y = m_tmpscroll + (actualSize.y - localPos.y) / theme->lineHeight;
+        int y = m_tmpscroll + (actualSize.y - local_pos.y) / theme->lineHeight;
         if (y >= m_lines.size())
             y = m_lines.size() - 1;
-        int x = -1;
-        float width = 0;
-        std::u32string line = m_lines[y];
-        for (int i = 0; i < line.length(); i++) {
-            float charWidth = theme->text_renderer()->charWidth(line[i], theme->fontSize);
-            width += charWidth;
-            // Correction for click between characters
-            if (width > localPos.x + charWidth / 2) {
-                x = i;
-                break;
-            }
-            if (width > localPos.x) {
-                x = i + 1;
-                break;
+
+        size_t line_start = y > 0 ? m_lines[y - 1] : 0;
+        int char_pos = theme->text_renderer()->char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), theme->fontSize, local_pos.x, true);
+        return line_start + char_pos;
+    }
+
+    glm::ivec2 Textarea::get_2d_pos(size_t pos) {
+        for (size_t y = 0; y < m_lines.size(); y++) {
+            if (m_lines[y] > pos) {
+                if (y == 0)
+                    return glm::ivec2(pos, y);
+                else
+                    return glm::ivec2(pos - m_lines[y - 1], y);
             }
         }
-        if (x == -1)
-            x = line.length();
-
-        int pos = x;
-        for (int i = 0; i < y; i++)
-            pos += m_lines[i].length() + 1;
-
-        return glm::ivec3(x, y, pos);
+        return glm::vec2(m_lines.size(), 0);
     }
+
 }

@@ -17,6 +17,13 @@ namespace Birdy3d {
         virtual void draw() override;
 
     protected:
+        std::u32string m_text;
+        bool m_selecting = false;
+        int m_cursor_pos = -1;
+        int m_selection_start = -1;
+        int m_selection_end = -1;
+        bool m_changed = false;
+
         // Events
         virtual void on_update() override;
         virtual void on_click(InputClickEvent* event) override;
@@ -26,17 +33,7 @@ namespace Birdy3d {
         virtual void on_mouse_leave() override;
         virtual void on_focus_lost() override;
 
-        // Helpers
         void clear_selection();
-
-    private:
-        std::u32string m_text;
-        bool m_selecting = false;
-        int m_cursor_pos = -1;
-        int m_selection_start = -1;
-        int m_selection_end = -1;
-        bool m_changed = false;
-
         void late_update() override;
     };
 
