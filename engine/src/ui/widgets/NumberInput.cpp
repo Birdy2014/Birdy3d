@@ -18,7 +18,7 @@ namespace Birdy3d {
     }
 
     void NumberInput::value(float value) {
-        m_value = value;
+        m_value = std::clamp(value, min_value, max_value);
         std::stringstream stream;
         stream << std::fixed << std::setprecision(3) << m_value;
         text(stream.str());
