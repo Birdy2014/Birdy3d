@@ -34,6 +34,7 @@ namespace Birdy3d {
         m_deferred_geometry_shader = RessourceManager::getShader("geometry_buffer");
         m_deferred_light_shader = RessourceManager::getShader("deferred_lighting");
         m_forward_shader = RessourceManager::getShader("forward_lighting");
+        m_normal_shader = RessourceManager::getShader("normal_display");
         m_deferred_light_shader->use();
         m_deferred_light_shader->setInt("gPosition", 0);
         m_deferred_light_shader->setInt("gNormal", 1);
@@ -83,6 +84,9 @@ namespace Birdy3d {
         } else {
             renderForward(true);
         }
+
+        if (display_normals)
+            renderNormals();
 
         // GUI
         if (canvas) {
@@ -264,6 +268,25 @@ namespace Birdy3d {
 
         for (std::map<float, ModelComponent*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++) {
             it->second->render(m_forward_shader.get(), true);
+        }
+    }
+
+    void Camera::renderNormals() {
+        glm::vec3 absPos = object->transform.worldPosition();
+        glm::vec3 absForward = object->absForward();
+        glm::vec3 up = object->absUp();
+        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+
+        glEnable(GL_DEPTH_TEST);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        m_normal_shader->use();
+        m_normal_shader->setMat4("projection", m_projection);
+        m_normal_shader->setMat4("view", view);
+        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+            m->render(m_normal_shader.get(), false);
+            m->render(m_normal_shader.get(), true);
         }
     }
 

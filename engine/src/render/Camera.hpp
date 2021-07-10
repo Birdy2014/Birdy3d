@@ -12,6 +12,7 @@ namespace Birdy3d {
     class Camera : public Component {
     public:
         Canvas* canvas = nullptr;
+        bool display_normals = false;
 
         Camera(int width, int height, bool deferred);
         Camera(int width, int height, bool deferred, Canvas* canvas);
@@ -27,7 +28,7 @@ namespace Birdy3d {
         glm::mat4 m_projection;
         unsigned int m_quad_vao = 0;
         unsigned int m_quad_vbo;
-        std::shared_ptr<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader;
+        std::shared_ptr<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader, m_normal_shader;
         bool m_deferred_enabled;
 
         void createGBuffer();
@@ -35,6 +36,7 @@ namespace Birdy3d {
         void renderQuad();
         void renderDeferred();
         void renderForward(bool renderOpaque);
+        void renderNormals();
     };
 
 }
