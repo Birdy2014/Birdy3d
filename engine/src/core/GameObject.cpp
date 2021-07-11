@@ -18,13 +18,13 @@ namespace Birdy3d {
         this->children.push_back(c);
     }
 
-    void GameObject::addComponent(Component* c) {
+    void GameObject::add_component(std::unique_ptr<Component> c) {
         c->object = this;
-        this->components.push_back(c);
+        m_components.push_back(std::move(c));
     }
 
     void GameObject::start() {
-        for (Component* c : this->components) {
+        for (std::unique_ptr<Component>& c : m_components) {
             c->_start();
         }
         for (GameObject* o : this->children) {
@@ -36,7 +36,7 @@ namespace Birdy3d {
         if (hidden)
             return;
 
-        for (Component* c : this->components) {
+        for (std::unique_ptr<Component>& c : m_components) {
             c->_update();
         }
         for (GameObject* o : this->children) {
@@ -45,7 +45,7 @@ namespace Birdy3d {
     }
 
     void GameObject::cleanup() {
-        for (Component* c : this->components) {
+        for (std::unique_ptr<Component>& c : m_components) {
             c->_cleanup();
         }
     }

@@ -116,8 +116,8 @@ int main() {
     Scene* scene = new Scene();
 
     player = new GameObject(glm::vec3(0, 0, 3));
-    player->addComponent(new Camera(800, 600, true, &canvas));
-    player->addComponent(new FPPlayerController());
+    player->add_component<Camera>(800, 600, true, &canvas);
+    player->add_component<FPPlayerController>();
     scene->addChild(player);
 
     Material redTransparentMaterial;
@@ -126,24 +126,24 @@ int main() {
     blueTransparentMaterial.diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
 
     GameObject* obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-    obj->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", &redTransparentMaterial));
-    obj->addComponent(new Collider());
+    obj->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &redTransparentMaterial);
+    obj->add_component<Collider>();
     scene->addChild(obj);
 
     GameObject* obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-    obj2->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", nullptr));
+    obj2->add_component<ModelComponent>("./ressources/testObjects/cube.obj", nullptr);
     scene->addChild(obj2);
 
     GameObject* obj3 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
-    obj3->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", &blueTransparentMaterial));
-    obj3->addComponent(new Collider());
+    obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &blueTransparentMaterial);
+    obj3->add_component<Collider>();
     scene->addChild(obj3);
 
     // Spheres
     GameObject* sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
-    sphere1->addComponent(new ModelComponent("./ressources/testObjects/sphere.obj", nullptr));
-    sphere1->addComponent(new Collider(new CollisionSphere(glm::vec3(0), 1)));
-    sphere1->addComponent(new TestComponent());
+    sphere1->add_component<ModelComponent>("./ressources/testObjects/sphere.obj", nullptr);
+    sphere1->add_component<Collider>(new CollisionSphere(glm::vec3(0), 1));
+    sphere1->add_component<TestComponent>();
     scene->addChild(sphere1);
 
     bool collision = false;
@@ -154,17 +154,17 @@ int main() {
 
     // Light
     GameObject* dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
-    dirLight->addComponent(new DirectionalLight(glm::vec3(0.2f), glm::vec3(0.7f)));
+    dirLight->add_component<DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
     scene->addChild(dirLight);
     GameObject* pLight = new GameObject(glm::vec3(2.0f, 1.5f, 4.0f));
-    pLight->addComponent(new PointLight(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f));
+    pLight->add_component<PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
     scene->addChild(pLight);
     GameObject* sLight = new GameObject(glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
-    sLight->addComponent(new Spotlight(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f));
+    sLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
     scene->addChild(sLight);
 
     GameObject* flashLight = new GameObject(glm::vec3(0), glm::vec3(0));
-    flashLight->addComponent(new Spotlight(glm::vec3(0), glm::vec3(1), glm::radians(30.0f), glm::radians(40.0f), 0.08f, 0.02f, false));
+    flashLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1), glm::radians(30.0f), glm::radians(40.0f), 0.08f, 0.02f, false);
     flashLight->hidden = true;
     player->addChild(flashLight);
 
@@ -189,7 +189,7 @@ int main() {
         Material* newMaterial = new Material();
         newMaterial->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
         GameObject* newCube = new GameObject(glm::vec3(x, y, z));
-        newCube->addComponent(new ModelComponent("./ressources/testObjects/cube.obj", newMaterial));
+        newCube->add_component<ModelComponent>("./ressources/testObjects/cube.obj", newMaterial);
         scene->addChild(newCube);
         Logger::debug("Created cube at x: ", x, " y: ", y, " z: ", z);
     },
