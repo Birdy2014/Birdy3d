@@ -88,7 +88,7 @@ int main() {
     testWindow.hidden = true;
     canvas.addChild(&testWindow);
 
-    AbsoluteLayout winLayout(0_px, 100_p);
+    DirectionalLayout winLayout(DirectionalLayout::Direction::DOWN, Placement::TOP_LEFT, 100_p, 10, true);
     testWindow.set_child(&winLayout);
 
     Textarea area2(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
