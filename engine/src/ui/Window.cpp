@@ -40,7 +40,7 @@ namespace Birdy3d {
         glm::vec2 minChild(0);
         if (m_child)
             minChild = m_child->minimalSize();
-        return glm::vec2(std::max(minSelf.x, minChild.x), std::max(minSelf.y, minChild.y));
+        return minSelf + minChild;
     }
 
     void Window::set_child(Widget* child) {
@@ -133,9 +133,9 @@ namespace Birdy3d {
             size.x += Input::cursorPosOffset().x;
         }
         if (resizeY) {
-            float diffold = size.y - minimalSize().x;
+            float diffold = size.y - minimalSize().y;
             size.y -= Input::cursorPosOffset().y;
-            float diffnew = size.y - minimalSize().x;
+            float diffnew = size.y - minimalSize().y;
             if (diffold >= 0 && diffnew >= 0) {
                 pos.y += Input::cursorPosOffset().y;
             } else if (diffold >= 0 && diffnew < 0) {
