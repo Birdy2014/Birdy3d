@@ -18,13 +18,15 @@ namespace Birdy3d {
     }
 
     void DirectionalLayout::arrange_full_size() {
-        std::list<Widget*> smallerWidgets = m_children;
+        std::list<Widget*> smallerWidgets;
+        for (const std::unique_ptr<Widget>& widget : m_children)
+            smallerWidgets.push_back(widget.get());
         float gapps = gap * (m_children.size() - 1);
         float weights = 0;
         float widgetSize;
         bool horizontal = dir == Direction::LEFT || dir == Direction::RIGHT;
 
-        for (Widget* c : m_children)
+        for (const std::unique_ptr<Widget>& c : m_children)
             weights += c->weight;
 
         if (dir == Direction::LEFT || dir == Direction::RIGHT)
@@ -54,7 +56,7 @@ namespace Birdy3d {
         }
 
         float offset = 0;
-        for (Widget* w : m_children) {
+        for (const std::unique_ptr<Widget>& w : m_children) {
             float currentWidgetSize = std::max(widgetSize * w->weight, horizontal ? w->minimalSize().x : w->minimalSize().y);
             switch (dir) {
             case Direction::RIGHT:
@@ -76,7 +78,7 @@ namespace Birdy3d {
 
     void DirectionalLayout::arrange_preserve_size() {
         float offset = 0;
-        for (Widget* w : m_children) {
+        for (const std::unique_ptr<Widget>& w : m_children) {
             glm::vec2 widget_size = w->preferredSize(actualSize);
             switch (dir) {
             case Direction::RIGHT:
@@ -104,7 +106,7 @@ namespace Birdy3d {
         switch (dir) {
         case Direction::RIGHT:
         case Direction::LEFT:
-            for (Widget* child : m_children) {
+            for (const std::unique_ptr<Widget>& child : m_children) {
                 glm::vec2 csize = child->minimalSize();
                 minsize.x += csize.x;
                 if (csize.y > minsize.y)
@@ -114,7 +116,7 @@ namespace Birdy3d {
             break;
         case Direction::DOWN:
         case Direction::UP:
-            for (Widget* child : m_children) {
+            for (const std::unique_ptr<Widget>& child : m_children) {
                 glm::vec2 csize = child->minimalSize();
                 if (csize.x > minsize.x)
                     minsize.x = csize.x;

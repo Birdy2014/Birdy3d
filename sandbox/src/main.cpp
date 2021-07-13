@@ -63,54 +63,53 @@ int main() {
 
     Canvas canvas;
 
-    FPSCounter counter(0_px, Placement::TOP_RIGHT);
-    canvas.addChild(&counter);
+    canvas.add_child<FPSCounter>(0_px, Placement::TOP_RIGHT);
 
-    DirectionalLayout menu(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 30_p, 10);
-    menu.name = "menu";
-    canvas.addChild(&menu);
+    DirectionalLayout* menu = canvas.add_child<DirectionalLayout>(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 30_p, 10);
+    menu->name = "menu";
 
-    Button closeButton(0_px, Placement::BOTTOM_LEFT, "Close", 20);
-    closeButton.clickCallback = [](InputClickEvent*) {
+    Button* closeButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close", 20);
+    closeButton->clickCallback = [](InputClickEvent*) {
         glfwSetWindowShouldClose(Application::getWindow(), true);
     };
-    menu.addChild(&closeButton);
 
-    Button testButton(0_px, Placement::BOTTOM_LEFT, "TestButton", 20, UIVector(200_px, 50_px));
-    menu.addChild(&testButton);
+    Button* testButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Fenster anzeigen", 20, UIVector(200_px, 50_px));
 
-    Textarea area(0_px, 100_px, Placement::BOTTOM_LEFT);
-    area.weight = 2;
-    area.append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
-    menu.addChild(&area);
+    Textarea* area = menu->add_child<Textarea>(0_px, 100_px, Placement::BOTTOM_LEFT);
+    area->weight = 2;
+    area->append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
 
-    Window testWindow(0_px, 500_px);
-    testWindow.hidden = true;
-    testWindow.title("Test");
-    canvas.addChild(&testWindow);
+    Window* testWindow = canvas.add_child<Window>(0_px, 500_px);
+    testWindow->hidden = true;
+    testWindow->title("Test");
 
     DirectionalLayout winLayout(DirectionalLayout::Direction::DOWN, Placement::TOP_LEFT, 100_p, 10, true);
-    testWindow.set_child(&winLayout);
+    testWindow->set_child(&winLayout);
 
-    Textarea area2(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
-    area2.append("Dies ist ein Fenster");
-    winLayout.addChild(&area2);
+    Textarea* area2 = winLayout.add_child<Textarea>(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
+    area2->append("Dies ist ein Fenster");
 
-    CheckBox testCheckBox(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Test");
-    winLayout.addChild(&testCheckBox);
+    CheckBox* testCheckBox = winLayout.add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
 
-    NumberInput numberInput(UIVector(0_px, -80), UIVector(100_p, 30_px), Placement::TOP_LEFT, 0);
-    numberInput.on_change = [&] {
-        Logger::debug(numberInput.value());
-    };
-    winLayout.addChild(&numberInput);
+    NumberInput* inputR = winLayout.add_child<NumberInput>(UIVector(0_px, -80), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputG = winLayout.add_child<NumberInput>(UIVector(0_px, -110), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputB = winLayout.add_child<NumberInput>(UIVector(0_px, -140), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    inputR->min_value = 0;
+    inputG->min_value = 0;
+    inputB->min_value = 0;
+    inputR->max_value = 1;
+    inputG->max_value = 1;
+    inputB->max_value = 1;
+    inputR->value(1);
+    inputG->value(1);
+    inputB->value(1);
 
-    TextField textField(UIVector(0_px, -120), UIVector(100_p, 30_px), Placement::TOP_LEFT);
-    textField.text("Hallo Welt!");
-    winLayout.addChild(&textField);
+    NumberInput* inputX = winLayout.add_child<NumberInput>(UIVector(0_px, -170), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputY = winLayout.add_child<NumberInput>(UIVector(0_px, -200), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputZ = winLayout.add_child<NumberInput>(UIVector(0_px, -230), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
 
-    testButton.clickCallback = [&testWindow](InputClickEvent*) {
-        testWindow.hidden = !testWindow.hidden;
+    testButton->clickCallback = [&testWindow](InputClickEvent*) {
+        testWindow->hidden = !testWindow->hidden;
     };
 
     // GameObjects

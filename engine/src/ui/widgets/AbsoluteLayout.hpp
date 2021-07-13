@@ -12,7 +12,7 @@ namespace Birdy3d {
         void arrange(glm::vec2 pos, glm::vec2 size) override {
             Widget::arrange(pos, size);
 
-            for (Widget* child : m_children) {
+            for (const std::unique_ptr<Widget>& child : m_children) {
                 glm::vec2 childSize = child->preferredSize(size);
                 glm::vec2 childPos = pos + child->preferredPosition(size, childSize);
                 if (childSize.x == 0 || childSize.y == 0)
