@@ -5,10 +5,11 @@
 
 namespace Birdy3d {
 
-    Theme::Theme(Color color_fg, Color color_bg, Color color_border, Color color_input_bg, std::string font, unsigned int fontSize)
+    Theme::Theme(Color color_fg, Color color_bg, Color color_border, Color color_title_bar, Color color_input_bg, std::string font, unsigned int fontSize)
         : color_fg(color_fg)
         , color_bg(color_bg)
         , color_border(color_border)
+        , color_title_bar(color_title_bar)
         , color_input_bg(color_input_bg)
         , font(font)
         , fontSize(fontSize)

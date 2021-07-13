@@ -59,7 +59,7 @@ int main() {
     Input::init();
 
     // UI
-    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "#1d2021", "TTF/DejaVuSans.ttf", 22);
+    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "TTF/DejaVuSans.ttf", 20);
 
     Canvas canvas;
 
@@ -86,6 +86,7 @@ int main() {
 
     Window testWindow(0_px, 500_px);
     testWindow.hidden = true;
+    testWindow.title("Test");
     canvas.addChild(&testWindow);
 
     DirectionalLayout winLayout(DirectionalLayout::Direction::DOWN, Placement::TOP_LEFT, 100_p, 10, true);

@@ -2,6 +2,7 @@
 
 #include "events/InputEvents.hpp"
 #include "ui/Rectangle.hpp"
+#include "ui/TextRenderer.hpp"
 #include "ui/Widget.hpp"
 
 namespace Birdy3d {
@@ -9,7 +10,6 @@ namespace Birdy3d {
     class Window : public Widget {
     public:
         const int BORDER_SIZE = 4;
-        const int BAR_HEIGHT = 14;
 
         Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Theme* theme = Application::defaultTheme, std::string name = "");
         void arrange(glm::vec2 pos, glm::vec2 size) override;
@@ -21,6 +21,9 @@ namespace Birdy3d {
         bool update_hover(bool hover) override;
         void late_update() override;
 
+        std::string title() { return m_title->text; }
+        void title(std::string title) { m_title->text = title; }
+
     protected:
         void on_update() override;
         void on_click(InputClickEvent* event) override;
@@ -29,6 +32,7 @@ namespace Birdy3d {
     private:
         Widget* m_child = nullptr;
         Rectangle* closeButton;
+        Text* m_title;
         bool hoverDrag = false;
         bool hoverResizeXL = false;
         bool hoverResizeXR = false;

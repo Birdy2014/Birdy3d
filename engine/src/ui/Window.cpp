@@ -8,16 +8,17 @@ namespace Birdy3d {
 
     Window::Window(UIVector pos, UIVector size, Theme* theme, std::string name)
         : Widget(pos, size, Placement::BOTTOM_LEFT, theme, name) {
-        addFilledRectangle(0_px, 100_p, theme->color_bg);
+        addFilledRectangle(0_px, UIVector(100_p, 100_p - theme->lineHeight), theme->color_bg, Placement::BOTTOM_LEFT);
+        addFilledRectangle(0_px, UIVector(100_p, theme->lineHeight), theme->color_title_bar, Placement::TOP_LEFT);
         addRectangle(0_px, 100_p, theme->color_border);
-        closeButton = new Rectangle(-2_px, Unit(BAR_HEIGHT - 2), "#FF0000", Shape::Type::FILLED, Placement::TOP_RIGHT);
-        shapes.push_back(closeButton);
+        closeButton = addFilledRectangle(-4_px, 14_px, "#FF0000", Placement::TOP_RIGHT);
+        m_title = addText(UIVector(10_px, -4_px), theme->fontSize, "", theme->color_fg, Placement::TOP_LEFT);
     }
 
     void Window::arrange(glm::vec2 pos, glm::vec2 size) {
         Widget::arrange(pos, size);
         if (m_child) {
-            m_child->arrange(pos + glm::vec2(BORDER_SIZE, BORDER_SIZE), glm::vec2(size.x - 2 * BORDER_SIZE, size.y - BORDER_SIZE - BAR_HEIGHT));
+            m_child->arrange(pos + glm::vec2(BORDER_SIZE, BORDER_SIZE), glm::vec2(size.x - 2 * BORDER_SIZE, size.y - BORDER_SIZE - theme->lineHeight));
         }
     }
 
@@ -36,7 +37,7 @@ namespace Birdy3d {
     }
 
     glm::vec2 Window::minimalSize() {
-        glm::vec2 minSelf = glm::vec2(BAR_HEIGHT + BORDER_SIZE + 10);
+        glm::vec2 minSelf = glm::vec2(theme->lineHeight + BORDER_SIZE + 10);
         glm::vec2 minChild(0);
         if (m_child)
             minChild = m_child->minimalSize();
@@ -89,10 +90,10 @@ namespace Birdy3d {
         if (closeButton->contains(localCursorPos))
             return;
 
-        if (localCursorPos.y >= actualSize.y - BAR_HEIGHT)
+        if (localCursorPos.y >= actualSize.y - theme->lineHeight)
             hoverDrag = true;
 
-        if (localCursorPos.y < actualSize.y - BAR_HEIGHT) {
+        if (localCursorPos.y < actualSize.y - theme->lineHeight) {
             if (localCursorPos.x < BORDER_SIZE)
                 hoverResizeXL = true;
             if (localCursorPos.x > actualSize.x - BORDER_SIZE)
