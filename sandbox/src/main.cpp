@@ -127,7 +127,7 @@ int main() {
 
     GameObject* obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
     obj->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &redTransparentMaterial);
-    obj->add_component<Collider>();
+    obj->add_component<Collider>(GenerationMode::COPY);
     scene->addChild(obj);
 
     GameObject* obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
@@ -136,13 +136,13 @@ int main() {
 
     GameObject* obj3 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
     obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &blueTransparentMaterial);
-    obj3->add_component<Collider>();
+    obj3->add_component<Collider>(GenerationMode::COPY);
     scene->addChild(obj3);
 
     // Spheres
     GameObject* sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
     sphere1->add_component<ModelComponent>("./ressources/testObjects/sphere.obj", nullptr);
-    sphere1->add_component<Collider>(new CollisionSphere(glm::vec3(0), 1));
+    sphere1->add_component<Collider>(GenerationMode::COPY);
     sphere1->add_component<TestComponent>();
     scene->addChild(sphere1);
 

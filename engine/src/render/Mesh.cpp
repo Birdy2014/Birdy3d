@@ -1,5 +1,6 @@
 #include "render/Mesh.hpp"
 
+#include "core/Logger.hpp"
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
@@ -85,6 +86,19 @@ namespace Birdy3d {
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+    }
+
+    glm::vec3 Mesh::findFurthestPoint(glm::vec3 direction) {
+        float max = std::numeric_limits<float>::min();
+        glm::vec3 furthestVertex;
+        for (Vertex vertex : vertices) {
+            float dot = glm::dot(vertex.position, direction);
+            if (dot > max) {
+                max = dot;
+                furthestVertex = vertex.position;
+            }
+        }
+        return furthestVertex;
     }
 
 }

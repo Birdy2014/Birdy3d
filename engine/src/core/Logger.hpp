@@ -52,3 +52,5 @@ namespace Birdy3d {
     };
 
 }
+
+#define BIRDY3D_TODO Logger::error("Not implemented: ", __PRETTY_FUNCTION__);
