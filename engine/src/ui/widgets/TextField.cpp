@@ -29,13 +29,13 @@ namespace Birdy3d {
 
     void TextField::draw() {
         Widget::draw();
-        theme->text_renderer()->renderText(m_text, 0, actualSize.y - theme->fontSize, theme->fontSize, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, "#0000a050");
+        theme->text_renderer()->renderText(m_text, 0, actualSize.y - theme->font_size, theme->font_size, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, "#0000a050");
     }
 
     void TextField::on_update() {
         if (m_selecting) {
             glm::vec2 local_pos = Input::cursorPos() - actualPos;
-            int char_pos = theme->text_renderer()->char_index(m_text, theme->fontSize, local_pos.x, true);
+            int char_pos = theme->text_renderer()->char_index(m_text, theme->font_size, local_pos.x, true);
             if (m_selection_start == char_pos)
                 m_selection_end = -1;
             else
@@ -50,7 +50,7 @@ namespace Birdy3d {
         if (event->action == GLFW_PRESS) {
             grab_cursor();
             glm::vec2 local_pos = Input::cursorPos() - actualPos;
-            int char_pos = theme->text_renderer()->char_index(m_text, theme->fontSize, local_pos.x, true);
+            int char_pos = theme->text_renderer()->char_index(m_text, theme->font_size, local_pos.x, true);
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;
@@ -79,7 +79,7 @@ namespace Birdy3d {
         if (m_cursor_pos >= 0) {
             switch (event->key) {
             case GLFW_KEY_DELETE:
-                if (m_cursor_pos == (int) m_text.length())
+                if (m_cursor_pos == (int)m_text.length())
                     break;
                 m_text.erase(m_text.begin() + m_cursor_pos, m_text.begin() + m_cursor_pos + 1);
                 break;
@@ -95,7 +95,7 @@ namespace Birdy3d {
                 m_cursor_pos--;
                 break;
             case GLFW_KEY_RIGHT:
-                if (m_cursor_pos == (int) m_text.length())
+                if (m_cursor_pos == (int)m_text.length())
                     break;
                 m_cursor_pos++;
                 break;
@@ -109,7 +109,7 @@ namespace Birdy3d {
 
         clear_selection();
 
-        if (m_cursor_pos < 0 || m_cursor_pos > (int) m_text.size())
+        if (m_cursor_pos < 0 || m_cursor_pos > (int)m_text.size())
             return;
 
         char32_t c[2];

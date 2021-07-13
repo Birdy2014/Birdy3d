@@ -22,7 +22,7 @@ namespace Birdy3d {
 
     void Textarea::draw() {
         Widget::draw();
-        int linec = actualSize.y / theme->lineHeight;
+        int linec = actualSize.y / theme->line_height;
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
             // smooth scrolling
@@ -33,13 +33,13 @@ namespace Birdy3d {
 
             // draw lines
             line = l + floor(m_tmpscroll);
-            int y = actualSize.y - (l + 1) * theme->lineHeight + (m_tmpscroll - floor(m_tmpscroll)) * theme->lineHeight;
+            int y = actualSize.y - (l + 1) * theme->line_height + (m_tmpscroll - floor(m_tmpscroll)) * theme->line_height;
             int selection_start = m_selection_start <= m_selection_end ? m_selection_start : m_selection_end;
             int selection_end = m_selection_start <= m_selection_end ? m_selection_end + 1 : m_selection_start;
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                theme->text_renderer()->renderText(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, theme->fontSize, theme->color_fg, normalizedMove(), m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, "#0000a050");
+                theme->text_renderer()->renderText(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, theme->font_size, theme->color_fg, normalizedMove(), m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, "#0000a050");
             }
         }
     }
@@ -57,7 +57,7 @@ namespace Birdy3d {
             line = m_text.substr(pos, eol - pos);
             line_end = eol;
             // Line is too long
-            length = theme->text_renderer()->textSize(line, theme->fontSize).x;
+            length = theme->text_renderer()->textSize(line, theme->font_size).x;
             if (length > actualSize.x) {
                 nextspace = pos;
                 while (nextspace < eol) {
@@ -67,7 +67,7 @@ namespace Birdy3d {
                     line_end = nextspace;
 
                     // reached the space too far right
-                    length = theme->text_renderer()->textSize(line, theme->fontSize).x;
+                    length = theme->text_renderer()->textSize(line, theme->font_size).x;
                     if (length > actualSize.x) {
                         // the line can't be broken using a space
                         if (prevspace == pos)
@@ -103,14 +103,14 @@ namespace Birdy3d {
         if (event->action == GLFW_PRESS) {
             grab_cursor();
             m_selecting = true;
-            m_selection_start  = char_pos;
+            m_selection_start = char_pos;
             m_cursor_pos = -1;
         } else if (event->action == GLFW_RELEASE && char_pos == m_selection_start) {
             ungrab_cursor();
             m_selecting = false;
             m_cursor_pos = m_selection_start;
-            m_selection_start  = -1;
-            m_selection_end  = -1;
+            m_selection_start = -1;
+            m_selection_end = -1;
         } else if (event->action == GLFW_RELEASE && char_pos != m_selection_start) {
             ungrab_cursor();
             m_selecting = false;
@@ -168,12 +168,12 @@ namespace Birdy3d {
     size_t Textarea::cursorCharPos() {
         glm::vec2 local_pos = Input::cursorPos() - actualPos;
 
-        int y = m_tmpscroll + (actualSize.y - local_pos.y) / theme->lineHeight;
+        int y = m_tmpscroll + (actualSize.y - local_pos.y) / theme->line_height;
         if (y >= m_lines.size())
             y = m_lines.size() - 1;
 
         size_t line_start = y > 0 ? m_lines[y - 1] : 0;
-        int char_pos = theme->text_renderer()->char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), theme->fontSize, local_pos.x, true);
+        int char_pos = theme->text_renderer()->char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), theme->font_size, local_pos.x, true);
         return line_start + char_pos;
     }
 

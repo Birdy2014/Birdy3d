@@ -17,10 +17,10 @@ namespace Birdy3d {
         const Color color_title_bar;
         const Color color_input_bg;
         const std::string font;
-        const unsigned int fontSize;
-        const unsigned int lineHeight;
+        const unsigned int font_size;
+        const unsigned int line_height;
 
-        Theme(Color color_fg, Color color_bg, Color color_border, Color color_title_bar, Color color_input_bg, std::string font, unsigned int fontSize);
+        Theme(Color color_fg, Color color_bg, Color color_border, Color color_title_bar, Color color_input_bg, std::string font, unsigned int font_size);
 
         TextRenderer* text_renderer();
 
