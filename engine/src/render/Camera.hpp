@@ -28,7 +28,7 @@ namespace Birdy3d {
         glm::mat4 m_projection;
         unsigned int m_quad_vao = 0;
         unsigned int m_quad_vbo;
-        std::shared_ptr<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader, m_normal_shader;
+        std::shared_ptr<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader, m_normal_shader, m_simple_color_shader;
         bool m_deferred_enabled;
 
         void createGBuffer();
@@ -37,6 +37,7 @@ namespace Birdy3d {
         void renderDeferred();
         void renderForward(bool renderOpaque);
         void renderNormals();
+        void renderOutline();
     };
 
 }

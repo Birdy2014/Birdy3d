@@ -35,6 +35,7 @@ namespace Birdy3d {
         m_deferred_light_shader = RessourceManager::getShader("deferred_lighting");
         m_forward_shader = RessourceManager::getShader("forward_lighting");
         m_normal_shader = RessourceManager::getShader("normal_display");
+        m_simple_color_shader = RessourceManager::getShader("simple_color");
         m_deferred_light_shader->use();
         m_deferred_light_shader->setInt("gPosition", 0);
         m_deferred_light_shader->setInt("gNormal", 1);
@@ -87,6 +88,8 @@ namespace Birdy3d {
 
         if (display_normals)
             renderNormals();
+
+        renderOutline();
 
         // GUI
         if (canvas) {
@@ -287,6 +290,27 @@ namespace Birdy3d {
         for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
             m->render(m_normal_shader.get(), false);
             m->render(m_normal_shader.get(), true);
+        }
+    }
+
+    void Camera::renderOutline() {
+        glm::vec3 absPos = object->transform.worldPosition();
+        glm::vec3 absForward = object->absForward();
+        glm::vec3 up = object->absUp();
+        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        m_simple_color_shader->use();
+        m_simple_color_shader->setMat4("projection", m_projection);
+        m_simple_color_shader->setMat4("view", view);
+        m_simple_color_shader->setVec4("color", Color("#e0902180"));
+        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+            m->renderOutline(m_simple_color_shader.get());
         }
     }
 
