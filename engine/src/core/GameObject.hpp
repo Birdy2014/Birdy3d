@@ -18,7 +18,17 @@ namespace Birdy3d {
         bool hidden = false;
 
         GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
-        void addChild(GameObject* c);
+
+        void add_child(std::unique_ptr<GameObject>);
+        template <class T = GameObject, typename... Args>
+        T* add_child(Args... args) {
+            static_assert(std::is_base_of<GameObject, T>::value);
+            std::unique_ptr<GameObject> object = std::make_unique<T>(args...);
+            GameObject* object_ptr = object.get();
+            add_child(std::move(object));
+            return static_cast<T*>(object_ptr);
+        }
+
         void add_component(std::unique_ptr<Component>);
         template <class T, typename... Args>
         T* add_component(Args... args) {
@@ -51,7 +61,7 @@ namespace Birdy3d {
                 }
             }
             if (recursive) {
-                for (GameObject* o : this->children) {
+                for (const std::unique_ptr<GameObject>& o : m_children) {
                     std::vector<T*> childComponents = o->getComponents<T>(hidden, recursive);
                     components.insert(components.end(), childComponents.begin(), childComponents.end());
                 }
@@ -72,7 +82,7 @@ namespace Birdy3d {
                 }
             }
             if (recursive) {
-                for (GameObject* o : this->children) {
+                for (const std::unique_ptr<GameObject>& o : m_children) {
                     T* c = o->getComponent<T>(hidden, recursive);
                     if (c)
                         return c;
@@ -82,7 +92,7 @@ namespace Birdy3d {
         }
 
     private:
-        std::vector<GameObject*> children;
+        std::vector<std::unique_ptr<GameObject>> m_children;
         std::vector<std::unique_ptr<Component>> m_components;
     };
 

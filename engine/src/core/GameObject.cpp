@@ -11,11 +11,11 @@ namespace Birdy3d {
         this->transform.scale = scale;
     }
 
-    void GameObject::addChild(GameObject* c) {
+    void GameObject::add_child(std::unique_ptr<GameObject> c) {
         c->parent = this;
         c->transform.setParentTransform(&transform);
         c->setScene(scene);
-        this->children.push_back(c);
+        m_children.push_back(std::move(c));
     }
 
     void GameObject::add_component(std::unique_ptr<Component> c) {
@@ -27,7 +27,7 @@ namespace Birdy3d {
         for (std::unique_ptr<Component>& c : m_components) {
             c->_start();
         }
-        for (GameObject* o : this->children) {
+        for (const std::unique_ptr<GameObject>& o : m_children) {
             o->start();
         }
     }
@@ -39,7 +39,7 @@ namespace Birdy3d {
         for (std::unique_ptr<Component>& c : m_components) {
             c->_update();
         }
-        for (GameObject* o : this->children) {
+        for (const std::unique_ptr<GameObject>& o : m_children) {
             o->update();
         }
     }
@@ -69,7 +69,7 @@ namespace Birdy3d {
 
     void GameObject::setScene(Scene* scene) {
         this->scene = scene;
-        for (GameObject* c : this->children) {
+        for (const std::unique_ptr<GameObject>& c : m_children) {
             c->setScene(scene);
         }
     }

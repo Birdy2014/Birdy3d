@@ -115,36 +115,32 @@ int main() {
     // GameObjects
     Scene* scene = new Scene();
 
-    player = new GameObject(glm::vec3(0, 0, 3));
+    player = scene->add_child(glm::vec3(0, 0, 3));
     player->add_component<Camera>(800, 600, true, &canvas);
     player->add_component<FPPlayerController>();
-    scene->addChild(player);
 
     Material redTransparentMaterial;
     redTransparentMaterial.diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
     Material blueTransparentMaterial;
     blueTransparentMaterial.diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
 
-    GameObject* obj = new GameObject(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+    GameObject* obj = scene->add_child(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
     obj->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &redTransparentMaterial);
     obj->add_component<Collider>(GenerationMode::COPY);
-    scene->addChild(obj);
 
-    GameObject* obj2 = new GameObject(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+    GameObject* obj2 = scene->add_child(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
     obj2->add_component<ModelComponent>("./ressources/testObjects/cube.obj", nullptr);
-    scene->addChild(obj2);
 
-    GameObject* obj3 = new GameObject(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
+    GameObject* obj3 = scene->add_child(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
     obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &blueTransparentMaterial);
     obj3->add_component<Collider>(GenerationMode::COPY);
     scene->addChild(obj3);
 
     // Spheres
-    GameObject* sphere1 = new GameObject(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
+    GameObject* sphere1 = scene->add_child(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
     sphere1->add_component<ModelComponent>("./ressources/testObjects/sphere.obj", nullptr);
     sphere1->add_component<Collider>(GenerationMode::COPY);
     sphere1->add_component<TestComponent>();
-    scene->addChild(sphere1);
 
     bool collision = false;
     Application::eventBus->subscribe<CollisionEvent>([&](CollisionEvent*) {
@@ -153,20 +149,16 @@ int main() {
         sphere1, CollisionEvent::COLLIDING);
 
     // Light
-    GameObject* dirLight = new GameObject(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
+    GameObject* dirLight = scene->add_child(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
     dirLight->add_component<DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
-    scene->addChild(dirLight);
-    GameObject* pLight = new GameObject(glm::vec3(2.0f, 1.5f, 4.0f));
+    GameObject* pLight = scene->add_child(glm::vec3(2.0f, 1.5f, 4.0f));
     pLight->add_component<PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
-    scene->addChild(pLight);
-    GameObject* sLight = new GameObject(glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
+    GameObject* sLight = scene->add_child(glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
     sLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
-    scene->addChild(sLight);
 
-    GameObject* flashLight = new GameObject(glm::vec3(0), glm::vec3(0));
+    GameObject* flashLight = player->add_child(glm::vec3(0), glm::vec3(0));
     flashLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1), glm::radians(30.0f), glm::radians(40.0f), 0.08f, 0.02f, false);
     flashLight->hidden = true;
-    player->addChild(flashLight);
 
     Application::eventBus->subscribe<InputKeyEvent>([&flashLight](InputKeyEvent*) {
         flashLight->hidden = !flashLight->hidden;
@@ -188,9 +180,8 @@ int main() {
         float z = random(-30, 30);
         Material* newMaterial = new Material();
         newMaterial->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
-        GameObject* newCube = new GameObject(glm::vec3(x, y, z));
+        GameObject* newCube = scene->add_child(glm::vec3(x, y, z));
         newCube->add_component<ModelComponent>("./ressources/testObjects/cube.obj", newMaterial);
-        scene->addChild(newCube);
         Logger::debug("Created cube at x: ", x, " y: ", y, " z: ", z);
     },
         GLFW_KEY_N);
