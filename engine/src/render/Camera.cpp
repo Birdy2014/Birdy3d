@@ -63,6 +63,12 @@ namespace Birdy3d {
 
     void Camera::cleanup() {
         deleteGBuffer();
+        if (m_outline_vao != 0) {
+            glDeleteVertexArrays(1, &m_outline_vao);
+            glDeleteBuffers(1, &m_outline_vbo);
+            m_outline_vao = 0;
+            m_outline_vbo = 0;
+        }
     }
 
     void Camera::resize(int width, int height) {
