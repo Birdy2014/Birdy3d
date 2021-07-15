@@ -314,58 +314,50 @@ namespace Birdy3d {
 
         const float outline_offset = 0.4;
 
-        float x_low = std::numeric_limits<float>::max();
-        float y_low = std::numeric_limits<float>::max();
-        float z_low = std::numeric_limits<float>::max();
-        float x_high = std::numeric_limits<float>::min();
-        float y_high = std::numeric_limits<float>::min();
-        float z_high = std::numeric_limits<float>::min();
+        glm::vec3 low(std::numeric_limits<float>::max());
+        glm::vec3 high(std::numeric_limits<float>::min());
 
+        std::pair<glm::vec3, glm::vec3> bounding_box;
+        glm::mat4 model;
         for (ModelComponent* model_component : selected_object->getComponents<ModelComponent>(false, true)) {
-            glm::mat4 model = model_component->object->transform.matrix();
-            for (Mesh* mesh : model_component->model->getMeshes()) {
-                for (Vertex vertex : mesh->vertices) {
-                    glm::vec3 position = model * glm::vec4(vertex.position, 1.0f);
-                    if (position.x < x_low)
-                        x_low = position.x;
-                    if (position.y < y_low)
-                        y_low = position.y;
-                    if (position.z < z_low)
-                        z_low = position.z;
-                    if (position.x > x_high)
-                        x_high = position.x;
-                    if (position.y > y_high)
-                        y_high = position.y;
-                    if (position.z > z_high)
-                        z_high = position.z;
-                }
-            }
+            model = model_component->object->transform.matrix();
+            bounding_box = model_component->model->bounding_box();
+            glm::vec3 model_low = model * glm::vec4(bounding_box.first, 1.0f);
+            glm::vec3 model_high = model * glm::vec4(bounding_box.second, 1.0f);
+            if (model_low.x < low.x)
+                low.x = model_low.x;
+            if (model_low.y < low.y)
+                low.y = model_low.y;
+            if (model_low.z < low.z)
+                low.z = model_low.z;
+            if (model_high.x > high.x)
+                high.x = model_high.x;
+            if (model_high.y > high.y)
+                high.y = model_high.y;
+            if (model_high.z > high.z)
+                high.z = model_high.z;
         }
 
-        x_low -= outline_offset;
-        y_low -= outline_offset;
-        z_low -= outline_offset;
-        x_high += outline_offset;
-        y_high += outline_offset;
-        z_high += outline_offset;
+        low -= outline_offset;
+        high += outline_offset;
 
         // clang-format off
         glm::vec3 vertices[24] = {
             // Bottom rectangle
-            glm::vec3(x_low, y_low, z_low), glm::vec3(x_high, y_low, z_low),
-            glm::vec3(x_high, y_low, z_low), glm::vec3(x_high, y_low, z_high),
-            glm::vec3(x_high, y_low, z_high), glm::vec3(x_low, y_low, z_high),
-            glm::vec3(x_low, y_low, z_high), glm::vec3(x_low, y_low, z_low),
+            glm::vec3(low.x, low.y, low.z), glm::vec3(high.x, low.y, low.z),
+            glm::vec3(high.x, low.y, low.z), glm::vec3(high.x, low.y, high.z),
+            glm::vec3(high.x, low.y, high.z), glm::vec3(low.x, low.y, high.z),
+            glm::vec3(low.x, low.y, high.z), glm::vec3(low.x, low.y, low.z),
             // Top rectangle
-            glm::vec3(x_low, y_high, z_low), glm::vec3(x_high, y_high, z_low),
-            glm::vec3(x_high, y_high, z_low), glm::vec3(x_high, y_high, z_high),
-            glm::vec3(x_high, y_high, z_high), glm::vec3(x_low, y_high, z_high),
-            glm::vec3(x_low, y_high, z_high), glm::vec3(x_low, y_high, z_low),
+            glm::vec3(low.x, high.y, low.z), glm::vec3(high.x, high.y, low.z),
+            glm::vec3(high.x, high.y, low.z), glm::vec3(high.x, high.y, high.z),
+            glm::vec3(high.x, high.y, high.z), glm::vec3(low.x, high.y, high.z),
+            glm::vec3(low.x, high.y, high.z), glm::vec3(low.x, high.y, low.z),
             // Side rectangles
-            glm::vec3(x_low, y_low, z_low), glm::vec3(x_low, y_high, z_low),
-            glm::vec3(x_high, y_low, z_low), glm::vec3(x_high, y_high, z_low),
-            glm::vec3(x_high, y_low, z_high), glm::vec3(x_high, y_high, z_high),
-            glm::vec3(x_low, y_low, z_high), glm::vec3(x_low, y_high, z_high),
+            glm::vec3(low.x, low.y, low.z), glm::vec3(low.x, high.y, low.z),
+            glm::vec3(high.x, low.y, low.z), glm::vec3(high.x, high.y, low.z),
+            glm::vec3(high.x, low.y, high.z), glm::vec3(high.x, high.y, high.z),
+            glm::vec3(low.x, low.y, high.z), glm::vec3(low.x, high.y, high.z),
         };
         // clang-format on
         glBindVertexArray(m_outline_vao);
@@ -390,7 +382,6 @@ namespace Birdy3d {
         m_simple_color_shader->setMat4("model", glm::mat4(1));
         glBindVertexArray(m_outline_vao);
         glDrawArrays(GL_LINES, 0, 24);
-
     }
 
 }

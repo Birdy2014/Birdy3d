@@ -17,6 +17,7 @@ namespace Birdy3d {
         : m_path(path) {
         Logger::debug("Loading model: ", path);
         load();
+        compute_bounding_box();
     }
 
     void Model::render(GameObject* object, const Material* material, Shader* shader, bool transparent) {
@@ -142,6 +143,27 @@ namespace Birdy3d {
         for (Mesh* m : m_meshes) {
             delete m;
         }
+    }
+
+    void Model::compute_bounding_box() {
+        glm::vec3 low, high;
+        for (Mesh* mesh : m_meshes) {
+            for (Vertex vertex : mesh->vertices) {
+                if (vertex.position.x < low.x)
+                    low.x = vertex.position.x;
+                if (vertex.position.y < low.y)
+                    low.y = vertex.position.y;
+                if (vertex.position.z < low.z)
+                    low.z = vertex.position.z;
+                if (vertex.position.x > high.x)
+                    high.x = vertex.position.x;
+                if (vertex.position.y > high.y)
+                    high.y = vertex.position.y;
+                if (vertex.position.z > high.z)
+                    high.z = vertex.position.z;
+            }
+        }
+        m_bounding_box = std::pair(low, high);
     }
 
 }
