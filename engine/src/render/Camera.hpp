@@ -19,6 +19,7 @@ namespace Birdy3d {
         void start() override;
         void cleanup() override;
         void render();
+        void renderOutline(GameObject*);
         void resize(int width, int height);
         void reloadModels();
 
@@ -30,6 +31,8 @@ namespace Birdy3d {
         unsigned int m_quad_vbo;
         std::shared_ptr<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader, m_normal_shader, m_simple_color_shader;
         bool m_deferred_enabled;
+        unsigned int m_outline_vao = 0;
+        unsigned int m_outline_vbo = 0;
 
         void createGBuffer();
         void deleteGBuffer();
@@ -37,7 +40,6 @@ namespace Birdy3d {
         void renderDeferred();
         void renderForward(bool renderOpaque);
         void renderNormals();
-        void renderOutline();
     };
 
 }

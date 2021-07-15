@@ -14,7 +14,6 @@ namespace Birdy3d {
         std::shared_ptr<Model> model;
         std::string name;
         Material* material;
-        bool show_outline = false;
 
         ModelComponent(const std::string& name, Material* material)
             : name(name)
@@ -34,11 +33,6 @@ namespace Birdy3d {
         void renderDepth(Shader* shader) {
             if (model)
                 model->renderDepth(object, shader);
-        }
-
-        void renderOutline(Shader* shader) {
-            if (model && show_outline)
-                model->renderOutline(object, shader);
         }
     };
 

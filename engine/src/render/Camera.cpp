@@ -89,8 +89,6 @@ namespace Birdy3d {
         if (display_normals)
             renderNormals();
 
-        renderOutline();
-
         // GUI
         if (canvas) {
             glClear(GL_DEPTH_BUFFER_BIT);
@@ -293,7 +291,81 @@ namespace Birdy3d {
         }
     }
 
-    void Camera::renderOutline() {
+    void Camera::renderOutline(GameObject* selected_object) {
+        if (m_outline_vao == 0) {
+            glGenVertexArrays(1, &m_outline_vao);
+            glGenBuffers(1, &m_outline_vbo);
+
+            glBindVertexArray(m_outline_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_outline_vbo);
+
+            glm::vec3 vertices[24];
+            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        }
+
+        const float outline_offset = 0.4;
+
+        float x_low = std::numeric_limits<float>::max();
+        float y_low = std::numeric_limits<float>::max();
+        float z_low = std::numeric_limits<float>::max();
+        float x_high = std::numeric_limits<float>::min();
+        float y_high = std::numeric_limits<float>::min();
+        float z_high = std::numeric_limits<float>::min();
+
+        for (ModelComponent* model_component : selected_object->getComponents<ModelComponent>(false, true)) {
+            glm::mat4 model = model_component->object->transform.matrix();
+            for (Mesh* mesh : model_component->model->getMeshes()) {
+                for (Vertex vertex : mesh->vertices) {
+                    glm::vec3 position = model * glm::vec4(vertex.position, 1.0f);
+                    if (position.x < x_low)
+                        x_low = position.x;
+                    if (position.y < y_low)
+                        y_low = position.y;
+                    if (position.z < z_low)
+                        z_low = position.z;
+                    if (position.x > x_high)
+                        x_high = position.x;
+                    if (position.y > y_high)
+                        y_high = position.y;
+                    if (position.z > z_high)
+                        z_high = position.z;
+                }
+            }
+        }
+
+        x_low -= outline_offset;
+        y_low -= outline_offset;
+        z_low -= outline_offset;
+        x_high += outline_offset;
+        y_high += outline_offset;
+        z_high += outline_offset;
+
+        // clang-format off
+        glm::vec3 vertices[24] = {
+            // Bottom rectangle
+            glm::vec3(x_low, y_low, z_low), glm::vec3(x_high, y_low, z_low),
+            glm::vec3(x_high, y_low, z_low), glm::vec3(x_high, y_low, z_high),
+            glm::vec3(x_high, y_low, z_high), glm::vec3(x_low, y_low, z_high),
+            glm::vec3(x_low, y_low, z_high), glm::vec3(x_low, y_low, z_low),
+            // Top rectangle
+            glm::vec3(x_low, y_high, z_low), glm::vec3(x_high, y_high, z_low),
+            glm::vec3(x_high, y_high, z_low), glm::vec3(x_high, y_high, z_high),
+            glm::vec3(x_high, y_high, z_high), glm::vec3(x_low, y_high, z_high),
+            glm::vec3(x_low, y_high, z_high), glm::vec3(x_low, y_high, z_low),
+            // Side rectangles
+            glm::vec3(x_low, y_low, z_low), glm::vec3(x_low, y_high, z_low),
+            glm::vec3(x_high, y_low, z_low), glm::vec3(x_high, y_high, z_low),
+            glm::vec3(x_high, y_low, z_high), glm::vec3(x_high, y_high, z_high),
+            glm::vec3(x_low, y_low, z_high), glm::vec3(x_low, y_high, z_high),
+        };
+        // clang-format on
+        glBindVertexArray(m_outline_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_outline_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
+
         glm::vec3 absPos = object->transform.worldPosition();
         glm::vec3 absForward = object->absForward();
         glm::vec3 up = object->absUp();
@@ -309,9 +381,10 @@ namespace Birdy3d {
         m_simple_color_shader->setMat4("projection", m_projection);
         m_simple_color_shader->setMat4("view", view);
         m_simple_color_shader->setVec4("color", Color("#e0902180"));
-        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
-            m->renderOutline(m_simple_color_shader.get());
-        }
+        m_simple_color_shader->setMat4("model", glm::mat4(1));
+        glBindVertexArray(m_outline_vao);
+        glDrawArrays(GL_LINES, 0, 24);
+
     }
 
 }
