@@ -146,7 +146,7 @@ int main() {
     Application::eventBus->subscribe<CollisionEvent>([&](CollisionEvent*) {
         collision = true;
     },
-        sphere1, CollisionEvent::COLLIDING);
+        sphere1);
 
     // Light
     GameObject* dirLight = scene->add_child(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));

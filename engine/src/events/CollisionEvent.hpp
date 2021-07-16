@@ -23,15 +23,14 @@ namespace Birdy3d {
             , colliderB(colliderB)
             , type(type) { }
 
-        bool forObject(GameObject* object) override {
+        bool checkOptions(std::any options) override {
+            GameObject* object = std::any_cast<GameObject*>(options);
+            if (!object)
+                return true;
             Collider* collider = object->getComponent<Collider>();
             if (!collider)
                 return false;
             return colliderA == collider || colliderB == collider;
-        }
-
-        bool checkOptions(int options) override {
-            return options == type || (options == Type::COLLIDING && type == Type::ENTER);
         }
 
         Collider* other(Collider* current) {

@@ -39,8 +39,9 @@ namespace Birdy3d {
             , action(action)
             , mods(mods) { }
 
-        bool checkOptions(int options) override {
-            return options == key && action == 1; // GLFW_PRESS
+        bool checkOptions(std::any options) override {
+            int key_option = std::any_cast<int>(options);
+            return key_option == key && action == 1; // GLFW_PRESS
         }
     };
 

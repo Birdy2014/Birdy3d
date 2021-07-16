@@ -1,16 +1,12 @@
 #pragma once
 
-namespace Birdy3d {
+#include <any>
 
-    class GameObject;
+namespace Birdy3d {
 
     class Event {
     public:
-        virtual bool forObject(GameObject* obj [[maybe_unused]]) {
-            return true;
-        }
-
-        virtual bool checkOptions(int options [[maybe_unused]]) {
+        virtual bool checkOptions(std::any) {
             return true;
         }
 
