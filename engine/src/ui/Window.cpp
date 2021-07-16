@@ -87,8 +87,10 @@ namespace Birdy3d {
         hoverResizeXR = false;
         hoverResizeY = false;
 
-        if (closeButton->contains(localCursorPos))
+        if (!dragging && !resizeXL && !resizeXR && !resizeY && closeButton->contains(localCursorPos)) {
+            Input::setCursor(Input::CURSOR_HAND);
             return;
+        }
 
         if (localCursorPos.y >= actualSize.y - theme->line_height)
             hoverDrag = true;
@@ -156,9 +158,6 @@ namespace Birdy3d {
 
         glm::vec2 localCursorPos = Input::cursorPos() - actualPos;
 
-        if (closeButton->contains(localCursorPos))
-            return;
-
         if (event->action == GLFW_RELEASE) {
             ungrab_cursor();
             dragging = false;
@@ -166,6 +165,14 @@ namespace Birdy3d {
             resizeXR = false;
             resizeY = false;
             size = actualSize;
+            return;
+        }
+
+        if (closeButton->contains(localCursorPos)) {
+            if (callback_close)
+                callback_close();
+            else
+                hidden = true;
             return;
         }
 

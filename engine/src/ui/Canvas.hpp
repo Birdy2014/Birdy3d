@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Application.hpp"
+#include "events/EventBus.hpp"
 #include "ui/Widget.hpp"
 #include "ui/widgets/AbsoluteLayout.hpp"
 
@@ -33,6 +34,7 @@ namespace Birdy3d {
 
         void draw() override {
             if (updated) {
+                glClear(GL_DEPTH_BUFFER_BIT);
                 glEnable(GL_SCISSOR_TEST);
                 AbsoluteLayout::draw();
                 glDisable(GL_SCISSOR_TEST);

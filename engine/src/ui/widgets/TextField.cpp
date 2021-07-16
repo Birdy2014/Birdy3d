@@ -149,8 +149,8 @@ namespace Birdy3d {
 
     void TextField::late_update() {
         Widget::late_update();
-        if (m_changed && on_change) {
-            on_change();
+        if (m_changed && callback_change) {
+            callback_change();
             m_changed = false;
         }
     }

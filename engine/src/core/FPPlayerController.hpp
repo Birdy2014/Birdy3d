@@ -17,8 +17,8 @@ namespace Birdy3d {
         void update() override;
 
     private:
-        Camera* cam;
-        Widget* menu;
+        Camera* cam = nullptr;
+        Widget* menu = nullptr;
 
         void onResize(WindowResizeEvent* event);
         void onKey(InputKeyEvent* event);

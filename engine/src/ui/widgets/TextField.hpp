@@ -8,7 +8,7 @@ namespace Birdy3d {
     class TextField : public Widget {
     public:
         bool readonly = false;
-        std::function<void()> on_change;
+        std::function<void()> callback_change;
 
         TextField(UIVector position, UIVector size, Placement placement);
         std::string text();

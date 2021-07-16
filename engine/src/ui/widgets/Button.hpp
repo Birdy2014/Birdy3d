@@ -27,12 +27,12 @@ namespace Birdy3d {
             return glm::max(minSize, Widget::minimalSize());
         }
 
-        std::function<void(InputClickEvent*)> clickCallback;
+        std::function<void(InputClickEvent*)> callback_click;
 
     protected:
         void on_click(InputClickEvent* event) override {
-            if (clickCallback && event->action == GLFW_PRESS) {
-                clickCallback(event);
+            if (callback_click && event->action == GLFW_PRESS) {
+                callback_click(event);
             }
         }
 

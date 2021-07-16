@@ -2,12 +2,15 @@
 
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
+#include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
+#include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"
 
 namespace Birdy3d {
 
+    Canvas* Application::canvas = nullptr;
     Theme* Application::defaultTheme = nullptr;
     EventBus* Application::eventBus = nullptr;
     float Application::deltaTime = 0;

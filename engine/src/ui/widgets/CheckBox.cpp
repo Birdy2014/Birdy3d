@@ -24,8 +24,8 @@ namespace Birdy3d {
             return;
 
         checked = !checked;
-        if (change_callback)
-            change_callback(checked);
+        if (callback_change)
+            callback_change(checked);
         return;
     }
 

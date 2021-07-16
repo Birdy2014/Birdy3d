@@ -3,6 +3,7 @@
 #include "core/Application.hpp"
 #include "core/GameObject.hpp"
 #include "core/Input.hpp"
+#include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "render/Camera.hpp"
@@ -11,12 +12,12 @@
 
 namespace Birdy3d {
 
-    FPPlayerController::FPPlayerController() {
-    }
+    FPPlayerController::FPPlayerController() { }
 
     void FPPlayerController::start() {
         cam = object->getComponent<Camera>();
-        menu = cam->canvas->getWidget<Layout>("menu");
+        if (Application::canvas)
+            menu = Application::canvas->getWidget<Layout>("menu");
         Application::eventBus->subscribe(this, &FPPlayerController::onResize);
         Input::setCursorHidden(true);
 

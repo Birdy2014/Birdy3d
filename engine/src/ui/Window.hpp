@@ -10,6 +10,7 @@ namespace Birdy3d {
     class Window : public Widget {
     public:
         const int BORDER_SIZE = 4;
+        std::function<void()> callback_close;
 
         Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Theme* theme = Application::defaultTheme, std::string name = "");
         void arrange(glm::vec2 pos, glm::vec2 size) override;

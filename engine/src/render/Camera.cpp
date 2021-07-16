@@ -9,7 +9,6 @@
 #include "render/Shader.hpp"
 #include "render/Spotlight.hpp"
 #include "scene/Scene.hpp"
-#include "ui/Canvas.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -19,12 +18,6 @@ namespace Birdy3d {
 
     Camera::Camera(int width, int height, bool deferred)
         : m_width(width)
-        , m_height(height)
-        , m_deferred_enabled(deferred) { }
-
-    Camera::Camera(int width, int height, bool deferred, Canvas* canvas)
-        : canvas(canvas)
-        , m_width(width)
         , m_height(height)
         , m_deferred_enabled(deferred) { }
 
@@ -94,12 +87,6 @@ namespace Birdy3d {
 
         if (display_normals)
             renderNormals();
-
-        // GUI
-        if (canvas) {
-            glClear(GL_DEPTH_BUFFER_BIT);
-            this->canvas->draw();
-        }
     }
 
     void Camera::createGBuffer() {

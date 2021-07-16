@@ -1,20 +1,25 @@
 #pragma once
 
-#include "events/EventBus.hpp"
 // clang-format off
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 // clang-format on
+#include <functional>
 #include <glm/glm.hpp>
+#include <list>
 #include <string>
+#include <vector>
 
 namespace Birdy3d {
 
+    class Canvas;
+    class EventBus;
     class TextRenderer;
     class Theme;
 
     class Application {
     public:
+        static Canvas* canvas;
         static Theme* defaultTheme;
         static EventBus* eventBus;
         static float deltaTime;

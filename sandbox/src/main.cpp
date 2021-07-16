@@ -62,6 +62,7 @@ int main() {
     Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "TTF/DejaVuSans.ttf", 20);
 
     Canvas canvas;
+    Application::canvas = &canvas;
 
     canvas.add_child<FPSCounter>(0_px, Placement::TOP_RIGHT);
 
@@ -69,7 +70,7 @@ int main() {
     menu->name = "menu";
 
     Button* closeButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close", 20);
-    closeButton->clickCallback = [](InputClickEvent*) {
+    closeButton->callback_click = [](InputClickEvent*) {
         glfwSetWindowShouldClose(Application::getWindow(), true);
     };
 
@@ -108,7 +109,7 @@ int main() {
     NumberInput* inputY = winLayout.add_child<NumberInput>(UIVector(0_px, -200), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
     NumberInput* inputZ = winLayout.add_child<NumberInput>(UIVector(0_px, -230), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
 
-    testButton->clickCallback = [&testWindow](InputClickEvent*) {
+    testButton->callback_click = [&testWindow](InputClickEvent*) {
         testWindow->hidden = !testWindow->hidden;
     };
 
@@ -116,7 +117,7 @@ int main() {
     Scene* scene = new Scene();
 
     player = scene->add_child(glm::vec3(0, 0, 3));
-    player->add_component<Camera>(800, 600, true, &canvas);
+    player->add_component<Camera>(800, 600, true);
     player->add_component<FPPlayerController>();
 
     Material redTransparentMaterial;
@@ -134,7 +135,6 @@ int main() {
     GameObject* obj3 = scene->add_child(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
     obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &blueTransparentMaterial);
     obj3->add_component<Collider>(GenerationMode::COPY);
-    scene->addChild(obj3);
 
     // Spheres
     GameObject* sphere1 = scene->add_child(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
@@ -234,6 +234,8 @@ int main() {
             Application::defaultTheme->text_renderer()->renderText("collision", 100, 0, 20, glm::vec4(1));
             collision = false;
         }
+
+        canvas.draw();
 
         // swap Buffers
         glfwSwapBuffers(Application::getWindow());

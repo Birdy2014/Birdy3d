@@ -7,15 +7,12 @@
 namespace Birdy3d {
 
     class Shader;
-    class Canvas;
 
     class Camera : public Component {
     public:
-        Canvas* canvas = nullptr;
         bool display_normals = false;
 
         Camera(int width, int height, bool deferred);
-        Camera(int width, int height, bool deferred, Canvas* canvas);
         void start() override;
         void cleanup() override;
         void render();
