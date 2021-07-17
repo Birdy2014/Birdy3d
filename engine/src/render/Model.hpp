@@ -16,6 +16,7 @@ namespace Birdy3d {
     class Model {
     public:
         Model(const std::string& path);
+        Model(Mesh*);
         ~Model();
         void render(GameObject* object, const Material* material, Shader* shader, bool transparent);
         void renderDepth(GameObject*, Shader*);
@@ -23,13 +24,12 @@ namespace Birdy3d {
         std::pair<glm::vec3, glm::vec3> bounding_box() { return m_bounding_box; }
 
     private:
-        std::string m_path;
         std::vector<Mesh*> m_meshes;
         std::string m_directory;
         Material m_embedded_material;
         std::pair<glm::vec3, glm::vec3> m_bounding_box;
 
-        void load();
+        void load(std::string path);
         void processNode(aiNode* node, const aiScene* scene);
         Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
         void compute_bounding_box();

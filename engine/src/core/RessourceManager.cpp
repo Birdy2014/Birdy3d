@@ -4,6 +4,7 @@
 #include "render/Model.hpp"
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
+#include "scene/PrimitiveGenerator.hpp"
 #include "ui/TextRenderer.hpp"
 #include <algorithm>
 #include <filesystem>
@@ -48,8 +49,32 @@ namespace Birdy3d {
     std::shared_ptr<Model> RessourceManager::getModel(const std::string& name) {
         std::shared_ptr<Model> model = models[name];
         if (!model) {
-            std::string path = getRessourcePath(name, RessourceType::MODEL);
-            model = std::make_shared<Model>(path);
+            // TODO: generalize for all ressources
+            std::string prefix_primitive = "primitive::";
+            if (name.starts_with(prefix_primitive)) {
+                std::string primitive_type, arg;
+                std::string rest = name.substr(prefix_primitive.length());
+                size_t arg_separator_pos = rest.find(':');
+                if (arg_separator_pos == std::string::npos) {
+                    primitive_type = rest;
+                } else {
+                    primitive_type = rest.substr(0, arg_separator_pos);
+                    arg = rest.substr(arg_separator_pos + 1);
+                }
+                if (primitive_type == "plane")
+                    model = PrimitiveGenerator::generate_plane();
+                else if (primitive_type == "cube")
+                    model = PrimitiveGenerator::generate_cube();
+                else if (primitive_type == "uv_sphere")
+                    model = PrimitiveGenerator::generate_uv_sphere(std::stoi(arg));
+                else if (primitive_type == "ico_sphere")
+                    model = PrimitiveGenerator::generate_ico_sphere(std::stoi(arg));
+                else
+                    Logger::error("invalid primitive type");
+            } else {
+                std::string path = getRessourcePath(name, RessourceType::MODEL);
+                model = std::make_shared<Model>(path);
+            }
             models[name] = model;
         }
         return model;

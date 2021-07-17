@@ -132,6 +132,9 @@ int main() {
     GameObject* obj2 = scene->add_child(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
     obj2->add_component<ModelComponent>("./ressources/testObjects/cube.obj", nullptr);
 
+    GameObject* plane = scene->add_child(glm::vec3(2.0f, -4.0f, 2.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+    plane->add_component<ModelComponent>("primitive::plane", nullptr);
+
     GameObject* obj3 = scene->add_child(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
     obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &blueTransparentMaterial);
     obj3->add_component<Collider>(GenerationMode::COPY);

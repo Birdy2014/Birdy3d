@@ -13,10 +13,14 @@
 
 namespace Birdy3d {
 
-    Model::Model(const std::string& path)
-        : m_path(path) {
+    Model::Model(const std::string& path) {
         Logger::debug("Loading model: ", path);
-        load();
+        load(path);
+        compute_bounding_box();
+    }
+
+    Model::Model(Mesh* mesh) {
+        m_meshes.push_back(mesh);
         compute_bounding_box();
     }
 
@@ -45,15 +49,15 @@ namespace Birdy3d {
         return m_meshes;
     }
 
-    void Model::load() {
+    void Model::load(std::string path) {
         Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(m_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             Logger::error("ASSIMP: ", importer.GetErrorString());
             return;
         }
-        m_directory = m_path.substr(0, m_path.find_last_of('/'));
+        m_directory = path.substr(0, path.find_last_of('/'));
 
         processNode(scene->mRootNode, scene);
     }
