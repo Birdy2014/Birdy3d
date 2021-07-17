@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Component.hpp"
-#include "core/Transform.hpp"
+#include "scene/Component.hpp"
+#include "scene/Transform.hpp"
 #include <memory>
 #include <vector>
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "events/Event.hpp"
+#include "scene/GameObject.hpp"
 
 namespace Birdy3d {
 
@@ -14,9 +15,9 @@ namespace Birdy3d {
             EXIT
         };
 
-        Collider* colliderA;
-        Collider* colliderB;
-        Type type;
+        Collider* const colliderA;
+        Collider* const colliderB;
+        const Type type;
 
         CollisionEvent(Collider* colliderA, Collider* colliderB, Type type)
             : colliderA(colliderA)
@@ -27,10 +28,10 @@ namespace Birdy3d {
             GameObject* object = std::any_cast<GameObject*>(options);
             if (!object)
                 return true;
-            Collider* collider = object->getComponent<Collider>();
-            if (!collider)
+            auto colliders = object->getComponents<Collider>(false, true);
+            if (colliders.empty())
                 return false;
-            return colliderA == collider || colliderB == collider;
+            return std::find(colliders.begin(), colliders.end(), colliderA) != colliders.end() || std::find(colliders.begin(), colliders.end(), colliderB) != colliders.end();
         }
 
         Collider* other(Collider* current) {

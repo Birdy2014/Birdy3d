@@ -1,7 +1,6 @@
 #include "physics/Collider.hpp"
 
 #include "core/Application.hpp"
-#include "core/GameObject.hpp"
 #include "core/Logger.hpp"
 #include "events/CollisionEvent.hpp"
 #include "physics/Collision.hpp"
@@ -9,6 +8,7 @@
 #include "render/Model.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Vertex.hpp"
+#include "scene/GameObject.hpp"
 #include "scene/Scene.hpp"
 
 namespace Birdy3d {

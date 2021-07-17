@@ -1,7 +1,8 @@
-#include "ui/Widget.hpp"
+#pragma once
 
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
+#include "ui/Widget.hpp"
 
 namespace Birdy3d {
 

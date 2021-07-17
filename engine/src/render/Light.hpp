@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Component.hpp"
+#include "scene/Component.hpp"
 #include <glm/glm.hpp>
 #include <memory>
 

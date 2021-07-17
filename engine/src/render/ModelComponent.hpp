@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/Component.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Material.hpp"
 #include "render/Model.hpp"
+#include "scene/Component.hpp"
 #include <string>
 
 namespace Birdy3d {

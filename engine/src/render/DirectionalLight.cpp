@@ -1,10 +1,10 @@
 #include "render/DirectionalLight.hpp"
 
-#include "core/GameObject.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Camera.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
+#include "scene/GameObject.hpp"
 #include "scene/Scene.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -12,7 +12,7 @@ namespace Birdy3d {
 
     DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, bool shadow_enabled)
         : Light(RessourceManager::getShader("directional_light_depth"), ambient, diffuse, 1.0f, 1.0f, shadow_enabled) {
-        camOffset = 30;
+        camOffset = 1000;
     }
 
     void DirectionalLight::setupShadowMap() {
@@ -67,7 +67,7 @@ namespace Birdy3d {
         glEnable(GL_DEPTH_TEST);
 
         m_depthShader->use();
-        float nearPlane = 1.0f, farPlane = 100.0f;
+        float nearPlane = 1.0f, farPlane = 10000.0f;
         glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
         glm::mat4 lightView = glm::lookAt(absPos, absPos + object->absForward(), object->absUp());
         lightSpaceMatrix = lightProjection * lightView;

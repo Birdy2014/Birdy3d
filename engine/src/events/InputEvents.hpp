@@ -16,9 +16,9 @@ namespace Birdy3d {
 
     class InputClickEvent : public Event {
     public:
-        int button;
-        int action;
-        int mods;
+        const int button;
+        const int action;
+        const int mods;
 
         InputClickEvent(int button, int action, int mods)
             : button(button)
@@ -28,10 +28,10 @@ namespace Birdy3d {
 
     class InputKeyEvent : public Event {
     public:
-        int key;
-        int scancode;
-        int action;
-        int mods;
+        const int key;
+        const int scancode;
+        const int action;
+        const int mods;
 
         InputKeyEvent(int key, int scancode, int action, int mods)
             : key(key)
@@ -47,7 +47,7 @@ namespace Birdy3d {
 
     class InputCharEvent : public Event {
     public:
-        unsigned int codepoint;
+        const unsigned int codepoint;
 
         InputCharEvent(unsigned int codepoint)
             : codepoint(codepoint) { }

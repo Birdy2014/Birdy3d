@@ -2,12 +2,9 @@
 
 // Core
 #include "core/Application.hpp"
-#include "core/Component.hpp"
 #include "core/FPPlayerController.hpp"
-#include "core/GameObject.hpp"
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
-#include "core/Transform.hpp"
 
 // Events
 #include "events/CollisionEvent.hpp"
@@ -34,7 +31,10 @@
 #include "render/Texture.hpp"
 
 // Scene
+#include "scene/Component.hpp"
+#include "scene/GameObject.hpp"
 #include "scene/Scene.hpp"
+#include "scene/Transform.hpp"
 
 // UI
 #include "ui/Canvas.hpp"

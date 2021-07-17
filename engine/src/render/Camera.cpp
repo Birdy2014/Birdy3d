@@ -1,6 +1,5 @@
 #include "render/Camera.hpp"
 
-#include "core/GameObject.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/DirectionalLight.hpp"
@@ -8,6 +7,7 @@
 #include "render/PointLight.hpp"
 #include "render/Shader.hpp"
 #include "render/Spotlight.hpp"
+#include "scene/GameObject.hpp"
 #include "scene/Scene.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>

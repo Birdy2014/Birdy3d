@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/Component.hpp"
-#include "core/GameObject.hpp"
 #include "events/Event.hpp"
+#include "scene/Component.hpp"
+#include "scene/GameObject.hpp"
 #include <any>
 #include <functional>
 #include <list>

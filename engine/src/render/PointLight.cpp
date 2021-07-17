@@ -1,9 +1,9 @@
 #include "render/PointLight.hpp"
 
-#include "core/GameObject.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
+#include "scene/GameObject.hpp"
 #include "scene/Scene.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 

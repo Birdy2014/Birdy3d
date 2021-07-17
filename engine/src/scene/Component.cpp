@@ -1,4 +1,4 @@
-#include "core/Component.hpp"
+#include "scene/Component.hpp"
 
 namespace Birdy3d {
 

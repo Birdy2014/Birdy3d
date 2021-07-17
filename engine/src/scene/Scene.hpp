@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/GameObject.hpp"
 #include "physics/PhysicsWorld.hpp"
+#include "scene/GameObject.hpp"
 #include <memory>
 
 namespace Birdy3d {

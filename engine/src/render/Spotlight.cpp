@@ -1,6 +1,6 @@
 #include "render/Spotlight.hpp"
 
-#include "core/GameObject.hpp"
+#include "scene/GameObject.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"

@@ -1,6 +1,6 @@
 #include "render/Model.hpp"
 
-#include "core/GameObject.hpp"
+#include "scene/GameObject.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Mesh.hpp"
