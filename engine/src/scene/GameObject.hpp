@@ -48,11 +48,11 @@ namespace Birdy3d {
         void setScene(Scene* scene);
 
         template <class T>
-        std::vector<T*> getComponents(bool hidden = true, bool recursive = false) {
+        std::vector<T*> getComponents(bool hidden = true, bool recursive = false) const {
             std::vector<T*> components;
             if (this->hidden && !hidden)
                 return components;
-            for (std::unique_ptr<Component>& c : m_components) {
+            for (const auto& c : m_components) {
                 if (!c->isLoaded())
                     continue;
                 T* casted = dynamic_cast<T*>(c.get());
@@ -61,7 +61,7 @@ namespace Birdy3d {
                 }
             }
             if (recursive) {
-                for (const std::unique_ptr<GameObject>& o : m_children) {
+                for (const auto& o : m_children) {
                     std::vector<T*> childComponents = o->getComponents<T>(hidden, recursive);
                     components.insert(components.end(), childComponents.begin(), childComponents.end());
                 }
@@ -70,10 +70,10 @@ namespace Birdy3d {
         }
 
         template <class T>
-        T* getComponent(bool hidden = true, bool recursive = false) {
+        T* getComponent(bool hidden = true, bool recursive = false) const {
             if (this->hidden && !hidden)
                 return nullptr;
-            for (std::unique_ptr<Component>& c : m_components) {
+            for (const auto& c : m_components) {
                 if (!c->isLoaded())
                     continue;
                 T* casted = dynamic_cast<T*>(c.get());
@@ -82,7 +82,7 @@ namespace Birdy3d {
                 }
             }
             if (recursive) {
-                for (const std::unique_ptr<GameObject>& o : m_children) {
+                for (const auto& o : m_children) {
                     T* c = o->getComponent<T>(hidden, recursive);
                     if (c)
                         return c;

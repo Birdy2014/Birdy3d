@@ -17,7 +17,7 @@ namespace Birdy3d {
     void FPPlayerController::start() {
         cam = object->getComponent<Camera>();
         if (Application::canvas)
-            menu = Application::canvas->getWidget<Layout>("menu");
+            menu = Application::canvas->get_widget("menu");
         Application::eventBus->subscribe(this, &FPPlayerController::onResize);
         Input::setCursorHidden(true);
 

@@ -45,8 +45,8 @@ namespace Birdy3d {
             indices.push_back(v + res_z + 1);
         }
 
-        Mesh* mesh = new Mesh(vertices, indices);
-        return std::make_shared<Model>(mesh);
+        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(vertices, indices);
+        return std::make_shared<Model>(std::move(mesh));
     }
 
     std::shared_ptr<Model> PrimitiveGenerator::generate_cube() {

@@ -33,23 +33,23 @@ namespace Birdy3d {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void PointLight::use(Shader* lightShader, int id, int textureid) {
+    void PointLight::use(const Shader& lightShader, int id, int textureid) {
         if (!m_shadowMapUpdated) {
             genShadowMap();
             m_shadowMapUpdated = true;
         }
         std::string name = "pointLights[" + std::to_string(id) + "].";
-        lightShader->use();
-        lightShader->setBool(name + "shadow_enabled", shadow_enabled);
-        lightShader->setVec3(name + "position", object->transform.worldPosition());
-        lightShader->setVec3(name + "ambient", ambient);
-        lightShader->setVec3(name + "diffuse", diffuse);
-        lightShader->setFloat(name + "linear", linear);
-        lightShader->setFloat(name + "quadratic", quadratic);
+        lightShader.use();
+        lightShader.setBool(name + "shadow_enabled", shadow_enabled);
+        lightShader.setVec3(name + "position", object->transform.worldPosition());
+        lightShader.setVec3(name + "ambient", ambient);
+        lightShader.setVec3(name + "diffuse", diffuse);
+        lightShader.setFloat(name + "linear", linear);
+        lightShader.setFloat(name + "quadratic", quadratic);
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthMap);
-        lightShader->setInt("pointLights[" + std::to_string(id) + "].shadowMap", textureid);
-        lightShader->setFloat("pointLights[" + std::to_string(id) + "].far", m_far);
+        lightShader.setInt("pointLights[" + std::to_string(id) + "].shadowMap", textureid);
+        lightShader.setFloat("pointLights[" + std::to_string(id) + "].far", m_far);
     }
 
     void PointLight::genShadowMap() {
@@ -80,7 +80,7 @@ namespace Birdy3d {
         m_depthShader->setFloat("far_plane", m_far);
         m_depthShader->setVec3("lightPos", absPos);
         for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
-            m->renderDepth(m_depthShader.get());
+            m->renderDepth(*m_depthShader);
         }
 
         // reset framebuffer and viewport

@@ -10,6 +10,8 @@ namespace Birdy3d {
 
     class Button : public Widget {
     public:
+        Text* button_text;
+
         Button(UIVector pos, Placement placement, std::string text, float fontSize, UIVector size = UIVector(0)) {
             this->pos = pos;
             this->placement = placement;
@@ -17,13 +19,13 @@ namespace Birdy3d {
 
             Logger::assertNotNull(theme, "no default theme set");
 
-            addFilledRectangle(UIVector(0_px), UIVector(100_p), theme->color_bg, Placement::BOTTOM_LEFT);
-            addRectangle(UIVector(0_px), UIVector(100_p), theme->color_border, Placement::BOTTOM_LEFT);
-            addText(UIVector(0_px), fontSize, text, theme->color_fg, Placement::CENTER);
+            add_filled_rectangle(UIVector(0_px), UIVector(100_p), theme->color_bg, Placement::BOTTOM_LEFT);
+            add_rectangle(UIVector(0_px), UIVector(100_p), theme->color_border, Placement::BOTTOM_LEFT);
+            button_text = add_text(UIVector(0_px), fontSize, text, theme->color_fg, Placement::CENTER);
         };
 
         glm::vec2 minimalSize() override {
-            glm::vec2 minSize = theme->text_renderer()->textSize(getShape<Text>()->text, getShape<Text>()->fontSize) + 2.0f;
+            glm::vec2 minSize = theme->text_renderer()->textSize(button_text->text, button_text->fontSize) + 2.0f;
             return glm::max(minSize, Widget::minimalSize());
         }
 

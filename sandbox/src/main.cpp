@@ -66,7 +66,8 @@ int main() {
 
     canvas.add_child<FPSCounter>(0_px, Placement::TOP_RIGHT);
 
-    DirectionalLayout* menu = canvas.add_child<DirectionalLayout>(DirectionalLayout::Direction::RIGHT, Placement::CENTER, 30_p, 10);
+    Widget* menu = canvas.add_child<Widget>(0_px, 30_p, Placement::CENTER);
+    menu->set_layout<DirectionalLayout>(DirectionalLayout::Direction::RIGHT, 10);
     menu->name = "menu";
 
     Button* closeButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close", 20);
@@ -81,20 +82,18 @@ int main() {
     area->append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
 
     Window* testWindow = canvas.add_child<Window>(0_px, 500_px);
+    testWindow->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
     testWindow->hidden = true;
     testWindow->title("Test");
 
-    DirectionalLayout winLayout(DirectionalLayout::Direction::DOWN, Placement::TOP_LEFT, 100_p, 10, true);
-    testWindow->set_child(&winLayout);
-
-    Textarea* area2 = winLayout.add_child<Textarea>(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
+    Textarea* area2 = testWindow->add_child<Textarea>(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
     area2->append("Dies ist ein Fenster");
 
-    CheckBox* testCheckBox = winLayout.add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
+    CheckBox* testCheckBox = testWindow->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
 
-    NumberInput* inputR = winLayout.add_child<NumberInput>(UIVector(0_px, -80), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    NumberInput* inputG = winLayout.add_child<NumberInput>(UIVector(0_px, -110), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    NumberInput* inputB = winLayout.add_child<NumberInput>(UIVector(0_px, -140), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputR = testWindow->add_child<NumberInput>(UIVector(0_px, -80), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputG = testWindow->add_child<NumberInput>(UIVector(0_px, -110), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputB = testWindow->add_child<NumberInput>(UIVector(0_px, -140), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
     inputR->min_value = 0;
     inputG->min_value = 0;
     inputB->min_value = 0;
@@ -105,9 +104,9 @@ int main() {
     inputG->value(1);
     inputB->value(1);
 
-    NumberInput* inputX = winLayout.add_child<NumberInput>(UIVector(0_px, -170), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    NumberInput* inputY = winLayout.add_child<NumberInput>(UIVector(0_px, -200), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    NumberInput* inputZ = winLayout.add_child<NumberInput>(UIVector(0_px, -230), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputX = testWindow->add_child<NumberInput>(UIVector(0_px, -170), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputY = testWindow->add_child<NumberInput>(UIVector(0_px, -200), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    NumberInput* inputZ = testWindow->add_child<NumberInput>(UIVector(0_px, -230), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
 
     testButton->callback_click = [&testWindow](InputClickEvent*) {
         testWindow->hidden = !testWindow->hidden;

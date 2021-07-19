@@ -129,7 +129,7 @@ namespace Birdy3d {
         }
     }
 
-    void Shader::use() {
+    void Shader::use() const {
         glUseProgram(ID);
     }
 

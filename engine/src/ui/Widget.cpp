@@ -2,6 +2,7 @@
 
 #include "core/Input.hpp"
 #include "ui/Canvas.hpp"
+#include "ui/Layout.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
@@ -16,54 +17,53 @@ namespace Birdy3d {
         , placement(placement)
         , theme(theme) { }
 
-    Widget::~Widget() {
-        for (Shape* s : shapes) {
-            delete s;
-        }
+    Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::OUTLINE, placement);
+        Rectangle* ptr = rectangle.get();
+        m_shapes.push_back(std::move(rectangle));
+        return ptr;
     }
 
-    Rectangle* Widget::addRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
-        Rectangle* rectangle = new Rectangle(pos, size, color, Shape::OUTLINE, placement);
-        this->shapes.push_back(rectangle);
-        return rectangle;
+    Rectangle* Widget::add_filled_rectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::FILLED, placement);
+        Rectangle* ptr = rectangle.get();
+        m_shapes.push_back(std::move(rectangle));
+        return ptr;
     }
 
-    Rectangle* Widget::addFilledRectangle(UIVector pos, UIVector size, Color color, Placement placement) {
-        Rectangle* rectangle = new Rectangle(pos, size, color, Shape::FILLED, placement);
-        this->shapes.push_back(rectangle);
-        return rectangle;
+    Triangle* Widget::add_triangle(UIVector pos, UIVector size, Color color) {
+        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::OUTLINE);
+        Triangle* ptr = triangle.get();
+        m_shapes.push_back(std::move(triangle));
+        return ptr;
     }
 
-    Triangle* Widget::addTriangle(UIVector pos, UIVector size, Color color) {
-        Triangle* triangle = new Triangle(pos, size, color, Shape::OUTLINE);
-        this->shapes.push_back(triangle);
-        return triangle;
+    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, Color color) {
+        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::FILLED);
+        Triangle* ptr = triangle.get();
+        m_shapes.push_back(std::move(triangle));
+        return ptr;
     }
 
-    Triangle* Widget::addFilledTriangle(UIVector pos, UIVector size, Color color) {
-        Triangle* triangle = new Triangle(pos, size, color, Shape::FILLED);
-        this->shapes.push_back(triangle);
-        return triangle;
-    }
-
-    Text* Widget::addText(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
-        Text* shape = new Text(pos, fontSize, text, color, placement, theme->text_renderer());
-        this->shapes.push_back(shape);
-        return shape;
+    Text* Widget::add_text(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
+        std::unique_ptr<Text> shape = std::make_unique<Text>(pos, fontSize, text, color, placement, theme->text_renderer());
+        Text* ptr = shape.get();
+        m_shapes.push_back(std::move(shape));
+        return ptr;
     }
 
     void Widget::draw() {
         if (hidden)
             return;
 
-        // FIXME: the -1 and +2 should not be necessary and don't completely fix the problem, that widget borders are sometimes invisible.
-        glScissor(actualPos.x - 1, actualPos.y - 1, actualSize.x + 2, actualSize.y + 2);
-
         glm::mat4 move = normalizedMove();
 
-        for (Shape* s : this->shapes) {
+        for (const auto& s : m_shapes) {
             s->draw(move);
         }
+
+        for (const auto& child : m_children)
+            child->draw();
     }
 
     glm::vec2 Widget::preferredPosition(glm::vec2 parentSize, glm::vec2 size) {
@@ -71,7 +71,10 @@ namespace Birdy3d {
     }
 
     glm::vec2 Widget::minimalSize() {
-        return size.toPixels();
+        glm::vec2 children_minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
+        if (m_layout)
+            children_minsize += m_layout->minimal_size(m_children);
+        return glm::max(children_minsize, size.toPixels());
     }
 
     glm::vec2 Widget::preferredSize(glm::vec2 parentSize) {
@@ -79,22 +82,27 @@ namespace Birdy3d {
     }
 
     void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
-        this->actualPos = pos;
-        this->actualSize = size;
+        m_actual_pos = pos;
+        m_actual_size = size;
 
-        for (Shape* s : shapes) {
+        for (const auto& s : m_shapes) {
             s->parentSize(size);
         }
+
+        if (m_layout)
+            m_layout->arrange(m_children, pos + glm::vec2(m_padding[0], m_padding[2]), size - glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]));
     }
 
     void Widget::set_canvas(Canvas* c) {
         canvas = c;
+        for (const std::unique_ptr<Widget>& child : m_children)
+            child->set_canvas(c);
     }
 
     glm::mat4 Widget::normalizedMove() {
         glm::vec2 viewportSize = Application::getViewportSize();
         glm::mat4 move = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
-        return glm::translate(move, glm::vec3(actualPos, 0.0f));
+        return glm::translate(move, glm::vec3(m_actual_pos, 0.0f));
     }
 
     bool Widget::is_hovering() {
@@ -122,11 +130,21 @@ namespace Birdy3d {
     }
 
     bool Widget::update_hover(bool hover) {
+        bool success = false;
+        if (hidden)
+            hover = false;
+        for (std::list<std::unique_ptr<Widget>>::reverse_iterator it = m_children.rbegin(); it != m_children.rend(); it++) {
+            if ((*it)->update_hover(hover)) {
+                hover = false;
+                success = true;
+            }
+        }
+
         if (hidden)
             hover = false;
         if (hover) {
             glm::vec2 cursorPos = Input::cursorPos();
-            if (cursorPos.x > actualPos.x && cursorPos.y > actualPos.y && cursorPos.x < actualPos.x + actualSize.x && cursorPos.y < actualPos.y + actualSize.y) {
+            if (cursorPos.x > m_actual_pos.x && cursorPos.y > m_actual_pos.y && cursorPos.x < m_actual_pos.x + m_actual_size.x && cursorPos.y < m_actual_pos.y + m_actual_size.y) {
                 canvas->m_hovering_widget = this;
                 return true;
             }
@@ -135,14 +153,33 @@ namespace Birdy3d {
             on_mouse_leave();
             m_hovered_last_frame = false;
         }
-        return false;
+        return success;
+    }
+
+    void Widget::on_update() {
+        for (auto it = m_children.rbegin(); it != m_children.rend(); it++) {
+            (*it)->on_update();
+        }
     }
 
     void Widget::late_update() {
+        for (auto it = m_children.rbegin(); it != m_children.rend(); it++)
+            (*it)->late_update();
         if (is_hovering() && !m_hovered_last_frame) {
             on_mouse_enter();
             m_hovered_last_frame = true;
         }
+    }
+
+    void Widget::add_child(std::unique_ptr<Widget> w) {
+        w->parent = this;
+        w->set_canvas(canvas);
+        m_children.push_back(std::move(w));
+    }
+
+    void Widget::toForeground(Widget* widget) {
+        auto element = std::find_if(m_children.cbegin(), m_children.cend(), [&](const std::unique_ptr<Widget>& w) { return w.get() == widget; });
+        m_children.splice(m_children.end(), m_children, element);
     }
 
 }

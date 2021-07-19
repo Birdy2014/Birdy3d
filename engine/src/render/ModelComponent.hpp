@@ -23,16 +23,16 @@ namespace Birdy3d {
             model = RessourceManager::getModel(name);
         }
 
-        void render(Shader* shader, bool transparent) {
+        void render(const Shader& shader, bool transparent) const {
             if (model)
-                model->render(object, material, shader, transparent);
+                model->render(*object, material, shader, transparent);
             else
                 Logger::error("No model specified");
         }
 
-        void renderDepth(Shader* shader) {
+        void renderDepth(const Shader& shader) const {
             if (model)
-                model->renderDepth(object, shader);
+                model->renderDepth(*object, shader);
         }
     };
 

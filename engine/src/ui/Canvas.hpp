@@ -2,42 +2,41 @@
 
 #include "core/Application.hpp"
 #include "events/EventBus.hpp"
+#include "ui/AbsoluteLayout.hpp"
 #include "ui/Widget.hpp"
-#include "ui/widgets/AbsoluteLayout.hpp"
 
 namespace Birdy3d {
 
-    class Canvas : public AbsoluteLayout {
+    class Canvas : public Widget {
     public:
         bool updated = false;
 
         Canvas()
-            : AbsoluteLayout(0_px, 100_p) {
+            : Widget(0_px, 100_p) {
             canvas = this;
             Application::eventBus->subscribe(this, &Canvas::on_scroll);
             Application::eventBus->subscribe(this, &Canvas::on_click);
             Application::eventBus->subscribe(this, &Canvas::on_key);
             Application::eventBus->subscribe(this, &Canvas::on_char);
+            set_layout<AbsoluteLayout>();
         };
 
         void update() {
             if (!hidden) {
                 updated = true;
                 glm::vec2 viewport = Application::getViewportSize();
-                AbsoluteLayout::arrange(glm::vec2(0), viewport);
+                Widget::arrange(glm::vec2(0), viewport);
                 if (!m_cursor_grabbed)
-                    AbsoluteLayout::update_hover(true);
-                AbsoluteLayout::on_update();
-                AbsoluteLayout::late_update();
+                    Widget::update_hover(true);
+                Widget::on_update();
+                Widget::late_update();
             }
         }
 
         void draw() override {
             if (updated) {
                 glClear(GL_DEPTH_BUFFER_BIT);
-                glEnable(GL_SCISSOR_TEST);
-                AbsoluteLayout::draw();
-                glDisable(GL_SCISSOR_TEST);
+                Widget::draw();
             }
         }
 

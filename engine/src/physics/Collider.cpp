@@ -33,9 +33,9 @@ namespace Birdy3d {
 
     CollisionPoints Collider::collides(Collider* collider) {
         CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
-        for (Mesh* own_mesh : m_model->getMeshes()) {
-            for (Mesh* other_mesh : collider->m_model->getMeshes()) {
-                if (collides(own_mesh, other_mesh, object->transform.matrix(), collider->object->transform.matrix())) {
+        for (const auto& own_mesh : m_model->getMeshes()) {
+            for (const auto& other_mesh : collider->m_model->getMeshes()) {
+                if (collides(own_mesh.get(), other_mesh.get(), object->transform.matrix(), collider->object->transform.matrix())) {
                     points.hasCollision = true;
                     break;
                 }
@@ -44,7 +44,7 @@ namespace Birdy3d {
         return points;
     }
 
-    bool Collider::collides(Mesh* mesh_a, Mesh* mesh_b, glm::mat4 transform_a, glm::mat4 transform_b) {
+    bool Collider::collides(const Mesh* mesh_a, const Mesh* mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b) {
         m_point_count = 0;
         glm::vec3 s = support(mesh_a, mesh_b, transform_a, transform_b, glm::vec3(1.0f, 0.0f, 0.0f));
         push_front(s);
@@ -67,7 +67,7 @@ namespace Birdy3d {
         }
     }
 
-    glm::vec3 Collider::support(Mesh* mesh_a, Mesh* mesh_b, glm::mat4 transform_a, glm::mat4 transform_b, glm::vec3 direction) {
+    glm::vec3 Collider::support(const Mesh* mesh_a, const Mesh* mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction) {
         // Transform world direction to local direction
         glm::mat4 inverse_transform_a = glm::inverse(transform_a);
         glm::mat4 inverse_transform_b = glm::inverse(transform_b);

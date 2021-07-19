@@ -13,14 +13,7 @@ namespace Birdy3d {
         std::function<void()> callback_close;
 
         Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Theme* theme = Application::defaultTheme, std::string name = "");
-        void arrange(glm::vec2 pos, glm::vec2 size) override;
         void toForeground();
-        void draw() override;
-        glm::vec2 minimalSize() override;
-        void set_child(Widget*);
-        void set_canvas(Canvas*) override;
-        bool update_hover(bool hover) override;
-        void late_update() override;
 
         std::string title() { return m_title->text; }
         void title(std::string title) { m_title->text = title; }
@@ -31,7 +24,6 @@ namespace Birdy3d {
         void on_mouse_leave() override;
 
     private:
-        Widget* m_child = nullptr;
         Rectangle* closeButton;
         Text* m_title;
         bool hoverDrag = false;

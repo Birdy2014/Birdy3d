@@ -19,33 +19,33 @@ namespace Birdy3d {
         compute_bounding_box();
     }
 
-    Model::Model(Mesh* mesh) {
-        m_meshes.push_back(mesh);
+    Model::Model(std::unique_ptr<Mesh> mesh) {
+        m_meshes.push_back(std::move(mesh));
         compute_bounding_box();
     }
 
-    void Model::render(GameObject* object, const Material* material, Shader* shader, bool transparent) {
+    void Model::render(GameObject& object, const Material* material, const Shader& shader, bool transparent) const {
         if (material == nullptr)
             material = &m_embedded_material;
-        glm::mat4 model = object->transform.matrix();
-        shader->use();
-        shader->setMat4("model", model);
-        for (Mesh* m : m_meshes) {
+        glm::mat4 model = object.transform.matrix();
+        shader.use();
+        shader.setMat4("model", model);
+        for (const auto& m : m_meshes) {
             if (transparent == material->transparent())
                 m->render(shader, *material);
         }
     }
 
-    void Model::renderDepth(GameObject* object, Shader* shader) {
-        glm::mat4 model = object->transform.matrix();
-        shader->use();
-        shader->setMat4("model", model);
-        for (Mesh* m : m_meshes) {
+    void Model::renderDepth(GameObject& object, const Shader& shader) const {
+        glm::mat4 model = object.transform.matrix();
+        shader.use();
+        shader.setMat4("model", model);
+        for (const auto& m : m_meshes) {
             m->renderDepth();
         }
     }
 
-    const std::vector<Mesh*>& Model::getMeshes() {
+    const std::vector<std::unique_ptr<Mesh>>& Model::getMeshes() const {
         return m_meshes;
     }
 
@@ -74,7 +74,7 @@ namespace Birdy3d {
         }
     }
 
-    Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene) {
+    std::unique_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene) {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture*> textures;
@@ -140,19 +140,13 @@ namespace Birdy3d {
             m_embedded_material.emissive_map_enabled = true;
         }
 
-        return new Mesh(vertices, indices);
-    }
-
-    Model::~Model() {
-        for (Mesh* m : m_meshes) {
-            delete m;
-        }
+        return std::make_unique<Mesh>(vertices, indices);
     }
 
     void Model::compute_bounding_box() {
         glm::vec3 low(std::numeric_limits<float>::max());
         glm::vec3 high(std::numeric_limits<float>::min());
-        for (Mesh* mesh : m_meshes) {
+        for (const auto& mesh : m_meshes) {
             for (Vertex vertex : mesh->vertices) {
                 if (vertex.position.x < low.x)
                     low.x = vertex.position.x;

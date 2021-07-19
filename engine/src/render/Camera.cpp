@@ -181,7 +181,7 @@ namespace Birdy3d {
             m_deferred_geometry_shader->use();
             m_deferred_geometry_shader->setMat4("projection", m_projection);
             m_deferred_geometry_shader->setMat4("view", view);
-            m->render(m_deferred_geometry_shader.get(), false);
+            m->render(*m_deferred_geometry_shader, false);
         }
 
         // 2. lighting pass
@@ -201,11 +201,11 @@ namespace Birdy3d {
         m_deferred_light_shader->setInt("nr_pointlights", pointLights.size());
         m_deferred_light_shader->setInt("nr_spotlights", spotlights.size());
         for (size_t i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(m_deferred_light_shader.get(), i, 3 + i);
+            dirLights[i]->use(*m_deferred_light_shader, i, 3 + i);
         for (size_t i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(m_deferred_light_shader.get(), i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            pointLights[i]->use(*m_deferred_light_shader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (size_t i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(m_deferred_light_shader.get(), i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            spotlights[i]->use(*m_deferred_light_shader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         m_deferred_light_shader->setVec3("viewPos", absPos);
         renderQuad();
@@ -228,11 +228,11 @@ namespace Birdy3d {
         m_forward_shader->setInt("nr_pointlights", pointLights.size());
         m_forward_shader->setInt("nr_spotlights", spotlights.size());
         for (size_t i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(m_forward_shader.get(), i, 4 + i);
+            dirLights[i]->use(*m_forward_shader, i, 4 + i);
         for (size_t i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(m_forward_shader.get(), i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            pointLights[i]->use(*m_forward_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (size_t i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(m_forward_shader.get(), i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            spotlights[i]->use(*m_forward_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         if (renderOpaque) {
@@ -248,7 +248,7 @@ namespace Birdy3d {
         m_forward_shader->setVec3("viewPos", absPos);
         if (renderOpaque) {
             for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
-                m->render(m_forward_shader.get(), false);
+                m->render(*m_forward_shader, false);
             }
         }
 
@@ -261,7 +261,7 @@ namespace Birdy3d {
         }
 
         for (std::map<float, ModelComponent*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++) {
-            it->second->render(m_forward_shader.get(), true);
+            it->second->render(*m_forward_shader, true);
         }
     }
 
@@ -279,12 +279,15 @@ namespace Birdy3d {
         m_normal_shader->setMat4("projection", m_projection);
         m_normal_shader->setMat4("view", view);
         for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
-            m->render(m_normal_shader.get(), false);
-            m->render(m_normal_shader.get(), true);
+            m->render(*m_normal_shader, false);
+            m->render(*m_normal_shader, true);
         }
     }
 
-    void Camera::renderOutline(GameObject* selected_object) {
+    void Camera::renderOutline(const GameObject* selected_object) {
+        if (selected_object == nullptr)
+            return;
+
         if (m_outline_vao == 0) {
             glGenVertexArrays(1, &m_outline_vao);
             glGenBuffers(1, &m_outline_vbo);

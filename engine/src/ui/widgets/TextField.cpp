@@ -8,7 +8,7 @@ namespace Birdy3d {
 
     TextField::TextField(UIVector position, UIVector size, Placement placement)
         : Widget(position, size, placement) {
-        addFilledRectangle(0_px, 100_p, theme->color_input_bg);
+        add_filled_rectangle(0_px, 100_p, theme->color_input_bg);
     }
 
     std::string TextField::text() {
@@ -29,12 +29,15 @@ namespace Birdy3d {
 
     void TextField::draw() {
         Widget::draw();
-        theme->text_renderer()->renderText(m_text, 0, actualSize.y - theme->font_size, theme->font_size, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, "#0000a050");
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(m_actual_pos.x, m_actual_pos.y, m_actual_size.x, m_actual_size.y);
+        theme->text_renderer()->renderText(m_text, 0, m_actual_size.y - theme->font_size, theme->font_size, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, "#0000a050");
+        glDisable(GL_SCISSOR_TEST);
     }
 
     void TextField::on_update() {
         if (m_selecting) {
-            glm::vec2 local_pos = Input::cursorPos() - actualPos;
+            glm::vec2 local_pos = Input::cursorPos() - m_actual_pos;
             int char_pos = theme->text_renderer()->char_index(m_text, theme->font_size, local_pos.x, true);
             if (m_selection_start == char_pos)
                 m_selection_end = -1;
@@ -49,7 +52,7 @@ namespace Birdy3d {
 
         if (event->action == GLFW_PRESS) {
             grab_cursor();
-            glm::vec2 local_pos = Input::cursorPos() - actualPos;
+            glm::vec2 local_pos = Input::cursorPos() - m_actual_pos;
             int char_pos = theme->text_renderer()->char_index(m_text, theme->font_size, local_pos.x, true);
             m_selecting = true;
             m_selection_start = char_pos;

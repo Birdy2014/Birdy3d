@@ -25,8 +25,8 @@ namespace Birdy3d {
         glm::vec3 m_points[4];
         int m_point_count;
 
-        bool collides(Mesh* mesh_a, Mesh* mesh_b, glm::mat4 transform_a, glm::mat4 transform_b);
-        glm::vec3 support(Mesh* a, Mesh* b, glm::mat4 transform_a, glm::mat4 transform_b, glm::vec3 direction);
+        bool collides(const Mesh* mesh_a, const Mesh* mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b);
+        glm::vec3 support(const Mesh* a, const Mesh* b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction);
         bool line(glm::vec3& direction);
         bool triangle(glm::vec3& direction);
         bool tetrahedron(glm::vec3& direction);

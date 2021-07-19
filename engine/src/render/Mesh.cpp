@@ -52,29 +52,29 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
-    void Mesh::render(Shader* shader, const Material& material) {
-        shader->setBool("material.diffuse_map_enabled", material.diffuse_map_enabled);
-        shader->setVec4("material.diffuse_color", material.diffuse_color);
+    void Mesh::render(const Shader& shader, const Material& material) const {
+        shader.setBool("material.diffuse_map_enabled", material.diffuse_map_enabled);
+        shader.setVec4("material.diffuse_color", material.diffuse_color);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, material.diffuse_map->id);
-        shader->setInt("material.diffuse_map", 0);
+        shader.setInt("material.diffuse_map", 0);
 
-        shader->setBool("material.specular_map_enabled", material.specular_map_enabled);
-        shader->setFloat("material.specular_value", material.specular_value);
+        shader.setBool("material.specular_map_enabled", material.specular_map_enabled);
+        shader.setFloat("material.specular_value", material.specular_value);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, material.specular_map->id);
-        shader->setInt("material.specular_map", 1);
+        shader.setInt("material.specular_map", 1);
 
-        shader->setBool("material.normal_map_enabled", material.normal_map_enabled);
+        shader.setBool("material.normal_map_enabled", material.normal_map_enabled);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, material.normal_map->id);
-        shader->setInt("material.normal_map", 2);
+        shader.setInt("material.normal_map", 2);
 
-        shader->setBool("material.emissive_map_enabled", material.emissive_map_enabled);
-        shader->setVec4("material.emissive_color", material.emissive_color);
+        shader.setBool("material.emissive_map_enabled", material.emissive_map_enabled);
+        shader.setVec4("material.emissive_color", material.emissive_color);
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, material.emissive_map->id);
-        shader->setInt("material.emissive_map", 3);
+        shader.setInt("material.emissive_map", 3);
 
         // draw mesh
         glBindVertexArray(m_vao);
@@ -82,13 +82,13 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
-    void Mesh::renderDepth() {
+    void Mesh::renderDepth() const {
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
-    glm::vec3 Mesh::findFurthestPoint(glm::vec3 direction) {
+    glm::vec3 Mesh::findFurthestPoint(const glm::vec3 direction) const {
         float max = std::numeric_limits<float>::min();
         glm::vec3 furthestVertex;
         for (Vertex vertex : vertices) {

@@ -16,9 +16,8 @@ namespace Birdy3d {
         void start() override;
         void cleanup() override;
         void render();
-        void renderOutline(GameObject*);
+        void renderOutline(const GameObject*);
         void resize(int width, int height);
-        void reloadModels();
 
     private:
         unsigned int m_gbuffer, m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo_spec, m_rbo_depth;

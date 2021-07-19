@@ -17,7 +17,7 @@ namespace Birdy3d {
         float quadratic;
 
         Light(std::shared_ptr<Shader> depthShader, glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled);
-        virtual void use(Shader* lightShader, int id, int textureid) = 0;
+        virtual void use(const Shader& lightShader, int id, int textureid) = 0;
         virtual void setupShadowMap() = 0;
         virtual void genShadowMap() = 0;
         void start() override;

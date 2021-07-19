@@ -55,7 +55,7 @@ namespace Birdy3d {
         m_lightSpaceMatrix = lightProjection * lightView;
         m_depthShader->setMat4("lightSpaceMatrix", m_lightSpaceMatrix);
         for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
-            m->renderDepth(m_depthShader.get());
+            m->renderDepth(*m_depthShader);
         }
 
         // reset framebuffer and viewport
@@ -65,26 +65,26 @@ namespace Birdy3d {
         glCullFace(GL_BACK);
     }
 
-    void Spotlight::use(Shader* lightShader, int id, int textureid) {
+    void Spotlight::use(const Shader& lightShader, int id, int textureid) {
         if (!m_shadowMapUpdated) {
             genShadowMap();
             m_shadowMapUpdated = true;
         }
         std::string name = "spotlights[" + std::to_string(id) + "].";
-        lightShader->use();
-        lightShader->setBool(name + "shadow_enabled", shadow_enabled);
-        lightShader->setVec3(name + "position", object->transform.worldPosition());
-        lightShader->setVec3(name + "direction", object->absForward());
-        lightShader->setVec3(name + "ambient", ambient);
-        lightShader->setVec3(name + "diffuse", diffuse);
-        lightShader->setFloat(name + "innerCutOff", glm::cos(m_innerCutOff));
-        lightShader->setFloat(name + "outerCutOff", glm::cos(m_outerCutOff));
-        lightShader->setFloat(name + "linear", linear);
-        lightShader->setFloat(name + "quadratic", quadratic);
+        lightShader.use();
+        lightShader.setBool(name + "shadow_enabled", shadow_enabled);
+        lightShader.setVec3(name + "position", object->transform.worldPosition());
+        lightShader.setVec3(name + "direction", object->absForward());
+        lightShader.setVec3(name + "ambient", ambient);
+        lightShader.setVec3(name + "diffuse", diffuse);
+        lightShader.setFloat(name + "innerCutOff", glm::cos(m_innerCutOff));
+        lightShader.setFloat(name + "outerCutOff", glm::cos(m_outerCutOff));
+        lightShader.setFloat(name + "linear", linear);
+        lightShader.setFloat(name + "quadratic", quadratic);
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_2D, m_depthMap);
-        lightShader->setMat4(name + "lightSpaceMatrix", m_lightSpaceMatrix);
-        lightShader->setInt(name + "shadowMap", textureid);
+        lightShader.setMat4(name + "lightSpaceMatrix", m_lightSpaceMatrix);
+        lightShader.setInt(name + "shadowMap", textureid);
     }
 
 }
