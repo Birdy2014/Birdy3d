@@ -12,7 +12,7 @@ namespace Birdy3d {
     public:
         Text* button_text;
 
-        Button(UIVector pos, Placement placement, std::string text, float fontSize, UIVector size = UIVector(0)) {
+        Button(UIVector pos, Placement placement, std::string text, UIVector size = UIVector(0)) {
             this->pos = pos;
             this->placement = placement;
             this->size = size;
@@ -21,7 +21,7 @@ namespace Birdy3d {
 
             add_filled_rectangle(UIVector(0_px), UIVector(100_p), theme->color_bg, Placement::BOTTOM_LEFT);
             add_rectangle(UIVector(0_px), UIVector(100_p), theme->color_border, Placement::BOTTOM_LEFT);
-            button_text = add_text(UIVector(0_px), fontSize, text, theme->color_fg, Placement::CENTER);
+            button_text = add_text(UIVector(0_px), theme->font_size, text, theme->color_fg, Placement::CENTER);
         };
 
         glm::vec2 minimalSize() override {

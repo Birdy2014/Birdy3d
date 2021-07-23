@@ -5,10 +5,11 @@
 
 namespace Birdy3d {
 
-    GameObject::GameObject(glm::vec3 position, glm::vec3 orientation, glm::vec3 scale) {
-        this->transform.position = position;
-        this->transform.orientation = orientation;
-        this->transform.scale = scale;
+    GameObject::GameObject(std::string name, glm::vec3 position, glm::vec3 orientation, glm::vec3 scale)
+        : name(name) {
+        transform.position = position;
+        transform.orientation = orientation;
+        transform.scale = scale;
     }
 
     void GameObject::add_child(std::unique_ptr<GameObject> c) {

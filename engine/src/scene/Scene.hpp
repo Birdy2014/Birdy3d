@@ -12,6 +12,9 @@ namespace Birdy3d {
     public:
         Camera* m_current_camera;
 
+        Scene(std::string name)
+            : GameObject(name) { }
+
         void start() override {
             setScene(this);
             m_physics_world = std::make_unique<PhysicsWorld>(this);

@@ -33,6 +33,7 @@ public:
 };
 
 GameObject* player;
+GameObject* selected_object = nullptr;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -70,16 +71,26 @@ int main() {
     menu->set_layout<DirectionalLayout>(DirectionalLayout::Direction::RIGHT, 10);
     menu->name = "menu";
 
-    Button* closeButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close", 20);
+    Button* closeButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close");
     closeButton->callback_click = [](InputClickEvent*) {
         glfwSetWindowShouldClose(Application::getWindow(), true);
     };
 
-    Button* testButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Fenster anzeigen", 20, UIVector(200_px, 50_px));
+    Button* testButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Fenster anzeigen", UIVector(200_px, 50_px));
 
     Textarea* area = menu->add_child<Textarea>(0_px, 100_px, Placement::BOTTOM_LEFT);
     area->weight = 2;
     area->append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
+
+    Window* treeWindow = canvas.add_child<Window>(0_px, UIVector(200_px, 300_px));
+    treeWindow->set_layout<AbsoluteLayout>();
+    treeWindow->title("Scene");
+
+    TreeView* tree = treeWindow->add_child<TreeView>(0_px, 100_p, Placement::TOP_LEFT);
+    tree->callback_select = [&](TreeItem& item) {
+        if (item.data.type() == typeid(GameObject*))
+            selected_object = std::any_cast<GameObject*>(item.data);
+    };
 
     Window* testWindow = canvas.add_child<Window>(0_px, 500_px);
     testWindow->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
@@ -113,9 +124,9 @@ int main() {
     };
 
     // GameObjects
-    Scene* scene = new Scene();
+    Scene* scene = new Scene("Scene");
 
-    player = scene->add_child(glm::vec3(0, 0, 3));
+    player = scene->add_child("Player", glm::vec3(0, 0, 3));
     player->add_component<Camera>(800, 600, true);
     player->add_component<FPPlayerController>();
 
@@ -124,22 +135,22 @@ int main() {
     Material blueTransparentMaterial;
     blueTransparentMaterial.diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
 
-    GameObject* obj = scene->add_child(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+    GameObject* obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
     obj->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &redTransparentMaterial);
     obj->add_component<Collider>(GenerationMode::COPY);
 
-    GameObject* obj2 = scene->add_child(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+    GameObject* obj2 = scene->add_child("obj2", glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
     obj2->add_component<ModelComponent>("./ressources/testObjects/cube.obj", nullptr);
 
-    GameObject* plane = scene->add_child(glm::vec3(2.0f, -4.0f, 2.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+    GameObject* plane = scene->add_child("plane", glm::vec3(2.0f, -4.0f, 2.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
     plane->add_component<ModelComponent>("primitive::plane", nullptr);
 
-    GameObject* obj3 = scene->add_child(glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
+    GameObject* obj3 = scene->add_child("obj3", glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
     obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", &blueTransparentMaterial);
     obj3->add_component<Collider>(GenerationMode::COPY);
 
     // Spheres
-    GameObject* sphere1 = scene->add_child(glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
+    GameObject* sphere1 = scene->add_child("Sphere1", glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
     sphere1->add_component<ModelComponent>("./ressources/testObjects/sphere.obj", nullptr);
     sphere1->add_component<Collider>(GenerationMode::COPY);
     sphere1->add_component<TestComponent>();
@@ -151,14 +162,14 @@ int main() {
         sphere1);
 
     // Light
-    GameObject* dirLight = scene->add_child(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
+    GameObject* dirLight = scene->add_child("DirLight", glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
     dirLight->add_component<DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
-    GameObject* pLight = scene->add_child(glm::vec3(2.0f, 1.5f, 4.0f));
+    GameObject* pLight = scene->add_child("Point Light", glm::vec3(2.0f, 1.5f, 4.0f));
     pLight->add_component<PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
-    GameObject* sLight = scene->add_child(glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
+    GameObject* sLight = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
     sLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
 
-    GameObject* flashLight = player->add_child(glm::vec3(0), glm::vec3(0));
+    GameObject* flashLight = player->add_child("Flashlight", glm::vec3(0), glm::vec3(0));
     flashLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1), glm::radians(30.0f), glm::radians(40.0f), 0.08f, 0.02f, false);
     flashLight->hidden = true;
 
@@ -182,8 +193,9 @@ int main() {
         float z = random(-30, 30);
         Material* newMaterial = new Material();
         newMaterial->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
-        GameObject* newCube = scene->add_child(glm::vec3(x, y, z));
+        GameObject* newCube = scene->add_child("New Cube", glm::vec3(x, y, z));
         newCube->add_component<ModelComponent>("./ressources/testObjects/cube.obj", newMaterial);
+        tree->sync_scene_tree(scene);
         Logger::debug("Created cube at x: ", x, " y: ", y, " z: ", z);
     },
         GLFW_KEY_N);
@@ -193,6 +205,8 @@ int main() {
     PointLight* light = pLight->getComponent<PointLight>();
     bool lightup = true;
     bool sphereup = true;
+
+    tree->sync_scene_tree(scene);
 
     //Mainloop
     while (!glfwWindowShouldClose(Application::getWindow())) {
@@ -230,7 +244,7 @@ int main() {
 
         // draw the object
         player->getComponent<Camera>()->render();
-        player->getComponent<Camera>()->renderOutline(scene);
+        player->getComponent<Camera>()->renderOutline(selected_object);
 
         if (collision) {
             Application::defaultTheme->text_renderer()->renderText("collision", 100, 0, 20, glm::vec4(1));

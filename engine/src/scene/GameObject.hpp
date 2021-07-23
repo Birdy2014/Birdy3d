@@ -12,13 +12,15 @@ namespace Birdy3d {
 
     class GameObject {
     public:
+        std::string name;
         Transform3d transform;
         GameObject* parent = nullptr;
         Scene* scene = nullptr;
         bool hidden = false;
 
-        GameObject(glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
+        GameObject(std::string name = "New GameObject", glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
 
+        const std::vector<std::unique_ptr<GameObject>>& children() const { return m_children; }
         void add_child(std::unique_ptr<GameObject>);
         template <class T = GameObject, typename... Args>
         T* add_child(Args... args) {
@@ -29,6 +31,7 @@ namespace Birdy3d {
             return static_cast<T*>(object_ptr);
         }
 
+        const std::vector<std::unique_ptr<Component>>& components() const { return m_components; }
         void add_component(std::unique_ptr<Component>);
         template <class T, typename... Args>
         T* add_component(Args... args) {
