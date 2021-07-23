@@ -45,6 +45,7 @@ namespace Birdy3d {
         TreeItem m_root_item;
         std::list<std::pair<int, TreeItem&>> m_flat_tree_list;
         bool m_items_changed = true;
+        Rectangle* m_item_highlight_rect;
 
         virtual void on_update() override;
         virtual void on_click(InputClickEvent* event) override;

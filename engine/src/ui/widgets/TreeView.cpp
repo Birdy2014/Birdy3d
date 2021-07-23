@@ -26,11 +26,15 @@ namespace Birdy3d {
     }
 
     TreeView::TreeView(UIVector pos, UIVector size, Placement placement)
-        : Widget(pos, size, placement), m_root_item(TreeItem("Root", this)) { }
+        : Widget(pos, size, placement), m_root_item(TreeItem("Root", this)) {
+        m_item_highlight_rect = add_filled_rectangle(0_px, UIVector(100_p, theme->line_height), theme->color_selected_bg, Placement::TOP_LEFT);
+        m_item_highlight_rect->hidden(true);
+    }
 
     void TreeView::draw() {
         int offset_y = theme->line_height;
         glm::mat4 move = normalizedMove();
+        m_item_highlight_rect->draw(move);
         for (const auto& row : m_flat_tree_list) {
             if (!row.second.children.empty()) {
                 row.second.m_collapse_button->position(UIVector(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y));
@@ -71,6 +75,8 @@ namespace Birdy3d {
             offset_y += theme->line_height;
             if (local_pos.y < offset_y) {
                 if (local_pos.x > m_offset_x_left + item.first * m_indent_size) {
+                    m_item_highlight_rect->position(UIVector(0_px, -offset_y + (int) theme->line_height));
+                    m_item_highlight_rect->hidden(false);
                     if (callback_select)
                         callback_select(item.second);
                     return;
