@@ -83,7 +83,7 @@ int main() {
     area->append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
 
     Window* treeWindow = canvas.add_child<Window>(0_px, UIVector(200_px, 300_px));
-    treeWindow->set_layout<AbsoluteLayout>();
+    treeWindow->set_layout<MaxLayout>();
     treeWindow->title("Scene");
 
     TreeView* tree = treeWindow->add_child<TreeView>(0_px, 100_p, Placement::TOP_LEFT);

@@ -41,6 +41,7 @@
 #include "ui/Canvas.hpp"
 #include "ui/DirectionalLayout.hpp"
 #include "ui/Layout.hpp"
+#include "ui/MaxLayout.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 #include "ui/Utils.hpp"

@@ -32,6 +32,7 @@ namespace Birdy3d {
 
         TreeView(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT);
         virtual void draw() override;
+        virtual glm::vec2 minimalSize() override;
         TreeItem& root_item() { return m_root_item; }
         void sync_scene_tree(Scene*);
 

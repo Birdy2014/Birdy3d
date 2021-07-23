@@ -41,6 +41,17 @@ namespace Birdy3d {
         }
     }
 
+    glm::vec2 TreeView::minimalSize() {
+        float max_width = 0;
+        for (const auto& row : m_flat_tree_list) {
+            float width = theme->text_renderer()->textSize(row.second.text, theme->font_size).x;
+            width += row.first * m_indent_size + m_offset_x_left;
+            if (width > max_width)
+                max_width = width;
+        }
+        return glm::vec2(max_width, m_flat_tree_list.size() * theme->line_height);
+    }
+
     void TreeView::on_update() {
         Widget::on_update();
         if (m_items_changed) {
