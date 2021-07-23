@@ -89,7 +89,7 @@ namespace Birdy3d {
     }
 
     glm::vec3 Mesh::findFurthestPoint(const glm::vec3 direction) const {
-        float max = std::numeric_limits<float>::min();
+        float max = -std::numeric_limits<float>::infinity();
         glm::vec3 furthestVertex;
         for (Vertex vertex : vertices) {
             float dot = glm::dot(vertex.position, direction);

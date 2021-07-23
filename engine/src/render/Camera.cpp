@@ -304,8 +304,8 @@ namespace Birdy3d {
 
         const float outline_offset = 0.4;
 
-        glm::vec3 low(std::numeric_limits<float>::max());
-        glm::vec3 high(std::numeric_limits<float>::min());
+        glm::vec3 low(std::numeric_limits<float>::infinity());
+        glm::vec3 high(-std::numeric_limits<float>::infinity());
 
         std::pair<glm::vec3, glm::vec3> bounding_box;
         glm::mat4 model;

@@ -144,8 +144,8 @@ namespace Birdy3d {
     }
 
     void Model::compute_bounding_box() {
-        glm::vec3 low(std::numeric_limits<float>::max());
-        glm::vec3 high(std::numeric_limits<float>::min());
+        glm::vec3 low(std::numeric_limits<float>::infinity());
+        glm::vec3 high(-std::numeric_limits<float>::infinity());
         for (const auto& mesh : m_meshes) {
             for (Vertex vertex : mesh->vertices) {
                 if (vertex.position.x < low.x)
