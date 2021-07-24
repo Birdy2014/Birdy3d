@@ -31,7 +31,7 @@ namespace Birdy3d {
         Widget::draw();
         glEnable(GL_SCISSOR_TEST);
         glScissor(m_actual_pos.x, m_actual_pos.y, m_actual_size.x, m_actual_size.y);
-        theme->text_renderer()->renderText(m_text, 0, m_actual_size.y - theme->font_size, theme->font_size, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, "#0000a050");
+        theme->text_renderer()->renderText(m_text, 0, m_actual_size.y / 2 - theme->font_size / 2, theme->font_size, theme->color_fg, normalizedMove(), m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, "#0000a050");
         glDisable(GL_SCISSOR_TEST);
     }
 

@@ -37,7 +37,7 @@ namespace Birdy3d {
         m_item_highlight_rect->draw(move);
         for (const auto& row : m_flat_tree_list) {
             if (!row.second.children.empty()) {
-                row.second.m_collapse_button->position(UIVector(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y));
+                row.second.m_collapse_button->position(UIVector(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y + theme->line_height / 2 - row.second.m_collapse_button->size().y / 2));
                 row.second.m_collapse_button->draw(move);
             }
             theme->text_renderer()->renderText(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, theme->font_size, theme->color_fg);

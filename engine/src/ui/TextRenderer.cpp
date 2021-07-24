@@ -73,6 +73,8 @@ namespace Birdy3d {
             hlend--;
         }
 
+        y += fontSize / 5; // Offet between baseline and bottom
+
         bool highlighting = highlight && hlstart < 0;
         float scale = (fontSize / m_fontSize);
         char16_t c;
@@ -137,13 +139,11 @@ namespace Birdy3d {
 
     UIVector TextRenderer::textSize(std::u32string text, float fontSize) {
         float scale = (fontSize / m_fontSize);
-        UIVector size(0_px);
+        UIVector size(0_px, fontSize);
         for (std::u32string::const_iterator c = text.begin(); c != text.end(); c++) {
             if (m_chars.count(*c) == 0)
                 addChar(*c);
             Character ch = m_chars[*c];
-            float h = ch.size.y * scale;
-            size.y = std::max((float)size.y, h);
             size.x += (ch.advance >> 6) * scale;
         }
         return size;
