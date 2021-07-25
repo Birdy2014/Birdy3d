@@ -45,6 +45,15 @@ namespace Birdy3d {
         }
     }
 
+    void Model::render_wireframe(GameObject& object, const Shader& shader) const {
+        glm::mat4 model = object.transform.matrix();
+        shader.use();
+        shader.setMat4("model", model);
+        for (const auto& m : m_meshes) {
+            m->render_wireframe();
+        }
+    }
+
     const std::vector<std::unique_ptr<Mesh>>& Model::getMeshes() const {
         return m_meshes;
     }

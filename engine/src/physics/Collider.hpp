@@ -18,6 +18,7 @@ namespace Birdy3d {
         Collider(GenerationMode);
         void start() override;
         CollisionPoints collides(Collider*);
+        void render_wireframe(Shader&);
 
     private:
         Model* m_model;

@@ -17,6 +17,7 @@ namespace Birdy3d {
         void cleanup() override;
         void render();
         void renderOutline(const GameObject*);
+        void render_collider_wireframe();
         void resize(int width, int height);
 
     private:

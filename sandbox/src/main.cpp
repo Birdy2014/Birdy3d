@@ -245,6 +245,7 @@ int main() {
         // draw the object
         player->getComponent<Camera>()->render();
         player->getComponent<Camera>()->renderOutline(selected_object);
+        player->getComponent<Camera>()->render_collider_wireframe();
 
         if (collision) {
             Application::defaultTheme->text_renderer()->renderText("collision", 100, 0, 20, glm::vec4(1));

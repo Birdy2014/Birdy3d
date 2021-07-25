@@ -31,6 +31,10 @@ namespace Birdy3d {
         }
     }
 
+    void Collider::render_wireframe(Shader& shader) {
+        m_model->render_wireframe(*object, shader);
+    }
+
     CollisionPoints Collider::collides(Collider* collider) {
         CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
         for (const auto& own_mesh : m_model->getMeshes()) {

@@ -88,6 +88,13 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
+    void Mesh::render_wireframe() const {
+        glBindVertexArray(m_vao);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
     glm::vec3 Mesh::findFurthestPoint(const glm::vec3 direction) const {
         float max = -std::numeric_limits<float>::infinity();
         glm::vec3 furthestVertex;

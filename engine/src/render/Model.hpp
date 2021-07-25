@@ -19,6 +19,7 @@ namespace Birdy3d {
         Model(std::unique_ptr<Mesh>);
         void render(GameObject& object, const Material* material, const Shader& shader, bool transparent) const;
         void renderDepth(GameObject&, const Shader&) const;
+        void render_wireframe(GameObject&, const Shader&) const;
         const std::vector<std::unique_ptr<Mesh>>& getMeshes() const;
         std::pair<glm::vec3, glm::vec3> bounding_box() const { return m_bounding_box; }
 

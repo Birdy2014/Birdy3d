@@ -2,6 +2,7 @@
 
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+#include "physics/Collider.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/PointLight.hpp"
@@ -372,6 +373,25 @@ namespace Birdy3d {
         m_simple_color_shader->setMat4("model", glm::mat4(1));
         glBindVertexArray(m_outline_vao);
         glDrawArrays(GL_LINES, 0, 24);
+    }
+
+    void Camera::render_collider_wireframe() {
+        glm::vec3 absPos = object->transform.worldPosition();
+        glm::vec3 absForward = object->absForward();
+        glm::vec3 up = object->absUp();
+        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+
+        glEnable(GL_DEPTH_TEST);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        m_simple_color_shader->use();
+        m_simple_color_shader->setMat4("projection", m_projection);
+        m_simple_color_shader->setMat4("view", view);
+        m_simple_color_shader->setVec4("color", Color("#00ff0080"));
+        for (Collider* c : object->scene->getComponents<Collider>(false, true)) {
+            c->render_wireframe(*m_simple_color_shader);
+        }
     }
 
 }

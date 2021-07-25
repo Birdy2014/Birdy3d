@@ -18,6 +18,7 @@ namespace Birdy3d {
         ~Mesh();
         void render(const Shader& shader, const Material& material) const;
         void renderDepth() const;
+        void render_wireframe() const;
         glm::vec3 findFurthestPoint(const glm::vec3 direction) const;
 
     private:
