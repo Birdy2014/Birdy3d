@@ -54,3 +54,4 @@
 #include "ui/widgets/TextField.hpp"
 #include "ui/widgets/Textarea.hpp"
 #include "ui/widgets/TreeView.hpp"
+#include "ui/widgets/WindowSnapArea.hpp"

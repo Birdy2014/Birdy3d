@@ -65,6 +65,8 @@ int main() {
     Canvas canvas;
     Application::canvas = &canvas;
 
+    WindowSnapArea* snap_area = canvas.add_child<WindowSnapArea>(0_px, 400_px, Placement::BOTTOM_RIGHT);
+
     canvas.add_child<FPSCounter>(0_px, Placement::TOP_RIGHT);
 
     Widget* menu = canvas.add_child<Widget>(0_px, 30_p, Placement::CENTER);

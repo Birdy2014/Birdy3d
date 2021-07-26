@@ -40,6 +40,10 @@ namespace Birdy3d {
             }
         }
 
+        Widget* hovering_widget() { return m_hovering_widget; }
+        Widget* focused_widget() { return m_focused_widget; }
+        bool cursor_grabbed() { return m_cursor_grabbed; }
+
     private:
         friend class Widget;
 
