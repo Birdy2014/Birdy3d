@@ -60,7 +60,7 @@ int main() {
     Input::init();
 
     // UI
-    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "#2e2b2a", "TTF/DejaVuSans.ttf", 20);
+    Application::defaultTheme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "#ffffff11", "#0000a050", "TTF/DejaVuSans.ttf", 20);
 
     Canvas canvas;
     Application::canvas = &canvas;
