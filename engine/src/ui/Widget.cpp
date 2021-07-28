@@ -129,6 +129,10 @@ namespace Birdy3d {
         canvas->m_cursor_grabbed = false;
     }
 
+    bool Widget::contains(glm::vec2 point) const {
+        return point.x > m_actual_pos.x && point.y > m_actual_pos.y && point.x < m_actual_pos.x + m_actual_size.x && point.y < m_actual_pos.y + m_actual_size.y;
+    }
+
     bool Widget::update_hover(bool hover) {
         bool success = false;
         if (hidden)
@@ -143,8 +147,7 @@ namespace Birdy3d {
         if (hidden)
             hover = false;
         if (hover) {
-            glm::vec2 cursorPos = Input::cursorPos();
-            if (cursorPos.x > m_actual_pos.x && cursorPos.y > m_actual_pos.y && cursorPos.x < m_actual_pos.x + m_actual_size.x && cursorPos.y < m_actual_pos.y + m_actual_size.y) {
+            if (contains(Input::cursorPos())) {
                 canvas->m_hovering_widget = this;
                 return true;
             }

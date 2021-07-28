@@ -4,6 +4,7 @@
 
 namespace Birdy3d {
 
+    class ContextMenu;
     class Scene;
     class TreeView;
 
@@ -29,6 +30,7 @@ namespace Birdy3d {
     class TreeView : public Widget {
     public:
         std::function<void(TreeItem&)> callback_select;
+        ContextMenu* context_menu = nullptr;
 
         TreeView(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT);
         virtual void draw() override;

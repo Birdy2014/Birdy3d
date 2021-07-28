@@ -8,6 +8,7 @@ target_sources(Birdy3d PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Widget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/CheckBox.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/ContextMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/NumberInput.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/Textarea.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/TextField.cpp

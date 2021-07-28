@@ -117,6 +117,7 @@ namespace Birdy3d {
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
 
         glm::mat4 normalizedMove();
+        virtual bool contains(glm::vec2) const;
 
         // Events
         virtual void on_scroll(InputScrollEvent* event) { }

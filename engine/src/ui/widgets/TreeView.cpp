@@ -6,6 +6,7 @@
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
+#include "ui/widgets/ContextMenu.hpp"
 
 namespace Birdy3d {
 
@@ -68,7 +69,7 @@ namespace Birdy3d {
     }
 
     void TreeView::on_click(InputClickEvent* event) {
-        if (event->button != GLFW_MOUSE_BUTTON_LEFT || event->action != GLFW_PRESS)
+        if (event->action != GLFW_PRESS)
             return;
 
         glm::vec2 local_pos = Input::cursorPos() - m_actual_pos;
@@ -82,6 +83,10 @@ namespace Birdy3d {
                     m_selected_item = &item.second;
                     if (callback_select)
                         callback_select(item.second);
+                    if (event->button == GLFW_MOUSE_BUTTON_RIGHT) {
+                        if (context_menu)
+                            context_menu->open();
+                    }
                     return;
                 }
                 if (item.second.m_collapse_button->contains(Input::cursorPos() - m_actual_pos)) {
@@ -125,6 +130,7 @@ namespace Birdy3d {
         for (TreeItem& child : item.children) {
             update_flat_tree_list(child, indent + 1);
         }
+        // FIXME: update selection rect position
     }
 
     void TreeView::sync_scene_tree(Scene* scene) {

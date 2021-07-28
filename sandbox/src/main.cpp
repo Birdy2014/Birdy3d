@@ -67,6 +67,27 @@ int main() {
 
     WindowSnapArea* snap_area = canvas.add_child<WindowSnapArea>(0_px, 400_px, Placement::BOTTOM_RIGHT);
 
+    ContextMenu* scene_context_menu = canvas.add_child<ContextMenu>();
+    scene_context_menu->root_item.add_child("Test", []() {
+        Logger::debug("Hello World!");
+    });
+    auto& submenu = scene_context_menu->root_item.add_child("SubMenu");
+    submenu.add_child("Test2", []() {
+        Logger::debug("Hello World 2 from submenu");
+    });
+    submenu.add_child("Test3", []() {
+        Logger::debug("Hello World 3 from submenu");
+    });
+    auto& submenu2 = scene_context_menu->root_item.add_child("submenu 2");
+    submenu2.add_child("Test4", []() {
+        Logger::debug("Hello World 4 from submenu 2");
+    });
+    auto& submenu3 = submenu2.add_child("submenu 3");
+    submenu3.add_child("Test5", []() {
+        Logger::debug("Hello World 5 from submenu 2");
+    });
+
+
     canvas.add_child<FPSCounter>(0_px, Placement::TOP_RIGHT);
 
     Widget* menu = canvas.add_child<Widget>(0_px, 30_p, Placement::CENTER);
@@ -93,6 +114,7 @@ int main() {
         if (item.data.type() == typeid(GameObject*))
             selected_object = std::any_cast<GameObject*>(item.data);
     };
+    tree->context_menu = scene_context_menu;
 
     Window* testWindow = canvas.add_child<Window>(0_px, 500_px);
     testWindow->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
