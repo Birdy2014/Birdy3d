@@ -32,9 +32,11 @@ namespace Birdy3d {
         void on_update() override;
 
     private:
-        const int m_padding = 10;
+        int m_padding = 10;
+        int m_arrow_size;
         Rectangle* m_background_rect;
         Rectangle* m_border_rect;
+        Triangle* m_submenu_triangle;
 
         bool contains(glm::vec2) const override;
 

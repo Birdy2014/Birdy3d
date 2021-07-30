@@ -6,6 +6,7 @@
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
+#include "ui/Triangle.hpp"
 
 namespace Birdy3d {
 
@@ -20,8 +21,10 @@ namespace Birdy3d {
     ContextMenu::ContextMenu()
         : Widget()
         , root_item(ContextItem("Root", nullptr)) {
+        m_arrow_size = theme->font_size / 2;
         m_background_rect = add_filled_rectangle(0_px, 0_px, theme->color_bg, Placement::BOTTOM_LEFT);
         m_border_rect = add_rectangle(0_px, 0_px, theme->color_border, Placement::BOTTOM_LEFT);
+        m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), theme->color_fg);
         hidden = true;
     }
 
@@ -58,23 +61,33 @@ namespace Birdy3d {
         for (const auto& child_item : item.children) {
             item.m_child_rect_size.y += theme->line_height;
             float text_width = theme->text_renderer()->textSize(child_item.text, theme->font_size).x;
+            if (!child_item.children.empty())
+                text_width += m_arrow_size + 5;
             if (item.m_child_rect_size.x < text_width)
                 item.m_child_rect_size.x = text_width;
         }
         item.m_child_rect_size += glm::vec2(m_padding * 2);
+
         glm::vec2 viewportSize = Application::getViewportSize();
-        glm::mat4 move = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
+        glm::mat4 projection = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
+        glm::mat4 rotate = glm::rotate(glm::mat4(1), glm::radians(-225.0f), glm::vec3(0, 0, 1));
+
         m_background_rect->position(item.m_child_rect_pos);
         m_background_rect->size(item.m_child_rect_size);
-        m_background_rect->draw(move);
+        m_background_rect->draw(projection);
         m_border_rect->position(item.m_child_rect_pos);
         m_border_rect->size(item.m_child_rect_size);
-        m_border_rect->draw(move);
+        m_border_rect->draw(projection);
+
         int offset_y = item.m_child_rect_size.y - m_padding;
         for (const auto& child_item : item.children) {
             offset_y -= theme->line_height;
             if (!child_item.children.empty()) {
                 // TODO: draw arrow to the right
+                glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size, offset_y + m_arrow_size), 1.0f));
+                glm::mat4 move_triangle = projection * translate * rotate;
+                //m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - 10, offset_y));
+                m_submenu_triangle->draw(move_triangle);
             }
             theme->text_renderer()->renderText(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, theme->font_size, theme->color_fg);
         }

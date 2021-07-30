@@ -13,7 +13,7 @@ namespace Birdy3d {
     TreeItem::TreeItem(std::string text, TreeView* treeview)
         : text(text)
         , m_treeview(treeview)
-        , m_collapse_button(std::make_unique<Rectangle>(0_px, 10_px, "#900000")) { }
+        , m_collapse_button(std::make_unique<Triangle>(0_px, 8_px, Color::WHITE)) { }
 
     TreeItem& TreeItem::add_child(std::string text) {
         m_treeview->m_items_changed = true;
@@ -41,8 +41,13 @@ namespace Birdy3d {
                 m_item_highlight_rect->draw(move);
             }
             if (!row.second.children.empty()) {
-                row.second.m_collapse_button->position(UIVector(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y + theme->line_height / 2 - row.second.m_collapse_button->size().y / 2));
-                row.second.m_collapse_button->draw(move);
+                if (row.second.collapsed) {
+                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + row.second.m_collapse_button->size().x / 2 + 4, m_actual_size.y - offset_y + theme->line_height / 2, 1.0f));
+                    row.second.m_collapse_button->draw(move * translate *  m_rotate_collapsed);
+                } else {
+                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + 4, m_actual_size.y - offset_y + theme->line_height / 2 - row.second.m_collapse_button->size().y / 3, 1.0f));
+                    row.second.m_collapse_button->draw(move * translate * m_rotate_open);
+                }
             }
             theme->text_renderer()->renderText(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, theme->font_size, theme->color_fg);
             offset_y += theme->line_height;
@@ -79,6 +84,7 @@ namespace Birdy3d {
             offset_y += theme->line_height;
             if (local_pos.y < offset_y) {
                 if (local_pos.x > m_offset_x_left + item.first * m_indent_size) {
+                    // Select
                     m_item_highlight_rect->hidden(false);
                     m_selected_item = &item.second;
                     if (callback_select)
@@ -87,9 +93,8 @@ namespace Birdy3d {
                         if (context_menu)
                             context_menu->open();
                     }
-                    return;
-                }
-                if (item.second.m_collapse_button->contains(Input::cursorPos() - m_actual_pos)) {
+                } else if (local_pos.x > m_offset_x_left + (item.first - 1) * m_indent_size) {
+                    // Toggle children
                     item.second.collapsed = !item.second.collapsed;
                     update_flat_tree_list();
                 }
