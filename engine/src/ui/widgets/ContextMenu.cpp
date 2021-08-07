@@ -21,10 +21,10 @@ namespace Birdy3d {
     ContextMenu::ContextMenu()
         : Widget()
         , root_item(ContextItem("Root", nullptr)) {
-        m_arrow_size = theme->font_size / 2;
-        m_background_rect = add_filled_rectangle(0_px, 0_px, theme->color_bg, Placement::BOTTOM_LEFT);
-        m_border_rect = add_rectangle(0_px, 0_px, theme->color_border, Placement::BOTTOM_LEFT);
-        m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), theme->color_fg);
+        m_arrow_size = Application::theme->font_size / 2;
+        m_background_rect = add_filled_rectangle(0_px, 0_px, Application::theme->color_bg, Placement::BOTTOM_LEFT);
+        m_border_rect = add_rectangle(0_px, 0_px, Application::theme->color_border, Placement::BOTTOM_LEFT);
+        m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), Application::theme->color_fg);
         hidden = true;
     }
 
@@ -59,8 +59,8 @@ namespace Birdy3d {
     void ContextMenu::draw_context_item_children(ContextItem& item) {
         item.m_child_rect_size = glm::vec2(0);
         for (const auto& child_item : item.children) {
-            item.m_child_rect_size.y += theme->line_height;
-            float text_width = theme->text_renderer()->textSize(child_item.text, theme->font_size).x;
+            item.m_child_rect_size.y += Application::theme->line_height;
+            float text_width = Application::theme->text_renderer()->textSize(child_item.text, Application::theme->font_size).x;
             if (!child_item.children.empty())
                 text_width += m_arrow_size + 5;
             if (item.m_child_rect_size.x < text_width)
@@ -68,7 +68,7 @@ namespace Birdy3d {
         }
         item.m_child_rect_size += glm::vec2(m_padding * 2);
 
-        glm::vec2 viewportSize = Application::getViewportSize();
+        glm::vec2 viewportSize = Application::get_viewport_size();
         glm::mat4 projection = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
         glm::mat4 rotate = glm::rotate(glm::mat4(1), glm::radians(-225.0f), glm::vec3(0, 0, 1));
 
@@ -81,15 +81,13 @@ namespace Birdy3d {
 
         int offset_y = item.m_child_rect_size.y - m_padding;
         for (const auto& child_item : item.children) {
-            offset_y -= theme->line_height;
+            offset_y -= Application::theme->line_height;
             if (!child_item.children.empty()) {
-                // TODO: draw arrow to the right
                 glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size, offset_y + m_arrow_size), 1.0f));
                 glm::mat4 move_triangle = projection * translate * rotate;
-                //m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - 10, offset_y));
                 m_submenu_triangle->draw(move_triangle);
             }
-            theme->text_renderer()->renderText(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, theme->font_size, theme->color_fg);
+            Application::theme->text_renderer()->renderText(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, Application::theme->font_size, Application::theme->color_fg);
         }
         for (auto& child_item : item.children) {
             if (!child_item.children.empty() && child_item.opened) {
@@ -105,7 +103,7 @@ namespace Birdy3d {
         if (local_pos.x > 0 && local_pos.x < item.m_child_rect_size.x && local_pos.y > 0 && local_pos.y < item.m_child_rect_size.y) {
             int offset_y = item.m_child_rect_size.y - m_padding;
             for (auto& child_item : item.children) {
-                offset_y -= theme->line_height;
+                offset_y -= Application::theme->line_height;
                 if (!found) {
                     if (offset_y < local_pos.y) {
                         if (click && child_item.children.empty()) {
@@ -116,7 +114,7 @@ namespace Birdy3d {
                         }
                         if (!child_item.children.empty()) {
                             child_item.opened = true;
-                            child_item.m_child_rect_pos = item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x, offset_y - child_item.m_child_rect_size.y + theme->line_height + m_padding);
+                            child_item.m_child_rect_pos = item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x, offset_y - child_item.m_child_rect_size.y + Application::theme->line_height + m_padding);
                             // Close all children of newly opened item
                             for (auto& child_child_item : child_item.children)
                                 child_child_item.opened = false;

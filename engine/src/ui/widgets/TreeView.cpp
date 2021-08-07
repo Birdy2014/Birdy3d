@@ -26,43 +26,48 @@ namespace Birdy3d {
             child.set_treeview(treeview);
     }
 
+    void TreeItem::remove_child(const TreeItem* child) {
+        children.remove_if([&](TreeItem& item) { return &item == child; });
+    }
+
     TreeView::TreeView(UIVector pos, UIVector size, Placement placement)
-        : Widget(pos, size, placement), m_root_item(TreeItem("Root", this)) {
-        m_item_highlight_rect = add_filled_rectangle(0_px, UIVector(100_p, theme->line_height), theme->color_selected_bg, Placement::TOP_LEFT);
+        : Widget(pos, size, placement)
+        , m_root_item(TreeItem("Root", this)) {
+        m_item_highlight_rect = add_filled_rectangle(0_px, UIVector(100_p, Application::theme->line_height), Application::theme->color_selected_bg, Placement::TOP_LEFT);
         m_item_highlight_rect->hidden(true);
     }
 
     void TreeView::draw() {
-        int offset_y = theme->line_height;
+        int offset_y = Application::theme->line_height;
         glm::mat4 move = normalizedMove();
         for (const auto& row : m_flat_tree_list) {
             if (m_selected_item == &row.second) {
-                m_item_highlight_rect->position(UIVector(0_px, -offset_y + (int) theme->line_height));
+                m_item_highlight_rect->position(UIVector(0_px, -offset_y + (int)Application::theme->line_height));
                 m_item_highlight_rect->draw(move);
             }
             if (!row.second.children.empty()) {
                 if (row.second.collapsed) {
-                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + row.second.m_collapse_button->size().x / 2 + 4, m_actual_size.y - offset_y + theme->line_height / 2, 1.0f));
-                    row.second.m_collapse_button->draw(move * translate *  m_rotate_collapsed);
+                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + row.second.m_collapse_button->size().x / 2 + 4, m_actual_size.y - offset_y + Application::theme->line_height / 2.0f, 1.0f));
+                    row.second.m_collapse_button->draw(move * translate * m_rotate_collapsed);
                 } else {
-                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + 4, m_actual_size.y - offset_y + theme->line_height / 2 - row.second.m_collapse_button->size().y / 3, 1.0f));
+                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + 4, m_actual_size.y - offset_y + Application::theme->line_height / 2.0f - row.second.m_collapse_button->size().y / 3, 1.0f));
                     row.second.m_collapse_button->draw(move * translate * m_rotate_open);
                 }
             }
-            theme->text_renderer()->renderText(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, theme->font_size, theme->color_fg);
-            offset_y += theme->line_height;
+            Application::theme->text_renderer()->renderText(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, Application::theme->font_size, Application::theme->color_fg);
+            offset_y += Application::theme->line_height;
         }
     }
 
     glm::vec2 TreeView::minimalSize() {
         float max_width = 0;
         for (const auto& row : m_flat_tree_list) {
-            float width = theme->text_renderer()->textSize(row.second.text, theme->font_size).x;
+            float width = Application::theme->text_renderer()->textSize(row.second.text, Application::theme->font_size).x;
             width += row.first * m_indent_size + m_offset_x_left;
             if (width > max_width)
                 max_width = width;
         }
-        return glm::vec2(max_width, m_flat_tree_list.size() * theme->line_height);
+        return glm::vec2(max_width, m_flat_tree_list.size() * Application::theme->line_height);
     }
 
     void TreeView::on_update() {
@@ -81,7 +86,7 @@ namespace Birdy3d {
         local_pos = glm::vec2(local_pos.x, m_actual_size.y - local_pos.y);
         int offset_y = 0;
         for (auto& item : m_flat_tree_list) {
-            offset_y += theme->line_height;
+            offset_y += Application::theme->line_height;
             if (local_pos.y < offset_y) {
                 if (local_pos.x > m_offset_x_left + item.first * m_indent_size) {
                     // Select
@@ -90,8 +95,8 @@ namespace Birdy3d {
                     if (callback_select)
                         callback_select(item.second);
                     if (event->button == GLFW_MOUSE_BUTTON_RIGHT) {
-                        if (context_menu)
-                            context_menu->open();
+                        if (auto menu = context_menu.lock())
+                            menu->open();
                     }
                 } else if (local_pos.x > m_offset_x_left + (item.first - 1) * m_indent_size) {
                     // Toggle children
@@ -104,23 +109,18 @@ namespace Birdy3d {
     }
 
     void TreeView::on_key(InputKeyEvent* event) {
-
     }
 
     void TreeView::on_char(InputCharEvent* event) {
-
     }
 
     void TreeView::on_mouse_enter() {
-
     }
 
     void TreeView::on_mouse_leave() {
-
     }
 
     void TreeView::on_focus_lost() {
-
     }
 
     void TreeView::update_flat_tree_list() {
@@ -135,14 +135,30 @@ namespace Birdy3d {
         for (TreeItem& child : item.children) {
             update_flat_tree_list(child, indent + 1);
         }
-        // FIXME: update selection rect position
     }
 
     void TreeView::sync_scene_tree(Scene* scene) {
         std::function<void(const GameObject*, TreeItem&)> traverse = [&](const GameObject* object, TreeItem& item) {
+            // Remove old TreeItems
+            for (auto child_item_it = item.children.cbegin(); child_item_it != item.children.cend();) {
+                const auto& child_item = *child_item_it;
+                child_item_it++;
+                if (child_item.data.type() != typeid(GameObject*)) {
+                    item.remove_child(&child_item);
+                    continue;
+                }
+                auto it = std::find_if(object->children().begin(), object->children().end(), [&](const std::shared_ptr<GameObject>& child_object) {
+                    return child_object.get() == std::any_cast<GameObject*>(child_item.data);
+                });
+                if (it == object->children().end()) {
+                    item.remove_child(&child_item);
+                }
+            }
+
+            // Add new TreeItems
             for (const auto& child : object->children()) {
-                auto it = std::find_if(item.children.begin(), item.children.end(), [&](const TreeItem& current_item) {
-                    return current_item.data.type() == typeid(GameObject*) && std::any_cast<GameObject*>(current_item.data) == child.get();
+                auto it = std::find_if(item.children.begin(), item.children.end(), [&](const TreeItem& child_item) {
+                    return child_item.data.type() == typeid(GameObject*) && std::any_cast<GameObject*>(child_item.data) == child.get();
                 });
                 if (it == item.children.end()) {
                     std::string name = child->name;
@@ -157,8 +173,9 @@ namespace Birdy3d {
             }
         };
         m_root_item.text = scene->name;
-        m_root_item.data = (GameObject*) scene;
+        m_root_item.data = (GameObject*)scene;
         traverse(scene, m_root_item);
+        update_flat_tree_list();
     }
 
 }

@@ -12,23 +12,40 @@ namespace Birdy3d {
         transform.scale = scale;
     }
 
-    void GameObject::add_child(std::unique_ptr<GameObject> c) {
+    void GameObject::add_child(std::shared_ptr<GameObject> c) {
         c->parent = this;
         c->transform.setParentTransform(&transform);
         c->setScene(scene);
         m_children.push_back(std::move(c));
     }
 
-    void GameObject::add_component(std::unique_ptr<Component> c) {
+    void GameObject::add_component(std::shared_ptr<Component> c) {
         c->object = this;
         m_components.push_back(std::move(c));
     }
 
+    void GameObject::remove_child(GameObject* to_remove) {
+        if (std::find_if(m_children.begin(), m_children.end(), [&](std::shared_ptr<GameObject> object) { return object.get() == to_remove; }) != m_children.end())
+            to_remove->cleanup();
+        m_children.erase(std::remove_if(m_children.begin(), m_children.end(), [&](std::shared_ptr<GameObject> child) { return child.get() == to_remove; }), m_children.end());
+    }
+
+    void GameObject::remove_component(Component* to_remove) {
+        if (std::find_if(m_components.begin(), m_components.end(), [&](std::shared_ptr<Component> component) { return component.get() == to_remove; }) != m_components.end())
+            to_remove->_cleanup();
+        m_components.erase(std::remove_if(m_components.begin(), m_components.end(), [&](std::shared_ptr<Component> component) { return component.get() == to_remove; }), m_components.end());
+    }
+
+    void GameObject::remove() {
+        if (parent)
+            parent->remove_child(this);
+    }
+
     void GameObject::start() {
-        for (std::unique_ptr<Component>& c : m_components) {
+        for (const auto& c : m_components) {
             c->_start();
         }
-        for (const std::unique_ptr<GameObject>& o : m_children) {
+        for (const auto& o : m_children) {
             o->start();
         }
     }
@@ -37,16 +54,16 @@ namespace Birdy3d {
         if (hidden)
             return;
 
-        for (std::unique_ptr<Component>& c : m_components) {
+        for (const auto& c : m_components) {
             c->_update();
         }
-        for (const std::unique_ptr<GameObject>& o : m_children) {
+        for (const auto& o : m_children) {
             o->update();
         }
     }
 
     void GameObject::cleanup() {
-        for (std::unique_ptr<Component>& c : m_components) {
+        for (const auto& c : m_components) {
             c->_cleanup();
         }
     }
@@ -70,7 +87,7 @@ namespace Birdy3d {
 
     void GameObject::setScene(Scene* scene) {
         this->scene = scene;
-        for (const std::unique_ptr<GameObject>& c : m_children) {
+        for (const auto& c : m_children) {
             c->setScene(scene);
         }
     }

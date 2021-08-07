@@ -1,8 +1,8 @@
 #pragma once
 
+#include "core/Base.hpp"
 #include "physics/PhysicsWorld.hpp"
 #include "scene/GameObject.hpp"
-#include <memory>
 
 namespace Birdy3d {
 
@@ -10,7 +10,8 @@ namespace Birdy3d {
 
     class Scene : public GameObject {
     public:
-        Camera* m_current_camera;
+        std::weak_ptr<Camera> main_camera;
+        Camera* m_current_camera = nullptr;
 
         Scene(std::string name)
             : GameObject(name) { }

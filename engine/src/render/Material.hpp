@@ -1,9 +1,8 @@
 #pragma once
 
+#include "core/Base.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Texture.hpp"
-#include <glm/glm.hpp>
-#include <memory>
 
 namespace Birdy3d {
 
@@ -24,12 +23,8 @@ namespace Birdy3d {
         Color emissive_color = Color::BLACK;
         std::shared_ptr<Texture> emissive_map = RessourceManager::getColorTexture(Color::BLACK);
 
-        bool transparent() const {
-            if (diffuse_map_enabled)
-                return diffuse_map->transparent();
-            else
-                return diffuse_color.value.a < 1;
-        }
+        void use(const Shader& shader) const;
+        bool transparent() const;
     };
 
 }

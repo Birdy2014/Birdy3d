@@ -178,7 +178,7 @@ namespace Birdy3d {
         glDisable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+        for (auto m : object->scene->get_components<ModelComponent>(false, true)) {
             m_deferred_geometry_shader->use();
             m_deferred_geometry_shader->setMat4("projection", m_projection);
             m_deferred_geometry_shader->setMat4("view", view);
@@ -194,9 +194,9 @@ namespace Birdy3d {
         glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, m_gbuffer_albedo_spec);
-        std::vector<DirectionalLight*> dirLights = object->scene->getComponents<DirectionalLight>(false, true);
-        std::vector<PointLight*> pointLights = object->scene->getComponents<PointLight>(false, true);
-        std::vector<Spotlight*> spotlights = object->scene->getComponents<Spotlight>(false, true);
+        auto dirLights = object->scene->get_components<DirectionalLight>(false, true);
+        auto pointLights = object->scene->get_components<PointLight>(false, true);
+        auto spotlights = object->scene->get_components<Spotlight>(false, true);
         m_deferred_light_shader->use();
         m_deferred_light_shader->setInt("nr_directional_lights", dirLights.size());
         m_deferred_light_shader->setInt("nr_pointlights", pointLights.size());
@@ -221,9 +221,9 @@ namespace Birdy3d {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        std::vector<DirectionalLight*> dirLights = object->scene->getComponents<DirectionalLight>(false, true);
-        std::vector<PointLight*> pointLights = object->scene->getComponents<PointLight>(false, true);
-        std::vector<Spotlight*> spotlights = object->scene->getComponents<Spotlight>(false, true);
+        auto dirLights = object->scene->get_components<DirectionalLight>(false, true);
+        auto pointLights = object->scene->get_components<PointLight>(false, true);
+        auto spotlights = object->scene->get_components<Spotlight>(false, true);
         m_forward_shader->use();
         m_forward_shader->setInt("nr_directional_lights", dirLights.size());
         m_forward_shader->setInt("nr_pointlights", pointLights.size());
@@ -248,20 +248,20 @@ namespace Birdy3d {
         m_forward_shader->setMat4("view", view);
         m_forward_shader->setVec3("viewPos", absPos);
         if (renderOpaque) {
-            for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+            for (auto m : object->scene->get_components<ModelComponent>(false, true)) {
                 m->render(*m_forward_shader, false);
             }
         }
 
         // Transparency
-        std::vector<ModelComponent*> models = object->scene->getComponents<ModelComponent>(false, true);
+        auto models = object->scene->get_components<ModelComponent>(false, true);
         std::map<float, ModelComponent*> sorted;
-        for (ModelComponent* m : models) {
+        for (auto m : models) {
             float distance = glm::length(object->transform.position - m->object->transform.position);
-            sorted[distance] = m;
+            sorted[distance] = m.get();
         }
 
-        for (std::map<float, ModelComponent*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++) {
+        for (auto it = sorted.rbegin(); it != sorted.rend(); it++) {
             it->second->render(*m_forward_shader, true);
         }
     }
@@ -279,7 +279,7 @@ namespace Birdy3d {
         m_normal_shader->use();
         m_normal_shader->setMat4("projection", m_projection);
         m_normal_shader->setMat4("view", view);
-        for (ModelComponent* m : object->scene->getComponents<ModelComponent>(false, true)) {
+        for (auto m : object->scene->get_components<ModelComponent>(false, true)) {
             m->render(*m_normal_shader, false);
             m->render(*m_normal_shader, true);
         }
@@ -310,7 +310,7 @@ namespace Birdy3d {
 
         std::pair<glm::vec3, glm::vec3> bounding_box;
         glm::mat4 model;
-        for (ModelComponent* model_component : selected_object->getComponents<ModelComponent>(false, true)) {
+        for (auto model_component : selected_object->get_components<ModelComponent>(false, true)) {
             model = model_component->object->transform.matrix();
             bounding_box = model_component->model->bounding_box();
             glm::vec3 model_low = model * glm::vec4(bounding_box.first, 1.0f);
@@ -389,7 +389,7 @@ namespace Birdy3d {
         m_simple_color_shader->setMat4("projection", m_projection);
         m_simple_color_shader->setMat4("view", view);
         m_simple_color_shader->setVec4("color", Color("#00ff0080"));
-        for (Collider* c : object->scene->getComponents<Collider>(false, true)) {
+        for (auto c : object->scene->get_components<Collider>(false, true)) {
             c->render_wireframe(*m_simple_color_shader);
         }
     }

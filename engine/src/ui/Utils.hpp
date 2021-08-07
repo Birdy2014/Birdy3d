@@ -57,6 +57,9 @@ namespace Birdy3d {
         UIVector operator+(const float other);
         UIVector operator-();
         UIVector operator-(const UIVector& other);
+        UIVector operator+=(const UIVector& other);
+        UIVector operator+=(const float other);
+        UIVector operator-=(const UIVector& other);
         glm::vec2 toPixels(glm::vec2 parentSize = glm::vec2(0));
         operator glm::vec2();
     };

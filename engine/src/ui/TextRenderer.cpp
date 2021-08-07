@@ -57,7 +57,7 @@ namespace Birdy3d {
     }
 
     void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color) {
-        glm::vec2 viewportSize = Application::getViewportSize();
+        glm::vec2 viewportSize = Application::get_viewport_size();
         glm::mat4 m = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
         renderText(text, x, y, fontSize, color, m);
     }
@@ -73,9 +73,12 @@ namespace Birdy3d {
             hlend--;
         }
 
+        m_rect->type = Rectangle::TEXT;
+
         y += fontSize / 5; // Offet between baseline and bottom
 
-        bool highlighting = highlight && hlstart < 0;
+        float hlstart_x = x;
+        float hlend_x = x;
         float scale = (fontSize / m_fontSize);
         char16_t c;
         for (int i = 0; i <= (int)text.length(); i++) {
@@ -84,10 +87,10 @@ namespace Birdy3d {
             else
                 c = ' ';
 
-            if (highlight && i == hlstart)
-                highlighting = true;
-            if (hlend >= 0 && i == hlend + 1)
-                highlighting = false;
+            if (i == hlstart)
+                hlstart_x = x;
+            if (i == hlend + 1)
+                hlend_x = x;
 
             if (m_chars.count(c) == 0) {
                 addChar(c);
@@ -117,18 +120,18 @@ namespace Birdy3d {
                 m_rect->type = Rectangle::TEXT;
             }
 
-            if (highlighting && i < (int)text.length()) {
-                m_rect->type = Rectangle::FILLED;
-                m_rect->color(hlcolor);
-                m_rect->position(UIVector(xpos, ypos - fontSize / 5));
-                m_rect->size(UIVector((ch.advance >> 6) * scale, fontSize));
-                m_rect->draw(move);
-
-                m_rect->color(color);
-                m_rect->type = Rectangle::TEXT;
-            }
+            if (hlend > (int)text.length())
+                hlend_x = x;
 
             x += (ch.advance >> 6) * scale;
+        }
+
+        if (highlight && hlstart_x != hlend_x) {
+            m_rect->type = Rectangle::FILLED;
+            m_rect->color(hlcolor);
+            m_rect->position(UIVector(hlstart_x, y - fontSize / 5));
+            m_rect->size(UIVector(hlend_x - hlstart_x, fontSize));
+            m_rect->draw(move);
         }
     }
 

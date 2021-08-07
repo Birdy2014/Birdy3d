@@ -1,8 +1,7 @@
 #pragma once
 
+#include "core/Base.hpp"
 #include "scene/Component.hpp"
-#include <glm/glm.hpp>
-#include <memory>
 
 namespace Birdy3d {
 

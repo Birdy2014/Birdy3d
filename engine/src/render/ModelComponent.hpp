@@ -1,11 +1,10 @@
 #pragma once
 
-#include "core/Logger.hpp"
+#include "core/Base.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Material.hpp"
 #include "render/Model.hpp"
 #include "scene/Component.hpp"
-#include <string>
 
 namespace Birdy3d {
 
@@ -13,9 +12,9 @@ namespace Birdy3d {
     public:
         std::shared_ptr<Model> model;
         std::string name;
-        Material* material;
+        std::shared_ptr<Material> material;
 
-        ModelComponent(const std::string& name, Material* material)
+        ModelComponent(const std::string& name, std::shared_ptr<Material> material = {})
             : name(name)
             , material(material) { }
 
@@ -25,7 +24,7 @@ namespace Birdy3d {
 
         void render(const Shader& shader, bool transparent) const {
             if (model)
-                model->render(*object, material, shader, transparent);
+                model->render(*object, material.get(), shader, transparent);
             else
                 Logger::error("No model specified");
         }

@@ -118,6 +118,24 @@ namespace Birdy3d {
         return UIVector(x - other.x, y - other.y);
     }
 
+    UIVector UIVector::operator+=(const UIVector& other) {
+        x += other.x;
+        y += other.y;
+        return UIVector(x, y);
+    }
+
+    UIVector UIVector::operator+=(const float other) {
+        x += other;
+        y += other;
+        return UIVector(x, y);
+    }
+
+    UIVector UIVector::operator-=(const UIVector& other) {
+        x -= other.x;
+        y -= other.y;
+        return UIVector(x, y);
+    }
+
     glm::vec2 UIVector::toPixels(glm::vec2 parentSize) {
         return glm::vec2(x.toPixels(parentSize.x), y.toPixels(parentSize.y));
     }

@@ -1,12 +1,6 @@
 #pragma once
 
-#include <fstream>
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <unordered_map>
+#include "core/Base.hpp"
 
 namespace Birdy3d {
 

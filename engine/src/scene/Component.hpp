@@ -12,6 +12,7 @@ namespace Birdy3d {
         void _update();
         void _cleanup();
         bool isLoaded();
+        void remove();
 
     protected:
         bool loaded = false;

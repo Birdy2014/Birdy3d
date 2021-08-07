@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ui/Widget.hpp"
 #include "ui/Triangle.hpp"
+#include "ui/Widget.hpp"
 
 namespace Birdy3d {
 
@@ -18,6 +18,7 @@ namespace Birdy3d {
 
         TreeItem(std::string, TreeView*);
         TreeItem& add_child(std::string text);
+        void remove_child(const TreeItem*);
 
     private:
         friend class TreeView;
@@ -31,13 +32,14 @@ namespace Birdy3d {
     class TreeView : public Widget {
     public:
         std::function<void(TreeItem&)> callback_select;
-        ContextMenu* context_menu = nullptr;
+        std::weak_ptr<ContextMenu> context_menu;
 
         TreeView(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT);
         virtual void draw() override;
         virtual glm::vec2 minimalSize() override;
         TreeItem& root_item() { return m_root_item; }
         void sync_scene_tree(Scene*);
+        void selected_item(TreeItem* item) { m_selected_item = item; }
 
     protected:
         friend class TreeItem;

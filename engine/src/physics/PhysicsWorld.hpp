@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 namespace Birdy3d {
@@ -10,11 +11,12 @@ namespace Birdy3d {
     class PhysicsWorld {
     public:
         PhysicsWorld(GameObject* scene);
+        ~PhysicsWorld();
         void update();
 
     private:
-        GameObject* scene;
-        std::vector<Collision*> collisions;
+        GameObject* m_scene;
+        std::vector<std::unique_ptr<Collision>> m_collisions;
     };
 
 }

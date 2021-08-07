@@ -5,16 +5,21 @@
 #include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
+#include "render/Camera.hpp"
+#include "scene/Scene.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"
 
 namespace Birdy3d {
 
-    Canvas* Application::canvas = nullptr;
-    Theme* Application::defaultTheme = nullptr;
-    EventBus* Application::eventBus = nullptr;
-    float Application::deltaTime = 0;
-    GLFWwindow* Application::window = nullptr;
+    Theme* Application::theme = nullptr;
+    EventBus* Application::event_bus = nullptr;
+    float Application::delta_time = 0;
+    std::weak_ptr<Scene> Application::scene;
+    std::weak_ptr<Canvas> Application::canvas;
+    GameObject* Application::selected_object = nullptr;
+    GLFWwindow* Application::m_window = nullptr;
+    std::unordered_map<Option, bool> Application::m_options_bool;
 
     bool Application::init(const char* windowName, int width, int height) {
         glfwInit();
@@ -23,13 +28,13 @@ namespace Birdy3d {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create Window
-        Application::window = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
-        if (window == nullptr) {
+        Application::m_window = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
+        if (m_window == nullptr) {
             Logger::error("Failed to create GLFW window");
             glfwTerminate();
             return false;
         }
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(m_window);
 
         // Load OpenGL
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -44,15 +49,15 @@ namespace Birdy3d {
 
         // Set Viewport and resize callback
         glViewport(0, 0, width, height);
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-        glfwSetWindowFocusCallback(window, window_focus_callback);
-        glfwSetScrollCallback(window, scroll_callback);
-        glfwSetMouseButtonCallback(window, mouse_button_callback);
-        glfwSetKeyCallback(window, key_callback);
-        glfwSetCharCallback(window, character_callback);
+        glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+        glfwSetWindowFocusCallback(m_window, window_focus_callback);
+        glfwSetScrollCallback(m_window, scroll_callback);
+        glfwSetMouseButtonCallback(m_window, mouse_button_callback);
+        glfwSetKeyCallback(m_window, key_callback);
+        glfwSetCharCallback(m_window, character_callback);
 
         // Init variables
-        eventBus = new EventBus();
+        event_bus = new EventBus();
 
         return true;
     }
@@ -61,9 +66,48 @@ namespace Birdy3d {
         glfwTerminate();
     }
 
+    void Application::mainloop() {
+        float last_frame = 0.0f;
+        while (!glfwWindowShouldClose(m_window)) {
+            float current_frame = glfwGetTime();
+            delta_time = current_frame - last_frame;
+            last_frame = current_frame;
+
+            auto scene_ptr = scene.lock();
+            auto canvas_ptr = canvas.lock();
+
+            Input::update();
+
+            if (canvas_ptr)
+                canvas_ptr->update();
+
+            if (scene_ptr)
+                scene_ptr->update();
+
+            event_bus->flush();
+
+            // draw the objects
+            if (scene_ptr) {
+                if (auto camera = scene_ptr->main_camera.lock()) {
+                    camera->render();
+                    camera->renderOutline(selected_object);
+                    if (option_bool(Option::SHOW_COLLIDERS))
+                        camera->render_collider_wireframe();
+                }
+            }
+
+            if (canvas_ptr)
+                canvas_ptr->draw();
+
+            // swap Buffers
+            glfwSwapBuffers(m_window);
+            glfwPollEvents();
+        }
+    }
+
     void Application::framebuffer_size_callback(GLFWwindow*, int width, int height) {
         glViewport(0, 0, width, height);
-        eventBus->emit<WindowResizeEvent>(width, height);
+        event_bus->emit<WindowResizeEvent>(width, height);
     }
 
     void Application::window_focus_callback(GLFWwindow* window, int focused) {
@@ -76,29 +120,48 @@ namespace Birdy3d {
     }
 
     void Application::scroll_callback(GLFWwindow*, double xoffset, double yoffset) {
-        eventBus->emit<InputScrollEvent>(xoffset, yoffset);
+        event_bus->emit<InputScrollEvent>(xoffset, yoffset);
     }
 
     void Application::mouse_button_callback(GLFWwindow*, int button, int action, int mods) {
-        eventBus->emit<InputClickEvent>(button, action, mods);
+        event_bus->emit<InputClickEvent>(button, action, mods);
     }
 
     void Application::key_callback(GLFWwindow*, int key, int scancode, int action, int mods) {
-        eventBus->emit<InputKeyEvent>(key, scancode, action, mods);
+        event_bus->emit<InputKeyEvent>(key, scancode, action, mods);
     }
 
     void Application::character_callback(GLFWwindow*, unsigned int codepoint) {
-        eventBus->emit<InputCharEvent>(codepoint);
+        event_bus->emit<InputCharEvent>(codepoint);
     }
 
-    GLFWwindow* Application::getWindow() {
-        return window;
+    GLFWwindow* Application::get_window() {
+        return m_window;
     }
 
-    glm::vec2 Application::getViewportSize() {
+    glm::vec2 Application::get_viewport_size() {
         GLint viewport[4];
         glGetIntegerv(GL_VIEWPORT, viewport);
         return glm::vec2(viewport[2], viewport[3]);
+    }
+
+    bool Application::option_bool(Option option) {
+        return m_options_bool[option];
+    }
+
+    void Application::option_toggle(Option option) {
+        option_bool(option, !option_bool(option));
+    }
+
+    void Application::option_bool(Option option, bool value) {
+        m_options_bool[option] = value;
+        switch (option) {
+        case Option::VSYNC:
+            glfwSwapInterval(value);
+            break;
+        default:
+            break;
+        }
     }
 
 }

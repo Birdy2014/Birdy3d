@@ -2,7 +2,6 @@
 
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
-#include <algorithm>
 #include <cstring>
 
 namespace Birdy3d {

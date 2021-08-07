@@ -1,9 +1,9 @@
 #pragma once
 
+#include "core/Base.hpp"
 #include "render/Material.hpp"
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
-#include <vector>
 
 namespace Birdy3d {
 

@@ -24,6 +24,11 @@ namespace Birdy3d {
         compute_bounding_box();
     }
 
+    Model::Model(std::vector<std::unique_ptr<Mesh>>& meshes) {
+        for (auto& mesh : meshes)
+            m_meshes.push_back(std::move(mesh));
+    }
+
     void Model::render(GameObject& object, const Material* material, const Shader& shader, bool transparent) const {
         if (material == nullptr)
             material = &m_embedded_material;

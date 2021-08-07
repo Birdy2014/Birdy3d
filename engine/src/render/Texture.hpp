@@ -1,8 +1,7 @@
 #pragma once
 
+#include "core/Base.hpp"
 #include "render/Color.hpp"
-#include <glad/glad.h>
-#include <string>
 
 namespace Birdy3d {
 

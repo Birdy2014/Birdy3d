@@ -53,28 +53,7 @@ namespace Birdy3d {
     }
 
     void Mesh::render(const Shader& shader, const Material& material) const {
-        shader.setBool("material.diffuse_map_enabled", material.diffuse_map_enabled);
-        shader.setVec4("material.diffuse_color", material.diffuse_color);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, material.diffuse_map->id);
-        shader.setInt("material.diffuse_map", 0);
-
-        shader.setBool("material.specular_map_enabled", material.specular_map_enabled);
-        shader.setFloat("material.specular_value", material.specular_value);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, material.specular_map->id);
-        shader.setInt("material.specular_map", 1);
-
-        shader.setBool("material.normal_map_enabled", material.normal_map_enabled);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, material.normal_map->id);
-        shader.setInt("material.normal_map", 2);
-
-        shader.setBool("material.emissive_map_enabled", material.emissive_map_enabled);
-        shader.setVec4("material.emissive_color", material.emissive_color);
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, material.emissive_map->id);
-        shader.setInt("material.emissive_map", 3);
+        material.use(shader);
 
         // draw mesh
         glBindVertexArray(m_vao);

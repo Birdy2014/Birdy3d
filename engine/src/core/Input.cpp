@@ -9,7 +9,7 @@ namespace Birdy3d {
 
     void Input::init() {
         double x, y;
-        glfwGetCursorPos(Application::getWindow(), &x, &y);
+        glfwGetCursorPos(Application::get_window(), &x, &y);
         Input::lastCursorPos = glm::vec2(x, y);
         Input::currentCursorPos = glm::vec2(x, y);
         cursors[Cursor::CURSOR_DEFAULT] = nullptr;
@@ -23,13 +23,13 @@ namespace Birdy3d {
 
     void Input::update() {
         double x, y;
-        glfwGetCursorPos(Application::getWindow(), &x, &y);
+        glfwGetCursorPos(Application::get_window(), &x, &y);
         Input::lastCursorPos = Input::currentCursorPos;
-        Input::currentCursorPos = glm::vec2(x + 2, Application::getViewportSize().y - y);
+        Input::currentCursorPos = glm::vec2(x + 2, Application::get_viewport_size().y - y);
     }
 
     bool Input::keyPressed(int key) {
-        return glfwGetKey(Application::getWindow(), key) == GLFW_PRESS;
+        return glfwGetKey(Application::get_window(), key) == GLFW_PRESS;
     }
 
     glm::vec2 Input::cursorPos() {
@@ -41,7 +41,7 @@ namespace Birdy3d {
     }
 
     bool Input::buttonPressed(int button) {
-        return glfwGetMouseButton(Application::getWindow(), button) == GLFW_PRESS;
+        return glfwGetMouseButton(Application::get_window(), button) == GLFW_PRESS;
     }
 
     void Input::setCursorHidden(bool hidden) {
@@ -51,7 +51,7 @@ namespace Birdy3d {
         else
             mode = GLFW_CURSOR_NORMAL;
 
-        glfwSetInputMode(Application::getWindow(), GLFW_CURSOR, mode);
+        glfwSetInputMode(Application::get_window(), GLFW_CURSOR, mode);
         Input::cursorHidden = hidden;
     }
 
@@ -64,7 +64,7 @@ namespace Birdy3d {
     }
 
     void Input::setCursor(Cursor cursor) {
-        glfwSetCursor(Application::getWindow(), cursors[cursor]);
+        glfwSetCursor(Application::get_window(), cursors[cursor]);
     }
 
 }

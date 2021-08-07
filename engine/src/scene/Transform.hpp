@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "core/Base.hpp"
 
 namespace Birdy3d {
 

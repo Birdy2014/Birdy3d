@@ -14,17 +14,17 @@ namespace Birdy3d {
         Canvas()
             : Widget(0_px, 100_p) {
             canvas = this;
-            Application::eventBus->subscribe(this, &Canvas::on_scroll);
-            Application::eventBus->subscribe(this, &Canvas::on_click);
-            Application::eventBus->subscribe(this, &Canvas::on_key);
-            Application::eventBus->subscribe(this, &Canvas::on_char);
+            Application::event_bus->subscribe(this, &Canvas::on_scroll);
+            Application::event_bus->subscribe(this, &Canvas::on_click);
+            Application::event_bus->subscribe(this, &Canvas::on_key);
+            Application::event_bus->subscribe(this, &Canvas::on_char);
             set_layout<AbsoluteLayout>();
         };
 
         void update() {
             if (!hidden) {
                 updated = true;
-                glm::vec2 viewport = Application::getViewportSize();
+                glm::vec2 viewport = Application::get_viewport_size();
                 Widget::arrange(glm::vec2(0), viewport);
                 if (!m_cursor_grabbed)
                     Widget::update_hover(true);

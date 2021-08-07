@@ -15,22 +15,22 @@ namespace Birdy3d {
     FPPlayerController::FPPlayerController() { }
 
     void FPPlayerController::start() {
-        cam = object->getComponent<Camera>();
-        if (Application::canvas)
-            menu = Application::canvas->get_widget("menu");
-        Application::eventBus->subscribe(this, &FPPlayerController::onResize);
+        cam = object->get_component<Camera>();
+        if (auto canvas = Application::canvas.lock())
+            menu = canvas->get_widget("menu");
+        Application::event_bus->subscribe(this, &FPPlayerController::onResize);
         Input::setCursorHidden(true);
 
-        if (menu) {
-            menu->hidden = true;
-            Application::eventBus->subscribe(this, &FPPlayerController::onKey);
+        if (auto menu_ptr = menu.lock()) {
+            menu_ptr->hidden = true;
+            Application::event_bus->subscribe(this, &FPPlayerController::onKey);
         }
     }
 
     void FPPlayerController::cleanup() {
-        Application::eventBus->unsubscribe(this, &FPPlayerController::onResize);
-        if (menu) {
-            Application::eventBus->unsubscribe(this, &FPPlayerController::onKey);
+        Application::event_bus->unsubscribe(this, &FPPlayerController::onResize);
+        if (menu.lock()) {
+            Application::event_bus->unsubscribe(this, &FPPlayerController::onKey);
         }
     }
 
@@ -39,7 +39,7 @@ namespace Birdy3d {
         if (!Input::isCursorHidden())
             return;
 
-        float cameraSpeed = 2.5f * Application::deltaTime;
+        float cameraSpeed = 2.5f * Application::delta_time;
         if (Input::keyPressed(GLFW_KEY_W))
             this->object->transform.position += cameraSpeed * this->object->absForward();
         if (Input::keyPressed(GLFW_KEY_S))
@@ -73,14 +73,16 @@ namespace Birdy3d {
     }
 
     void FPPlayerController::onResize(WindowResizeEvent* event) {
-        this->cam->resize(event->width, event->height);
+        if (auto cam_ptr = cam.lock())
+            cam_ptr->resize(event->width, event->height);
     }
 
     void FPPlayerController::onKey(InputKeyEvent* event) {
         if (event->action != GLFW_PRESS || !(event->key == GLFW_KEY_ESCAPE || event->key == GLFW_KEY_CAPS_LOCK))
             return;
         Input::toggleCursorHidden();
-        menu->hidden = !menu->hidden;
+        if (auto menu_ptr = menu.lock())
+            menu_ptr->hidden = !menu_ptr->hidden;
     }
 
 }

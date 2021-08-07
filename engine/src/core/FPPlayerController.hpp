@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scene/Component.hpp"
+#include <memory>
 
 namespace Birdy3d {
 
@@ -17,8 +18,8 @@ namespace Birdy3d {
         void update() override;
 
     private:
-        Camera* cam = nullptr;
-        Widget* menu = nullptr;
+        std::weak_ptr<Camera> cam;
+        std::weak_ptr<Widget> menu;
 
         void onResize(WindowResizeEvent* event);
         void onKey(InputKeyEvent* event);

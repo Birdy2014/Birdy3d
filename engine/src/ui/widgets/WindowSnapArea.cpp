@@ -9,11 +9,12 @@
 
 namespace Birdy3d {
 
-    WindowSnapArea::WindowSnapArea(UIVector pos, UIVector size, Placement placement)
-        : Widget(pos, size, placement) {
-        Application::eventBus->subscribe(this, &WindowSnapArea::on_click_raw);
-        Application::eventBus->subscribe(this, &WindowSnapArea::on_resize_raw);
-        m_background_rect = add_filled_rectangle(0_px, 100_p, theme->color_bg);
+    WindowSnapArea::WindowSnapArea(UIVector pos, UIVector size, Placement placement, Mode mode)
+        : Widget(pos, size, placement)
+        , mode(mode) {
+        Application::event_bus->subscribe(this, &WindowSnapArea::on_click_raw);
+        Application::event_bus->subscribe(this, &WindowSnapArea::on_resize_raw);
+        m_background_rect = add_filled_rectangle(0_px, 100_p, Application::theme->color_bg);
     }
 
     void WindowSnapArea::on_click_raw(InputClickEvent* event) {

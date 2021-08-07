@@ -10,7 +10,16 @@ namespace Birdy3d {
 
     class WindowSnapArea : public Widget {
     public:
-        WindowSnapArea(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT);
+        enum class Mode {
+            STACKING,
+            HORIZONTAL,
+            VERTICAL
+        };
+
+        Mode mode;
+
+        WindowSnapArea(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Mode mode = Mode::STACKING);
+        void on_update() override;
 
     private:
         Rectangle* m_background_rect;

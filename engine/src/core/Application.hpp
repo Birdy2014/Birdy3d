@@ -7,6 +7,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 #include <list>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,23 +15,37 @@ namespace Birdy3d {
 
     class Canvas;
     class EventBus;
+    class GameObject;
+    class Scene;
     class TextRenderer;
     class Theme;
 
+    enum class Option {
+        VSYNC,
+        SHOW_COLLIDERS
+    };
+
     class Application {
     public:
-        static Canvas* canvas;
-        static Theme* defaultTheme;
-        static EventBus* eventBus;
-        static float deltaTime;
+        static Theme* theme;
+        static EventBus* event_bus;
+        static float delta_time;
+        static std::weak_ptr<Scene> scene;
+        static std::weak_ptr<Canvas> canvas;
+        static GameObject* selected_object;
 
         static bool init(const char* windowName, int width, int height);
         static void cleanup();
-        static GLFWwindow* getWindow();
-        static glm::vec2 getViewportSize();
+        static void mainloop();
+        static GLFWwindow* get_window();
+        static glm::vec2 get_viewport_size();
+        static bool option_bool(Option);
+        static void option_toggle(Option);
+        static void option_bool(Option, bool);
 
     private:
-        static GLFWwindow* window;
+        static GLFWwindow* m_window;
+        static std::unordered_map<Option, bool> m_options_bool;
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);

@@ -24,12 +24,11 @@ namespace Birdy3d {
         UIVector pos;
         UIVector size;
         Placement placement;
-        Theme* theme;
         float weight = 1; // Size ratio in DirectionalLayout. 0 means stay on minimum size
         Widget* parent = nullptr;
         Canvas* canvas = nullptr;
 
-        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Theme* theme = Application::defaultTheme, std::string name = "");
+        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, std::string name = "");
         virtual ~Widget() { }
         virtual void draw();
 
@@ -42,30 +41,29 @@ namespace Birdy3d {
 
         void unset_layout() { m_layout = nullptr; }
 
-        void add_child(std::unique_ptr<Widget>);
+        void add_child(std::shared_ptr<Widget>);
 
         template <class T, typename... Args>
-        T* add_child(Args... args) {
+        std::shared_ptr<T> add_child(Args... args) {
             static_assert(std::is_base_of<Widget, T>::value);
-            std::unique_ptr<Widget> widget = std::make_unique<T>(args...);
-            Widget* widget_ptr = widget.get();
-            add_child(std::move(widget));
-            return static_cast<T*>(widget_ptr);
+            auto widget = std::make_shared<T>(args...);
+            add_child(widget);
+            return std::static_pointer_cast<T>(widget);
         }
 
         void toForeground(Widget* w);
 
         template <class T = Widget>
-        T* get_widget(const std::string& name, bool hidden = true) {
+        std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
             static_assert(std::is_base_of<Widget, T>::value);
             if (this->hidden && !hidden)
                 return nullptr;
-            for (const std::unique_ptr<Widget>& child : m_children) {
-                T* casted = dynamic_cast<T*>(child.get());
+            for (const auto& child : m_children) {
+                std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(child);
                 if (casted && child->name == name) {
                     return casted;
                 }
-                T* result = child->get_widget<T>(name, hidden);
+                std::shared_ptr<T> result = child->get_widget<T>(name, hidden);
                 if (result)
                     return result;
             }
@@ -82,24 +80,15 @@ namespace Birdy3d {
         virtual void arrange(glm::vec2 pos, glm::vec2 size);
         void set_canvas(Canvas*);
 
-        template <class T = Widget>
-        T* get_shape(std::string name = "") const {
-            static_assert(std::is_base_of<Widget, T>::value);
-            for (const auto& s : m_shapes) {
-                if (name != "" && name != s->name)
-                    continue;
-                T* casted = dynamic_cast<T*>(s);
-                if (casted)
-                    return casted;
-            }
-            return nullptr;
-        }
-
         bool is_hovering();
         bool is_focused();
         void focus();
         void grab_cursor();
         void ungrab_cursor();
+
+        // Getters
+        glm::vec2 actual_pos() { return m_actual_pos; }
+        glm::vec2 actual_size() { return m_actual_size; }
 
         // External Event calls
         virtual bool update_hover(bool hover);
@@ -110,7 +99,7 @@ namespace Birdy3d {
         friend class Canvas;
 
         std::vector<std::unique_ptr<Shape>> m_shapes;
-        std::list<std::unique_ptr<Widget>> m_children;
+        std::list<std::shared_ptr<Widget>> m_children;
         std::unique_ptr<Layout> m_layout = nullptr;
         glm::vec2 m_actual_size = glm::vec2(1);
         glm::vec2 m_actual_pos = glm::vec2(1);

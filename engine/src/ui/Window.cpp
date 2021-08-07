@@ -6,14 +6,14 @@
 
 namespace Birdy3d {
 
-    Window::Window(UIVector pos, UIVector size, Theme* theme, std::string name)
-        : Widget(pos, size, Placement::BOTTOM_LEFT, theme, name) {
-        m_padding = glm::vec4(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, theme->line_height);
-        add_filled_rectangle(0_px, UIVector(100_p, 100_p - theme->line_height), theme->color_bg, Placement::BOTTOM_LEFT);
-        add_filled_rectangle(0_px, UIVector(100_p, theme->line_height), theme->color_title_bar, Placement::TOP_LEFT);
-        add_rectangle(0_px, 100_p, theme->color_border);
-        closeButton = add_filled_rectangle(-4_px, 14_px, "#FF0000", Placement::TOP_RIGHT);
-        m_title = add_text(UIVector(10_px, -4_px), theme->font_size, "", theme->color_fg, Placement::TOP_LEFT);
+    Window::Window(UIVector pos, UIVector size, std::string name)
+        : Widget(pos, size, Placement::BOTTOM_LEFT, name) {
+        m_padding = glm::vec4(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, Application::theme->line_height);
+        add_filled_rectangle(0_px, UIVector(100_p, 100_p - Application::theme->line_height), Application::theme->color_bg, Placement::BOTTOM_LEFT);
+        add_filled_rectangle(0_px, UIVector(100_p, Application::theme->line_height), Application::theme->color_title_bar, Placement::TOP_LEFT);
+        add_rectangle(0_px, 100_p, Application::theme->color_border);
+        m_close_button = add_filled_rectangle(-4_px, 14_px, "#FF0000", Placement::TOP_RIGHT);
+        m_title = add_text(UIVector(10_px, -4_px), Application::theme->font_size, "", Application::theme->color_fg, Placement::TOP_LEFT);
     }
 
     void Window::toForeground() {
@@ -28,46 +28,46 @@ namespace Birdy3d {
 
         glm::vec2 localCursorPos = Input::cursorPos() - m_actual_pos;
 
-        hoverDrag = false;
-        hoverResizeXL = false;
-        hoverResizeXR = false;
-        hoverResizeY = false;
+        m_hover_drag = false;
+        m_hover_resize_xl = false;
+        m_hover_resize_xr = false;
+        m_hover_resize_y = false;
 
-        if (!dragging && !resizeXL && !resizeXR && !resizeY && closeButton->contains(localCursorPos)) {
+        if (!m_dragging && !m_resize_xl && !m_resize_xr && !m_resize_y && m_close_button->contains(localCursorPos)) {
             Input::setCursor(Input::CURSOR_HAND);
             return;
         }
 
-        if (localCursorPos.y >= m_actual_size.y - theme->line_height)
-            hoverDrag = true;
+        if (localCursorPos.y >= m_actual_size.y - Application::theme->line_height)
+            m_hover_drag = true;
 
-        if (localCursorPos.y < m_actual_size.y - theme->line_height) {
+        if (localCursorPos.y < m_actual_size.y - Application::theme->line_height) {
             if (localCursorPos.x < BORDER_SIZE)
-                hoverResizeXL = true;
+                m_hover_resize_xl = true;
             if (localCursorPos.x > m_actual_size.x - BORDER_SIZE)
-                hoverResizeXR = true;
+                m_hover_resize_xr = true;
             if (localCursorPos.y < BORDER_SIZE)
-                hoverResizeY = true;
+                m_hover_resize_y = true;
         }
 
         // Set cursor
-        if (hoverDrag || dragging)
+        if (m_hover_drag || m_dragging)
             Input::setCursor(Input::CURSOR_MOVE);
-        else if (hoverResizeXL || resizeXL)
+        else if (m_hover_resize_xl || m_resize_xl)
             Input::setCursor(Input::CURSOR_HRESIZE);
-        else if (hoverResizeXR || resizeXR)
+        else if (m_hover_resize_xr || m_resize_xr)
             Input::setCursor(Input::CURSOR_HRESIZE);
-        else if (hoverResizeY || resizeY)
+        else if (m_hover_resize_y || m_resize_y)
             Input::setCursor(Input::CURSOR_VRESIZE);
         else
             Input::setCursor(Input::CURSOR_DEFAULT);
 
         // Move and resize
-        if (dragging) {
+        if (m_dragging) {
             pos = pos + Input::cursorPosOffset();
         }
         glm::vec2 minsize = m_layout->minimal_size(m_children) + glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
-        if (resizeXL) {
+        if (m_resize_xl) {
             float diffold = size.x - minsize.x;
             size.x -= Input::cursorPosOffset().x;
             float diffnew = size.x - minsize.x;
@@ -79,10 +79,10 @@ namespace Birdy3d {
                 pos.x -= diffnew;
             }
         }
-        if (resizeXR) {
+        if (m_resize_xr) {
             size.x += Input::cursorPosOffset().x;
         }
-        if (resizeY) {
+        if (m_resize_y) {
             float diffold = size.y - minsize.y;
             size.y -= Input::cursorPosOffset().y;
             float diffnew = size.y - minsize.y;
@@ -107,37 +107,35 @@ namespace Birdy3d {
 
         if (event->action == GLFW_RELEASE) {
             ungrab_cursor();
-            dragging = false;
-            resizeXL = false;
-            resizeXR = false;
-            resizeY = false;
+            m_dragging = false;
+            m_resize_xl = false;
+            m_resize_xr = false;
+            m_resize_y = false;
             size = m_actual_size;
             return;
         }
 
-        if (closeButton->contains(localCursorPos)) {
+        if (m_close_button->contains(localCursorPos)) {
             if (callback_close)
                 callback_close();
-            else
-                hidden = true;
             return;
         }
 
         grab_cursor();
 
         // Moving
-        if (hoverDrag) {
-            dragging = true;
+        if (m_hover_drag) {
+            m_dragging = true;
             return;
         }
 
         // Resizing
-        if (hoverResizeXL)
-            resizeXL = true;
-        if (hoverResizeXR)
-            resizeXR = true;
-        if (hoverResizeY)
-            resizeY = true;
+        if (m_hover_resize_xl)
+            m_resize_xl = true;
+        if (m_hover_resize_xr)
+            m_resize_xr = true;
+        if (m_hover_resize_y)
+            m_resize_y = true;
     }
 
     void Window::on_mouse_leave() {

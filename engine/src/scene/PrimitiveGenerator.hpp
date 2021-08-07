@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include "core/Base.hpp"
 
 namespace Birdy3d {
 

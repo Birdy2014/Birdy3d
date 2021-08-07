@@ -1,9 +1,8 @@
 #pragma once
 
+#include "core/Base.hpp"
 #include "render/Material.hpp"
 #include "render/Mesh.hpp"
-#include <string>
-#include <vector>
 
 struct aiMesh;
 struct aiNode;
@@ -17,6 +16,7 @@ namespace Birdy3d {
     public:
         Model(const std::string& path);
         Model(std::unique_ptr<Mesh>);
+        Model(std::vector<std::unique_ptr<Mesh>>&);
         void render(GameObject& object, const Material* material, const Shader& shader, bool transparent) const;
         void renderDepth(GameObject&, const Shader&) const;
         void render_wireframe(GameObject&, const Shader&) const;

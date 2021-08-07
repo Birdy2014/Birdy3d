@@ -57,6 +57,7 @@ namespace Birdy3d {
         return color;
     }
 
+    Color Color::NONE = Color("#00000000");
     Color Color::WHITE = Color("#FFFFFFFF");
     Color Color::BLACK = Color("#000000FF");
 

@@ -1,10 +1,8 @@
 #pragma once
 
+#include "core/Base.hpp"
+#include "core/Logger.hpp"
 #include "render/Color.hpp"
-#include <map>
-#include <memory>
-#include <string>
-#include <unordered_map>
 
 namespace Birdy3d {
 

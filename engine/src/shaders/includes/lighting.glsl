@@ -77,7 +77,8 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDi
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
     float currentDepth = projCoords.z;
-    float bias = max(0.0001 * (1.0 - dot(normal, lightDir)), 0.0);
+    //float bias = max(0.0001 * (1.0 - dot(normal, lightDir)), 0.0);
+    float bias = 0;
 
     float shadow = 0;
     vec2 texelSize = 1.0 / textureSize(light.shadowMap, 0);

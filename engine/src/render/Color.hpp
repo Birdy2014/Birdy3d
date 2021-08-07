@@ -1,12 +1,12 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <string>
+#include "core/Base.hpp"
 
 namespace Birdy3d {
 
     class Color {
     public:
+        static Color NONE;
         static Color WHITE;
         static Color BLACK;
 
@@ -20,6 +20,12 @@ namespace Birdy3d {
         Color& operator=(const std::string& color);
         bool operator<(const Color& other) const;
         static glm::vec4 parse(const std::string& colorString);
+        float r() { return value.r; }
+        float g() { return value.g; }
+        float b() { return value.b; }
+        void r(float v) { value.r = v; }
+        void g(float v) { value.g = v; }
+        void b(float v) { value.b = v; }
     };
 
 }

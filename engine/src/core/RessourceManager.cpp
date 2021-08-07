@@ -11,10 +11,10 @@
 #include <fstream>
 #include <string>
 
-#ifdef __linux__
+#ifdef BIRDY3D_PLATFORM_LINUX
     #include <limits.h>
     #include <unistd.h>
-#elif _WIN32
+#elif BIRDY3D_PLATFORM_WINDOWS
     #include <windows.h>
 #endif
 
@@ -157,11 +157,11 @@ namespace Birdy3d {
     }
 
     std::string RessourceManager::getExecutableDir() {
-#ifdef __linux__
+#ifdef BIRDY3D_PLATFORM_LINUX
         char result[PATH_MAX];
         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
         std::string exec = std::string(result, (count > 0) ? count : 0);
-#elif __WIN32
+#elif BIRDY3D_PLATFORM_WINDOWS
         char result[MAX_PATH];
         std::string exec = std::string(result, GetModuleFileName(NULL, result, MAX_PATH));
 #endif

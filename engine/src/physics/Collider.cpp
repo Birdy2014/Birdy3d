@@ -22,7 +22,7 @@ namespace Birdy3d {
 
     void Collider::start() {
         if (!m_model) {
-            Model* model = object->getComponent<ModelComponent>()->model.get();
+            Model* model = object->get_component<ModelComponent>()->model.get();
             if (!model) {
                 Logger::warn("GameObject doesn't have any model");
                 return;
@@ -35,11 +35,11 @@ namespace Birdy3d {
         m_model->render_wireframe(*object, shader);
     }
 
-    CollisionPoints Collider::collides(Collider* collider) {
+    CollisionPoints Collider::collides(Collider& collider) {
         CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
         for (const auto& own_mesh : m_model->getMeshes()) {
-            for (const auto& other_mesh : collider->m_model->getMeshes()) {
-                if (collides(own_mesh.get(), other_mesh.get(), object->transform.matrix(), collider->object->transform.matrix())) {
+            for (const auto& other_mesh : collider.m_model->getMeshes()) {
+                if (collides(*own_mesh.get(), *other_mesh.get(), object->transform.matrix(), collider.object->transform.matrix())) {
                     points.hasCollision = true;
                     break;
                 }
@@ -48,7 +48,7 @@ namespace Birdy3d {
         return points;
     }
 
-    bool Collider::collides(const Mesh* mesh_a, const Mesh* mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b) {
+    bool Collider::collides(const Mesh& mesh_a, const Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b) {
         m_point_count = 0;
         glm::vec3 s = support(mesh_a, mesh_b, transform_a, transform_b, glm::vec3(1.0f, 0.0f, 0.0f));
         push_front(s);
@@ -71,15 +71,15 @@ namespace Birdy3d {
         }
     }
 
-    glm::vec3 Collider::support(const Mesh* mesh_a, const Mesh* mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction) {
+    glm::vec3 Collider::support(const Mesh& mesh_a, const Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction) {
         // Transform world direction to local direction
         glm::mat4 inverse_transform_a = glm::inverse(transform_a);
         glm::mat4 inverse_transform_b = glm::inverse(transform_b);
         glm::vec3 local_direction_a = glm::vec3(inverse_transform_a * glm::vec4(direction, 1.0f)) - glm::vec3(inverse_transform_a * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
         glm::vec3 local_direction_b = glm::vec3(inverse_transform_b * glm::vec4(direction, 1.0f)) - glm::vec3(inverse_transform_b * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
-        glm::vec3 local_furthest_a = mesh_a->findFurthestPoint(local_direction_a);
-        glm::vec3 local_furthest_b = mesh_b->findFurthestPoint(-local_direction_b);
+        glm::vec3 local_furthest_a = mesh_a.findFurthestPoint(local_direction_a);
+        glm::vec3 local_furthest_b = mesh_b.findFurthestPoint(-local_direction_b);
 
         // Transform local positions to world positions
         glm::vec3 world_furthest_a = glm::vec3(transform_a * glm::vec4(local_furthest_a, 1.0f));
