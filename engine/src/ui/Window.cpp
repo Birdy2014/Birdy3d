@@ -23,6 +23,8 @@ namespace Birdy3d {
     void Window::on_update() {
         Widget::on_update();
 
+        m_dragged = false;
+
         if (!is_hovering())
             return;
 
@@ -65,6 +67,7 @@ namespace Birdy3d {
         // Move and resize
         if (m_dragging) {
             pos = pos + Input::cursorPosOffset();
+            m_dragged = true;
         }
         glm::vec2 minsize = m_layout->minimal_size(m_children) + glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
         if (m_resize_xl) {

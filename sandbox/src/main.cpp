@@ -75,7 +75,7 @@ void handler(int sig) {
 int main() {
     signal(SIGSEGV, handler);
 
-    if (!Application::init("Birdy3d", 800, 600)) {
+    if (!Application::init("Birdy3d", 1280, 720)) {
         return -1;
     }
     Input::init();
@@ -86,8 +86,8 @@ int main() {
     auto canvas = std::make_shared<Canvas>();
     Application::canvas = canvas;
 
-    auto snap_area = canvas->add_child<WindowSnapArea>(0_px, 400_px, Placement::BOTTOM_RIGHT);
-    snap_area->mode = WindowSnapArea::Mode::STACKING;
+    auto snap_area = canvas->add_child<WindowSnapArea>(0_px, UIVector(600_px, 400_px), Placement::BOTTOM_RIGHT);
+    snap_area->mode = WindowSnapArea::Mode::HORIZONTAL;
 
     auto scene_context_menu = canvas->add_child<ContextMenu>();
 
@@ -148,23 +148,20 @@ int main() {
         }
     });
 
-    auto testWindow = canvas->add_child<Window>(0_px, 500_px);
-    testWindow->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
-    testWindow->hidden = true;
-    testWindow->title("Test");
+    auto inspector_window = canvas->add_child<Window>(0_px, 500_px);
+    inspector_window->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
+    inspector_window->hidden = true;
+    inspector_window->title("Inspector");
 
-    testWindow->callback_close = [&testWindow]() {
-        testWindow->hidden = !testWindow->hidden;
+    inspector_window->callback_close = [&inspector_window]() {
+        inspector_window->hidden = !inspector_window->hidden;
     };
 
-    auto area2 = testWindow->add_child<Textarea>(0_px, UIVector(100_p, 50_px), Placement::TOP_LEFT);
-    area2->append("Dies ist ein Fenster");
+    auto testCheckBox = inspector_window->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
 
-    auto testCheckBox = testWindow->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
-
-    auto inputR = testWindow->add_child<NumberInput>(UIVector(0_px, -80), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputG = testWindow->add_child<NumberInput>(UIVector(0_px, -110), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputB = testWindow->add_child<NumberInput>(UIVector(0_px, -140), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    auto inputR = inspector_window->add_child<NumberInput>(UIVector(0_px, -80), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    auto inputG = inspector_window->add_child<NumberInput>(UIVector(0_px, -110), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    auto inputB = inspector_window->add_child<NumberInput>(UIVector(0_px, -140), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
     inputR->min_value = 0;
     inputG->min_value = 0;
     inputB->min_value = 0;
@@ -175,13 +172,16 @@ int main() {
     inputG->value(1);
     inputB->value(1);
 
-    auto inputX = testWindow->add_child<NumberInput>(UIVector(0_px, -170), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputY = testWindow->add_child<NumberInput>(UIVector(0_px, -200), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputZ = testWindow->add_child<NumberInput>(UIVector(0_px, -230), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    auto inputX = inspector_window->add_child<NumberInput>(UIVector(0_px, -170), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    auto inputY = inspector_window->add_child<NumberInput>(UIVector(0_px, -200), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
+    auto inputZ = inspector_window->add_child<NumberInput>(UIVector(0_px, -230), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
 
-    testButton->callback_click = [&testWindow](InputClickEvent*) {
-        testWindow->hidden = !testWindow->hidden;
+    testButton->callback_click = [&inspector_window](InputClickEvent*) {
+        inspector_window->hidden = !inspector_window->hidden;
     };
+
+    auto test_window = canvas->add_child<Window>(UIVector(0_px, 50_px), 200_px);
+    test_window->title("Test");
 
     // GameObjects
     auto scene = std::make_shared<Scene>("Scene");
@@ -191,7 +191,8 @@ int main() {
 
     {
         auto player = scene->add_child("Player", glm::vec3(0, 0, 3));
-        scene->main_camera = player->add_component<Camera>(800, 600, true);
+        auto viewport = Application::get_viewport_size();
+        scene->main_camera = player->add_component<Camera>(viewport.x, viewport.y, true);
         player->add_component<FPPlayerController>();
 
         flashlight = player->add_child("Flashlight", glm::vec3(0), glm::vec3(0));

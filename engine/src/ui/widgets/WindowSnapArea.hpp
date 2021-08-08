@@ -27,7 +27,7 @@ namespace Birdy3d {
 
         void on_click_raw(InputClickEvent*);
         void on_resize_raw(WindowResizeEvent*);
-        void recalculate_sizes();
+        void rearrange_windows();
     };
 
 }

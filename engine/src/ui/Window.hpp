@@ -22,6 +22,7 @@ namespace Birdy3d {
         bool resizing_left() { return m_resize_xl; }
         bool resizing_right() { return m_resize_xr; }
         bool resizing_down() { return m_resize_y; }
+        bool dragged() { return m_dragged; }
 
     protected:
         void on_update() override;
@@ -39,6 +40,7 @@ namespace Birdy3d {
         bool m_resize_xl = false;
         bool m_resize_xr = false;
         bool m_resize_y = false;
+        bool m_dragged = false;
     };
 
 }
