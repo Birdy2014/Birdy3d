@@ -100,7 +100,7 @@ namespace Birdy3d {
 
         std::vector<std::unique_ptr<Shape>> m_shapes;
         std::list<std::shared_ptr<Widget>> m_children;
-        std::unique_ptr<Layout> m_layout = nullptr;
+        std::unique_ptr<Layout> m_layout = std::make_unique<EmptyLayout>();
         glm::vec2 m_actual_size = glm::vec2(1);
         glm::vec2 m_actual_pos = glm::vec2(1);
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
