@@ -49,7 +49,6 @@ public:
             if (object->transform.position.y < m_limit_down)
                 m_up = true;
         }
-
     }
 
 private:
@@ -80,8 +79,18 @@ int main() {
     }
     Input::init();
 
+    std::shared_ptr<Birdy3d::NumberInput> input_position_x;
+    std::shared_ptr<Birdy3d::NumberInput> input_position_y;
+    std::shared_ptr<Birdy3d::NumberInput> input_position_z;
+    std::shared_ptr<Birdy3d::NumberInput> input_scale_x;
+    std::shared_ptr<Birdy3d::NumberInput> input_scale_y;
+    std::shared_ptr<Birdy3d::NumberInput> input_scale_z;
+    std::shared_ptr<Birdy3d::NumberInput> input_orientation_x;
+    std::shared_ptr<Birdy3d::NumberInput> input_orientation_y;
+    std::shared_ptr<Birdy3d::NumberInput> input_orientation_z;
+
     // UI
-    Application::theme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "#ffffff11", "#0000a050", "TTF/DejaVuSans.ttf", 20);
+    Application::theme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "#ffffff11", "#0000a050", "TTF/DejaVuSans.ttf", 18);
 
     auto canvas = std::make_shared<Canvas>();
     Application::canvas = canvas;
@@ -114,8 +123,12 @@ int main() {
 
     auto tree = treeWindow->add_child<TreeView>(0_px, 100_p, Placement::TOP_LEFT);
     tree->callback_select = [&](TreeItem& item) {
-        if (item.data.type() == typeid(GameObject*))
+        if (item.data.type() == typeid(GameObject*)) {
             Application::selected_object = std::any_cast<GameObject*>(item.data);
+            input_position_x->value(Application::selected_object->transform.position.x);
+            input_position_y->value(Application::selected_object->transform.position.y);
+            input_position_z->value(Application::selected_object->transform.position.z);
+        }
     };
     tree->context_menu = scene_context_menu;
 
@@ -157,24 +170,82 @@ int main() {
         inspector_window->hidden = !inspector_window->hidden;
     };
 
+    input_position_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_position_y = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_position_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+
+    input_position_x->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.position.x = input_position_x->value();
+    };
+
+    input_position_y->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.position.y = input_position_y->value();
+    };
+
+    input_position_z->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.position.z = input_position_z->value();
+    };
+
+    input_scale_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_scale_y = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_scale_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+
+    input_scale_x->min_value = 0;
+    input_scale_y->min_value = 0;
+    input_scale_z->min_value = 0;
+
+    input_scale_x->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.scale.x = input_scale_x->value();
+    };
+
+    input_scale_y->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.scale.y = input_scale_y->value();
+    };
+
+    input_scale_z->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.scale.z = input_scale_z->value();
+    };
+
+    input_orientation_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_orientation_y = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_orientation_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+
+    input_orientation_x->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.orientation.x = input_orientation_x->value();
+    };
+
+    input_orientation_y->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.orientation.y = input_orientation_y->value();
+    };
+
+    input_orientation_z->callback_change = [&] {
+        if (Application::selected_object)
+            Application::selected_object->transform.orientation.z = input_orientation_z->value();
+    };
+
+    Application::event_bus->subscribe<TransformChangedEvent>([&](TransformChangedEvent* event) {
+        if (event->object != Birdy3d::Application::selected_object)
+            return;
+        input_position_x->value(event->object->transform.position.x);
+        input_position_y->value(event->object->transform.position.y);
+        input_position_z->value(event->object->transform.position.z);
+        input_scale_x->value(event->object->transform.scale.x);
+        input_scale_y->value(event->object->transform.scale.y);
+        input_scale_z->value(event->object->transform.scale.z);
+        input_orientation_x->value(event->object->transform.orientation.x);
+        input_orientation_y->value(event->object->transform.orientation.y);
+        input_orientation_z->value(event->object->transform.orientation.z);
+    });
+
     auto testCheckBox = inspector_window->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
-
-    auto inputR = inspector_window->add_child<NumberInput>(UIVector(0_px, -80), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputG = inspector_window->add_child<NumberInput>(UIVector(0_px, -110), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputB = inspector_window->add_child<NumberInput>(UIVector(0_px, -140), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    inputR->min_value = 0;
-    inputG->min_value = 0;
-    inputB->min_value = 0;
-    inputR->max_value = 1;
-    inputG->max_value = 1;
-    inputB->max_value = 1;
-    inputR->value(1);
-    inputG->value(1);
-    inputB->value(1);
-
-    auto inputX = inspector_window->add_child<NumberInput>(UIVector(0_px, -170), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputY = inspector_window->add_child<NumberInput>(UIVector(0_px, -200), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
-    auto inputZ = inspector_window->add_child<NumberInput>(UIVector(0_px, -230), UIVector(100_p, 25_px), Placement::TOP_LEFT, 0);
 
     testButton->callback_click = [&inspector_window](InputClickEvent*) {
         inspector_window->hidden = !inspector_window->hidden;
@@ -263,12 +334,12 @@ int main() {
         GLFW_KEY_N);
 
     Application::event_bus->subscribe<InputKeyEvent>([](InputKeyEvent*) {
-       Application::option_toggle(Option::VSYNC);
+        Application::option_toggle(Option::VSYNC);
     },
         GLFW_KEY_V);
 
     Application::event_bus->subscribe<InputKeyEvent>([](InputKeyEvent*) {
-       Application::option_toggle(Option::SHOW_COLLIDERS);
+        Application::option_toggle(Option::SHOW_COLLIDERS);
     },
         GLFW_KEY_P);
 
