@@ -321,12 +321,24 @@ namespace Birdy3d {
                 low.y = model_low.y;
             if (model_low.z < low.z)
                 low.z = model_low.z;
+            if (model_high.x < low.x)
+                low.x = model_high.x;
+            if (model_high.y < low.y)
+                low.y = model_high.y;
+            if (model_high.z < low.z)
+                low.z = model_high.z;
             if (model_high.x > high.x)
                 high.x = model_high.x;
             if (model_high.y > high.y)
                 high.y = model_high.y;
             if (model_high.z > high.z)
                 high.z = model_high.z;
+            if (model_low.x > high.x)
+                high.x = model_low.x;
+            if (model_low.y > high.y)
+                high.y = model_low.y;
+            if (model_low.z > high.z)
+                high.z = model_low.z;
         }
 
         low -= outline_offset;
