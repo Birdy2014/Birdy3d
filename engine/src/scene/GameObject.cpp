@@ -14,7 +14,6 @@ namespace Birdy3d {
 
     void GameObject::add_child(std::shared_ptr<GameObject> c) {
         c->parent = this;
-        c->transform.setParentTransform(&transform);
         c->setScene(scene);
         m_children.push_back(std::move(c));
     }
@@ -59,6 +58,17 @@ namespace Birdy3d {
         }
         for (const auto& o : m_children) {
             o->update();
+        }
+    }
+
+    void GameObject::post_update() {
+        if (hidden)
+            return;
+
+        transform.post_update();
+
+        for (const auto& o : m_children) {
+            o->post_update();
         }
     }
 

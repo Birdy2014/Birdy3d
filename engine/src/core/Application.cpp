@@ -99,6 +99,9 @@ namespace Birdy3d {
             if (canvas_ptr)
                 canvas_ptr->draw();
 
+            if (scene_ptr)
+                scene_ptr->post_update();
+
             // swap Buffers
             glfwSwapBuffers(m_window);
             glfwPollEvents();

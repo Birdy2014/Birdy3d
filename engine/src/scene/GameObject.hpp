@@ -12,7 +12,7 @@ namespace Birdy3d {
     class GameObject {
     public:
         std::string name;
-        Transform3d transform;
+        Transform3d transform = Transform3d(this);
         GameObject* parent = nullptr;
         Scene* scene = nullptr;
         bool hidden = false;
@@ -41,6 +41,7 @@ namespace Birdy3d {
 
         virtual void start();
         virtual void update();
+        virtual void post_update();
         void cleanup();
         glm::vec3 absForward();
         glm::vec3 absRight();

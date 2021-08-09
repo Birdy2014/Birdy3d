@@ -11,6 +11,7 @@
 #include "events/Event.hpp"
 #include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
+#include "events/TransformChangedEvent.hpp"
 #include "events/WindowResizeEvent.hpp"
 
 // Physics
