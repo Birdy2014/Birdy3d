@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 #include <algorithm>
+#include <functional>
 #include <glm/glm.hpp>
 #include <list>
 #include <map>
@@ -29,8 +30,3 @@
 #else
     #error "Unknown platform"
 #endif
-
-namespace Birdy3d {
-
-
-}

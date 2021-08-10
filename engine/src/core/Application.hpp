@@ -1,15 +1,6 @@
 #pragma once
 
-// clang-format off
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-// clang-format on
-#include <functional>
-#include <glm/glm.hpp>
-#include <list>
-#include <memory>
-#include <string>
-#include <vector>
+#include "core/Base.hpp"
 
 namespace Birdy3d {
 

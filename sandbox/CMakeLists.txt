@@ -3,10 +3,8 @@ project(sandbox)
 set(ENGINE_DIR ${CMAKE_SOURCE_DIR}/engine)
 
 add_executable(sandbox ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
-target_include_directories(sandbox PRIVATE
-    ${ENGINE_DIR}/src
-    ${ENGINE_DIR}/vendor/glad/include
-)
+
+target_include_directories(sandbox PRIVATE Birdy3d)
 
 target_link_directories(sandbox PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
