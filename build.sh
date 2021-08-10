@@ -6,19 +6,14 @@ trap exit INT
 cd "$(dirname "$0")"
 
 build() {
-    # Build engine
-    cd ../engine
-    mkdir -p build
-    cd build
-    cmake .. "-DCMAKE_BUILD_TYPE=$1" -G Ninja
-    ninja || exit 1
-
-    # Build sandbox
-    cd ../../sandbox
-    mkdir -p build
-    cd build
-    [[ -f sandbox ]] && rm sandbox
-    cmake .. "-DCMAKE_BUILD_TYPE=$1" -G Ninja
+    if [ ! -d build ]; then
+        mkdir build
+        cd build
+        cmake .. "-DCMAKE_BUILD_TYPE=$1" -G Ninja
+    else
+        cd build
+        [[ -f sandbox ]] && rm sandbox
+    fi
     ninja || exit 1
 
     # Return to starting directory
@@ -41,7 +36,6 @@ case $1 in
         build Release
         ;;
     clean)
-        rm -rf ../engine/build
         rm -rf build
         ;;
     *)
