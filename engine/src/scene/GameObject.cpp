@@ -42,9 +42,11 @@ namespace Birdy3d {
 
     void GameObject::start() {
         for (const auto& c : m_components) {
+            c->object = this;
             c->_start();
         }
         for (const auto& o : m_children) {
+            o->parent = this;
             o->start();
         }
     }

@@ -136,7 +136,7 @@ namespace Birdy3d {
 
         template <class EventType>
         void unsubscribe(std::function<void(EventType*)> func, std::any options = {}) {
-            HandlerList* handlers = subscribers[typeid(EventType)];
+            HandlerList* handlers = subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr)
                 return;

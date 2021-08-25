@@ -19,6 +19,12 @@ namespace Birdy3d {
         glm::vec3 worldPosition();
         glm::vec3 worldOrientation();
         glm::vec3 worldScale();
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("position", position));
+            ar(cereal::make_nvp("orientation", orientation));
+            ar(cereal::make_nvp("scale", scale));
+        }
 
     private:
         glm::mat4 m_matrix;

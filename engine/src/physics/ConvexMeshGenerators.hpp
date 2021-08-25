@@ -5,6 +5,7 @@ namespace Birdy3d {
     class Model;
 
     enum class GenerationMode {
+        NONE,
         COPY,
         HULL,
         DECOMPOSITION

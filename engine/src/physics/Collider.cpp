@@ -13,6 +13,10 @@
 
 namespace Birdy3d {
 
+    Collider::Collider()
+        : m_model(nullptr)
+        , m_generation_mode(GenerationMode::NONE) { }
+
     Collider::Collider(Model* model)
         : m_model(model) { }
 
@@ -22,7 +26,7 @@ namespace Birdy3d {
 
     void Collider::start() {
         if (!m_model) {
-            Model* model = object->get_component<ModelComponent>()->model.get();
+            Model* model = object->get_component<ModelComponent>()->model().get();
             if (!model) {
                 Logger::warn("GameObject doesn't have any model");
                 return;
@@ -37,6 +41,8 @@ namespace Birdy3d {
 
     CollisionPoints Collider::collides(Collider& collider) {
         CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
+        if (!m_model || !collider.m_model)
+            return points;
         for (const auto& own_mesh : m_model->getMeshes()) {
             for (const auto& other_mesh : collider.m_model->getMeshes()) {
                 if (collides(*own_mesh.get(), *other_mesh.get(), object->transform.matrix(), collider.object->transform.matrix())) {
@@ -49,6 +55,7 @@ namespace Birdy3d {
     }
 
     bool Collider::collides(const Mesh& mesh_a, const Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b) {
+        // FIXME: stop if one of the matrices scales to 0
         m_point_count = 0;
         glm::vec3 s = support(mesh_a, mesh_b, transform_a, transform_b, glm::vec3(1.0f, 0.0f, 0.0f));
         push_front(s);

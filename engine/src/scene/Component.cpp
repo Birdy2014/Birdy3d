@@ -5,26 +5,22 @@
 namespace Birdy3d {
 
     void Component::_start() {
-        if (!loaded) {
+        if (!m_loaded) {
             start();
-            loaded = true;
+            m_loaded = true;
         }
     }
 
     void Component::_update() {
-        if (loaded)
+        if (m_loaded)
             update();
         else
             _start();
     }
 
     void Component::_cleanup() {
-        if (loaded)
+        if (m_loaded)
             cleanup();
-    }
-
-    bool Component::isLoaded() {
-        return loaded;
     }
 
     void Component::remove() {

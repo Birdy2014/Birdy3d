@@ -14,11 +14,19 @@ namespace Birdy3d {
 
     class Collider : public Component {
     public:
+        Collider();
         Collider(Model*);
         Collider(GenerationMode);
         void start() override;
         CollisionPoints collides(Collider&);
         void render_wireframe(Shader&);
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            // TODO: Store model as shared_ptr
+            //ar(cereal::make_nvp("model", ));
+            ar(cereal::make_nvp("generaton_mode", m_generation_mode));
+        }
 
     private:
         Model* m_model;
@@ -37,3 +45,6 @@ namespace Birdy3d {
     };
 
 }
+
+CEREAL_REGISTER_TYPE(Birdy3d::Collider);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, Birdy3d::Collider);

@@ -1,4 +1,4 @@
-target_sources(Birdy3d PRIVATE
+target_sources(Birdy3d_engine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/DirectionalLayout.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Rectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TextRenderer.cpp

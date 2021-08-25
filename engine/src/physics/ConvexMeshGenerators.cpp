@@ -12,8 +12,9 @@ namespace Birdy3d {
             return hull(model);
         case GenerationMode::DECOMPOSITION:
             return decomposition(model);
+        default:
+            return nullptr;
         }
-        return nullptr;
     }
 
     Model* ConvexMeshGenerators::copy(Model* model) {

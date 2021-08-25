@@ -6,9 +6,11 @@
 
 namespace Birdy3d {
 
-    Shader::Shader(const std::string& shaderSource, const std::string& name)
+    Shader::Shader(const std::string& name)
         : m_name(name) {
-        std::unordered_map<GLenum, std::string> shaderSources = preprocess(shaderSource);
+        std::string path = RessourceManager::getRessourcePath(name, RessourceManager::RessourceType::SHADER);
+        std::string source = RessourceManager::readFile(path);
+        std::unordered_map<GLenum, std::string> shaderSources = preprocess(source);
         compile(shaderSources);
     }
 

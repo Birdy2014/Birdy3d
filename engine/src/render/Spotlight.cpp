@@ -11,11 +11,16 @@
 namespace Birdy3d {
 
     Spotlight::Spotlight(glm::vec3 ambient, glm::vec3 diffuse, float innerCutOff, float outerCutOff, float linear, float quadratic, bool shadow_enabled)
-        : Light(RessourceManager::getShader("directional_light_depth"), ambient, diffuse, linear, quadratic, shadow_enabled)
+        : Light(shadow_enabled)
+        , ambient(ambient)
+        , diffuse(diffuse)
+        , linear(linear)
+        , quadratic(quadratic)
         , m_innerCutOff(innerCutOff)
         , m_outerCutOff(outerCutOff) { }
 
     void Spotlight::setupShadowMap() {
+        m_depthShader = RessourceManager::getShader("directional_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map

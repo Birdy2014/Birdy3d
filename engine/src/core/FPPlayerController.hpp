@@ -12,10 +12,17 @@ namespace Birdy3d {
 
     class FPPlayerController : public Component {
     public:
+        std::weak_ptr<GameObject> flashlight;
+
         FPPlayerController();
         void start() override;
         void cleanup() override;
         void update() override;
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(CEREAL_NVP(flashlight));
+        }
 
     private:
         std::weak_ptr<Camera> cam;
@@ -26,3 +33,6 @@ namespace Birdy3d {
     };
 
 }
+
+CEREAL_REGISTER_TYPE(Birdy3d::FPPlayerController);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, Birdy3d::FPPlayerController);

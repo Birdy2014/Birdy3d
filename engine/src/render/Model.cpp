@@ -1,12 +1,12 @@
 #include "render/Model.hpp"
 
-#include "scene/GameObject.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Mesh.hpp"
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
+#include "scene/GameObject.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -132,25 +132,25 @@ namespace Birdy3d {
 
         if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-            m_embedded_material.diffuse_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.diffuse_map(m_directory + "/" + path.C_Str());
             m_embedded_material.diffuse_map_enabled = true;
         }
 
         if (material->GetTextureCount(aiTextureType_SPECULAR) > 0) {
             material->GetTexture(aiTextureType_SPECULAR, 0, &path);
-            m_embedded_material.specular_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.specular_map(m_directory + "/" + path.C_Str());
             m_embedded_material.specular_map_enabled = true;
         }
 
         if (material->GetTextureCount(aiTextureType_NORMALS) > 0) {
             material->GetTexture(aiTextureType_NORMALS, 0, &path);
-            m_embedded_material.normal_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.normal_map(m_directory + "/" + path.C_Str());
             m_embedded_material.normal_map_enabled = true;
         }
 
         if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0) {
             material->GetTexture(aiTextureType_EMISSIVE, 0, &path);
-            m_embedded_material.emissive_map = RessourceManager::getTexture(m_directory + "/" + path.C_Str());
+            m_embedded_material.emissive_map(m_directory + "/" + path.C_Str());
             m_embedded_material.emissive_map_enabled = true;
         }
 

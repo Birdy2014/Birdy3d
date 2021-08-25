@@ -13,7 +13,7 @@ namespace Birdy3d {
         std::weak_ptr<Camera> main_camera;
         Camera* m_current_camera = nullptr;
 
-        Scene(std::string name)
+        Scene(std::string name = "Scene")
             : GameObject(name) { }
 
         void start() override {
@@ -25,6 +25,12 @@ namespace Birdy3d {
         void update() override {
             GameObject::update();
             m_physics_world->update();
+        }
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::base_class<GameObject>(this));
+            ar(cereal::make_nvp("main_camera", main_camera));
         }
 
     private:

@@ -1,6 +1,8 @@
 #include "Birdy3d.hpp"
 #include <cstdlib>
 #include <execinfo.h>
+#include <filesystem>
+#include <fstream>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,9 +34,12 @@ public:
     }
 };
 
+CEREAL_REGISTER_TYPE(TestComponent);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, TestComponent);
+
 class MoveUpDown : public Component {
 public:
-    MoveUpDown(float speed, float limit_down, float limit_up)
+    MoveUpDown(float speed = 0, float limit_down = 0, float limit_up = 0)
         : m_speed(speed)
         , m_limit_down(limit_down)
         , m_limit_up(limit_up) { }
@@ -51,12 +56,22 @@ public:
         }
     }
 
+    template <class Archive>
+    void serialize(Archive& ar) {
+        ar(cereal::make_nvp("speed", m_speed));
+        ar(cereal::make_nvp("limit_down", m_limit_down));
+        ar(cereal::make_nvp("limit_up", m_limit_up));
+    }
+
 private:
     bool m_up = true;
     float m_speed;
     float m_limit_down;
     float m_limit_up;
 };
+
+CEREAL_REGISTER_TYPE(MoveUpDown);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, MoveUpDown);
 
 void handler(int sig) {
     void* array[10];
@@ -255,66 +270,70 @@ int main() {
     test_window->title("Test");
 
     // GameObjects
-    auto scene = std::make_shared<Scene>("Scene");
-    Application::scene = scene;
+    std::shared_ptr<Scene> scene;
+    if (std::filesystem::exists("scene.json")) {
+        std::fstream filestream;
+        filestream.open("scene.json", std::fstream::in);
+        cereal::JSONInputArchive iarchive(filestream);
+        iarchive(cereal::make_nvp("scene", scene));
+        Application::scene = scene;
+    } else {
+        scene = std::make_shared<Scene>("Scene");
+        Application::scene = scene;
 
-    std::shared_ptr<GameObject> flashlight;
-
-    {
         auto player = scene->add_child("Player", glm::vec3(0, 0, 3));
         auto viewport = Application::get_viewport_size();
         scene->main_camera = player->add_component<Camera>(viewport.x, viewport.y, true);
-        player->add_component<FPPlayerController>();
+        auto player_controller = player->add_component<FPPlayerController>();
 
-        flashlight = player->add_child("Flashlight", glm::vec3(0), glm::vec3(0));
+        auto flashlight = player->add_child("Flashlight", glm::vec3(0), glm::vec3(0));
         flashlight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1), glm::radians(30.0f), glm::radians(40.0f), 0.08f, 0.02f, false);
         flashlight->hidden = true;
+
+        player_controller->flashlight = flashlight;
+
+        auto white_material = std::make_shared<Material>();
+        white_material->specular_value = 1.0f;
+        auto redTransparentMaterial = std::make_shared<Material>();
+        redTransparentMaterial->diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
+        auto blueTransparentMaterial = std::make_shared<Material>();
+        blueTransparentMaterial->diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
+
+        auto obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
+        obj->add_component<ModelComponent>("./ressources/testObjects/cube.obj", redTransparentMaterial);
+        obj->add_component<Collider>(GenerationMode::COPY);
+
+        auto obj2 = scene->add_child("obj2", glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+        obj2->add_component<ModelComponent>("./ressources/testObjects/cube.obj", white_material);
+
+        auto plane = scene->add_child("plane", glm::vec3(2.0f, -4.0f, 2.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+        plane->add_component<ModelComponent>("primitive::plane", white_material);
+
+        auto obj3 = scene->add_child("obj3", glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
+        obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", blueTransparentMaterial);
+        obj3->add_component<Collider>(GenerationMode::COPY);
+
+        // Spheres
+        auto sphere1 = scene->add_child("Sphere1", glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
+        sphere1->add_component<ModelComponent>("./ressources/testObjects/sphere.obj", nullptr);
+        sphere1->add_component<Collider>(GenerationMode::COPY);
+        sphere1->add_component<TestComponent>();
+        sphere1->add_component<MoveUpDown>(0.4, 1, 5);
+
+        // Light
+        auto dirLight = scene->add_child("DirLight", glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
+        dirLight->add_component<DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
+        auto pLight = scene->add_child("Point Light", glm::vec3(2.0f, 1.5f, 4.0f));
+        pLight->add_component<PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
+        pLight->add_component<MoveUpDown>(0.1, 1, 3);
+        auto sLight = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
+        sLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
+
+        Application::event_bus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
+            pLight->hidden = !pLight->hidden;
+        },
+            GLFW_KEY_L);
     }
-
-    auto redTransparentMaterial = std::make_shared<Material>();
-    redTransparentMaterial->diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
-    auto blueTransparentMaterial = std::make_shared<Material>();
-    blueTransparentMaterial->diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
-
-    auto obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-    obj->add_component<ModelComponent>("./ressources/testObjects/cube.obj", redTransparentMaterial);
-    obj->add_component<Collider>(GenerationMode::COPY);
-
-    auto obj2 = scene->add_child("obj2", glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-    obj2->add_component<ModelComponent>("./ressources/testObjects/cube.obj", nullptr);
-
-    auto plane = scene->add_child("plane", glm::vec3(2.0f, -4.0f, 2.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-    plane->add_component<ModelComponent>("primitive::plane", nullptr);
-
-    auto obj3 = scene->add_child("obj3", glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
-    obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", blueTransparentMaterial);
-    obj3->add_component<Collider>(GenerationMode::COPY);
-
-    // Spheres
-    auto sphere1 = scene->add_child("Sphere1", glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
-    sphere1->add_component<ModelComponent>("./ressources/testObjects/sphere.obj", nullptr);
-    sphere1->add_component<Collider>(GenerationMode::COPY);
-    sphere1->add_component<TestComponent>();
-    sphere1->add_component<MoveUpDown>(0.4, 1, 5);
-
-    // Light
-    auto dirLight = scene->add_child("DirLight", glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
-    dirLight->add_component<DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
-    auto pLight = scene->add_child("Point Light", glm::vec3(2.0f, 1.5f, 4.0f));
-    pLight->add_component<PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
-    pLight->add_component<MoveUpDown>(0.1, 1, 3);
-    auto sLight = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
-    sLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
-
-    Application::event_bus->subscribe<InputKeyEvent>([&flashlight](InputKeyEvent*) {
-        flashlight->hidden = !flashlight->hidden;
-    },
-        GLFW_KEY_F);
-
-    Application::event_bus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
-        pLight->hidden = !pLight->hidden;
-    },
-        GLFW_KEY_L);
 
     Application::event_bus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
         auto random = [](float min, float max) {
@@ -352,6 +371,11 @@ int main() {
 
     scene->cleanup();
     Application::cleanup();
+
+    std::fstream filestream;
+    filestream.open("scene.json", std::fstream::out);
+    cereal::JSONOutputArchive oarchive(filestream);
+    oarchive(cereal::make_nvp("scene", scene));
 
     return 0;
 }

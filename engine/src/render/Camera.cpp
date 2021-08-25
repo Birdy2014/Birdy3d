@@ -17,6 +17,11 @@
 
 namespace Birdy3d {
 
+    Camera::Camera()
+        : m_width(1)
+        , m_height(1)
+        , m_deferred_enabled(false) { }
+
     Camera::Camera(int width, int height, bool deferred)
         : m_width(width)
         , m_height(height)
@@ -312,7 +317,7 @@ namespace Birdy3d {
         glm::mat4 model;
         for (auto model_component : selected_object->get_components<ModelComponent>(false, true)) {
             model = model_component->object->transform.matrix();
-            bounding_box = model_component->model->bounding_box();
+            bounding_box = model_component->model()->bounding_box();
             glm::vec3 model_low = model * glm::vec4(bounding_box.first, 1.0f);
             glm::vec3 model_high = model * glm::vec4(bounding_box.second, 1.0f);
             if (model_low.x < low.x)

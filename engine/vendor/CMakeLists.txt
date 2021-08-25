@@ -1,8 +1,8 @@
-target_sources(Birdy3d PRIVATE
+target_sources(Birdy3d_engine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/glad/src/glad.c
 )
 
-target_include_directories(Birdy3d PUBLIC
+target_include_directories(Birdy3d_engine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/glad/include
     ${CMAKE_CURRENT_SOURCE_DIR}/stb_image
 )
@@ -11,7 +11,7 @@ include(FetchContent)
 
 find_package(Freetype REQUIRED)
 if (FREETYPE_FOUND)
-    target_include_directories(Birdy3d PRIVATE ${FREETYPE_INCLUDE_DIRS})
+    target_include_directories(Birdy3d_engine PRIVATE ${FREETYPE_INCLUDE_DIRS})
 else()
     FetchContent_Declare(
         freetype
@@ -28,11 +28,11 @@ if (NOT LIBRARY_GLM)
     FetchContent_Declare(
         glm
         GIT_REPOSITORY https://github.com/g-truc/glm
-        GIT_TAG        0.9.9.8
+        GIT_TAG        master
     )
 
     FetchContent_MakeAvailable(glm)
-    target_include_directories(Birdy3d PUBLIC ${glm_SOURCE_DIR})
+    target_include_directories(Birdy3d_engine PUBLIC ${glm_SOURCE_DIR})
 endif()
 
 find_library(LIBRARY_GLFW glfw)
@@ -60,3 +60,12 @@ if (NOT LIBRARY_ASSIMP)
 
     FetchContent_MakeAvailable(assimp)
 endif()
+
+FetchContent_Declare(
+    cereal
+    GIT_REPOSITORY   https://github.com/USCiLab/cereal
+    GIT_TAG          master
+)
+
+FetchContent_Populate(cereal)
+target_include_directories(Birdy3d_engine PUBLIC ${cereal_SOURCE_DIR}/include)

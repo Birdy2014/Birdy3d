@@ -10,9 +10,14 @@
 namespace Birdy3d {
 
     PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled)
-        : Light(RessourceManager::getShader("point_light_depth"), ambient, diffuse, linear, quadratic, shadow_enabled) { }
+        : Light(shadow_enabled)
+        , ambient(ambient)
+        , diffuse(diffuse)
+        , linear(linear)
+        , quadratic(quadratic) { }
 
     void PointLight::setupShadowMap() {
+        m_depthShader = RessourceManager::getShader("point_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map

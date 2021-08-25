@@ -11,11 +11,14 @@
 namespace Birdy3d {
 
     DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, bool shadow_enabled)
-        : Light(RessourceManager::getShader("directional_light_depth"), ambient, diffuse, 1.0f, 1.0f, shadow_enabled) {
+        : Light(shadow_enabled)
+        , ambient(ambient)
+        , diffuse(diffuse) {
         camOffset = 1000;
     }
 
     void DirectionalLight::setupShadowMap() {
+        m_depthShader = RessourceManager::getShader("directional_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map

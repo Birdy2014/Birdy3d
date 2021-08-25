@@ -12,7 +12,7 @@ namespace Birdy3d {
 
         unsigned int ID;
 
-        Shader(const std::string& shaderSource, const std::string& name);
+        Shader(const std::string& name);
         void use() const;
         void setBool(const std::string& name, bool value) const;
         void setInt(const std::string& name, int value) const;
@@ -35,4 +35,16 @@ namespace Birdy3d {
         void compile(std::unordered_map<GLenum, std::string>& shaderSources);
     };
 
+}
+
+namespace cereal {
+    template <>
+    struct LoadAndConstruct<Birdy3d::Shader> {
+        template <class Archive>
+        static void load_and_construct(Archive& ar, cereal::construct<Birdy3d::Shader>& construct) {
+            std::string name;
+            ar(cereal::make_nvp("name", name));
+            construct(name);
+        }
+    };
 }

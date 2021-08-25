@@ -20,34 +20,32 @@
 
 namespace Birdy3d {
 
-    std::unordered_map<std::string, std::shared_ptr<Shader>> RessourceManager::shaders;
-    std::unordered_map<std::string, std::shared_ptr<TextRenderer>> RessourceManager::textRenderers;
-    std::unordered_map<std::string, std::shared_ptr<Model>> RessourceManager::models;
-    std::unordered_map<std::string, std::shared_ptr<Texture>> RessourceManager::textures;
-    std::map<Color, std::shared_ptr<Texture>> RessourceManager::m_color_textures;
+    std::unordered_map<std::string, std::shared_ptr<Shader>> RessourceManager::m_shaders;
+    std::unordered_map<std::string, std::shared_ptr<TextRenderer>> RessourceManager::m_text_renderers;
+    std::unordered_map<std::string, std::shared_ptr<Model>> RessourceManager::m_models;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> RessourceManager::m_textures;
 
     std::shared_ptr<Shader> RessourceManager::getShader(const std::string& name) {
-        std::shared_ptr<Shader> shader = shaders[name];
+        std::shared_ptr<Shader> shader = m_shaders[name];
         if (!shader) {
-            std::string path = getRessourcePath(name, RessourceType::SHADER);
-            shader = std::make_shared<Shader>(readFile(path), name);
-            shaders[name] = shader;
+            shader = std::make_shared<Shader>(name);
+            m_shaders[name] = shader;
         }
         return shader;
     }
 
     std::shared_ptr<TextRenderer> RessourceManager::getTextRenderer(const std::string& name) {
-        std::shared_ptr<TextRenderer> renderer = textRenderers[name];
+        std::shared_ptr<TextRenderer> renderer = m_text_renderers[name];
         if (!renderer) {
             std::string path = getRessourcePath(name, RessourceType::FONT);
             renderer = std::make_shared<TextRenderer>(path, 30);
-            textRenderers[name] = renderer;
+            m_text_renderers[name] = renderer;
         }
         return renderer;
     }
 
     std::shared_ptr<Model> RessourceManager::getModel(const std::string& name) {
-        std::shared_ptr<Model> model = models[name];
+        std::shared_ptr<Model> model = m_models[name];
         if (!model) {
             // TODO: generalize for all ressources
             std::string prefix_primitive = "primitive::";
@@ -75,28 +73,29 @@ namespace Birdy3d {
                 std::string path = getRessourcePath(name, RessourceType::MODEL);
                 model = std::make_shared<Model>(path);
             }
-            models[name] = model;
+            m_models[name] = model;
         }
         return model;
     }
 
     std::shared_ptr<Texture> RessourceManager::getTexture(const std::string& name) {
-        std::shared_ptr<Texture> texture = textures[name];
+        std::shared_ptr<Texture> texture = m_textures[name];
         if (!texture) {
-            std::string path = getRessourcePath(name, RessourceType::TEXTURE);
-            texture = std::make_shared<Texture>(path);
-            textures[name] = texture;
+            std::string prefix_color = "color::";
+            if (name.starts_with(prefix_color)) {
+                Color color = name.substr(prefix_color.length());
+                texture = std::make_shared<Texture>(color);
+            } else {
+                std::string path = getRessourcePath(name, RessourceType::TEXTURE);
+                texture = std::make_shared<Texture>(path);
+            }
+            m_textures[name] = texture;
         }
         return texture;
     }
 
     std::shared_ptr<Texture> RessourceManager::getColorTexture(const Color& color) {
-        std::shared_ptr<Texture> texture = m_color_textures[color];
-        if (!texture) {
-            texture = std::make_shared<Texture>(color);
-            m_color_textures[color] = texture;
-        }
-        return texture;
+        return getTexture("color::" + color.to_string());
     }
 
     std::string RessourceManager::getRessourcePath(std::string name, RessourceType type) {
@@ -157,11 +156,11 @@ namespace Birdy3d {
     }
 
     std::string RessourceManager::getExecutableDir() {
-#ifdef BIRDY3D_PLATFORM_LINUX
+#if defined(BIRDY3D_PLATFORM_LINUX)
         char result[PATH_MAX];
         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
         std::string exec = std::string(result, (count > 0) ? count : 0);
-#elif BIRDY3D_PLATFORM_WINDOWS
+#elif defined(BIRDY3D_PLATFORM_WINDOWS)
         char result[MAX_PATH];
         std::string exec = std::string(result, GetModuleFileName(NULL, result, MAX_PATH));
 #endif

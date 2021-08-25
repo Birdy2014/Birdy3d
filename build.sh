@@ -12,7 +12,7 @@ build() {
         cmake .. "-DCMAKE_BUILD_TYPE=$1" -G Ninja
     else
         cd build
-        [[ -f sandbox ]] && rm sandbox
+        [[ -f Birdy3d_sandbox ]] && rm Birdy3d_sandbox
     fi
     ninja || exit 1
 
@@ -27,7 +27,7 @@ fi
 
 case $1 in
     run)
-        build Debug && ./build/out/bin/sandbox
+        build Debug && ./build/out/bin/Birdy3d_sandbox
         ;;
     build)
         build Debug

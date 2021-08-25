@@ -54,7 +54,7 @@ namespace Birdy3d {
             if (this->hidden && !hidden)
                 return components;
             for (const auto& c : m_components) {
-                if (!c->isLoaded())
+                if (!c->loaded())
                     continue;
                 auto casted = std::dynamic_pointer_cast<T>(c);
                 if (casted) {
@@ -75,7 +75,7 @@ namespace Birdy3d {
             if (this->hidden && !hidden)
                 return nullptr;
             for (const auto& c : m_components) {
-                if (!c->isLoaded())
+                if (!c->loaded())
                     continue;
                 auto casted = std::dynamic_pointer_cast<T>(c);
                 if (casted) {
@@ -93,6 +93,15 @@ namespace Birdy3d {
         }
 
         void remove();
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("name", name));
+            ar(cereal::make_nvp("transform", transform));
+            ar(cereal::make_nvp("hidden", hidden));
+            ar(cereal::make_nvp("components", m_components));
+            ar(cereal::make_nvp("children", m_children));
+        }
 
     private:
         friend void Component::remove();

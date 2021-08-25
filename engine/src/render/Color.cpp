@@ -1,6 +1,7 @@
 #include "render/Color.hpp"
 
 #include "core/Logger.hpp"
+#include <iomanip>
 
 namespace Birdy3d {
 
@@ -22,6 +23,17 @@ namespace Birdy3d {
 
     Color::operator glm::vec4() const {
         return value;
+    }
+
+    std::string Color::to_string() const {
+        std::stringstream stream;
+        stream << '#' << std::setfill('0') << std::hex;
+        stream << std::setw(2) << std::clamp((int)(value.r * 255), 0, 255);
+        stream << std::setw(2) << std::clamp((int)(value.g * 255), 0, 255);
+        stream << std::setw(2) << std::clamp((int)(value.b * 255), 0, 255);
+        if ((int)(value.a * 255) > 0)
+            stream << std::clamp((int)(value.a * 255), 0, 255);
+        return stream.str();
     }
 
     Color& Color::operator=(const std::string& color) {
