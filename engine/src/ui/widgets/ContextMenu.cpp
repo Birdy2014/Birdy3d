@@ -68,24 +68,20 @@ namespace Birdy3d {
         }
         item.m_child_rect_size += glm::vec2(m_padding * 2);
 
-        glm::vec2 viewportSize = Application::get_viewport_size();
-        glm::mat4 projection = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
-        glm::mat4 rotate = glm::rotate(glm::mat4(1), glm::radians(-225.0f), glm::vec3(0, 0, 1));
-
         m_background_rect->position(item.m_child_rect_pos);
         m_background_rect->size(item.m_child_rect_size);
-        m_background_rect->draw(projection);
+        m_background_rect->draw(glm::mat4(1));
         m_border_rect->position(item.m_child_rect_pos);
         m_border_rect->size(item.m_child_rect_size);
-        m_border_rect->draw(projection);
+        m_border_rect->draw(glm::mat4(1));
 
         int offset_y = item.m_child_rect_size.y - m_padding;
         for (const auto& child_item : item.children) {
             offset_y -= Application::theme->line_height;
             if (!child_item.children.empty()) {
-                glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size, offset_y + m_arrow_size), 1.0f));
-                glm::mat4 move_triangle = projection * translate * rotate;
-                m_submenu_triangle->draw(move_triangle);
+                m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size - m_padding, offset_y + (Application::theme->line_height - m_arrow_size) / 2));
+                m_submenu_triangle->rotation(glm::radians(30.0f));
+                m_submenu_triangle->draw(glm::mat4(1));
             }
             Application::theme->text_renderer()->renderText(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, Application::theme->font_size, Application::theme->color_fg);
         }
