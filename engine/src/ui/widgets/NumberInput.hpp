@@ -7,10 +7,10 @@ namespace Birdy3d {
 
     class NumberInput : public TextField {
     public:
-        float max_value = std::numeric_limits<int>::max();
-        float min_value = std::numeric_limits<int>::min();
+        float max_value = std::numeric_limits<float>::infinity();
+        float min_value = -std::numeric_limits<float>::infinity();
 
-        NumberInput(UIVector position, UIVector size, Placement placement, float val);
+        NumberInput(UIVector position, UIVector size, Placement placement = Placement::BOTTOM_LEFT, float val = 0);
         float value();
         void value(float value);
 
