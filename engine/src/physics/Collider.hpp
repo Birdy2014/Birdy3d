@@ -15,7 +15,7 @@ namespace Birdy3d {
     class Collider : public Component {
     public:
         Collider();
-        Collider(Model*);
+        Collider(const std::string&);
         Collider(GenerationMode);
         void start() override;
         CollisionPoints collides(Collider&);
@@ -23,13 +23,13 @@ namespace Birdy3d {
 
         template <class Archive>
         void serialize(Archive& ar) {
-            // TODO: Store model as shared_ptr
-            //ar(cereal::make_nvp("model", ));
+            ar(cereal::make_nvp("model_name", m_model_name));
             ar(cereal::make_nvp("generaton_mode", m_generation_mode));
         }
 
     private:
-        Model* m_model;
+        std::string m_model_name;
+        std::shared_ptr<Model> m_model;
         GenerationMode m_generation_mode;
         glm::vec3 m_points[4];
         int m_point_count;

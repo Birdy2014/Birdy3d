@@ -17,21 +17,24 @@ namespace Birdy3d {
         : m_model(nullptr)
         , m_generation_mode(GenerationMode::NONE) { }
 
-    Collider::Collider(Model* model)
-        : m_model(model) { }
+    Collider::Collider(const std::string& name)
+        : m_model_name(name)
+        , m_generation_mode(GenerationMode::NONE) { }
 
     Collider::Collider(GenerationMode mode)
         : m_model(nullptr)
         , m_generation_mode(mode) { }
 
     void Collider::start() {
-        if (!m_model) {
+        if (m_generation_mode == GenerationMode::NONE) {
+            m_model = RessourceManager::getModel(m_model_name);
+        } else {
             Model* model = object->get_component<ModelComponent>()->model().get();
             if (!model) {
                 Logger::warn("GameObject doesn't have any model");
                 return;
             }
-            m_model = ConvexMeshGenerators::generate_model(m_generation_mode, model);
+            m_model = ConvexMeshGenerators::generate_model(m_generation_mode, *model);
         }
     }
 

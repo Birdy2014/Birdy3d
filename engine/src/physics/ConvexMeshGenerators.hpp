@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Base.hpp"
+
 namespace Birdy3d {
 
     class Model;
@@ -13,12 +15,12 @@ namespace Birdy3d {
 
     class ConvexMeshGenerators {
     public:
-        static Model* generate_model(GenerationMode, Model*);
+        static std::shared_ptr<Model> generate_model(GenerationMode, const Model&);
 
     private:
-        static Model* copy(Model*);
-        static Model* hull(Model*);
-        static Model* decomposition(Model*);
+        static std::shared_ptr<Model> copy(const Model&);
+        static std::shared_ptr<Model> hull(const Model&);
+        static std::shared_ptr<Model> decomposition(const Model&);
     };
 
 }
