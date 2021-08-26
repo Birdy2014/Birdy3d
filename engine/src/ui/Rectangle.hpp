@@ -15,7 +15,7 @@ namespace Birdy3d {
 
     private:
         void createBuffers();
-        void updateVBO();
+        void update_values();
     };
 
 }

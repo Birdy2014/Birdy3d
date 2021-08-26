@@ -2,6 +2,7 @@
 
 #include "core/RessourceManager.hpp"
 #include "render/Shader.hpp"
+#include "ui/Canvas.hpp"
 #include <glad/glad.h>
 
 namespace Birdy3d {
@@ -25,7 +26,7 @@ namespace Birdy3d {
 
         if (m_dirty) {
             m_dirty = false;
-            updateVBO();
+            update_values();
         }
 
         glDisable(GL_DEPTH_TEST);
@@ -35,7 +36,9 @@ namespace Birdy3d {
         glBindTexture(GL_TEXTURE_2D, m_texture);
         m_shader->use();
         m_shader->setInt("type", type);
+        m_shader->setMat4("projection", projection());
         m_shader->setMat4("move", move);
+        m_shader->setMat4("move_self", m_move_self);
         m_shader->setVec4("color", m_color);
         m_shader->setInt("rectTexture", 0);
         glBindVertexArray(m_vao);
@@ -69,15 +72,15 @@ namespace Birdy3d {
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
     }
 
-    void Rectangle::updateVBO() {
+    void Rectangle::update_values() {
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glm::vec2 pos = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
-        float x = pos.x;
-        float y = pos.y;
         glm::vec2 size = m_size.toPixels(m_parentSize);
-        float w = size.x;
-        float h = size.y;
+        m_move_self = glm::mat4(1);
+        m_move_self = glm::translate(m_move_self, glm::vec3(pos + glm::vec2(size.x / 2, size.y / 2), 0.0f));
+        m_move_self = glm::rotate(m_move_self, m_rotation, glm::vec3(0, 0, 1));
+        m_move_self = glm::scale(m_move_self, glm::vec3(size, 1.0f));
         float ua = m_texCoordA.x;
         float va = m_texCoordA.y;
         float ub = m_texCoordB.x;
@@ -85,18 +88,18 @@ namespace Birdy3d {
         // clang-format off
         if (type == Shape::OUTLINE) {
             float vertices[] = {
-                x,     y,     ua, va,
-                x,     y + h, ua, vb,
-                x + w, y + h, ub, vb,
-                x + w, y,     ub, va
+                -0.5, -0.5, ua, va,
+                -0.5,  0.5, ua, vb,
+                 0.5,  0.5, ub, vb,
+                 0.5, -0.5, ub, va
             };
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
         } else {
             float vertices[] = {
-                x,     y,     ua, vb,
-                x + w, y,     ub, vb,
-                x,     y + h, ua, va,
-                x + w, y + h, ub, va
+                -0.5, -0.5, ua, vb,
+                 0.5, -0.5, ub, vb,
+                -0.5,  0.5, ua, va,
+                 0.5,  0.5, ub, va
             };
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
         }

@@ -103,9 +103,9 @@ namespace Birdy3d {
         std::unique_ptr<Layout> m_layout = std::make_unique<EmptyLayout>();
         glm::vec2 m_actual_size = glm::vec2(1);
         glm::vec2 m_actual_pos = glm::vec2(1);
+        glm::mat4 m_move = glm::mat4(1);
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
 
-        glm::mat4 normalizedMove();
         virtual bool contains(glm::vec2) const;
 
         // Events

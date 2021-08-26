@@ -55,11 +55,8 @@ namespace Birdy3d {
         if (hidden)
             return;
 
-        glm::mat4 move = normalizedMove();
-
-        for (const auto& s : m_shapes) {
-            s->draw(move);
-        }
+        for (const auto& s : m_shapes)
+            s->draw(m_move);
 
         for (const auto& child : m_children)
             child->draw();
@@ -83,6 +80,7 @@ namespace Birdy3d {
     void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
         m_actual_pos = pos;
         m_actual_size = size;
+        m_move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
 
         for (const auto& s : m_shapes) {
             s->parentSize(size);
@@ -96,12 +94,6 @@ namespace Birdy3d {
         canvas = c;
         for (const auto& child : m_children)
             child->set_canvas(c);
-    }
-
-    glm::mat4 Widget::normalizedMove() {
-        glm::vec2 viewportSize = Application::get_viewport_size();
-        glm::mat4 move = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
-        return glm::translate(move, glm::vec3(m_actual_pos, 0.0f));
     }
 
     bool Widget::is_hovering() {

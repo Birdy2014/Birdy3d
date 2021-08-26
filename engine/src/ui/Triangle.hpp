@@ -13,7 +13,7 @@ namespace Birdy3d {
 
     private:
         void createBuffers();
-        void updateVBO();
+        void update_values();
         float area(glm::vec2 a, glm::vec2 b, glm::vec2 c);
     };
 

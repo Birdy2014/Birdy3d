@@ -56,12 +56,6 @@ namespace Birdy3d {
         return true;
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color) {
-        glm::vec2 viewportSize = Application::get_viewport_size();
-        glm::mat4 m = glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y);
-        renderText(text, x, y, fontSize, color, m);
-    }
-
     void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color hlcolor) {
         std::u32string converted = converter.from_bytes(text);
         renderText(converted, x, y, fontSize, color, move, cursorpos, highlight, hlstart, hlend, hlcolor);

@@ -5,10 +5,12 @@ layout (location = 1) in vec2 tex;
 
 out vec2 FragTex;
 
+uniform mat4 projection;
 uniform mat4 move;
+uniform mat4 move_self;
 
 void main() {
-    gl_Position = move * vec4(pos, 0, 1);
+    gl_Position = projection * move * move_self * vec4(pos, 0, 1);
     FragTex = tex;
 }
 

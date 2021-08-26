@@ -1,10 +1,10 @@
 #pragma once
 
+#include "core/Application.hpp"
+#include "core/Base.hpp"
 #include "core/RessourceManager.hpp"
 #include "render/Color.hpp"
 #include "ui/Utils.hpp"
-#include <glm/glm.hpp>
-#include <memory>
 
 namespace Birdy3d {
 
@@ -26,6 +26,7 @@ namespace Birdy3d {
             : name(name)
             , m_shader(RessourceManager::getShader("ui"))
             , m_position(position)
+            , m_rotation(0)
             , m_size(size)
             , m_color(color)
             , m_placement(placement)
@@ -35,14 +36,19 @@ namespace Birdy3d {
         bool hidden() { return m_hidden; }
         bool hidden(bool hidden) { return m_hidden = hidden; }
         UIVector position() { return m_position; }
-        UIVector position(UIVector position) {
+        void position(UIVector position) {
             m_dirty = true;
-            return m_position = position;
+            m_position = position;
+        }
+        float rotation() { return m_rotation; }
+        void rotation(float rotation) {
+            m_dirty = true;
+            m_rotation = rotation;
         }
         UIVector size() { return m_size; }
-        UIVector size(UIVector size) {
+        void size(UIVector size) {
             m_dirty = true;
-            return m_size = size;
+            m_size = size;
         }
         Color color() { return m_color; }
         Color color(Color color) { return m_color = color; }
@@ -65,6 +71,11 @@ namespace Birdy3d {
         virtual void draw(glm::mat4 move) = 0;
         virtual bool contains(glm::vec2 point) = 0;
 
+        glm::mat4 projection() {
+            glm::vec2 viewport = Application::get_viewport_size();
+            return glm::ortho(0.0f, viewport.x, 0.0f, viewport.y);
+        }
+
     protected:
         std::shared_ptr<Shader> m_shader;
         unsigned int m_vao = 0;
@@ -72,7 +83,9 @@ namespace Birdy3d {
         bool m_dirty = true;
         bool m_hidden = false;
         UIVector m_position;
+        float m_rotation;
         UIVector m_size;
+        glm::mat4 m_move_self;
         Color m_color;
         Placement m_placement;
         unsigned int m_texture = 0;

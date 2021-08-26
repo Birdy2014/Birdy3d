@@ -13,7 +13,7 @@ namespace Birdy3d {
     TreeItem::TreeItem(std::string text, TreeView* treeview)
         : text(text)
         , m_treeview(treeview)
-        , m_collapse_button(std::make_unique<Triangle>(0_px, 8_px, Color::WHITE)) { }
+        , m_collapse_button(std::make_unique<Triangle>(0_px, UIVector(Application::theme->font_size / 2), Color::WHITE)) { }
 
     TreeItem& TreeItem::add_child(std::string text) {
         m_treeview->m_items_changed = true;
@@ -39,20 +39,15 @@ namespace Birdy3d {
 
     void TreeView::draw() {
         int offset_y = Application::theme->line_height;
-        glm::mat4 move = normalizedMove();
         for (const auto& row : m_flat_tree_list) {
             if (m_selected_item == &row.second) {
                 m_item_highlight_rect->position(UIVector(0_px, -offset_y + (int)Application::theme->line_height));
-                m_item_highlight_rect->draw(move);
+                m_item_highlight_rect->draw(m_move);
             }
             if (!row.second.children.empty()) {
-                if (row.second.collapsed) {
-                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + row.second.m_collapse_button->size().x / 2 + 4, m_actual_size.y - offset_y + Application::theme->line_height / 2.0f, 1.0f));
-                    row.second.m_collapse_button->draw(move * translate * m_rotate_collapsed);
-                } else {
-                    glm::mat4 translate = glm::translate(glm::mat4(1), glm::vec3(row.first * m_indent_size + m_offset_x_left + m_offset_x_button + 4, m_actual_size.y - offset_y + Application::theme->line_height / 2.0f - row.second.m_collapse_button->size().y / 3, 1.0f));
-                    row.second.m_collapse_button->draw(move * translate * m_rotate_open);
-                }
+                row.second.m_collapse_button->position(glm::vec2(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y + (Application::theme->line_height - row.second.m_collapse_button->size().x) / 2.0f));
+                row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 60.0f : 30.0f));
+                row.second.m_collapse_button->draw(m_move);
             }
             Application::theme->text_renderer()->renderText(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, Application::theme->font_size, Application::theme->color_fg);
             offset_y += Application::theme->line_height;

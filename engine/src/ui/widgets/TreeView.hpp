@@ -52,8 +52,6 @@ namespace Birdy3d {
         bool m_items_changed = true;
         Rectangle* m_item_highlight_rect;
         TreeItem* m_selected_item = nullptr;
-        glm::mat4 m_rotate_collapsed = glm::rotate(glm::mat4(1), glm::radians(-225.0f), glm::vec3(0, 0, 1));
-        glm::mat4 m_rotate_open = glm::rotate(glm::mat4(1), glm::radians(-315.0f), glm::vec3(0, 0, 1));
 
         virtual void on_update() override;
         virtual void on_click(InputClickEvent* event) override;

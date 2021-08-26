@@ -41,7 +41,7 @@ namespace Birdy3d {
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                Application::theme->text_renderer()->renderText(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size, Application::theme->color_fg, normalizedMove(), m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Application::theme->color_text_highlight);
+                Application::theme->text_renderer()->renderText(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Application::theme->color_text_highlight);
             }
         }
         glDisable(GL_SCISSOR_TEST);
