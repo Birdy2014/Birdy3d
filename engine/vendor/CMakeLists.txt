@@ -35,16 +35,17 @@ if (NOT LIBRARY_GLM)
     target_include_directories(Birdy3d_engine PUBLIC ${glm_SOURCE_DIR})
 endif()
 
-find_library(LIBRARY_GLFW glfw)
-if (NOT LIBRARY_GLFW)
+# TODO: uncomment find_library and change GIT_TAG once new-cursors-on-3.3-stable gets merged
+#find_library(LIBRARY_GLFW glfw)
+#if (NOT LIBRARY_GLFW)
     FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw
-        GIT_TAG        3.3.4
+        GIT_TAG        new-cursors-on-3.3-stable
     )
 
     FetchContent_MakeAvailable(glfw)
-endif()
+#endif()
 
 find_library(LIBRARY_ASSIMP assimp)
 if (NOT LIBRARY_ASSIMP)

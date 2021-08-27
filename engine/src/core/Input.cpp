@@ -16,8 +16,12 @@ namespace Birdy3d {
         cursors[Cursor::CURSOR_ARROW] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
         cursors[Cursor::CURSOR_HAND] = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
         cursors[Cursor::CURSOR_TEXT] = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
-        cursors[Cursor::CURSOR_MOVE] = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+        cursors[Cursor::CURSOR_MOVE] = glfwCreateStandardCursor(GLFW_RESIZE_ALL_CURSOR);
         cursors[Cursor::CURSOR_HRESIZE] = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
+        cursors[Cursor::CURSOR_TOP_LEFT_RESIZE] = glfwCreateStandardCursor(GLFW_RESIZE_NWSE_CURSOR);
+        cursors[Cursor::CURSOR_TOP_RIGHT_RESIZE] = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
+        cursors[Cursor::CURSOR_BOTTOM_LEFT_RESIZE] = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
+        cursors[Cursor::CURSOR_BOTTOM_RIGHT_RESIZE] = glfwCreateStandardCursor(GLFW_RESIZE_NWSE_CURSOR);
         cursors[Cursor::CURSOR_VRESIZE] = glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR);
     }
 

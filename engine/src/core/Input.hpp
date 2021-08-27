@@ -15,6 +15,10 @@ namespace Birdy3d {
             CURSOR_MOVE,
             CURSOR_HRESIZE,
             CURSOR_VRESIZE,
+            CURSOR_TOP_LEFT_RESIZE,
+            CURSOR_TOP_RIGHT_RESIZE,
+            CURSOR_BOTTOM_LEFT_RESIZE,
+            CURSOR_BOTTOM_RIGHT_RESIZE,
             CURSOR_LAST
         };
 

@@ -52,9 +52,15 @@ namespace Birdy3d {
                 m_hover_resize_y = true;
         }
 
+        // TODO: resize y top
+
         // Set cursor
         if (m_hover_drag || m_dragging)
             Input::setCursor(Input::CURSOR_MOVE);
+        else if ((m_hover_resize_xl && m_hover_resize_y) || (m_resize_xl && m_resize_y))
+            Input::setCursor(Input::CURSOR_BOTTOM_LEFT_RESIZE);
+        else if ((m_hover_resize_xr && m_hover_resize_y) || (m_resize_xr && m_resize_y))
+            Input::setCursor(Input::CURSOR_BOTTOM_RIGHT_RESIZE);
         else if (m_hover_resize_xl || m_resize_xl)
             Input::setCursor(Input::CURSOR_HRESIZE);
         else if (m_hover_resize_xr || m_resize_xr)
