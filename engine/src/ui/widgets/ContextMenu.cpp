@@ -37,7 +37,15 @@ namespace Birdy3d {
 
     void ContextMenu::open() {
         glm::vec2 open_pos = Input::cursorPos();
-        pos = open_pos;
+        glm::vec2 viewport = Application::get_viewport_size();
+        if (open_pos.x + root_item.m_child_rect_size.x > viewport.x)
+            pos.x = open_pos.x - root_item.m_child_rect_size.x; // Left
+        else
+            pos.x = open_pos.x; // Right
+        if (open_pos.y - root_item.m_child_rect_size.y < 0)
+            pos.y = open_pos.y; // Up
+        else
+            pos.y = open_pos.y - root_item.m_child_rect_size.y; // Down
         hidden = false;
         focus();
         canvas->toForeground(this);
@@ -110,7 +118,17 @@ namespace Birdy3d {
                         }
                         if (!child_item.children.empty()) {
                             child_item.opened = true;
-                            child_item.m_child_rect_pos = item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x, offset_y - child_item.m_child_rect_size.y + Application::theme->line_height + m_padding);
+                            // Set position of new menu
+                            glm::vec2 viewport = Application::get_viewport_size();
+                            if (item.m_child_rect_pos.x + child_item.m_child_rect_size.x > viewport.x)
+                                child_item.m_child_rect_pos.x = item.m_child_rect_pos.x - child_item.m_child_rect_size.x; // Left
+                            else
+                                child_item.m_child_rect_pos.x = item.m_child_rect_pos.x + item.m_child_rect_size.x; // Right
+                            if (item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height + m_padding < 0)
+                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - m_padding; // Up
+                            else
+                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height + m_padding; // Down
+
                             // Close all children of newly opened item
                             for (auto& child_child_item : child_item.children)
                                 child_child_item.opened = false;
