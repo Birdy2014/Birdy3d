@@ -31,41 +31,56 @@ namespace Birdy3d {
         glm::vec2 localCursorPos = Input::cursorPos() - m_actual_pos;
 
         m_hover_drag = false;
-        m_hover_resize_xl = false;
-        m_hover_resize_xr = false;
-        m_hover_resize_y = false;
+        m_hover_resize_x_left = false;
+        m_hover_resize_x_right = false;
+        m_hover_resize_y_top = false;
+        m_hover_resize_y_bottom = false;
 
-        if (!m_dragging && !m_resize_xl && !m_resize_xr && !m_resize_y && m_close_button->contains(localCursorPos)) {
+        if (!m_dragging && !m_resize_x_left && !m_resize_x_right && !m_resize_y_top && !m_resize_y_bottom && m_close_button->contains(localCursorPos)) {
             Input::setCursor(Input::CURSOR_HAND);
             return;
         }
 
-        if (localCursorPos.y >= m_actual_size.y - Application::theme->line_height)
+        if (localCursorPos.x < BORDER_SIZE)
+            m_hover_resize_x_left = true;
+        if (localCursorPos.x > m_actual_size.x - BORDER_SIZE)
+            m_hover_resize_x_right = true;
+        if (localCursorPos.y > m_actual_size.y - BORDER_SIZE)
+            m_hover_resize_y_top = true;
+        if (localCursorPos.y < BORDER_SIZE)
+            m_hover_resize_y_bottom = true;
+
+        if (localCursorPos.y >= m_actual_size.y - Application::theme->line_height && localCursorPos.y <= m_actual_size.y - BORDER_SIZE && localCursorPos.x >= BORDER_SIZE && localCursorPos.x <= m_actual_size.x - BORDER_SIZE)
             m_hover_drag = true;
 
-        if (localCursorPos.y < m_actual_size.y - Application::theme->line_height) {
-            if (localCursorPos.x < BORDER_SIZE)
-                m_hover_resize_xl = true;
-            if (localCursorPos.x > m_actual_size.x - BORDER_SIZE)
-                m_hover_resize_xr = true;
-            if (localCursorPos.y < BORDER_SIZE)
-                m_hover_resize_y = true;
-        }
-
-        // TODO: resize y top
-
         // Set cursor
-        if (m_hover_drag || m_dragging)
+        if (m_dragging)
             Input::setCursor(Input::CURSOR_MOVE);
-        else if ((m_hover_resize_xl && m_hover_resize_y) || (m_resize_xl && m_resize_y))
+        else if (m_resize_x_left && m_resize_y_top)
+            Input::setCursor(Input::CURSOR_TOP_LEFT_RESIZE);
+        else if (m_resize_x_right && m_resize_y_top)
+            Input::setCursor(Input::CURSOR_TOP_RIGHT_RESIZE);
+        else if (m_resize_x_left && m_resize_y_bottom)
             Input::setCursor(Input::CURSOR_BOTTOM_LEFT_RESIZE);
-        else if ((m_hover_resize_xr && m_hover_resize_y) || (m_resize_xr && m_resize_y))
+        else if (m_resize_x_right && m_resize_y_bottom)
             Input::setCursor(Input::CURSOR_BOTTOM_RIGHT_RESIZE);
-        else if (m_hover_resize_xl || m_resize_xl)
+        else if (m_resize_x_left || m_resize_x_right)
             Input::setCursor(Input::CURSOR_HRESIZE);
-        else if (m_hover_resize_xr || m_resize_xr)
+        else if (m_resize_y_top || m_resize_y_bottom)
+            Input::setCursor(Input::CURSOR_VRESIZE);
+        else if (m_hover_drag)
+            Input::setCursor(Input::CURSOR_MOVE);
+        else if (m_hover_resize_x_left && m_hover_resize_y_top)
+            Input::setCursor(Input::CURSOR_TOP_LEFT_RESIZE);
+        else if (m_hover_resize_x_right && m_hover_resize_y_top)
+            Input::setCursor(Input::CURSOR_TOP_RIGHT_RESIZE);
+        else if (m_hover_resize_x_left && m_hover_resize_y_bottom)
+            Input::setCursor(Input::CURSOR_BOTTOM_LEFT_RESIZE);
+        else if (m_hover_resize_x_right && m_hover_resize_y_bottom)
+            Input::setCursor(Input::CURSOR_BOTTOM_RIGHT_RESIZE);
+        else if (m_hover_resize_x_left || m_hover_resize_x_right)
             Input::setCursor(Input::CURSOR_HRESIZE);
-        else if (m_hover_resize_y || m_resize_y)
+        else if (m_hover_resize_y_top || m_hover_resize_y_bottom)
             Input::setCursor(Input::CURSOR_VRESIZE);
         else
             Input::setCursor(Input::CURSOR_DEFAULT);
@@ -76,7 +91,7 @@ namespace Birdy3d {
             m_dragged = true;
         }
         glm::vec2 minsize = m_layout->minimal_size(m_children) + glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
-        if (m_resize_xl) {
+        if (m_resize_x_left) {
             float diffold = size.x - minsize.x;
             size.x -= Input::cursorPosOffset().x;
             float diffnew = size.x - minsize.x;
@@ -88,10 +103,13 @@ namespace Birdy3d {
                 pos.x -= diffnew;
             }
         }
-        if (m_resize_xr) {
+        if (m_resize_x_right) {
             size.x += Input::cursorPosOffset().x;
         }
-        if (m_resize_y) {
+        if (m_resize_y_top) {
+            size.y += Input::cursorPosOffset().y;
+        }
+        if (m_resize_y_bottom) {
             float diffold = size.y - minsize.y;
             size.y -= Input::cursorPosOffset().y;
             float diffnew = size.y - minsize.y;
@@ -117,9 +135,10 @@ namespace Birdy3d {
         if (event->action == GLFW_RELEASE) {
             ungrab_cursor();
             m_dragging = false;
-            m_resize_xl = false;
-            m_resize_xr = false;
-            m_resize_y = false;
+            m_resize_x_left = false;
+            m_resize_x_right = false;
+            m_resize_y_top = false;
+            m_resize_y_bottom = false;
             size = m_actual_size;
             return;
         }
@@ -139,12 +158,14 @@ namespace Birdy3d {
         }
 
         // Resizing
-        if (m_hover_resize_xl)
-            m_resize_xl = true;
-        if (m_hover_resize_xr)
-            m_resize_xr = true;
-        if (m_hover_resize_y)
-            m_resize_y = true;
+        if (m_hover_resize_x_left)
+            m_resize_x_left = true;
+        if (m_hover_resize_x_right)
+            m_resize_x_right = true;
+        if (m_hover_resize_y_top)
+            m_resize_y_top = true;
+        if (m_hover_resize_y_bottom)
+            m_resize_y_bottom = true;
     }
 
     void Window::on_mouse_leave() {

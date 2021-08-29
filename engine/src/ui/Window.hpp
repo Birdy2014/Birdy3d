@@ -18,10 +18,11 @@ namespace Birdy3d {
         std::string title() { return m_title->text; }
         void title(std::string title) { m_title->text = title; }
         bool dragging() { return m_dragging; }
-        bool resizing() { return m_resize_xl || m_resize_xr || m_resize_y; }
-        bool resizing_left() { return m_resize_xl; }
-        bool resizing_right() { return m_resize_xr; }
-        bool resizing_down() { return m_resize_y; }
+        bool resizing() { return m_resize_x_left || m_resize_x_right || m_resize_y_top || m_resize_y_bottom; }
+        bool resizing_left() { return m_resize_x_left; }
+        bool resizing_right() { return m_resize_x_right; }
+        bool resizing_top() { return m_resize_y_top; }
+        bool resizing_bottom() { return m_resize_y_bottom; }
         bool dragged() { return m_dragged; }
 
     protected:
@@ -33,13 +34,15 @@ namespace Birdy3d {
         Rectangle* m_close_button;
         Text* m_title;
         bool m_hover_drag = false;
-        bool m_hover_resize_xl = false;
-        bool m_hover_resize_xr = false;
-        bool m_hover_resize_y = false;
+        bool m_hover_resize_x_left = false;
+        bool m_hover_resize_x_right = false;
+        bool m_hover_resize_y_top = false;
+        bool m_hover_resize_y_bottom = false;
         bool m_dragging = false;
-        bool m_resize_xl = false;
-        bool m_resize_xr = false;
-        bool m_resize_y = false;
+        bool m_resize_x_left = false;
+        bool m_resize_x_right = false;
+        bool m_resize_y_top = false;
+        bool m_resize_y_bottom = false;
         bool m_dragged = false;
     };
 

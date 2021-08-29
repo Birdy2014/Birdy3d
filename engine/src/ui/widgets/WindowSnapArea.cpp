@@ -154,15 +154,23 @@ namespace Birdy3d {
                 break;
             }
             case Mode::VERTICAL:
-                if (focused_window && (focused_window->resizing_down())) {
+                if (focused_window && (focused_window->resizing_top() || focused_window->resizing_bottom())) {
                     size_diff = 0;
                     if (window == focused_window) {
-                        if (i == 0) {
-                            focused_window->size.y += m_actual_size.y - size_sum.y;
-                            focused_window->pos = m_actual_pos;
+                        if (focused_window->resizing_top()) {
+                            if (i == m_windows.size() - 1) {
+                                focused_window->pos = m_actual_pos;
+                            } else {
+                                m_windows[i + 1]->size.y += m_actual_size.y - size_sum.y;
+                            }
                         } else {
-                            m_windows[i - 1]->size.y += m_actual_size.y - size_sum.y;
-                            new_pos.y += m_actual_size.y - size_sum.y;
+                            if (i == 0) {
+                                focused_window->size.y += m_actual_size.y - size_sum.y;
+                                focused_window->pos = m_actual_pos;
+                            } else {
+                                m_windows[i - 1]->size.y += m_actual_size.y - size_sum.y;
+                                new_pos.y += m_actual_size.y - size_sum.y;
+                            }
                         }
                     }
                 } else {
