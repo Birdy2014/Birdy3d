@@ -52,5 +52,5 @@ void main() {
     else
         gNormal = normalize(Normal);
 
-    gAlbedoSpec.a = material.specular_map_enabled ? texture(material.specular_map, TexCoords).r : material.specular_value;
+    gAlbedoSpec.a = material.specular_map_enabled ? texture(material.specular_map, TexCoords).r : material.specular_value / 100;
 }

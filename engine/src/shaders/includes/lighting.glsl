@@ -52,6 +52,13 @@ uniform int nr_directional_lights;
 uniform int nr_pointlights;
 uniform int nr_spotlights;
 
+float calc_specular_factor(vec3 normal, vec3 light_dir, vec3 view_dir, float shininess) {
+    vec3 halfwayDir = normalize(light_dir + view_dir);
+    if (shininess <= 0)
+        return 0;
+    return pow(max(dot(normal, halfwayDir), 0.0), shininess) * (shininess / 100);
+}
+
 vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess) {
     vec3 lightDir = normalize(-light.direction);
 
@@ -63,8 +70,7 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDi
     vec3 diffuse = diff * light.diffuse * materialColor;
 
     // specular lighting
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess) * 0.3;
+    float spec = calc_specular_factor(normal, lightDir, viewDir, shininess);
     vec3 specular = light.diffuse * spec;
 
     vec3 lighting = diffuse + specular;
@@ -111,8 +117,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
     vec3 diffuse = diff * light.diffuse * materialColor;
 
     // specular lighting
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess) * 0.3;
+    float spec = calc_specular_factor(normal, lightDir, viewDir, shininess);
     vec3 specular = light.diffuse * spec;
 
     vec3 lighting = diffuse + specular;
@@ -145,8 +150,7 @@ vec3 calcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     vec3 diffuse = light.diffuse * materialColor * diff * intensity * attenuation;
 
     // specular lighting
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess) * 0.3;
+    float spec = calc_specular_factor(normal, lightDir, viewDir, shininess);
     vec3 specular = light.diffuse * spec * intensity * attenuation;
 
     vec3 lighting = diffuse + specular;

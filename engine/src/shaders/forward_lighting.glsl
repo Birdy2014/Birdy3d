@@ -50,7 +50,7 @@ uniform vec3 viewPos;
 void main() {
     vec3 viewDir = normalize(viewPos - FragPos);
     vec4 var_diffuse = material.diffuse_map_enabled ? texture(material.diffuse_map, TexCoords).rgba : material.diffuse_color;
-    float var_specular = material.specular_map_enabled ? texture(material.specular_map, TexCoords).r * 255 : material.specular_value * 255;
+    float var_specular = material.specular_map_enabled ? texture(material.specular_map, TexCoords).r * 100 : material.specular_value;
     vec3 var_normal = material.normal_map_enabled ? normalize(TBN * (texture(material.normal_map, TexCoords).rgb * 2.0 - 1.0)) : Normal;
     if (var_diffuse.a < 0.1)
         discard;
