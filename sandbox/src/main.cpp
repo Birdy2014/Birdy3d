@@ -163,6 +163,14 @@ int main() {
             tree->sync_scene_tree(scene_ptr.get());
         }
     });
+    scene_new_menu.add_child("Cube", [&]() {
+        std::shared_ptr<Scene> scene_ptr;
+        if (Application::selected_object && (scene_ptr = Application::scene.lock())) {
+            auto new_object = Application::selected_object->add_child("Cube");
+            new_object->add_component<ModelComponent>("primitive::cube");
+            tree->sync_scene_tree(scene_ptr.get());
+        }
+    });
 
     scene_context_menu->root_item.add_child("Remove", [&]() {
         if (!Application::selected_object || !Application::selected_object->parent)
@@ -300,17 +308,17 @@ int main() {
         blueTransparentMaterial->diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
 
         auto obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-        obj->add_component<ModelComponent>("./ressources/testObjects/cube.obj", redTransparentMaterial);
+        obj->add_component<ModelComponent>("primitive::cube", redTransparentMaterial);
         obj->add_component<Collider>(GenerationMode::COPY);
 
         auto obj2 = scene->add_child("obj2", glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-        obj2->add_component<ModelComponent>("./ressources/testObjects/cube.obj", white_material);
+        obj2->add_component<ModelComponent>("primitive::cube", white_material);
 
         auto plane = scene->add_child("plane", glm::vec3(2.0f, -4.0f, 2.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
         plane->add_component<ModelComponent>("primitive::plane", white_material);
 
         auto obj3 = scene->add_child("obj3", glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
-        obj3->add_component<ModelComponent>("./ressources/testObjects/cube.obj", blueTransparentMaterial);
+        obj3->add_component<ModelComponent>("primitive::cube", blueTransparentMaterial);
         obj3->add_component<Collider>(GenerationMode::COPY);
 
         // Spheres
@@ -346,7 +354,7 @@ int main() {
         auto newMaterial = std::make_shared<Material>();
         newMaterial->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
         auto newCube = scene->add_child("New Cube", glm::vec3(x, y, z));
-        newCube->add_component<ModelComponent>("./ressources/testObjects/cube.obj", newMaterial);
+        newCube->add_component<ModelComponent>("primitive::cube", newMaterial);
         tree->sync_scene_tree(scene.get());
         Logger::debug("Created cube at x: ", x, " y: ", y, " z: ", z);
     },
