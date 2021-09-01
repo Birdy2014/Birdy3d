@@ -3,6 +3,7 @@
 #include "core/Logger.hpp"
 #include "render/Mesh.hpp"
 #include "render/Model.hpp"
+#include <numbers>
 
 namespace Birdy3d {
 
@@ -83,9 +84,73 @@ namespace Birdy3d {
     }
 
     std::shared_ptr<Model> PrimitiveGenerator::generate_uv_sphere(unsigned int resolution) {
-        // TODO
-        BIRDY3D_TODO
-        return nullptr;
+        int longitude_count = resolution;
+        int latitude_count = resolution;
+
+        if (longitude_count < 2 || latitude_count < 2) {
+            Logger::warn("Invalid uv_sphere resolution: longitude_count: ", longitude_count, " latitude_count: ", latitude_count);
+            return nullptr;
+        }
+
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
+
+        // Vertices
+        float longitude_step = (std::numbers::pi * 2) / longitude_count;
+        float latitude_step = std::numbers::pi / latitude_count;
+
+        for (int lat = 0; lat <= latitude_count; lat++) {
+            for (int lon = 0; lon <= longitude_count; lon++) {
+                Vertex v;
+                v.position = glm::vec3(
+                    cos(lon * longitude_step) * sin(lat * latitude_step),
+                    cos(lat * latitude_step - std::numbers::pi),
+                    sin(lon * longitude_step) * sin(lat * latitude_step));
+
+                v.normal = v.position;
+
+                v.texCoords = glm::vec2(
+                    (float)lon / longitude_count,
+                    (float)lat / latitude_count);
+
+                v.tangent = glm::vec3();
+
+                vertices.push_back(v);
+            }
+        }
+
+        // Indices
+        // Top Cap
+        int v = longitude_count + 1;
+        for (int lon = 0; lon < longitude_count; lon++, v++) {
+            indices.push_back(lon);
+            indices.push_back(v);
+            indices.push_back(v + 1);
+        }
+
+        // Middle
+        v = longitude_count + 1;
+        for (int lat = 1; lat < latitude_count - 1; lat++, v++) {
+            for (int lon = 0; lon < longitude_count; lon++, v++) {
+                indices.push_back(v);
+                indices.push_back(v + longitude_count + 1);
+                indices.push_back(v + 1);
+
+                indices.push_back(v + 1);
+                indices.push_back(v + longitude_count + 1);
+                indices.push_back(v + longitude_count + 2);
+            }
+        }
+
+        // Bottom Cap
+        for (int lon = 0; lon < longitude_count; lon++, v++) {
+            indices.push_back(v);
+            indices.push_back(v + longitude_count + 1);
+            indices.push_back(v + 1);
+        }
+
+        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(vertices, indices);
+        return std::make_shared<Model>(std::move(mesh));
     }
 
     std::shared_ptr<Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution) {
