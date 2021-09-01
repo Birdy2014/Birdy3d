@@ -143,6 +143,12 @@ int main() {
             input_position_x->value(Application::selected_object->transform.position.x);
             input_position_y->value(Application::selected_object->transform.position.y);
             input_position_z->value(Application::selected_object->transform.position.z);
+            input_scale_x->value(Application::selected_object->transform.scale.x);
+            input_scale_y->value(Application::selected_object->transform.scale.y);
+            input_scale_z->value(Application::selected_object->transform.scale.z);
+            input_orientation_x->value(Application::selected_object->transform.orientation.x);
+            input_orientation_y->value(Application::selected_object->transform.orientation.y);
+            input_orientation_z->value(Application::selected_object->transform.orientation.z);
         }
     };
     tree->context_menu = scene_context_menu;
