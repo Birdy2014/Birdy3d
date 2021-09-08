@@ -15,12 +15,9 @@ add_custom_command(
 )
 
 add_custom_target(
-    copy_shaders
+    Birdy3d_copy_shaders
     COMMAND mkdir -p ${CMAKE_BINARY_DIR}/out
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders ${CMAKE_BINARY_DIR}/out/shaders
 )
 
-add_dependencies(Birdy3d_engine copy_shaders)
-
-set_target_properties(Birdy3d_engine PROPERTIES DEBUG_POSTFIX "")
-set_target_properties(Birdy3d_engine PROPERTIES RELEASE_POSTFIX "")
+add_dependencies(Birdy3d_engine Birdy3d_copy_shaders)

@@ -15,9 +15,14 @@ add_custom_command(
     COMMAND mkdir -p ${CMAKE_BINARY_DIR}/out
     COMMAND mkdir -p ${CMAKE_BINARY_DIR}/out/bin
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/Birdy3d_sandbox ${CMAKE_BINARY_DIR}/out/bin
-    COMMAND mkdir -p ${CMAKE_BINARY_DIR}/out/ressources
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/ressources ${CMAKE_BINARY_DIR}/out/ressources
 )
 
-set_target_properties(Birdy3d_sandbox PROPERTIES DEBUG_POSTFIX "")
-set_target_properties(Birdy3d_sandbox PROPERTIES RELEASE_POSTFIX "")
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/ressources)
+    add_custom_target(
+        Birdy3d_copy_sandbox_ressources
+        COMMAND mkdir -p ${CMAKE_BINARY_DIR}/out/ressources
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/ressources ${CMAKE_BINARY_DIR}/out/ressources
+    )
+
+    add_dependencies(Birdy3d_sandbox Birdy3d_copy_sandbox_ressources)
+endif()

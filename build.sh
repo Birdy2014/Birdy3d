@@ -27,13 +27,13 @@ fi
 
 case $1 in
     run)
-        build Debug && ./build/out/bin/Birdy3d_sandbox
+        build DEBUG && ./build/out/bin/Birdy3d_sandbox
         ;;
     build)
-        build Debug
+        build DEBUG
         ;;
     release)
-        build Release
+        build RELEASE
         ;;
     clean)
         rm -rf build
