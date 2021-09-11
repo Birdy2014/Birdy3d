@@ -27,6 +27,7 @@ namespace Birdy3d {
         static std::shared_ptr<Texture> getColorTexture(const Color&);
         static std::string getRessourcePath(std::string name, RessourceType type);
         static std::string readFile(const std::string& path, bool convertEOL = true);
+        static void init();
 
     private:
         static std::unordered_map<std::string, std::shared_ptr<Shader>> m_shaders;

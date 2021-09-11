@@ -11,10 +11,10 @@
 #include <fstream>
 #include <string>
 
-#ifdef BIRDY3D_PLATFORM_LINUX
+#if defined(BIRDY3D_PLATFORM_LINUX)
     #include <limits.h>
     #include <unistd.h>
-#elif BIRDY3D_PLATFORM_WINDOWS
+#elif defined(BIRDY3D_PLATFORM_WINDOWS)
     #include <windows.h>
 #endif
 
@@ -24,6 +24,11 @@ namespace Birdy3d {
     std::unordered_map<std::string, std::shared_ptr<TextRenderer>> RessourceManager::m_text_renderers;
     std::unordered_map<std::string, std::shared_ptr<Model>> RessourceManager::m_models;
     std::unordered_map<std::string, std::shared_ptr<Texture>> RessourceManager::m_textures;
+
+    void RessourceManager::init() {
+        std::string base_path = getExecutableDir() + "../ressources/";
+        std::filesystem::current_path(base_path);
+    }
 
     std::shared_ptr<Shader> RessourceManager::getShader(const std::string& name) {
         std::shared_ptr<Shader> shader = m_shaders[name];
@@ -116,13 +121,12 @@ namespace Birdy3d {
             name = name.substr(0, dotPos);
         }
 
-        std::string base_path = getExecutableDir() + "../ressources/";
-        std::string default_dir = getExecutableDir() + "../";
+        std::string default_dir = "";
         std::string subdir;
         switch (type) {
         case RessourceType::SHADER:
+            default_dir = "../shaders/";
             subdir = "shaders/";
-            default_dir += "shaders/";
             if (extension.size() == 0)
                 extension = ".glsl";
             break;
@@ -142,10 +146,10 @@ namespace Birdy3d {
             return nullptr;
         }
 
-        if (std::filesystem::exists(base_path + subdir + name + extension))
-            return base_path + subdir + name + extension;
-        if (std::filesystem::exists(base_path + name + extension))
-            return base_path + name + extension;
+        if (std::filesystem::exists(subdir + name + extension))
+            return subdir + name + extension;
+        if (std::filesystem::exists(name + extension))
+            return name + extension;
         if (std::filesystem::exists(default_dir + name + extension))
             return default_dir + name + extension;
         if (std::filesystem::exists("/" + name + extension))

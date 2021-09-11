@@ -15,7 +15,7 @@ namespace Birdy3d {
 
     void PhysicsWorld::update() {
         auto colliders = m_scene->get_components<Collider>(false, true);
-        for (auto it = colliders.rbegin(); it != colliders.rend(); it++) {
+        for (auto it = colliders.begin(); it != colliders.end(); it++) {
             auto c1 = *it;
             for (auto c2 : colliders) {
                 if (c1 == c2)
@@ -46,7 +46,6 @@ namespace Birdy3d {
                     }
                 }
             }
-            colliders.pop_back();
         }
     }
 

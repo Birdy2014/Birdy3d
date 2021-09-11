@@ -9,7 +9,7 @@ target_include_directories(Birdy3d_engine PUBLIC
 
 include(FetchContent)
 
-find_package(Freetype REQUIRED)
+find_package(Freetype)
 if (FREETYPE_FOUND)
     target_include_directories(Birdy3d_engine PRIVATE ${FREETYPE_INCLUDE_DIRS})
 else()

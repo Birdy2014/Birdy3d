@@ -69,7 +69,7 @@ namespace Birdy3d {
         this->object->transform.orientation.y += xoffset;
         this->object->transform.orientation.x += yoffset;
 
-        float maxPitch = M_PI_2 - 0.001;
+        float maxPitch = std::numbers::pi / 2 - 0.001;
         if (this->object->transform.orientation.x > maxPitch)
             this->object->transform.orientation.x = maxPitch;
         if (this->object->transform.orientation.x < -maxPitch)

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "core/Logger.hpp"
-#include <glm/glm.hpp>
+#include "core/Base.hpp"
 
 namespace Birdy3d {
 
@@ -30,11 +29,15 @@ namespace Birdy3d {
         Unit& operator+=(const Unit& other);
         Unit operator+(const float other);
         Unit& operator+=(const float other);
+        Unit operator+(const int other);
+        Unit& operator+=(const int other);
         Unit operator-();
         Unit operator-(const Unit& other);
         Unit& operator-=(const Unit& other);
         Unit operator-(const float other);
         Unit& operator-=(const float other);
+        Unit operator-(const int other);
+        Unit& operator-=(const int other);
     };
 
     Unit operator"" _px(long double value);

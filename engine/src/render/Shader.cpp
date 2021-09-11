@@ -103,8 +103,7 @@ namespace Birdy3d {
 
     void Shader::compile(std::unordered_map<GLenum, std::string>& shaderSources) {
         ID = glCreateProgram();
-        GLuint shaders[shaderSources.size()];
-        size_t shaderNr = 0;
+        std::vector<GLuint> shaders;
         for (std::pair<GLenum, std::string> s : shaderSources) {
             GLuint shader = glCreateShader(s.first);
             const char* sourceString = s.second.c_str();
@@ -112,21 +111,21 @@ namespace Birdy3d {
             glCompileShader(shader);
             if (checkCompileErrors(shader, s.first)) {
                 glDeleteShader(shader);
-                for (size_t i = 0; i < shaderNr; i++) {
-                    glDetachShader(ID, shaders[i]);
-                    glDeleteShader(shaders[i]);
+                for (auto s : shaders) {
+                    glDetachShader(ID, s);
+                    glDeleteShader(s);
                     glDeleteProgram(ID);
                     return;
                 }
             }
             glAttachShader(ID, shader);
-            shaders[shaderNr++] = shader;
+            shaders.push_back(shader);
         }
         glLinkProgram(ID);
         checkCompileErrors(ID, 0);
-        while (shaderNr-- > 0) {
-            glDetachShader(ID, shaders[shaderNr]);
-            glDeleteShader(shaders[shaderNr]);
+        for (auto s : shaders) {
+            glDetachShader(ID, s);
+            glDeleteShader(s);
         }
     }
 

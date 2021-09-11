@@ -57,6 +57,7 @@ namespace Birdy3d {
         glfwSetCharCallback(m_window, character_callback);
 
         // Init variables
+        RessourceManager::init();
         event_bus = new EventBus();
 
         return true;

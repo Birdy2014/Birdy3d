@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/Logger.hpp"
 // clang-format off
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -16,6 +15,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <numbers>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -35,6 +35,12 @@
 #else
     #error "Unknown platform"
 #endif
+
+#ifndef __PRETTY_FUNCTION__
+    #define __PRETTY_FUNCTION__ __func__
+#endif
+
+#include "core/Logger.hpp"
 
 namespace glm {
 

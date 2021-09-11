@@ -14,10 +14,13 @@ build() {
         cd build
         [[ -f Birdy3d_sandbox ]] && rm Birdy3d_sandbox
     fi
-    ninja || exit 1
+    ninja Birdy3d_sandbox || exit 1
 
     # Return to starting directory
     cd ..
+
+    # Copy compile_commands.json
+    [[ -f build/compile_commands.json ]] && cp build/compile_commands.json compile_commands.json
 }
 
 if [[ ! -v 1 ]]; then

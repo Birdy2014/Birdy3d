@@ -1,12 +1,14 @@
 #include "Birdy3d.hpp"
-#include <cstdlib>
-#include <execinfo.h>
 #include <filesystem>
 #include <fstream>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#ifdef BIRDY3D_PLATFORM_LINUX
+    #include <cstdlib>
+    #include <execinfo.h>
+    #include <signal.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <unistd.h>
+#endif
 
 using namespace Birdy3d;
 
@@ -73,6 +75,7 @@ private:
 CEREAL_REGISTER_TYPE(MoveUpDown);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, MoveUpDown);
 
+#ifdef BIRDY3D_PLATFORM_LINUX
 void handler(int sig) {
     void* array[10];
     size_t size;
@@ -85,9 +88,12 @@ void handler(int sig) {
     backtrace_symbols_fd(array, size, STDERR_FILENO);
     exit(1);
 }
+#endif
 
 int main() {
+#ifdef BIRDY3D_PLATFORM_LINUX
     signal(SIGSEGV, handler);
+#endif
 
     if (!Application::init("Birdy3d", 1280, 720)) {
         return -1;
@@ -105,7 +111,14 @@ int main() {
     std::shared_ptr<Birdy3d::NumberInput> input_orientation_z;
 
     // UI
-    Application::theme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "#ffffff11", "#0000a050", "TTF/DejaVuSans.ttf", 18);
+#ifdef BIRDY3D_PLATFORM_LINUX
+    std::string font = "TTF/DejaVuSans.ttf";
+#elif defined(BIRDY3D_PLATFORM_WINDOWS)
+    std::string font = "C:/Windows/Fonts/arial.ttf";
+#else
+    #error "Unknown Platform in main.cpp"
+#endif
+    Application::theme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "#ffffff11", "#0000a050", font, 18);
 
     auto canvas = std::make_shared<Canvas>();
     Application::canvas = canvas;
