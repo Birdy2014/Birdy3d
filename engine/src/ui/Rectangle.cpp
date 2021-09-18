@@ -79,7 +79,8 @@ namespace Birdy3d {
         glm::vec2 size = m_size.toPixels(m_parentSize);
         m_move_self = glm::mat4(1);
         m_move_self = glm::translate(m_move_self, glm::vec3(pos + glm::vec2(size.x / 2, size.y / 2), 0.0f));
-        m_move_self = glm::rotate(m_move_self, m_rotation, glm::vec3(0, 0, 1));
+        if (m_rotation != 0)
+            m_move_self = glm::rotate(m_move_self, m_rotation, glm::vec3(0, 0, 1));
         m_move_self = glm::scale(m_move_self, glm::vec3(size, 1.0f));
         float ua = m_texCoordA.x;
         float va = m_texCoordA.y;

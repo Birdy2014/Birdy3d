@@ -37,16 +37,22 @@ namespace Birdy3d {
         bool hidden(bool hidden) { return m_hidden = hidden; }
         UIVector position() { return m_position; }
         void position(UIVector position) {
+            if (m_position == position)
+                return;
             m_dirty = true;
             m_position = position;
         }
         float rotation() { return m_rotation; }
         void rotation(float rotation) {
+            if (m_rotation == rotation)
+                return;
             m_dirty = true;
             m_rotation = rotation;
         }
         UIVector size() { return m_size; }
         void size(UIVector size) {
+            if (m_size == size)
+                return;
             m_dirty = true;
             m_size = size;
         }
