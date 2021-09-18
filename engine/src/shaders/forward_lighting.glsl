@@ -55,7 +55,7 @@ void main() {
     if (var_diffuse.a < 0.1)
         discard;
 
-    vec3 lighting = calcLights(var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular);
+    vec3 lighting = calcLights(var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular, 1.0f);
 
     FragColor = vec4(lighting, var_diffuse.a);
 }

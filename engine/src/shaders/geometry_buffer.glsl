@@ -15,11 +15,12 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-    vec4 worldPos = model * vec4(aPos, 1.0);
-    FragPos = worldPos.xyz;
+    vec4 viewPos = view * model * vec4(aPos, 1.0f);
+
+    FragPos = viewPos.xyz;
     TexCoords = aTexCoords;
 
-    mat3 normalMatrix = transpose(inverse(mat3(model)));
+    mat3 normalMatrix = transpose(inverse(mat3(view * model)));
     vec3 T = normalize(normalMatrix * aTangent);
     Normal = normalize(normalMatrix * aNormal);
     T = normalize(T - dot(T, Normal) * Normal);
@@ -27,7 +28,7 @@ void main() {
 
     TBN = mat3(T, B, Normal);
 
-    gl_Position = projection * view * worldPos;
+    gl_Position = projection * viewPos;
 }
 
 #type fragment

@@ -35,6 +35,10 @@ namespace Birdy3d {
         bool m_deferred_enabled;
         unsigned int m_outline_vao = 0;
         unsigned int m_outline_vbo = 0;
+        unsigned int m_ssao_fbo, m_ssao_buffer;
+        unsigned int m_ssao_blur_fbo, m_ssao_blur_buffer;
+        unsigned int m_ssao_noise;
+        std::shared_ptr<Shader> m_ssao_shader, m_ssao_blur_shader;
 
         void createGBuffer();
         void deleteGBuffer();

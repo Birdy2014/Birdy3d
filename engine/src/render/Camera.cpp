@@ -1,5 +1,6 @@
 #include "render/Camera.hpp"
 
+#include "core/Application.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
 #include "physics/Collider.hpp"
@@ -14,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <map>
+#include <random>
 
 namespace Birdy3d {
 
@@ -35,29 +37,54 @@ namespace Birdy3d {
         m_forward_shader = RessourceManager::getShader("forward_lighting");
         m_normal_shader = RessourceManager::getShader("normal_display");
         m_simple_color_shader = RessourceManager::getShader("simple_color");
+        m_ssao_shader = RessourceManager::getShader("ssao");
+        m_ssao_blur_shader = RessourceManager::getShader("ssao_blur");
         m_deferred_light_shader->use();
         m_deferred_light_shader->setInt("gPosition", 0);
         m_deferred_light_shader->setInt("gNormal", 1);
         m_deferred_light_shader->setInt("gAlbedoSpec", 2);
+        m_deferred_light_shader->setInt("ssao", 3);
+        m_ssao_shader->use();
+        m_ssao_shader->setInt("gPosition", 0);
+        m_ssao_shader->setInt("gNormal", 1);
+        m_ssao_shader->setInt("texNoise", 2);
+        m_ssao_blur_shader->use();
+        m_ssao_blur_shader->setInt("ssaoInput", 0);
         // Set the default shadowmaps to the first texture in the right format so that the shader doesn't crash
         for (int i = 0; i < Shader::MAX_DIRECTIONAL_LIGHTS; i++) {
             m_deferred_light_shader->use();
-            m_deferred_light_shader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 3);
+            m_deferred_light_shader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 4);
             m_forward_shader->use();
             m_forward_shader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 4);
         }
         for (int i = 0; i < Shader::MAX_POINTLIGHTS; i++) {
             m_deferred_light_shader->use();
-            m_deferred_light_shader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            m_deferred_light_shader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
             m_forward_shader->use();
             m_forward_shader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         }
         for (int i = 0; i < Shader::MAX_SPOTLIGHTS; i++) {
             m_deferred_light_shader->use();
-            m_deferred_light_shader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            m_deferred_light_shader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
             m_forward_shader->use();
             m_forward_shader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
         }
+
+        // SSAO noise texture
+        std::uniform_real_distribution<GLfloat> random_floats(0.0, 1.0);
+        std::default_random_engine generator;
+        std::array<glm::vec3, 16> ssao_noise;
+        for (unsigned int i = 0; i < ssao_noise.size(); i++) {
+            glm::vec3 noise(random_floats(generator) * 2.0 - 1.0, random_floats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
+            ssao_noise[i] = glm::normalize(noise);
+        }
+        glGenTextures(1, &m_ssao_noise);
+        glBindTexture(GL_TEXTURE_2D, m_ssao_noise);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssao_noise[0]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
 
     void Camera::cleanup() {
@@ -132,9 +159,32 @@ namespace Birdy3d {
         glBindRenderbuffer(GL_RENDERBUFFER, m_rbo_depth);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo_depth);
+
         // finally check if framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             Logger::error("Framebuffer not complete!");
+
+        // SSAO
+        glGenFramebuffers(1, &m_ssao_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_fbo);
+
+        glGenTextures(1, &m_ssao_buffer);
+        glBindTexture(GL_TEXTURE_2D, m_ssao_buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ssao_buffer, 0);
+
+        glGenFramebuffers(1, &m_ssao_blur_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_blur_fbo);
+
+        glGenTextures(1, &m_ssao_blur_buffer);
+        glBindTexture(GL_TEXTURE_2D, m_ssao_blur_buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ssao_blur_buffer, 0);
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
@@ -143,6 +193,10 @@ namespace Birdy3d {
         glDeleteTextures(3, textures);
         glDeleteRenderbuffers(1, &m_rbo_depth);
         glDeleteFramebuffers(1, &m_gbuffer);
+
+        // SSAO
+        glDeleteTextures(1, &m_ssao_buffer);
+        glDeleteFramebuffers(1, &m_ssao_fbo);
     }
 
     void Camera::renderQuad() {
@@ -178,6 +232,27 @@ namespace Birdy3d {
         glm::vec3 up = object->absUp();
         glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
 
+        auto lerp = [](float a, float b, float f) {
+            return a + f * (b - a);
+        };
+
+        // Create SSAO sample kernel and noise
+        std::uniform_real_distribution<float> random_floats(0.0, 1.0);
+        std::default_random_engine generator;
+        std::array<glm::vec3, 64> ssao_kernel;
+        for (unsigned int i = 0; i < 64; ++i) {
+            glm::vec3 sample(
+                random_floats(generator) * 2.0 - 1.0,
+                random_floats(generator) * 2.0 - 1.0,
+                random_floats(generator));
+            sample = glm::normalize(sample);
+            sample *= random_floats(generator);
+            float scale = float(i) / 64.0;
+            scale = lerp(0.1f, 1.0f, scale * scale);
+            sample *= scale;
+            ssao_kernel[i] = sample;
+        }
+
         // 1. geometry pass: render all geometric/color data to g-buffer
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
@@ -190,7 +265,32 @@ namespace Birdy3d {
             m->render(*m_deferred_geometry_shader, false);
         }
 
-        // 2. lighting pass
+        // 2. SSAO
+        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_fbo);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_position);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, m_ssao_noise);
+        m_ssao_shader->use();
+        for (unsigned int i = 0; i < 64; i++)
+            m_ssao_shader->setVec3("samples[" + std::to_string(i) + "]", ssao_kernel[i]);
+        m_ssao_shader->setMat4("projection", m_projection);
+        glm::vec2 viewport = Application::get_viewport_size();
+        m_ssao_shader->setVec2("noise_scale", viewport / 4.0f);
+        renderQuad();
+
+        // 3. blur SSAO
+        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_blur_fbo);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_ssao_buffer);
+        m_ssao_blur_shader->use();
+        renderQuad();
+
+        // 4. lighting pass
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
@@ -199,6 +299,8 @@ namespace Birdy3d {
         glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, m_gbuffer_albedo_spec);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, m_ssao_blur_buffer);
         auto dirLights = object->scene->get_components<DirectionalLight>(false, true);
         auto pointLights = object->scene->get_components<PointLight>(false, true);
         auto spotlights = object->scene->get_components<Spotlight>(false, true);
@@ -207,13 +309,14 @@ namespace Birdy3d {
         m_deferred_light_shader->setInt("nr_pointlights", pointLights.size());
         m_deferred_light_shader->setInt("nr_spotlights", spotlights.size());
         for (size_t i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(*m_deferred_light_shader, i, 3 + i);
+            dirLights[i]->use(*m_deferred_light_shader, i, 4 + i);
         for (size_t i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(*m_deferred_light_shader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            pointLights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (size_t i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(*m_deferred_light_shader, i, 3 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            spotlights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         m_deferred_light_shader->setVec3("viewPos", absPos);
+        m_deferred_light_shader->setMat4("inverse_view", glm::inverse(view));
         renderQuad();
     }
 
