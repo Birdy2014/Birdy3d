@@ -5,6 +5,7 @@
 
 namespace Birdy3d {
 
+    class ModelComponent;
     class Shader;
 
     class Camera : public Component {
@@ -39,6 +40,8 @@ namespace Birdy3d {
         unsigned int m_ssao_blur_fbo, m_ssao_blur_buffer;
         unsigned int m_ssao_noise;
         std::shared_ptr<Shader> m_ssao_shader, m_ssao_blur_shader;
+
+        std::vector<std::shared_ptr<ModelComponent>> m_models;
 
         void createGBuffer();
         void deleteGBuffer();

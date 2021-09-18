@@ -111,6 +111,9 @@ namespace Birdy3d {
         object->scene->m_current_camera = this;
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
+        m_models.clear();
+        object->scene->get_components<ModelComponent>(m_models, false, true);
+
         if (m_deferred_enabled) {
             renderDeferred();
             renderForward(false);
@@ -258,7 +261,7 @@ namespace Birdy3d {
         glDisable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (auto m : object->scene->get_components<ModelComponent>(false, true)) {
+        for (auto m : m_models) {
             m_deferred_geometry_shader->use();
             m_deferred_geometry_shader->setMat4("projection", m_projection);
             m_deferred_geometry_shader->setMat4("view", view);
@@ -356,15 +359,14 @@ namespace Birdy3d {
         m_forward_shader->setMat4("view", view);
         m_forward_shader->setVec3("viewPos", absPos);
         if (renderOpaque) {
-            for (auto m : object->scene->get_components<ModelComponent>(false, true)) {
+            for (auto m : m_models) {
                 m->render(*m_forward_shader, false);
             }
         }
 
         // Transparency
-        auto models = object->scene->get_components<ModelComponent>(false, true);
         std::map<float, ModelComponent*> sorted;
-        for (auto m : models) {
+        for (auto m : m_models) {
             float distance = glm::length(object->transform.position - m->object->transform.position);
             sorted[distance] = m.get();
         }
@@ -387,7 +389,7 @@ namespace Birdy3d {
         m_normal_shader->use();
         m_normal_shader->setMat4("projection", m_projection);
         m_normal_shader->setMat4("view", view);
-        for (auto m : object->scene->get_components<ModelComponent>(false, true)) {
+        for (auto m : m_models) {
             m->render(*m_normal_shader, false);
             m->render(*m_normal_shader, true);
         }

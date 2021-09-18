@@ -49,10 +49,9 @@ namespace Birdy3d {
         void setScene(Scene* scene);
 
         template <class T>
-        std::vector<std::shared_ptr<T>> get_components(bool hidden = true, bool recursive = false) const {
-            std::vector<std::shared_ptr<T>> components;
+        void get_components(std::vector<std::shared_ptr<T>>& components, bool hidden = true, bool recursive = false) const {
             if (this->hidden && !hidden)
-                return components;
+                return;
             for (const auto& c : m_components) {
                 if (!c->loaded())
                     continue;
@@ -63,10 +62,16 @@ namespace Birdy3d {
             }
             if (recursive) {
                 for (const auto& o : m_children) {
-                    auto childComponents = o->get_components<T>(hidden, recursive);
-                    components.insert(components.end(), childComponents.begin(), childComponents.end());
+                    o->get_components<T>(components, hidden, recursive);
                 }
             }
+            return;
+        }
+
+        template <class T>
+        std::vector<std::shared_ptr<T>> get_components(bool hidden = true, bool recursive = false) const {
+            std::vector<std::shared_ptr<T>> components;
+            get_components<T>(components, hidden, recursive);
             return components;
         }
 
