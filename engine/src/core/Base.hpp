@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 #include <algorithm>
+#include <array>
 #include <cereal/archives/json.hpp>
 #include <cereal/types/memory.hpp>
 #include <cereal/types/polymorphic.hpp>

@@ -25,6 +25,7 @@ namespace Birdy3d {
         void operator=(float value);
         operator float();
         float toPixels(float parentSize = 0);
+        bool operator==(const Unit& other);
         Unit operator+(const Unit& other);
         Unit& operator+=(const Unit& other);
         Unit operator+(const float other);
@@ -56,6 +57,7 @@ namespace Birdy3d {
         UIVector(Unit x);
         UIVector(Unit x, Unit y);
         UIVector& operator=(const UIVector& other);
+        bool operator==(const UIVector& other);
         UIVector operator+(const UIVector& other);
         UIVector operator+(const float other);
         UIVector operator-();
