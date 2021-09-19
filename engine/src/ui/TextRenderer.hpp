@@ -15,10 +15,10 @@ typedef struct FT_FaceRec_* FT_Face;
 namespace Birdy3d {
 
     class Rectangle;
-    class TextRenderer;
 
     struct Character {
-        unsigned int textureID;
+        glm::vec2 texcoord1;
+        glm::vec2 texcoord2;
         glm::ivec2 size;
         glm::ivec2 bearing;
         long advance;
@@ -53,6 +53,9 @@ namespace Birdy3d {
         FT_Face* m_face;
         std::unique_ptr<Rectangle> m_rect;
         unsigned int m_fontSize;
+        GLuint m_texture_atlas;
+        glm::vec2 m_texture_atlas_size;
+        int m_texture_atlas_current_x;
 
         bool addChar(char32_t c);
     };

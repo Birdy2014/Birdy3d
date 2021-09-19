@@ -27,32 +27,43 @@ namespace Birdy3d {
             Logger::error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, fontSize);
         m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::WHITE, Rectangle::Type::TEXT);
-    }
 
-    bool TextRenderer::addChar(char32_t c) {
+        // Setup texture atlas
+        m_texture_atlas_size = glm::vec2(fontSize * 100, fontSize);
+        m_texture_atlas_current_x = 0;
+        glGenTextures(1, &m_texture_atlas);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_texture_atlas);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        if (FT_Load_Char(*m_face, c, FT_LOAD_RENDER)) {
-            Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
-            return false;
-        }
-        // generate texture
-        unsigned int texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, (*m_face)->glyph->bitmap.width, (*m_face)->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, (*m_face)->glyph->bitmap.buffer);
-        // set texture options
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_texture_atlas_size.x, m_texture_atlas_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+    }
+
+    bool TextRenderer::addChar(char32_t c) {
+        if (FT_Load_Char(*m_face, c, FT_LOAD_RENDER)) {
+            Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
+            return false;
+        }
+        if (m_texture_atlas_current_x + (*m_face)->glyph->bitmap.width > m_texture_atlas_size.x) {
+            Logger::warn("Failed to load glyph '", (unsigned)c, "': font texture atlas full");
+            return false;
+        }
+        // generate texture
+        glBindTexture(GL_TEXTURE_2D, m_texture_atlas);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, m_texture_atlas_current_x, 0, (*m_face)->glyph->bitmap.width, (*m_face)->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, (*m_face)->glyph->bitmap.buffer);
         // store character
         Character character = {
-            texture,
+            glm::vec2((float)m_texture_atlas_current_x / m_texture_atlas_size.x, 0),
+            glm::vec2((float)(m_texture_atlas_current_x + (*m_face)->glyph->bitmap.width) / (float)m_texture_atlas_size.x, (*m_face)->glyph->bitmap.rows / m_texture_atlas_size.y),
             glm::ivec2((*m_face)->glyph->bitmap.width, (*m_face)->glyph->bitmap.rows),
             glm::ivec2((*m_face)->glyph->bitmap_left, (*m_face)->glyph->bitmap_top),
             (*m_face)->glyph->advance.x
         };
         m_chars.insert(std::pair<char, Character>(c, character));
+        m_texture_atlas_current_x += (*m_face)->glyph->bitmap.width;
         return true;
     }
 
@@ -68,6 +79,7 @@ namespace Birdy3d {
         }
 
         m_rect->type = Rectangle::TEXT;
+        m_rect->texture(m_texture_atlas);
 
         y += fontSize / 5; // Offet between baseline and bottom
 
@@ -97,11 +109,10 @@ namespace Birdy3d {
             float h = ch.size.y * scale;
 
             m_rect->position(UIVector(xpos, ypos - bottomToOrigin));
-            m_rect->texture(ch.textureID);
             m_rect->color(color);
 
             m_rect->size(UIVector(w, h));
-            m_rect->texCoords(glm::vec2(0, 0), glm::vec2(1, 1));
+            m_rect->texCoords(ch.texcoord1, ch.texcoord2);
 
             m_rect->draw(move);
 
