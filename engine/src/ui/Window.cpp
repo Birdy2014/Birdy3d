@@ -13,11 +13,11 @@ namespace Birdy3d {
         add_filled_rectangle(0_px, UIVector(100_p, Application::theme->line_height), Application::theme->color_title_bar, Placement::TOP_LEFT);
         add_rectangle(0_px, 100_p, Application::theme->color_border);
         m_close_button = add_filled_rectangle(-4_px, 14_px, "#FF0000", Placement::TOP_RIGHT);
-        m_title = add_text(UIVector(10_px, -4_px), Application::theme->font_size, "", Application::theme->color_fg, Placement::TOP_LEFT);
+        m_title = add_text(UIVector(10_px, 0_px), Application::theme->font_size, "", Application::theme->color_fg, Placement::TOP_LEFT);
     }
 
     void Window::toForeground() {
-        parent->toForeground(this);
+        parent->to_foreground(this);
     }
 
     void Window::on_update() {
@@ -28,7 +28,7 @@ namespace Birdy3d {
         if (!is_hovering())
             return;
 
-        glm::vec2 localCursorPos = Input::cursorPos() - m_actual_pos;
+        glm::vec2 local_cursor_pos = Input::cursor_pos() - m_actual_pos;
 
         m_hover_drag = false;
         m_hover_resize_x_left = false;
@@ -36,67 +36,67 @@ namespace Birdy3d {
         m_hover_resize_y_top = false;
         m_hover_resize_y_bottom = false;
 
-        if (!m_dragging && !m_resize_x_left && !m_resize_x_right && !m_resize_y_top && !m_resize_y_bottom && m_close_button->contains(localCursorPos)) {
-            Input::setCursor(Input::CURSOR_HAND);
+        if (!m_dragging && !m_resize_x_left && !m_resize_x_right && !m_resize_y_top && !m_resize_y_bottom && m_close_button->contains(local_cursor_pos)) {
+            Input::set_cursor(Input::CURSOR_HAND);
             return;
         }
 
-        if (localCursorPos.x < BORDER_SIZE)
+        if (local_cursor_pos.x < BORDER_SIZE)
             m_hover_resize_x_left = true;
-        if (localCursorPos.x > m_actual_size.x - BORDER_SIZE)
+        if (local_cursor_pos.x > m_actual_size.x - BORDER_SIZE)
             m_hover_resize_x_right = true;
-        if (localCursorPos.y > m_actual_size.y - BORDER_SIZE)
+        if (local_cursor_pos.y > m_actual_size.y - BORDER_SIZE)
             m_hover_resize_y_top = true;
-        if (localCursorPos.y < BORDER_SIZE)
+        if (local_cursor_pos.y < BORDER_SIZE)
             m_hover_resize_y_bottom = true;
 
-        if (localCursorPos.y >= m_actual_size.y - Application::theme->line_height && localCursorPos.y <= m_actual_size.y - BORDER_SIZE && localCursorPos.x >= BORDER_SIZE && localCursorPos.x <= m_actual_size.x - BORDER_SIZE)
+        if (local_cursor_pos.y >= m_actual_size.y - Application::theme->line_height && local_cursor_pos.y <= m_actual_size.y - BORDER_SIZE && local_cursor_pos.x >= BORDER_SIZE && local_cursor_pos.x <= m_actual_size.x - BORDER_SIZE)
             m_hover_drag = true;
 
         // Set cursor
         if (m_dragging)
-            Input::setCursor(Input::CURSOR_MOVE);
+            Input::set_cursor(Input::CURSOR_MOVE);
         else if (m_resize_x_left && m_resize_y_top)
-            Input::setCursor(Input::CURSOR_TOP_LEFT_RESIZE);
+            Input::set_cursor(Input::CURSOR_TOP_LEFT_RESIZE);
         else if (m_resize_x_right && m_resize_y_top)
-            Input::setCursor(Input::CURSOR_TOP_RIGHT_RESIZE);
+            Input::set_cursor(Input::CURSOR_TOP_RIGHT_RESIZE);
         else if (m_resize_x_left && m_resize_y_bottom)
-            Input::setCursor(Input::CURSOR_BOTTOM_LEFT_RESIZE);
+            Input::set_cursor(Input::CURSOR_BOTTOM_LEFT_RESIZE);
         else if (m_resize_x_right && m_resize_y_bottom)
-            Input::setCursor(Input::CURSOR_BOTTOM_RIGHT_RESIZE);
+            Input::set_cursor(Input::CURSOR_BOTTOM_RIGHT_RESIZE);
         else if (m_resize_x_left || m_resize_x_right)
-            Input::setCursor(Input::CURSOR_HRESIZE);
+            Input::set_cursor(Input::CURSOR_HRESIZE);
         else if (m_resize_y_top || m_resize_y_bottom)
-            Input::setCursor(Input::CURSOR_VRESIZE);
+            Input::set_cursor(Input::CURSOR_VRESIZE);
         else if (m_hover_drag)
-            Input::setCursor(Input::CURSOR_MOVE);
+            Input::set_cursor(Input::CURSOR_MOVE);
         else if (m_hover_resize_x_left && m_hover_resize_y_top)
-            Input::setCursor(Input::CURSOR_TOP_LEFT_RESIZE);
+            Input::set_cursor(Input::CURSOR_TOP_LEFT_RESIZE);
         else if (m_hover_resize_x_right && m_hover_resize_y_top)
-            Input::setCursor(Input::CURSOR_TOP_RIGHT_RESIZE);
+            Input::set_cursor(Input::CURSOR_TOP_RIGHT_RESIZE);
         else if (m_hover_resize_x_left && m_hover_resize_y_bottom)
-            Input::setCursor(Input::CURSOR_BOTTOM_LEFT_RESIZE);
+            Input::set_cursor(Input::CURSOR_BOTTOM_LEFT_RESIZE);
         else if (m_hover_resize_x_right && m_hover_resize_y_bottom)
-            Input::setCursor(Input::CURSOR_BOTTOM_RIGHT_RESIZE);
+            Input::set_cursor(Input::CURSOR_BOTTOM_RIGHT_RESIZE);
         else if (m_hover_resize_x_left || m_hover_resize_x_right)
-            Input::setCursor(Input::CURSOR_HRESIZE);
+            Input::set_cursor(Input::CURSOR_HRESIZE);
         else if (m_hover_resize_y_top || m_hover_resize_y_bottom)
-            Input::setCursor(Input::CURSOR_VRESIZE);
+            Input::set_cursor(Input::CURSOR_VRESIZE);
         else
-            Input::setCursor(Input::CURSOR_DEFAULT);
+            Input::set_cursor(Input::CURSOR_DEFAULT);
 
         // Move and resize
         if (m_dragging) {
-            pos = pos + Input::cursorPosOffset();
+            pos = pos + Input::cursor_pos_offset();
             m_dragged = true;
         }
         glm::vec2 minsize = m_layout->minimal_size(m_children) + glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
         if (m_resize_x_left) {
             float diffold = size.x - minsize.x;
-            size.x -= Input::cursorPosOffset().x;
+            size.x -= Input::cursor_pos_offset().x;
             float diffnew = size.x - minsize.x;
             if (diffold >= 0 && diffnew >= 0) {
-                pos.x += Input::cursorPosOffset().x;
+                pos.x += Input::cursor_pos_offset().x;
             } else if (diffold >= 0 && diffnew < 0) {
                 pos.x += diffold;
             } else if (diffold < 0 && diffnew >= 0) {
@@ -104,23 +104,25 @@ namespace Birdy3d {
             }
         }
         if (m_resize_x_right) {
-            size.x += Input::cursorPosOffset().x;
+            size.x += Input::cursor_pos_offset().x;
         }
         if (m_resize_y_top) {
-            size.y += Input::cursorPosOffset().y;
+            size.y += Input::cursor_pos_offset().y;
         }
         if (m_resize_y_bottom) {
             float diffold = size.y - minsize.y;
-            size.y -= Input::cursorPosOffset().y;
+            size.y -= Input::cursor_pos_offset().y;
             float diffnew = size.y - minsize.y;
             if (diffold >= 0 && diffnew >= 0) {
-                pos.y += Input::cursorPosOffset().y;
+                pos.y += Input::cursor_pos_offset().y;
             } else if (diffold >= 0 && diffnew < 0) {
                 pos.y += diffold;
             } else if (diffold < 0 && diffnew >= 0) {
                 pos.y -= diffnew;
             }
         }
+        m_actual_pos = pos;
+        m_actual_size = glm::vec2(std::max(size.x.to_pixels(), minimal_size().x), std::max(size.y.to_pixels(), minimal_size().y));
     }
 
     void Window::on_click(InputClickEvent* event) {
@@ -130,7 +132,7 @@ namespace Birdy3d {
         if (event->action == GLFW_PRESS)
             toForeground();
 
-        glm::vec2 localCursorPos = Input::cursorPos() - m_actual_pos;
+        glm::vec2 local_cursor_pos = Input::cursor_pos() - m_actual_pos;
 
         if (event->action == GLFW_RELEASE) {
             ungrab_cursor();
@@ -143,7 +145,7 @@ namespace Birdy3d {
             return;
         }
 
-        if (m_close_button->contains(localCursorPos)) {
+        if (m_close_button->contains(local_cursor_pos)) {
             if (callback_close)
                 callback_close();
             return;
@@ -169,7 +171,7 @@ namespace Birdy3d {
     }
 
     void Window::on_mouse_leave() {
-        Input::setCursor(Input::CURSOR_DEFAULT);
+        Input::set_cursor(Input::CURSOR_DEFAULT);
     }
 
 }

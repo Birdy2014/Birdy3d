@@ -12,7 +12,7 @@ namespace Birdy3d {
         bool contains(glm::vec2 point) override;
 
     private:
-        void createBuffers();
+        void create_buffers();
         void update_values();
         float area(glm::vec2 a, glm::vec2 b, glm::vec2 c);
     };

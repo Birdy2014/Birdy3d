@@ -51,7 +51,7 @@ namespace Birdy3d {
         Widget* m_focused_widget = nullptr;
         bool m_cursor_grabbed = false;
 
-        void on_scroll(InputScrollEvent* event) {
+        void on_scroll(InputScrollEvent* event) override {
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_scroll(event);
@@ -60,7 +60,7 @@ namespace Birdy3d {
             }
         }
 
-        void on_click(InputClickEvent* event) {
+        void on_click(InputClickEvent* event) override {
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_click(event);
@@ -71,12 +71,12 @@ namespace Birdy3d {
             }
         }
 
-        void on_key(InputKeyEvent* event) {
+        void on_key(InputKeyEvent* event) override {
             if (m_focused_widget && m_focused_widget != this)
                 m_focused_widget->on_key(event);
         }
 
-        void on_char(InputCharEvent* event) {
+        void on_char(InputCharEvent* event) override {
             if (m_focused_widget && m_focused_widget != this)
                 m_focused_widget->on_char(event);
         }

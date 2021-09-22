@@ -10,8 +10,8 @@ namespace Birdy3d {
         glm::vec3 diffuse;
 
         DirectionalLight(glm::vec3 ambient = glm::vec3(0), glm::vec3 diffuse = glm::vec3(0), bool shadow_enabled = true);
-        void setupShadowMap() override;
-        void genShadowMap() override;
+        void setup_shadow_map() override;
+        void gen_shadow_map() override;
         void use(const Shader& lightShader, int id, int textureid) override;
 
         template <class Archive>
@@ -19,12 +19,12 @@ namespace Birdy3d {
             ar(cereal::make_nvp("shadow_enabled", shadow_enabled));
             ar(cereal::make_nvp("ambient", ambient));
             ar(cereal::make_nvp("diffuse", diffuse));
-            ar(cereal::make_nvp("cam_offset", camOffset));
+            ar(cereal::make_nvp("cam_offset", m_cam_offset));
         }
 
     private:
-        float camOffset;
-        glm::mat4 lightSpaceMatrix;
+        float m_cam_offset;
+        glm::mat4 m_light_space_matrix;
     };
 
 }

@@ -13,8 +13,8 @@ namespace Birdy3d {
 
         Light(bool shadow_enabled);
         virtual void use(const Shader& lightShader, int id, int textureid) = 0;
-        virtual void setupShadowMap() = 0;
-        virtual void genShadowMap() = 0;
+        virtual void setup_shadow_map() = 0;
+        virtual void gen_shadow_map() = 0;
         void start() override;
         void update() override;
         void cleanup() override;

@@ -35,7 +35,7 @@ namespace Birdy3d {
         if (!focused_window || !focused_window->dragged())
             return;
 
-        if (m_background_rect->contains(Input::cursorPos() - m_actual_pos) && !Input::keyPressed(GLFW_KEY_LEFT_SHIFT)) {
+        if (m_background_rect->contains(Input::cursor_pos() - m_actual_pos) && !Input::key_pressed(GLFW_KEY_LEFT_SHIFT)) {
             std::vector<Window*>::iterator it;
             switch (mode) {
             case Mode::STACKING:
@@ -45,7 +45,7 @@ namespace Birdy3d {
             case Mode::HORIZONTAL:
                 if (std::find(m_windows.begin(), m_windows.end(), focused_window) == m_windows.end()) {
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursorPos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
+                        if (Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -59,7 +59,7 @@ namespace Birdy3d {
                 } else {
                     m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), focused_window), m_windows.end());
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursorPos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
+                        if (Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -68,7 +68,7 @@ namespace Birdy3d {
             case Mode::VERTICAL:
                 if (std::find(m_windows.begin(), m_windows.end(), focused_window) == m_windows.end()) {
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursorPos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
+                        if (Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -82,7 +82,7 @@ namespace Birdy3d {
                 } else {
                     m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), focused_window), m_windows.end());
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursorPos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
+                        if (Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -109,7 +109,7 @@ namespace Birdy3d {
 
         if (mode != Mode::STACKING) {
             for (Window* window : m_windows)
-                size_sum += glm::max(window->minimalSize(), window->size.toPixels());
+                size_sum += glm::max(window->minimal_size(), window->size.to_pixels());
         }
 
         Widget* focused_widget = canvas->focused_widget();
@@ -150,7 +150,7 @@ namespace Birdy3d {
                 window->pos = new_pos;
                 window->size.y = m_actual_size.y;
                 window->size.x += size_diff;
-                new_pos.x += std::max(window->minimalSize().x, window->size.x.toPixels());
+                new_pos.x += std::max(window->minimal_size().x, window->size.x.to_pixels());
                 break;
             }
             case Mode::VERTICAL:
@@ -179,7 +179,7 @@ namespace Birdy3d {
                 window->pos = new_pos;
                 window->size.x = m_actual_size.x;
                 window->size.y += size_diff;
-                new_pos.y += std::max(window->minimalSize().y, window->size.y.toPixels());
+                new_pos.y += std::max(window->minimal_size().y, window->size.y.to_pixels());
                 break;
             }
         }

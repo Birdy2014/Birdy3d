@@ -12,8 +12,8 @@ namespace Birdy3d {
         float quadratic;
 
         PointLight(glm::vec3 ambient = glm::vec3(0), glm::vec3 diffuse = glm::vec3(0), float linear = 0, float quadratic = 0, bool shadow_enabled = true);
-        void setupShadowMap() override;
-        void genShadowMap() override;
+        void setup_shadow_map() override;
+        void gen_shadow_map() override;
         void use(const Shader& lightShader, int id, int textureid) override;
 
         template <class Archive>

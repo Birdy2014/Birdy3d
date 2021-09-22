@@ -20,13 +20,13 @@ namespace Birdy3d {
             FONT
         };
 
-        static std::shared_ptr<Shader> getShader(const std::string& name);
-        static std::shared_ptr<TextRenderer> getTextRenderer(const std::string& name);
-        static std::shared_ptr<Model> getModel(const std::string& name);
-        static std::shared_ptr<Texture> getTexture(const std::string& name);
-        static std::shared_ptr<Texture> getColorTexture(const Color&);
-        static std::string getRessourcePath(std::string name, RessourceType type);
-        static std::string readFile(const std::string& path, bool convertEOL = true);
+        static std::shared_ptr<Shader> get_shader(const std::string& name);
+        static std::shared_ptr<TextRenderer> get_text_renderer(const std::string& name);
+        static std::shared_ptr<Model> get_model(const std::string& name);
+        static std::shared_ptr<Texture> get_texture(const std::string& name);
+        static std::shared_ptr<Texture> get_color_texture(const Color&);
+        static std::string get_ressource_path(std::string name, RessourceType type);
+        static std::string read_file(const std::string& path, bool convertEOL = true);
         static void init();
 
     private:
@@ -35,7 +35,7 @@ namespace Birdy3d {
         static std::unordered_map<std::string, std::shared_ptr<Model>> m_models;
         static std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
 
-        static std::string getExecutableDir();
+        static std::string get_executable_dir();
     };
 
 }

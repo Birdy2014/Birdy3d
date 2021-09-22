@@ -12,7 +12,7 @@ namespace Birdy3d {
 
     class FPPlayerController : public Component {
     public:
-        std::weak_ptr<GameObject> flashlight;
+        std::weak_ptr<Entity> flashlight;
 
         FPPlayerController();
         void start() override;
@@ -25,11 +25,11 @@ namespace Birdy3d {
         }
 
     private:
-        std::weak_ptr<Camera> cam;
-        std::weak_ptr<Widget> menu;
+        std::weak_ptr<Camera> m_cam;
+        std::weak_ptr<Widget> m_menu;
 
-        void onResize(WindowResizeEvent* event);
-        void onKey(InputKeyEvent* event);
+        void on_resize(WindowResizeEvent* event);
+        void on_key(InputKeyEvent* event);
     };
 
 }

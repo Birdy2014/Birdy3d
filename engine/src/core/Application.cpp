@@ -17,7 +17,7 @@ namespace Birdy3d {
     float Application::delta_time = 0;
     std::weak_ptr<Scene> Application::scene;
     std::weak_ptr<Canvas> Application::canvas;
-    GameObject* Application::selected_object = nullptr;
+    Entity* Application::selected_entity = nullptr;
     GLFWwindow* Application::m_window = nullptr;
     std::unordered_map<Option, bool> Application::m_options_bool;
 
@@ -87,11 +87,11 @@ namespace Birdy3d {
 
             event_bus->flush();
 
-            // draw the objects
+            // draw the entitys
             if (scene_ptr) {
                 if (auto camera = scene_ptr->main_camera.lock()) {
                     camera->render();
-                    camera->renderOutline(selected_object);
+                    camera->render_outline(selected_entity);
                     if (option_bool(Option::SHOW_COLLIDERS))
                         camera->render_collider_wireframe();
                 }
@@ -115,10 +115,8 @@ namespace Birdy3d {
     }
 
     void Application::window_focus_callback(GLFWwindow* window, int focused) {
-        if (focused && Input::isCursorHidden())
+        if (focused && Input::is_cursor_hidden())
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        else if (focused)
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         else
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }

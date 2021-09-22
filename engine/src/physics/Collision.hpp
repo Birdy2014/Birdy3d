@@ -8,8 +8,8 @@ namespace Birdy3d {
 
     class CollisionPoints {
     public:
-        glm::vec3 furthestA; // Furthest point of A into B
-        glm::vec3 furthestB; // Furthest point of B into A
+        glm::vec3 furthest_a; // Furthest point of A into B
+        glm::vec3 furthest_b; // Furthest point of B into A
         glm::vec3 normal; // B – A normalized
         float depth; // Length of B – A
         bool hasCollision = false;
@@ -17,16 +17,16 @@ namespace Birdy3d {
 
     class Collision {
     public:
-        Collider* colliderA;
-        Collider* colliderB;
+        Collider* collider_a;
+        Collider* collider_b;
         CollisionPoints points;
 
         Collision(Collider* colliderA, Collider* colliderB)
-            : colliderA(colliderA)
-            , colliderB(colliderB) { }
+            : collider_a(colliderA)
+            , collider_b(colliderB) { }
 
         bool contains(Collider* collider) {
-            return collider == colliderA || collider == colliderB;
+            return collider == collider_a || collider == collider_b;
         }
     };
 

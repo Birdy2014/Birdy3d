@@ -11,7 +11,7 @@
 
 namespace Birdy3d {
 
-    std::wstring_convert<TextRenderer::deletable_facet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> TextRenderer::converter;
+    std::wstring_convert<TextRenderer::DeletableFacet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> TextRenderer::converter;
 
     TextRenderer::~TextRenderer() {
         FT_Done_Face(*m_face);
@@ -45,7 +45,7 @@ namespace Birdy3d {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_texture_atlas_size.x, m_texture_atlas_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
     }
 
-    bool TextRenderer::addChar(char32_t c) {
+    bool TextRenderer::add_char(char32_t c) {
         if (FT_Load_Char(*m_face, c, FT_LOAD_RENDER)) {
             Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
             return false;
@@ -70,12 +70,12 @@ namespace Birdy3d {
         return true;
     }
 
-    void TextRenderer::renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color hlcolor) {
+    void TextRenderer::render_text(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color hlcolor) {
         std::u32string converted = converter.from_bytes(text);
-        renderText(converted, x, y, fontSize, color, move, cursorpos, highlight, hlstart, hlend, hlcolor);
+        render_text(converted, x, y, fontSize, color, move, cursorpos, highlight, hlstart, hlend, hlcolor);
     }
 
-    void TextRenderer::renderText(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color hlcolor) {
+    void TextRenderer::render_text(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color hlcolor) {
         if (hlstart > hlend) {
             std::swap(hlstart, hlend);
             hlend--;
@@ -102,20 +102,20 @@ namespace Birdy3d {
                 hlend_x = x;
 
             if (m_chars.count(c) == 0) {
-                addChar(c);
+                add_char(c);
             }
             Character ch = m_chars[c];
-            float bottomToOrigin = (ch.size.y - ch.bearing.y) / 1.5; // For some reason, the division by 1.5 is necessary.
+            float bottom_to_origin = (ch.size.y - ch.bearing.y) / 1.5; // For some reason, the division by 1.5 is necessary.
             float xpos = x + ch.bearing.x * scale;
             float ypos = y;
             float w = ch.size.x * scale;
             float h = ch.size.y * scale;
 
-            m_rect->position(UIVector(xpos, ypos - bottomToOrigin));
+            m_rect->position(UIVector(xpos, ypos - bottom_to_origin));
             m_rect->color(color);
 
             m_rect->size(UIVector(w, h));
-            m_rect->texCoords(ch.texcoord1, ch.texcoord2);
+            m_rect->texcoords(ch.texcoord1, ch.texcoord2);
 
             m_rect->draw(move);
 
@@ -143,26 +143,26 @@ namespace Birdy3d {
         }
     }
 
-    UIVector TextRenderer::textSize(std::string text, float fontSize) {
+    UIVector TextRenderer::text_size(std::string text, float fontSize) {
         std::u32string converted = converter.from_bytes(text);
-        return textSize(converted, fontSize);
+        return text_size(converted, fontSize);
     }
 
-    UIVector TextRenderer::textSize(std::u32string text, float fontSize) {
+    UIVector TextRenderer::text_size(std::u32string text, float fontSize) {
         float scale = (fontSize / m_fontSize);
         UIVector size(0_px, fontSize);
         for (std::u32string::const_iterator c = text.begin(); c != text.end(); c++) {
             if (m_chars.count(*c) == 0)
-                addChar(*c);
+                add_char(*c);
             Character ch = m_chars[*c];
             size.x += (ch.advance >> 6) * scale;
         }
         return size;
     }
 
-    float TextRenderer::charWidth(char32_t c, float fontSize) {
+    float TextRenderer::char_width(char32_t c, float fontSize) {
         if (m_chars.count(c) == 0)
-            addChar(c);
+            add_char(c);
         Character ch = m_chars[c];
         return (ch.advance >> 6) * (fontSize / m_fontSize);
     }
@@ -171,7 +171,7 @@ namespace Birdy3d {
         float width = 0;
         float current_char_width;
         for (size_t i = 0; i < text.size(); i++) {
-            width += current_char_width = charWidth(text[i], font_size);
+            width += current_char_width = char_width(text[i], font_size);
             if ((between_chars && x_pos < width - current_char_width / 2) || (!between_chars && x_pos < width))
                 return i;
         }
@@ -182,7 +182,7 @@ namespace Birdy3d {
         : Shape(pos, 0_px, color, placement)
         , fontSize(fontSize)
         , renderer(renderer)
-        , m_shader(RessourceManager::getShader("ui")) {
+        , m_shader(RessourceManager::get_shader("ui")) {
         m_text = TextRenderer::converter.from_bytes(text);
         create_buffers();
         m_dirty = true;
@@ -195,7 +195,7 @@ namespace Birdy3d {
         if (m_dirty) {
             delete_buffers();
             create_buffers();
-            glm::vec2 pos = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
+            glm::vec2 pos = Utils::get_relative_position(m_position, m_size, m_parentSize, m_placement);
             m_move_self = glm::mat4(1);
             m_move_self = glm::translate(m_move_self, glm::vec3(pos, 0.0f));
             if (m_rotation != 0)
@@ -209,12 +209,12 @@ namespace Birdy3d {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, renderer->m_texture_atlas);
         m_shader->use();
-        m_shader->setInt("type", Shape::Type::TEXT);
-        m_shader->setMat4("projection", projection());
-        m_shader->setMat4("move", move);
-        m_shader->setMat4("move_self", m_move_self);
-        m_shader->setVec4("color", m_color);
-        m_shader->setInt("rectTexture", 0);
+        m_shader->set_int("type", Shape::Type::TEXT);
+        m_shader->set_mat4("projection", projection());
+        m_shader->set_mat4("move", move);
+        m_shader->set_mat4("move_self", m_move_self);
+        m_shader->set_vec4("color", m_color);
+        m_shader->set_int("rectTexture", 0);
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, m_text.size() * 6, GL_UNSIGNED_INT, 0);
     }
@@ -246,11 +246,11 @@ namespace Birdy3d {
         float y = fontSize / 5; // Offet between baseline and bottom
         for (char32_t c : m_text) {
             if (renderer->m_chars.count(c) == 0)
-                renderer->addChar(c);
+                renderer->add_char(c);
             Character ch = renderer->m_chars[c];
-            float bottomToOrigin = (ch.size.y - ch.bearing.y) / 1.5; // For some reason, the division by 1.5 is necessary.
+            float bottom_to_origin = (ch.size.y - ch.bearing.y) / 1.5; // For some reason, the division by 1.5 is necessary.
             float xpos = x + ch.bearing.x * scale;
-            float ypos = y - bottomToOrigin;
+            float ypos = y - bottom_to_origin;
             float w = ch.size.x * scale;
             float h = ch.size.y * scale;
 

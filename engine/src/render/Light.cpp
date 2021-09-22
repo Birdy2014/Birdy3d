@@ -7,7 +7,7 @@ namespace Birdy3d {
         , shadow_enabled(shadow_enabled) { }
 
     void Light::start() {
-        setupShadowMap();
+        setup_shadow_map();
     }
 
     void Light::update() {

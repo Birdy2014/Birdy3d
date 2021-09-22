@@ -9,7 +9,7 @@
 #include "render/PointLight.hpp"
 #include "render/Shader.hpp"
 #include "render/Spotlight.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 #include "scene/Scene.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -31,43 +31,43 @@ namespace Birdy3d {
 
     void Camera::start() {
         m_projection = glm::perspective(glm::radians(80.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
-        createGBuffer();
-        m_deferred_geometry_shader = RessourceManager::getShader("geometry_buffer");
-        m_deferred_light_shader = RessourceManager::getShader("deferred_lighting");
-        m_forward_shader = RessourceManager::getShader("forward_lighting");
-        m_normal_shader = RessourceManager::getShader("normal_display");
-        m_simple_color_shader = RessourceManager::getShader("simple_color");
-        m_ssao_shader = RessourceManager::getShader("ssao");
-        m_ssao_blur_shader = RessourceManager::getShader("ssao_blur");
+        create_gbuffer();
+        m_deferred_geometry_shader = RessourceManager::get_shader("geometry_buffer");
+        m_deferred_light_shader = RessourceManager::get_shader("deferred_lighting");
+        m_forward_shader = RessourceManager::get_shader("forward_lighting");
+        m_normal_shader = RessourceManager::get_shader("normal_display");
+        m_simple_color_shader = RessourceManager::get_shader("simple_color");
+        m_ssao_shader = RessourceManager::get_shader("ssao");
+        m_ssao_blur_shader = RessourceManager::get_shader("ssao_blur");
         m_deferred_light_shader->use();
-        m_deferred_light_shader->setInt("gPosition", 0);
-        m_deferred_light_shader->setInt("gNormal", 1);
-        m_deferred_light_shader->setInt("gAlbedoSpec", 2);
-        m_deferred_light_shader->setInt("ssao", 3);
+        m_deferred_light_shader->set_int("gPosition", 0);
+        m_deferred_light_shader->set_int("gNormal", 1);
+        m_deferred_light_shader->set_int("gAlbedoSpec", 2);
+        m_deferred_light_shader->set_int("ssao", 3);
         m_ssao_shader->use();
-        m_ssao_shader->setInt("gPosition", 0);
-        m_ssao_shader->setInt("gNormal", 1);
-        m_ssao_shader->setInt("texNoise", 2);
+        m_ssao_shader->set_int("gPosition", 0);
+        m_ssao_shader->set_int("gNormal", 1);
+        m_ssao_shader->set_int("texNoise", 2);
         m_ssao_blur_shader->use();
-        m_ssao_blur_shader->setInt("ssaoInput", 0);
+        m_ssao_blur_shader->set_int("ssaoInput", 0);
         // Set the default shadowmaps to the first texture in the right format so that the shader doesn't crash
         for (int i = 0; i < Shader::MAX_DIRECTIONAL_LIGHTS; i++) {
             m_deferred_light_shader->use();
-            m_deferred_light_shader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 4);
+            m_deferred_light_shader->set_int("dirLights[" + std::to_string(i) + "].shadowMap", 4);
             m_forward_shader->use();
-            m_forward_shader->setInt("dirLights[" + std::to_string(i) + "].shadowMap", 4);
+            m_forward_shader->set_int("dirLights[" + std::to_string(i) + "].shadowMap", 4);
         }
         for (int i = 0; i < Shader::MAX_POINTLIGHTS; i++) {
             m_deferred_light_shader->use();
-            m_deferred_light_shader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            m_deferred_light_shader->set_int("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
             m_forward_shader->use();
-            m_forward_shader->setInt("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+            m_forward_shader->set_int("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         }
         for (int i = 0; i < Shader::MAX_SPOTLIGHTS; i++) {
             m_deferred_light_shader->use();
-            m_deferred_light_shader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            m_deferred_light_shader->set_int("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
             m_forward_shader->use();
-            m_forward_shader->setInt("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+            m_forward_shader->set_int("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
         }
 
         // SSAO noise texture
@@ -88,7 +88,7 @@ namespace Birdy3d {
     }
 
     void Camera::cleanup() {
-        deleteGBuffer();
+        delete_gbuffer();
         if (m_outline_vao != 0) {
             glDeleteVertexArrays(1, &m_outline_vao);
             glDeleteBuffers(1, &m_outline_vbo);
@@ -102,30 +102,30 @@ namespace Birdy3d {
             m_width = width;
             m_height = height;
             m_projection = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
-            deleteGBuffer(); // TODO: resize GBuffer instead of recreating it
-            createGBuffer();
+            delete_gbuffer(); // TODO: resize GBuffer instead of recreating it
+            create_gbuffer();
         }
     }
 
     void Camera::render() {
-        object->scene->m_current_camera = this;
+        entity->scene->m_current_camera = this;
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
         m_models.clear();
-        object->scene->get_components<ModelComponent>(m_models, false, true);
+        entity->scene->get_components<ModelComponent>(m_models, false, true);
 
         if (m_deferred_enabled) {
-            renderDeferred();
-            renderForward(false);
+            render_deferred();
+            render_forward(false);
         } else {
-            renderForward(true);
+            render_forward(true);
         }
 
         if (display_normals)
-            renderNormals();
+            render_normals();
     }
 
-    void Camera::createGBuffer() {
+    void Camera::create_gbuffer() {
         glGenFramebuffers(1, &m_gbuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
 
@@ -191,7 +191,7 @@ namespace Birdy3d {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Camera::deleteGBuffer() {
+    void Camera::delete_gbuffer() {
         unsigned int textures[3] = { m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo_spec };
         glDeleteTextures(3, textures);
         glDeleteRenderbuffers(1, &m_rbo_depth);
@@ -202,9 +202,9 @@ namespace Birdy3d {
         glDeleteFramebuffers(1, &m_ssao_fbo);
     }
 
-    void Camera::renderQuad() {
+    void Camera::render_quad() {
         if (m_quad_vao == 0) {
-            float quadVertices[] = {
+            float quad_vertices[] = {
                 // clang-format off
                 // positions        // texture Coords
                 -1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
@@ -218,7 +218,7 @@ namespace Birdy3d {
             glGenBuffers(1, &m_quad_vbo);
             glBindVertexArray(m_quad_vao);
             glBindBuffer(GL_ARRAY_BUFFER, m_quad_vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(1);
@@ -229,11 +229,11 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
-    void Camera::renderDeferred() {
-        glm::vec3 absPos = object->transform.worldPosition();
-        glm::vec3 absForward = object->absForward();
-        glm::vec3 up = object->absUp();
-        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+    void Camera::render_deferred() {
+        glm::vec3 world_pos = entity->transform.world_position();
+        glm::vec3 aworld_forward = entity->world_forward();
+        glm::vec3 up = entity->world_up();
+        glm::mat4 view = glm::lookAt(world_pos, world_pos + aworld_forward, up);
 
         auto lerp = [](float a, float b, float f) {
             return a + f * (b - a);
@@ -263,8 +263,8 @@ namespace Birdy3d {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (auto m : m_models) {
             m_deferred_geometry_shader->use();
-            m_deferred_geometry_shader->setMat4("projection", m_projection);
-            m_deferred_geometry_shader->setMat4("view", view);
+            m_deferred_geometry_shader->set_mat4("projection", m_projection);
+            m_deferred_geometry_shader->set_mat4("view", view);
             m->render(*m_deferred_geometry_shader, false);
         }
 
@@ -279,11 +279,11 @@ namespace Birdy3d {
         glBindTexture(GL_TEXTURE_2D, m_ssao_noise);
         m_ssao_shader->use();
         for (unsigned int i = 0; i < 64; i++)
-            m_ssao_shader->setVec3("samples[" + std::to_string(i) + "]", ssao_kernel[i]);
-        m_ssao_shader->setMat4("projection", m_projection);
+            m_ssao_shader->set_vec3("samples[" + std::to_string(i) + "]", ssao_kernel[i]);
+        m_ssao_shader->set_mat4("projection", m_projection);
         glm::vec2 viewport = Application::get_viewport_size();
-        m_ssao_shader->setVec2("noise_scale", viewport / 4.0f);
-        renderQuad();
+        m_ssao_shader->set_vec2("noise_scale", viewport / 4.0f);
+        render_quad();
 
         // 3. blur SSAO
         glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_blur_fbo);
@@ -291,7 +291,7 @@ namespace Birdy3d {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_ssao_buffer);
         m_ssao_blur_shader->use();
-        renderQuad();
+        render_quad();
 
         // 4. lighting pass
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -304,45 +304,45 @@ namespace Birdy3d {
         glBindTexture(GL_TEXTURE_2D, m_gbuffer_albedo_spec);
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, m_ssao_blur_buffer);
-        auto dirLights = object->scene->get_components<DirectionalLight>(false, true);
-        auto pointLights = object->scene->get_components<PointLight>(false, true);
-        auto spotlights = object->scene->get_components<Spotlight>(false, true);
+        auto dirlights = entity->scene->get_components<DirectionalLight>(false, true);
+        auto pointlights = entity->scene->get_components<PointLight>(false, true);
+        auto spotlights = entity->scene->get_components<Spotlight>(false, true);
         m_deferred_light_shader->use();
-        m_deferred_light_shader->setInt("nr_directional_lights", dirLights.size());
-        m_deferred_light_shader->setInt("nr_pointlights", pointLights.size());
-        m_deferred_light_shader->setInt("nr_spotlights", spotlights.size());
-        for (size_t i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(*m_deferred_light_shader, i, 4 + i);
-        for (size_t i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+        m_deferred_light_shader->set_int("nr_directional_lights", dirlights.size());
+        m_deferred_light_shader->set_int("nr_pointlights", pointlights.size());
+        m_deferred_light_shader->set_int("nr_spotlights", spotlights.size());
+        for (size_t i = 0; i < dirlights.size(); i++)
+            dirlights[i]->use(*m_deferred_light_shader, i, 4 + i);
+        for (size_t i = 0; i < pointlights.size(); i++)
+            pointlights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (size_t i = 0; i < spotlights.size(); i++)
             spotlights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
-        m_deferred_light_shader->setVec3("viewPos", absPos);
-        m_deferred_light_shader->setMat4("inverse_view", glm::inverse(view));
-        renderQuad();
+        m_deferred_light_shader->set_vec3("viewPos", world_pos);
+        m_deferred_light_shader->set_mat4("inverse_view", glm::inverse(view));
+        render_quad();
     }
 
-    void Camera::renderForward(bool renderOpaque) {
-        glm::vec3 absPos = object->transform.worldPosition();
-        glm::vec3 absForward = object->absForward();
-        glm::vec3 up = object->absUp();
-        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+    void Camera::render_forward(bool renderOpaque) {
+        glm::vec3 world_pos = entity->transform.world_position();
+        glm::vec3 world_forward = entity->world_forward();
+        glm::vec3 up = entity->world_up();
+        glm::mat4 view = glm::lookAt(world_pos, world_pos + world_forward, up);
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        auto dirLights = object->scene->get_components<DirectionalLight>(false, true);
-        auto pointLights = object->scene->get_components<PointLight>(false, true);
-        auto spotlights = object->scene->get_components<Spotlight>(false, true);
+        auto dirlights = entity->scene->get_components<DirectionalLight>(false, true);
+        auto pointlights = entity->scene->get_components<PointLight>(false, true);
+        auto spotlights = entity->scene->get_components<Spotlight>(false, true);
         m_forward_shader->use();
-        m_forward_shader->setInt("nr_directional_lights", dirLights.size());
-        m_forward_shader->setInt("nr_pointlights", pointLights.size());
-        m_forward_shader->setInt("nr_spotlights", spotlights.size());
-        for (size_t i = 0; i < dirLights.size(); i++)
-            dirLights[i]->use(*m_forward_shader, i, 4 + i);
-        for (size_t i = 0; i < pointLights.size(); i++)
-            pointLights[i]->use(*m_forward_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
+        m_forward_shader->set_int("nr_directional_lights", dirlights.size());
+        m_forward_shader->set_int("nr_pointlights", pointlights.size());
+        m_forward_shader->set_int("nr_spotlights", spotlights.size());
+        for (size_t i = 0; i < dirlights.size(); i++)
+            dirlights[i]->use(*m_forward_shader, i, 4 + i);
+        for (size_t i = 0; i < pointlights.size(); i++)
+            pointlights[i]->use(*m_forward_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
         for (size_t i = 0; i < spotlights.size(); i++)
             spotlights[i]->use(*m_forward_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
@@ -355,9 +355,9 @@ namespace Birdy3d {
             glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width, m_height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         }
 
-        m_forward_shader->setMat4("projection", m_projection);
-        m_forward_shader->setMat4("view", view);
-        m_forward_shader->setVec3("viewPos", absPos);
+        m_forward_shader->set_mat4("projection", m_projection);
+        m_forward_shader->set_mat4("view", view);
+        m_forward_shader->set_vec3("viewPos", world_pos);
         if (renderOpaque) {
             for (auto m : m_models) {
                 m->render(*m_forward_shader, false);
@@ -367,7 +367,7 @@ namespace Birdy3d {
         // Transparency
         std::map<float, ModelComponent*> sorted;
         for (auto m : m_models) {
-            float distance = glm::length(object->transform.position - m->object->transform.position);
+            float distance = glm::length(entity->transform.position - m->entity->transform.position);
             sorted[distance] = m.get();
         }
 
@@ -376,27 +376,27 @@ namespace Birdy3d {
         }
     }
 
-    void Camera::renderNormals() {
-        glm::vec3 absPos = object->transform.worldPosition();
-        glm::vec3 absForward = object->absForward();
-        glm::vec3 up = object->absUp();
-        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+    void Camera::render_normals() {
+        glm::vec3 world_pos = entity->transform.world_position();
+        glm::vec3 world_forward = entity->world_forward();
+        glm::vec3 up = entity->world_up();
+        glm::mat4 view = glm::lookAt(world_pos, world_pos + world_forward, up);
 
         glEnable(GL_DEPTH_TEST);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         m_normal_shader->use();
-        m_normal_shader->setMat4("projection", m_projection);
-        m_normal_shader->setMat4("view", view);
+        m_normal_shader->set_mat4("projection", m_projection);
+        m_normal_shader->set_mat4("view", view);
         for (auto m : m_models) {
             m->render(*m_normal_shader, false);
             m->render(*m_normal_shader, true);
         }
     }
 
-    void Camera::renderOutline(const GameObject* selected_object) {
-        if (selected_object == nullptr)
+    void Camera::render_outline(const Entity* selected_entity) {
+        if (selected_entity == nullptr)
             return;
 
         if (m_outline_vao == 0) {
@@ -420,8 +420,8 @@ namespace Birdy3d {
 
         std::pair<glm::vec3, glm::vec3> bounding_box;
         glm::mat4 model;
-        for (auto model_component : selected_object->get_components<ModelComponent>(false, true)) {
-            model = model_component->object->transform.matrix();
+        for (auto model_component : selected_entity->get_components<ModelComponent>(false, true)) {
+            model = model_component->entity->transform.matrix();
             bounding_box = model_component->model()->bounding_box();
             glm::vec3 model_low = model * glm::vec4(bounding_box.first, 1.0f);
             glm::vec3 model_high = model * glm::vec4(bounding_box.second, 1.0f);
@@ -477,10 +477,10 @@ namespace Birdy3d {
         glBindBuffer(GL_ARRAY_BUFFER, m_outline_vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
 
-        glm::vec3 absPos = object->transform.worldPosition();
-        glm::vec3 absForward = object->absForward();
-        glm::vec3 up = object->absUp();
-        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+        glm::vec3 world_pos = entity->transform.world_position();
+        glm::vec3 world_forward = entity->world_forward();
+        glm::vec3 up = entity->world_up();
+        glm::mat4 view = glm::lookAt(world_pos, world_pos + world_forward, up);
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
@@ -489,29 +489,29 @@ namespace Birdy3d {
         glClear(GL_DEPTH_BUFFER_BIT);
 
         m_simple_color_shader->use();
-        m_simple_color_shader->setMat4("projection", m_projection);
-        m_simple_color_shader->setMat4("view", view);
-        m_simple_color_shader->setVec4("color", Color("#e0902180"));
-        m_simple_color_shader->setMat4("model", glm::mat4(1));
+        m_simple_color_shader->set_mat4("projection", m_projection);
+        m_simple_color_shader->set_mat4("view", view);
+        m_simple_color_shader->set_vec4("color", Color("#e0902180"));
+        m_simple_color_shader->set_mat4("model", glm::mat4(1));
         glBindVertexArray(m_outline_vao);
         glDrawArrays(GL_LINES, 0, 24);
     }
 
     void Camera::render_collider_wireframe() {
-        glm::vec3 absPos = object->transform.worldPosition();
-        glm::vec3 absForward = object->absForward();
-        glm::vec3 up = object->absUp();
-        glm::mat4 view = glm::lookAt(absPos, absPos + absForward, up);
+        glm::vec3 world_pos = entity->transform.world_position();
+        glm::vec3 world_forward = entity->world_forward();
+        glm::vec3 up = entity->world_up();
+        glm::mat4 view = glm::lookAt(world_pos, world_pos + world_forward, up);
 
         glEnable(GL_DEPTH_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT);
 
         m_simple_color_shader->use();
-        m_simple_color_shader->setMat4("projection", m_projection);
-        m_simple_color_shader->setMat4("view", view);
-        m_simple_color_shader->setVec4("color", Color("#00ff0080"));
-        for (auto c : object->scene->get_components<Collider>(false, true)) {
+        m_simple_color_shader->set_mat4("projection", m_projection);
+        m_simple_color_shader->set_mat4("view", view);
+        m_simple_color_shader->set_vec4("color", Color("#00ff0080"));
+        for (auto c : entity->scene->get_components<Collider>(false, true)) {
             c->render_wireframe(*m_simple_color_shader);
         }
     }

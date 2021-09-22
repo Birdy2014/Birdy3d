@@ -15,14 +15,14 @@ using namespace Birdy3d;
 class TestComponent : public Component {
 public:
     void start() override {
-        Application::event_bus->subscribe(this, &TestComponent::onCollision);
+        Application::event_bus->subscribe(this, &TestComponent::on_collision);
     }
 
     void cleanup() override {
-        Application::event_bus->unsubscribe(this, &TestComponent::onCollision);
+        Application::event_bus->unsubscribe(this, &TestComponent::on_collision);
     }
 
-    void onCollision(CollisionEvent* event) {
+    void on_collision(CollisionEvent* event) {
         switch (event->type) {
         case CollisionEvent::ENTER:
             Logger::debug("ENTER");
@@ -48,12 +48,12 @@ public:
 
     void update() override {
         if (m_up) {
-            object->transform.position.y += m_speed * Application::delta_time;
-            if (object->transform.position.y > m_limit_up)
+            entity->transform.position.y += m_speed * Application::delta_time;
+            if (entity->transform.position.y > m_limit_up)
                 m_up = false;
         } else {
-            object->transform.position.y -= m_speed * Application::delta_time;
-            if (object->transform.position.y < m_limit_down)
+            entity->transform.position.y -= m_speed * Application::delta_time;
+            if (entity->transform.position.y < m_limit_down)
                 m_up = true;
         }
     }
@@ -134,70 +134,70 @@ int main() {
     menu->set_layout<DirectionalLayout>(DirectionalLayout::Direction::RIGHT, 10);
     menu->name = "menu";
 
-    auto closeButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close");
-    closeButton->callback_click = [](InputClickEvent*) {
+    auto close_button = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close");
+    close_button->callback_click = [](InputClickEvent*) {
         glfwSetWindowShouldClose(Application::get_window(), true);
     };
 
-    auto testButton = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Fenster anzeigen", UIVector(200_px, 50_px));
+    auto test_button = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Fenster anzeigen", UIVector(200_px, 50_px));
 
     auto area = menu->add_child<Textarea>(0_px, 100_px, Placement::BOTTOM_LEFT);
     area->weight = 2;
     area->append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
 
-    auto treeWindow = canvas->add_child<Window>(0_px, UIVector(200_px, 300_px));
-    treeWindow->set_layout<MaxLayout>();
-    treeWindow->title("Scene");
+    auto tree_window = canvas->add_child<Window>(0_px, UIVector(200_px, 300_px));
+    tree_window->set_layout<MaxLayout>();
+    tree_window->title("Scene");
 
-    auto tree = treeWindow->add_child<TreeView>(0_px, 100_p, Placement::TOP_LEFT);
+    auto tree = tree_window->add_child<TreeView>(0_px, 100_p, Placement::TOP_LEFT);
     tree->callback_select = [&](TreeItem& item) {
-        if (item.data.type() == typeid(GameObject*)) {
-            Application::selected_object = std::any_cast<GameObject*>(item.data);
-            input_position_x->value(Application::selected_object->transform.position.x);
-            input_position_y->value(Application::selected_object->transform.position.y);
-            input_position_z->value(Application::selected_object->transform.position.z);
-            input_scale_x->value(Application::selected_object->transform.scale.x);
-            input_scale_y->value(Application::selected_object->transform.scale.y);
-            input_scale_z->value(Application::selected_object->transform.scale.z);
-            input_orientation_x->value(Application::selected_object->transform.orientation.x);
-            input_orientation_y->value(Application::selected_object->transform.orientation.y);
-            input_orientation_z->value(Application::selected_object->transform.orientation.z);
+        if (item.data.type() == typeid(Entity*)) {
+            Application::selected_entity = std::any_cast<Entity*>(item.data);
+            input_position_x->value(Application::selected_entity->transform.position.x);
+            input_position_y->value(Application::selected_entity->transform.position.y);
+            input_position_z->value(Application::selected_entity->transform.position.z);
+            input_scale_x->value(Application::selected_entity->transform.scale.x);
+            input_scale_y->value(Application::selected_entity->transform.scale.y);
+            input_scale_z->value(Application::selected_entity->transform.scale.z);
+            input_orientation_x->value(Application::selected_entity->transform.orientation.x);
+            input_orientation_y->value(Application::selected_entity->transform.orientation.y);
+            input_orientation_z->value(Application::selected_entity->transform.orientation.z);
         }
     };
     tree->context_menu = scene_context_menu;
 
     auto& scene_new_menu = scene_context_menu->root_item.add_child("New");
-    scene_new_menu.add_child("Empty GameObject", [&]() {
+    scene_new_menu.add_child("Empty Entity", [&]() {
         std::shared_ptr<Scene> scene_ptr;
-        if (Application::selected_object && (scene_ptr = Application::scene.lock())) {
-            Application::selected_object->add_child();
+        if (Application::selected_entity && (scene_ptr = Application::scene.lock())) {
+            Application::selected_entity->add_child();
             tree->sync_scene_tree(scene_ptr.get());
         }
     });
     scene_new_menu.add_child("Plane", [&]() {
         std::shared_ptr<Scene> scene_ptr;
-        if (Application::selected_object && (scene_ptr = Application::scene.lock())) {
-            auto new_object = Application::selected_object->add_child("Plane");
-            new_object->add_component<ModelComponent>("primitive::plane");
+        if (Application::selected_entity && (scene_ptr = Application::scene.lock())) {
+            auto new_entity = Application::selected_entity->add_child("Plane");
+            new_entity->add_component<ModelComponent>("primitive::plane");
             tree->sync_scene_tree(scene_ptr.get());
         }
     });
     scene_new_menu.add_child("Cube", [&]() {
         std::shared_ptr<Scene> scene_ptr;
-        if (Application::selected_object && (scene_ptr = Application::scene.lock())) {
-            auto new_object = Application::selected_object->add_child("Cube");
-            new_object->add_component<ModelComponent>("primitive::cube");
+        if (Application::selected_entity && (scene_ptr = Application::scene.lock())) {
+            auto new_entity = Application::selected_entity->add_child("Cube");
+            new_entity->add_component<ModelComponent>("primitive::cube");
             tree->sync_scene_tree(scene_ptr.get());
         }
     });
 
     scene_context_menu->root_item.add_child("Remove", [&]() {
-        if (!Application::selected_object || !Application::selected_object->parent)
+        if (!Application::selected_entity || !Application::selected_entity->parent)
             return;
         std::shared_ptr<Scene> scene_ptr;
-        if (Application::selected_object && (scene_ptr = Application::scene.lock())) {
-            Application::selected_object->remove();
-            Application::selected_object = nullptr;
+        if (Application::selected_entity && (scene_ptr = Application::scene.lock())) {
+            Application::selected_entity->remove();
+            Application::selected_entity = nullptr;
             tree->selected_item(nullptr);
             tree->sync_scene_tree(scene_ptr.get());
         }
@@ -217,18 +217,18 @@ int main() {
     input_position_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
 
     input_position_x->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.position.x = input_position_x->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.position.x = input_position_x->value();
     };
 
     input_position_y->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.position.y = input_position_y->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.position.y = input_position_y->value();
     };
 
     input_position_z->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.position.z = input_position_z->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.position.z = input_position_z->value();
     };
 
     input_scale_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
@@ -240,18 +240,18 @@ int main() {
     input_scale_z->min_value = 0;
 
     input_scale_x->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.scale.x = input_scale_x->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.scale.x = input_scale_x->value();
     };
 
     input_scale_y->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.scale.y = input_scale_y->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.scale.y = input_scale_y->value();
     };
 
     input_scale_z->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.scale.z = input_scale_z->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.scale.z = input_scale_z->value();
     };
 
     input_orientation_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
@@ -259,44 +259,44 @@ int main() {
     input_orientation_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
 
     input_orientation_x->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.orientation.x = input_orientation_x->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.orientation.x = input_orientation_x->value();
     };
 
     input_orientation_y->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.orientation.y = input_orientation_y->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.orientation.y = input_orientation_y->value();
     };
 
     input_orientation_z->callback_change = [&] {
-        if (Application::selected_object)
-            Application::selected_object->transform.orientation.z = input_orientation_z->value();
+        if (Application::selected_entity)
+            Application::selected_entity->transform.orientation.z = input_orientation_z->value();
     };
 
     Application::event_bus->subscribe<TransformChangedEvent>([&](TransformChangedEvent* event) {
-        if (event->object != Birdy3d::Application::selected_object)
+        if (event->entity != Birdy3d::Application::selected_entity)
             return;
-        input_position_x->value(event->object->transform.position.x);
-        input_position_y->value(event->object->transform.position.y);
-        input_position_z->value(event->object->transform.position.z);
-        input_scale_x->value(event->object->transform.scale.x);
-        input_scale_y->value(event->object->transform.scale.y);
-        input_scale_z->value(event->object->transform.scale.z);
-        input_orientation_x->value(event->object->transform.orientation.x);
-        input_orientation_y->value(event->object->transform.orientation.y);
-        input_orientation_z->value(event->object->transform.orientation.z);
+        input_position_x->value(event->entity->transform.position.x);
+        input_position_y->value(event->entity->transform.position.y);
+        input_position_z->value(event->entity->transform.position.z);
+        input_scale_x->value(event->entity->transform.scale.x);
+        input_scale_y->value(event->entity->transform.scale.y);
+        input_scale_z->value(event->entity->transform.scale.z);
+        input_orientation_x->value(event->entity->transform.orientation.x);
+        input_orientation_y->value(event->entity->transform.orientation.y);
+        input_orientation_z->value(event->entity->transform.orientation.z);
     });
 
-    auto testCheckBox = inspector_window->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
+    auto test_checkbox = inspector_window->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
 
-    testButton->callback_click = [&inspector_window](InputClickEvent*) {
+    test_button->callback_click = [&inspector_window](InputClickEvent*) {
         inspector_window->hidden = !inspector_window->hidden;
     };
 
-    auto test_window = canvas->add_child<Window>(UIVector(0_px, 50_px), 200_px);
-    test_window->title("Test");
+    //auto test_window = canvas->add_child<Window>(UIVector(0_px, 50_px), 200_px);
+    //test_window->title("Test");
 
-    // GameObjects
+    // Entities
     std::shared_ptr<Scene> scene;
     if (std::filesystem::exists("scene.json")) {
         std::fstream filestream;
@@ -321,13 +321,13 @@ int main() {
 
         auto white_material = std::make_shared<Material>();
         white_material->specular_value = 1.0f;
-        auto redTransparentMaterial = std::make_shared<Material>();
-        redTransparentMaterial->diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
-        auto blueTransparentMaterial = std::make_shared<Material>();
-        blueTransparentMaterial->diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
+        auto red_transparent_material = std::make_shared<Material>();
+        red_transparent_material->diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
+        auto blue_transparent_material = std::make_shared<Material>();
+        blue_transparent_material->diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
 
         auto obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-        obj->add_component<ModelComponent>("primitive::cube", redTransparentMaterial);
+        obj->add_component<ModelComponent>("primitive::cube", red_transparent_material);
         obj->add_component<Collider>(GenerationMode::COPY);
 
         auto obj2 = scene->add_child("obj2", glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
@@ -337,7 +337,7 @@ int main() {
         plane->add_component<ModelComponent>("primitive::plane", white_material);
 
         auto obj3 = scene->add_child("obj3", glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
-        obj3->add_component<ModelComponent>("primitive::cube", blueTransparentMaterial);
+        obj3->add_component<ModelComponent>("primitive::cube", blue_transparent_material);
         obj3->add_component<Collider>(GenerationMode::COPY);
 
         // Spheres
@@ -348,32 +348,32 @@ int main() {
         sphere1->add_component<MoveUpDown>(0.4, 1, 5);
 
         // Light
-        auto dirLight = scene->add_child("DirLight", glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
-        dirLight->add_component<DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
-        auto pLight = scene->add_child("Point Light", glm::vec3(2.0f, 1.5f, 4.0f));
-        pLight->add_component<PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
-        pLight->add_component<MoveUpDown>(0.1, 1, 3);
-        auto sLight = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
-        sLight->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
+        auto dir_light = scene->add_child("DirLight", glm::vec3(0.2f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
+        dir_light->add_component<DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
+        auto point_light = scene->add_child("Point Light", glm::vec3(2.0f, 1.5f, 4.0f));
+        point_light->add_component<PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
+        point_light->add_component<MoveUpDown>(0.1, 1, 3);
+        auto spot_light = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
+        spot_light->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
 
         Application::event_bus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
-            pLight->hidden = !pLight->hidden;
+            point_light->hidden = !point_light->hidden;
         },
             GLFW_KEY_L);
     }
 
     Application::event_bus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
         auto random = [](float min, float max) {
-            float zeroToOne = ((float)std::rand() / (float)RAND_MAX);
-            return zeroToOne * (std::abs(min) + std::abs(max)) + min;
+            float zero_to_one = ((float)std::rand() / (float)RAND_MAX);
+            return zero_to_one * (std::abs(min) + std::abs(max)) + min;
         };
         float x = random(-30, 30);
         float y = random(-30, 30);
         float z = random(-30, 30);
-        auto newMaterial = std::make_shared<Material>();
-        newMaterial->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
-        auto newCube = scene->add_child("New Cube", glm::vec3(x, y, z));
-        newCube->add_component<ModelComponent>("primitive::cube", newMaterial);
+        auto new_material = std::make_shared<Material>();
+        new_material->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
+        auto new_cube = scene->add_child("New Cube", glm::vec3(x, y, z));
+        new_cube->add_component<ModelComponent>("primitive::cube", new_material);
         tree->sync_scene_tree(scene.get());
         Logger::debug("Created cube at x: ", x, " y: ", y, " z: ", z);
     },

@@ -14,7 +14,7 @@ namespace Birdy3d {
         bool contains(glm::vec2 point) override;
 
     private:
-        void createBuffers();
+        void create_buffers();
         void update_values();
     };
 

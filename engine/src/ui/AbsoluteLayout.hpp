@@ -9,8 +9,8 @@ namespace Birdy3d {
     public:
         void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const override {
             for (const auto& child : children) {
-                glm::vec2 child_size = child->preferredSize(size);
-                glm::vec2 child_pos = pos + child->preferredPosition(size, child_size);
+                glm::vec2 child_size = child->preferred_size(size);
+                glm::vec2 child_pos = pos + child->preferred_position(size, child_size);
                 if (child_size.x == 0 || child_size.y == 0)
                     child_size = size;
                 child->arrange(child_pos, child_size);

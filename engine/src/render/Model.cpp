@@ -6,7 +6,7 @@
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -29,37 +29,37 @@ namespace Birdy3d {
             m_meshes.push_back(std::move(mesh));
     }
 
-    void Model::render(GameObject& object, const Material* material, const Shader& shader, bool transparent) const {
+    void Model::render(Entity& entity, const Material* material, const Shader& shader, bool transparent) const {
         if (material == nullptr)
             material = &m_embedded_material;
-        glm::mat4 model = object.transform.matrix();
+        glm::mat4 model = entity.transform.matrix();
         shader.use();
-        shader.setMat4("model", model);
+        shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
             if (transparent == material->transparent())
                 m->render(shader, *material);
         }
     }
 
-    void Model::renderDepth(GameObject& object, const Shader& shader) const {
-        glm::mat4 model = object.transform.matrix();
+    void Model::render_depth(Entity& entity, const Shader& shader) const {
+        glm::mat4 model = entity.transform.matrix();
         shader.use();
-        shader.setMat4("model", model);
+        shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
-            m->renderDepth();
+            m->render_depth();
         }
     }
 
-    void Model::render_wireframe(GameObject& object, const Shader& shader) const {
-        glm::mat4 model = object.transform.matrix();
+    void Model::render_wireframe(Entity& entity, const Shader& shader) const {
+        glm::mat4 model = entity.transform.matrix();
         shader.use();
-        shader.setMat4("model", model);
+        shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
             m->render_wireframe();
         }
     }
 
-    const std::vector<std::unique_ptr<Mesh>>& Model::getMeshes() const {
+    const std::vector<std::unique_ptr<Mesh>>& Model::get_meshes() const {
         return m_meshes;
     }
 
@@ -73,22 +73,22 @@ namespace Birdy3d {
         }
         m_directory = path.substr(0, path.find_last_of('/'));
 
-        processNode(scene->mRootNode, scene);
+        process_node(scene->mRootNode, scene);
     }
 
-    void Model::processNode(aiNode* node, const aiScene* scene) {
+    void Model::process_node(aiNode* node, const aiScene* scene) {
         // process own meshes
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            m_meshes.push_back(processMesh(mesh, scene));
+            m_meshes.push_back(process_mesh(mesh, scene));
         }
         // children
         for (unsigned int i = 0; i < node->mNumChildren; i++) {
-            processNode(node->mChildren[i], scene);
+            process_node(node->mChildren[i], scene);
         }
     }
 
-    std::unique_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene) {
+    std::unique_ptr<Mesh> Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture*> textures;

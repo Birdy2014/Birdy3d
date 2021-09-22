@@ -1,31 +1,31 @@
 #include "scene/Component.hpp"
 
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 
 namespace Birdy3d {
 
-    void Component::_start() {
+    void Component::external_start() {
         if (!m_loaded) {
             start();
             m_loaded = true;
         }
     }
 
-    void Component::_update() {
+    void Component::external_update() {
         if (m_loaded)
             update();
         else
-            _start();
+            external_start();
     }
 
-    void Component::_cleanup() {
+    void Component::external_cleanup() {
         if (m_loaded)
             cleanup();
     }
 
     void Component::remove() {
-        if (object)
-            object->remove_component(this);
+        if (entity)
+            entity->remove_component(this);
     }
 
 }

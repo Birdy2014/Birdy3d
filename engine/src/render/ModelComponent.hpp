@@ -21,7 +21,7 @@ namespace Birdy3d {
             , m_model_name(name) { }
 
         void start() override {
-            m_model = RessourceManager::getModel(m_model_name);
+            m_model = RessourceManager::get_model(m_model_name);
         }
 
         template <class Archive>
@@ -32,20 +32,20 @@ namespace Birdy3d {
 
         void render(const Shader& shader, bool transparent) const {
             if (m_model)
-                m_model->render(*object, material.get(), shader, transparent);
+                m_model->render(*entity, material.get(), shader, transparent);
             else
                 Logger::error("No model specified");
         }
 
-        void renderDepth(const Shader& shader) const {
+        void render_depth(const Shader& shader) const {
             if (m_model)
-                m_model->renderDepth(*object, shader);
+                m_model->render_depth(*entity, shader);
         }
 
         std::shared_ptr<Model> model() { return m_model; }
         void model(const std::string& name) {
             m_model_name = name;
-            m_model = RessourceManager::getModel(name);
+            m_model = RessourceManager::get_model(name);
         }
 
     private:

@@ -4,11 +4,11 @@
 #include "events/CollisionEvent.hpp"
 #include "physics/Collider.hpp"
 #include "physics/Collision.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 
 namespace Birdy3d {
 
-    PhysicsWorld::PhysicsWorld(GameObject* scene)
+    PhysicsWorld::PhysicsWorld(Entity* scene)
         : m_scene(scene) { }
 
     PhysicsWorld::~PhysicsWorld() { }
@@ -32,16 +32,16 @@ namespace Birdy3d {
                     collision = unique_collision.get();
                     m_collisions.push_back(std::move(unique_collision));
                 }
-                bool collidedLastFrame = collision->points.hasCollision;
+                bool collided_last_frame = collision->points.hasCollision;
                 CollisionPoints points = c1->collides(*c2.get());
                 collision->points = points;
                 if (points.hasCollision) {
-                    if (collidedLastFrame)
+                    if (collided_last_frame)
                         Application::event_bus->emit<CollisionEvent>(c1, c2, CollisionEvent::COLLIDING);
                     else
                         Application::event_bus->emit<CollisionEvent>(c1, c2, CollisionEvent::ENTER);
                 } else {
-                    if (collidedLastFrame) {
+                    if (collided_last_frame) {
                         Application::event_bus->emit<CollisionEvent>(c1, c2, CollisionEvent::EXIT);
                     }
                 }

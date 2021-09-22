@@ -1,7 +1,7 @@
 #pragma once
 
 #include "events/Event.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 
 namespace Birdy3d {
 
@@ -24,15 +24,15 @@ namespace Birdy3d {
             , collider_b(collider_b)
             , type(type) { }
 
-        bool checkOptions(std::any options) override {
-            GameObject* object = nullptr;
-            if (options.type() == typeid(GameObject*))
-                object = std::any_cast<GameObject*>(options);
-            else if (options.type() == typeid(std::shared_ptr<GameObject*>))
-                object = std::any_cast<std::shared_ptr<GameObject>>(options).get();
-            if (!object)
+        bool check_options(std::any options) override {
+            Entity* entity = nullptr;
+            if (options.type() == typeid(Entity*))
+                entity = std::any_cast<Entity*>(options);
+            else if (options.type() == typeid(std::shared_ptr<Entity*>))
+                entity = std::any_cast<std::shared_ptr<Entity>>(options).get();
+            if (!entity)
                 return true;
-            auto colliders = object->get_components<Collider>(false, true);
+            auto colliders = entity->get_components<Collider>(false, true);
             if (colliders.empty())
                 return false;
             auto collider_a_ptr = collider_a.lock();

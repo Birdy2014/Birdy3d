@@ -154,7 +154,7 @@ namespace Birdy3d {
     }
 
     std::shared_ptr<Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution) {
-        // TODO
+        // TODO: ico sphere primitive
         BIRDY3D_TODO
         return nullptr;
     }

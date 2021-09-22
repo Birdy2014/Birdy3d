@@ -18,6 +18,6 @@ namespace Birdy3d {
         , line_height(font_size * 1.1) { }
 
     TextRenderer* Theme::text_renderer() {
-        return RessourceManager::getTextRenderer(font).get();
+        return RessourceManager::get_text_renderer(font).get();
     }
 }

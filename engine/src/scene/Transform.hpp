@@ -4,7 +4,7 @@
 
 namespace Birdy3d {
 
-    class GameObject;
+    class Entity;
 
     class Transform3d {
     public:
@@ -13,12 +13,12 @@ namespace Birdy3d {
         glm::vec3 scale;
 
         Transform3d() = delete;
-        Transform3d(GameObject*);
+        Transform3d(Entity*);
         void post_update();
         glm::mat4 matrix();
-        glm::vec3 worldPosition();
-        glm::vec3 worldOrientation();
-        glm::vec3 worldScale();
+        glm::vec3 world_position();
+        glm::vec3 world_orientation();
+        glm::vec3 world_scale();
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("position", position));
@@ -28,7 +28,7 @@ namespace Birdy3d {
 
     private:
         glm::mat4 m_matrix;
-        GameObject* m_object = nullptr;
+        Entity* m_entity = nullptr;
         bool m_value_changed = false;
 
         // Copies for change detection

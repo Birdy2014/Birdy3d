@@ -26,11 +26,11 @@ namespace Birdy3d {
 
     void NumberInput::on_update() {
         if (m_dragging) {
-            glm::vec2 offsets = Input::cursorPosOffset();
+            glm::vec2 offsets = Input::cursor_pos_offset();
             float change = offsets.x + offsets.y;
-            if (!Input::keyPressed(GLFW_KEY_LEFT_CONTROL))
+            if (!Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
                 change *= 0.1;
-            if (Input::keyPressed(GLFW_KEY_LEFT_SHIFT))
+            if (Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
                 change *= 0.01;
             value(value() + change);
         }
@@ -39,9 +39,9 @@ namespace Birdy3d {
 
     void NumberInput::on_scroll(InputScrollEvent* event) {
         float change = event->yoffset;
-        if (!Input::keyPressed(GLFW_KEY_LEFT_CONTROL))
+        if (!Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
             change *= 0.1;
-        if (Input::keyPressed(GLFW_KEY_LEFT_SHIFT))
+        if (Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
             change *= 0.01;
 
         value(m_value + change);

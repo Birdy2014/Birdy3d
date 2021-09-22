@@ -4,17 +4,17 @@
 
 namespace Birdy3d {
 
-    class GameObject;
+    class Entity;
 
     class TransformChangedEvent : public Event {
     public:
-        GameObject* const object;
+        Entity* const entity;
 
-        TransformChangedEvent(GameObject* object)
-            : object(object) { }
+        TransformChangedEvent(Entity* entity)
+            : entity(entity) { }
 
-        bool checkOptions(std::any options) override {
-            return options.type() == typeid(GameObject*) && std::any_cast<GameObject*>(options) == object;
+        bool check_options(std::any options) override {
+            return options.type() == typeid(Entity*) && std::any_cast<Entity*>(options) == entity;
         }
     };
 

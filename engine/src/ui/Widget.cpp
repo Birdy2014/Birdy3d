@@ -62,19 +62,19 @@ namespace Birdy3d {
             child->draw();
     }
 
-    glm::vec2 Widget::preferredPosition(glm::vec2 parentSize, glm::vec2 size) {
-        return Utils::getRelativePosition(this->pos, size, parentSize, this->placement);
+    glm::vec2 Widget::preferred_position(glm::vec2 parentSize, glm::vec2 size) {
+        return Utils::get_relative_position(this->pos, size, parentSize, this->placement);
     }
 
-    glm::vec2 Widget::minimalSize() {
+    glm::vec2 Widget::minimal_size() {
         glm::vec2 children_minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
         if (m_layout)
             children_minsize += m_layout->minimal_size(m_children);
-        return glm::max(children_minsize, size.toPixels());
+        return glm::max(children_minsize, size.to_pixels());
     }
 
-    glm::vec2 Widget::preferredSize(glm::vec2 parentSize) {
-        return glm::max(size.toPixels(parentSize), minimalSize());
+    glm::vec2 Widget::preferred_size(glm::vec2 parentSize) {
+        return glm::max(size.to_pixels(parentSize), minimal_size());
     }
 
     void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
@@ -83,7 +83,7 @@ namespace Birdy3d {
         m_move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
 
         for (const auto& s : m_shapes) {
-            s->parentSize(size);
+            s->parent_size(size);
         }
 
         if (m_layout)
@@ -138,7 +138,7 @@ namespace Birdy3d {
         if (hidden)
             hover = false;
         if (hover) {
-            if (contains(Input::cursorPos())) {
+            if (contains(Input::cursor_pos())) {
                 canvas->m_hovering_widget = this;
                 return true;
             }
@@ -171,7 +171,7 @@ namespace Birdy3d {
         m_children.push_back(std::move(w));
     }
 
-    void Widget::toForeground(Widget* widget) {
+    void Widget::to_foreground(Widget* widget) {
         auto element = std::find_if(m_children.cbegin(), m_children.cend(), [&](const std::shared_ptr<Widget>& w) { return w.get() == widget; });
         m_children.splice(m_children.end(), m_children, element);
     }

@@ -8,7 +8,7 @@
 #include "render/Model.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Vertex.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 #include "scene/Scene.hpp"
 
 namespace Birdy3d {
@@ -27,11 +27,11 @@ namespace Birdy3d {
 
     void Collider::start() {
         if (m_generation_mode == GenerationMode::NONE) {
-            m_model = RessourceManager::getModel(m_model_name);
+            m_model = RessourceManager::get_model(m_model_name);
         } else {
-            Model* model = object->get_component<ModelComponent>()->model().get();
+            Model* model = entity->get_component<ModelComponent>()->model().get();
             if (!model) {
-                Logger::warn("GameObject doesn't have any model");
+                Logger::warn("Entity doesn't have any model");
                 return;
             }
             m_model = ConvexMeshGenerators::generate_model(m_generation_mode, *model);
@@ -39,16 +39,16 @@ namespace Birdy3d {
     }
 
     void Collider::render_wireframe(Shader& shader) {
-        m_model->render_wireframe(*object, shader);
+        m_model->render_wireframe(*entity, shader);
     }
 
     CollisionPoints Collider::collides(Collider& collider) {
         CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
         if (!m_model || !collider.m_model)
             return points;
-        for (const auto& own_mesh : m_model->getMeshes()) {
-            for (const auto& other_mesh : collider.m_model->getMeshes()) {
-                if (collides(*own_mesh.get(), *other_mesh.get(), object->transform.matrix(), collider.object->transform.matrix())) {
+        for (const auto& own_mesh : m_model->get_meshes()) {
+            for (const auto& other_mesh : collider.m_model->get_meshes()) {
+                if (collides(*own_mesh.get(), *other_mesh.get(), entity->transform.matrix(), collider.entity->transform.matrix())) {
                     points.hasCollision = true;
                     break;
                 }
@@ -76,7 +76,7 @@ namespace Birdy3d {
                 Logger::error("points are the same collides 1 nr:", m_point_count);
             push_front(s);
 
-            if (nextSimplex(direction))
+            if (next_simplex(direction))
                 return true;
         }
     }
@@ -88,8 +88,8 @@ namespace Birdy3d {
         glm::vec3 local_direction_a = glm::vec3(inverse_transform_a * glm::vec4(direction, 1.0f)) - glm::vec3(inverse_transform_a * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
         glm::vec3 local_direction_b = glm::vec3(inverse_transform_b * glm::vec4(direction, 1.0f)) - glm::vec3(inverse_transform_b * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
-        glm::vec3 local_furthest_a = mesh_a.findFurthestPoint(local_direction_a);
-        glm::vec3 local_furthest_b = mesh_b.findFurthestPoint(-local_direction_b);
+        glm::vec3 local_furthest_a = mesh_a.find_furthest_point(local_direction_a);
+        glm::vec3 local_furthest_b = mesh_b.find_furthest_point(-local_direction_b);
 
         // Transform local positions to world positions
         glm::vec3 world_furthest_a = glm::vec3(transform_a * glm::vec4(local_furthest_a, 1.0f));
@@ -110,7 +110,7 @@ namespace Birdy3d {
         m_point_count++;
     }
 
-    bool Collider::nextSimplex(glm::vec3& direction) {
+    bool Collider::next_simplex(glm::vec3& direction) {
         switch (m_point_count) {
         case 2:
             return line(direction);
@@ -130,7 +130,7 @@ namespace Birdy3d {
         glm::vec3 ab = b - a;
         glm::vec3 ao = -a;
 
-        if (sameDirection(ab, ao)) {
+        if (same_direction(ab, ao)) {
             direction = glm::cross(glm::cross(ab, ao), ab);
         } else {
             m_point_count--;
@@ -151,8 +151,8 @@ namespace Birdy3d {
 
         glm::vec3 abc = glm::cross(ab, ac);
 
-        if (sameDirection(glm::cross(abc, ac), ao)) {
-            if (sameDirection(ac, ao)) {
+        if (same_direction(glm::cross(abc, ac), ao)) {
+            if (same_direction(ac, ao)) {
                 m_points[1] = c;
                 m_point_count--;
                 direction = glm::cross(glm::cross(ac, ao), ac);
@@ -161,12 +161,12 @@ namespace Birdy3d {
                 return line(direction);
             }
         } else {
-            if (sameDirection(glm::cross(ab, abc), ao)) {
+            if (same_direction(glm::cross(ab, abc), ao)) {
                 m_point_count--;
                 return line(direction);
             } else {
                 // Origin is inside of triangle
-                if (sameDirection(abc, ao)) {
+                if (same_direction(abc, ao)) {
                     direction = abc;
                 } else {
                     m_points[1] = c;
@@ -193,19 +193,19 @@ namespace Birdy3d {
         glm::vec3 acd = glm::cross(ac, ad);
         glm::vec3 adb = glm::cross(ad, ab);
 
-        if (sameDirection(abc, ao)) {
+        if (same_direction(abc, ao)) {
             m_point_count--;
             return triangle(direction);
         }
 
-        if (sameDirection(acd, ao)) {
+        if (same_direction(acd, ao)) {
             m_points[1] = c;
             m_points[2] = d;
             m_point_count--;
             return triangle(direction);
         }
 
-        if (sameDirection(adb, ao)) {
+        if (same_direction(adb, ao)) {
             m_points[1] = d;
             m_points[2] = b;
             m_point_count--;
@@ -215,7 +215,7 @@ namespace Birdy3d {
         return true;
     }
 
-    bool Collider::sameDirection(glm::vec3 a, glm::vec3 b) {
+    bool Collider::same_direction(glm::vec3 a, glm::vec3 b) {
         return glm::dot(a, b) > 0;
     }
 

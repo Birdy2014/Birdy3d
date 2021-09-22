@@ -48,13 +48,13 @@ namespace Birdy3d {
     }
 
     glm::vec4 Color::parse(const std::string& colorString) {
-        bool hasHash = colorString.at(0) == '#';
+        bool has_hash = colorString.at(0) == '#';
 
-        int colorLength;
-        if ((int)colorString.length() == 6 + hasHash || (int)colorString.length() == 8 + hasHash) {
-            colorLength = 2;
-        } else if ((int)colorString.length() == 3 + hasHash) {
-            colorLength = 1;
+        int color_length;
+        if ((int)colorString.length() == 6 + has_hash || (int)colorString.length() == 8 + has_hash) {
+            color_length = 2;
+        } else if ((int)colorString.length() == 3 + has_hash) {
+            color_length = 1;
         } else {
             Logger::warn("Invalid color: ", colorString);
             return glm::vec4(1);
@@ -62,15 +62,15 @@ namespace Birdy3d {
 
         glm::vec4 color(1);
 
-        for (size_t pos = hasHash; pos < colorString.length(); pos += colorLength) {
-            int nr = std::stoi(colorString.substr(pos, colorLength), nullptr, 16);
-            color[pos / colorLength] = nr / (std::pow(16, colorLength) - 1);
+        for (size_t pos = has_hash; pos < colorString.length(); pos += color_length) {
+            int nr = std::stoi(colorString.substr(pos, color_length), nullptr, 16);
+            color[pos / color_length] = nr / (std::pow(16, color_length) - 1);
         }
         return color;
     }
 
-    Color Color::NONE = Color("#00000000");
-    Color Color::WHITE = Color("#FFFFFFFF");
-    Color Color::BLACK = Color("#000000FF");
+    Color const Color::NONE = Color("#00000000");
+    Color const Color::WHITE = Color("#FFFFFFFF");
+    Color const Color::BLACK = Color("#000000FF");
 
 }

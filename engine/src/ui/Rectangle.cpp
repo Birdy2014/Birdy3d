@@ -22,7 +22,7 @@ namespace Birdy3d {
             return;
 
         if (!m_vao || !m_vbo)
-            createBuffers();
+            create_buffers();
 
         if (m_dirty) {
             m_dirty = false;
@@ -35,12 +35,12 @@ namespace Birdy3d {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_texture);
         m_shader->use();
-        m_shader->setInt("type", type);
-        m_shader->setMat4("projection", projection());
-        m_shader->setMat4("move", move);
-        m_shader->setMat4("move_self", m_move_self);
-        m_shader->setVec4("color", m_color);
-        m_shader->setInt("rectTexture", 0);
+        m_shader->set_int("type", type);
+        m_shader->set_mat4("projection", projection());
+        m_shader->set_mat4("move", move);
+        m_shader->set_mat4("move_self", m_move_self);
+        m_shader->set_vec4("color", m_color);
+        m_shader->set_int("rectTexture", 0);
         glBindVertexArray(m_vao);
         if (type == Shape::OUTLINE)
             glDrawArrays(GL_LINE_LOOP, 0, 4);
@@ -49,13 +49,13 @@ namespace Birdy3d {
     }
 
     bool Rectangle::contains(glm::vec2 point) {
-        glm::vec2 bottomLeft = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
-        glm::vec2 size = m_size.toPixels(m_parentSize);
-        glm::vec2 topRight = bottomLeft + size;
-        return point.x > bottomLeft.x && point.x < topRight.x && point.y > bottomLeft.y && point.y < topRight.y;
+        glm::vec2 bottom_left = Utils::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 size = m_size.to_pixels(m_parentSize);
+        glm::vec2 top_right = bottom_left + size;
+        return point.x > bottom_left.x && point.x < top_right.x && point.y > bottom_left.y && point.y < top_right.y;
     }
 
-    void Rectangle::createBuffers() {
+    void Rectangle::create_buffers() {
         float vertices[4 * 4];
         // Create buffers
         glGenVertexArrays(1, &m_vao);
@@ -75,8 +75,8 @@ namespace Birdy3d {
     void Rectangle::update_values() {
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glm::vec2 pos = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
-        glm::vec2 size = m_size.toPixels(m_parentSize);
+        glm::vec2 pos = Utils::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 size = m_size.to_pixels(m_parentSize);
         m_move_self = glm::mat4(1);
         m_move_self = glm::translate(m_move_self, glm::vec3(pos + glm::vec2(size.x / 2, size.y / 2), 0.0f));
         if (m_rotation != 0)

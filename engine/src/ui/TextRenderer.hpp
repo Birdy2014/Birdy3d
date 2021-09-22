@@ -28,23 +28,23 @@ namespace Birdy3d {
     private:
         // What is this and why is it needed?
         template <class Facet>
-        struct deletable_facet : Facet {
+        struct DeletableFacet : Facet {
             template <class... Args>
-            deletable_facet(Args&&... args)
+            DeletableFacet(Args&&... args)
                 : Facet(std::forward<Args>(args)...) { }
-            ~deletable_facet() { }
+            ~DeletableFacet() { }
         };
 
     public:
-        static std::wstring_convert<deletable_facet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> converter;
+        static std::wstring_convert<DeletableFacet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> converter;
 
         TextRenderer(std::string path, unsigned int fontSize);
         ~TextRenderer();
-        void renderText(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
-        void renderText(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
-        UIVector textSize(std::string text, float fontSize);
-        UIVector textSize(std::u32string text, float fontSize);
-        float charWidth(char32_t c, float fontSize);
+        void render_text(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
+        void render_text(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
+        UIVector text_size(std::string text, float fontSize);
+        UIVector text_size(std::u32string text, float fontSize);
+        float char_width(char32_t c, float fontSize);
         int char_index(std::u32string text, float font_size, float x_pos, bool between_chars = false);
 
     private:
@@ -59,7 +59,7 @@ namespace Birdy3d {
         glm::vec2 m_texture_atlas_size;
         int m_texture_atlas_current_x;
 
-        bool addChar(char32_t c);
+        bool add_char(char32_t c);
     };
 
     class Text : public Shape {

@@ -4,16 +4,16 @@
 
 namespace Birdy3d {
 
-    class GameObject;
+    class Entity;
 
     class Component {
     public:
-        GameObject* object = nullptr;
+        Entity* entity = nullptr;
 
         virtual ~Component() = default;
-        void _start();
-        void _update();
-        void _cleanup();
+        void external_start();
+        void external_update();
+        void external_cleanup();
         bool loaded() const { return m_loaded; }
         void remove();
         template <class Archive>

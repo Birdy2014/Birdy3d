@@ -22,7 +22,7 @@ namespace Birdy3d {
             return;
 
         if (!m_vao || !m_vbo)
-            createBuffers();
+            create_buffers();
 
         if (m_dirty) {
             m_dirty = false;
@@ -35,12 +35,12 @@ namespace Birdy3d {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_texture);
         m_shader->use();
-        m_shader->setInt("type", this->type);
-        m_shader->setMat4("projection", projection());
-        m_shader->setMat4("move", move);
-        m_shader->setMat4("move_self", m_move_self);
-        m_shader->setVec4("color", m_color);
-        m_shader->setInt("rectTexture", 0);
+        m_shader->set_int("type", this->type);
+        m_shader->set_mat4("projection", projection());
+        m_shader->set_mat4("move", move);
+        m_shader->set_mat4("move_self", m_move_self);
+        m_shader->set_vec4("color", m_color);
+        m_shader->set_int("rectTexture", 0);
         glBindVertexArray(m_vao);
         if (type == Shape::OUTLINE)
             glDrawArrays(GL_LINE_LOOP, 0, 3);
@@ -49,19 +49,19 @@ namespace Birdy3d {
     }
 
     bool Triangle::contains(glm::vec2 point) {
-        glm::vec2 position = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
-        glm::vec2 size = m_size.toPixels(m_parentSize);
+        glm::vec2 position = Utils::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 size = m_size.to_pixels(m_parentSize);
         glm::vec2 a = position;
         glm::vec2 b = position + glm::vec2(size.x, 0);
         glm::vec2 c = position + glm::vec2(0, size.y);
-        float triangleArea = area(a, b, c);
+        float triangle_area = area(a, b, c);
         float area1 = area(point, b, c);
         float area2 = area(a, point, c);
         float area3 = area(a, b, point);
-        return (triangleArea == area1 + area2 + area3);
+        return (triangle_area == area1 + area2 + area3);
     }
 
-    void Triangle::createBuffers() {
+    void Triangle::create_buffers() {
         float vertices[3 * 4];
         // Create buffers
         glGenVertexArrays(1, &m_vao);
@@ -81,8 +81,8 @@ namespace Birdy3d {
     void Triangle::update_values() {
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glm::vec2 pos = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
-        glm::vec2 size = m_size.toPixels(m_parentSize);
+        glm::vec2 pos = Utils::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 size = m_size.to_pixels(m_parentSize);
         m_move_self = glm::mat4(1);
         m_move_self = glm::translate(m_move_self, glm::vec3(pos + glm::vec2(size.x / 2, size.y / 2), 0.0f));
         if (m_rotation != 0)

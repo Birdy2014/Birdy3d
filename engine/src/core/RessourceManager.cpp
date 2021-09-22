@@ -26,11 +26,11 @@ namespace Birdy3d {
     std::unordered_map<std::string, std::shared_ptr<Texture>> RessourceManager::m_textures;
 
     void RessourceManager::init() {
-        std::string base_path = getExecutableDir() + "../ressources/";
+        std::string base_path = get_executable_dir() + "../ressources/";
         std::filesystem::current_path(base_path);
     }
 
-    std::shared_ptr<Shader> RessourceManager::getShader(const std::string& name) {
+    std::shared_ptr<Shader> RessourceManager::get_shader(const std::string& name) {
         std::shared_ptr<Shader> shader = m_shaders[name];
         if (!shader) {
             shader = std::make_shared<Shader>(name);
@@ -39,17 +39,17 @@ namespace Birdy3d {
         return shader;
     }
 
-    std::shared_ptr<TextRenderer> RessourceManager::getTextRenderer(const std::string& name) {
+    std::shared_ptr<TextRenderer> RessourceManager::get_text_renderer(const std::string& name) {
         std::shared_ptr<TextRenderer> renderer = m_text_renderers[name];
         if (!renderer) {
-            std::string path = getRessourcePath(name, RessourceType::FONT);
+            std::string path = get_ressource_path(name, RessourceType::FONT);
             renderer = std::make_shared<TextRenderer>(path, 30);
             m_text_renderers[name] = renderer;
         }
         return renderer;
     }
 
-    std::shared_ptr<Model> RessourceManager::getModel(const std::string& name) {
+    std::shared_ptr<Model> RessourceManager::get_model(const std::string& name) {
         std::shared_ptr<Model> model = m_models[name];
         if (!model) {
             // TODO: generalize for all ressources
@@ -75,7 +75,7 @@ namespace Birdy3d {
                 else
                     Logger::error("invalid primitive type");
             } else {
-                std::string path = getRessourcePath(name, RessourceType::MODEL);
+                std::string path = get_ressource_path(name, RessourceType::MODEL);
                 model = std::make_shared<Model>(path);
             }
             m_models[name] = model;
@@ -83,7 +83,7 @@ namespace Birdy3d {
         return model;
     }
 
-    std::shared_ptr<Texture> RessourceManager::getTexture(const std::string& name) {
+    std::shared_ptr<Texture> RessourceManager::get_texture(const std::string& name) {
         std::shared_ptr<Texture> texture = m_textures[name];
         if (!texture) {
             std::string prefix_color = "color::";
@@ -91,7 +91,7 @@ namespace Birdy3d {
                 Color color = name.substr(prefix_color.length());
                 texture = std::make_shared<Texture>(color);
             } else {
-                std::string path = getRessourcePath(name, RessourceType::TEXTURE);
+                std::string path = get_ressource_path(name, RessourceType::TEXTURE);
                 texture = std::make_shared<Texture>(path);
             }
             m_textures[name] = texture;
@@ -99,14 +99,14 @@ namespace Birdy3d {
         return texture;
     }
 
-    std::shared_ptr<Texture> RessourceManager::getColorTexture(const Color& color) {
-        return getTexture("color::" + color.to_string());
+    std::shared_ptr<Texture> RessourceManager::get_color_texture(const Color& color) {
+        return get_texture("color::" + color.to_string());
     }
 
-    std::string RessourceManager::getRessourcePath(std::string name, RessourceType type) {
+    std::string RessourceManager::get_ressource_path(std::string name, RessourceType type) {
         if (name.size() == 0) {
             Logger::error("invalid ressource name");
-            return nullptr;
+            return {};
         }
 
         std::replace(name.begin(), name.end(), '\\', '/');
@@ -115,10 +115,10 @@ namespace Birdy3d {
             name.erase(0, 1);
 
         std::string extension;
-        size_t dotPos = name.find_last_of('.');
-        if (dotPos != std::string::npos) {
-            extension = name.substr(dotPos);
-            name = name.substr(0, dotPos);
+        size_t dot_pos = name.find_last_of('.');
+        if (dot_pos != std::string::npos) {
+            extension = name.substr(dot_pos);
+            name = name.substr(0, dot_pos);
         }
 
         std::string default_dir = "";
@@ -143,7 +143,7 @@ namespace Birdy3d {
                 extension = ".ttf";
             break;
         default:
-            return nullptr;
+            return {};
         }
 
         if (std::filesystem::exists(subdir + name + extension))
@@ -159,7 +159,7 @@ namespace Birdy3d {
         return "";
     }
 
-    std::string RessourceManager::getExecutableDir() {
+    std::string RessourceManager::get_executable_dir() {
 #if defined(BIRDY3D_PLATFORM_LINUX)
         char result[PATH_MAX];
         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
@@ -171,12 +171,12 @@ namespace Birdy3d {
         return exec.substr(0, exec.find_last_of("/\\") + 1);
     }
 
-    std::string RessourceManager::readFile(const std::string& path, bool convertEOL) {
-        std::ifstream fileStream;
+    std::string RessourceManager::read_file(const std::string& path, bool convertEOL) {
+        std::ifstream file_stream;
         std::string content;
         try {
-            fileStream.open(path);
-            content.assign(std::istreambuf_iterator<char>(fileStream), std::istreambuf_iterator<char>());
+            file_stream.open(path);
+            content.assign(std::istreambuf_iterator<char>(file_stream), std::istreambuf_iterator<char>());
             if (convertEOL)
                 content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
         } catch (std::ifstream::failure& e) {

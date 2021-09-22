@@ -31,13 +31,13 @@ namespace Birdy3d {
         Widget::draw();
         glEnable(GL_SCISSOR_TEST);
         glScissor(m_actual_pos.x, m_actual_pos.y, m_actual_size.x, m_actual_size.y);
-        Application::theme->text_renderer()->renderText(m_text, 0, m_actual_size.y / 2 - Application::theme->font_size / 2, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Application::theme->color_text_highlight);
+        Application::theme->text_renderer()->render_text(m_text, 0, m_actual_size.y / 2 - Application::theme->font_size / 2, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Application::theme->color_text_highlight);
         glDisable(GL_SCISSOR_TEST);
     }
 
     void TextField::on_update() {
         if (m_selecting) {
-            glm::vec2 local_pos = Input::cursorPos() - m_actual_pos;
+            glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
             int char_pos = Application::theme->text_renderer()->char_index(m_text, Application::theme->font_size, local_pos.x, true);
             if (m_selection_start == char_pos)
                 m_selection_end = -1;
@@ -52,7 +52,7 @@ namespace Birdy3d {
 
         if (event->action == GLFW_PRESS) {
             grab_cursor();
-            glm::vec2 local_pos = Input::cursorPos() - m_actual_pos;
+            glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
             int char_pos = Application::theme->text_renderer()->char_index(m_text, Application::theme->font_size, local_pos.x, true);
             m_selecting = true;
             m_selection_start = char_pos;
@@ -124,12 +124,12 @@ namespace Birdy3d {
 
     void TextField::on_mouse_enter() {
         if (!readonly)
-            Input::setCursor(Input::CURSOR_TEXT);
+            Input::set_cursor(Input::CURSOR_TEXT);
     }
 
     void TextField::on_mouse_leave() {
         if (!readonly)
-            Input::setCursor(Input::CURSOR_DEFAULT);
+            Input::set_cursor(Input::CURSOR_DEFAULT);
     }
 
     void TextField::on_focus_lost() {

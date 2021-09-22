@@ -6,7 +6,7 @@ namespace Birdy3d {
 
     class Event {
     public:
-        virtual bool checkOptions(std::any) {
+        virtual bool check_options(std::any) {
             return true;
         }
 

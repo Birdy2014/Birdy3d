@@ -22,7 +22,7 @@ namespace Birdy3d {
         case Direction::RIGHT:
         case Direction::LEFT:
             for (const auto& child : children) {
-                glm::vec2 csize = child->minimalSize();
+                glm::vec2 csize = child->minimal_size();
                 minsize.x += csize.x;
                 if (csize.y > minsize.y)
                     minsize.y = csize.y;
@@ -32,7 +32,7 @@ namespace Birdy3d {
         case Direction::DOWN:
         case Direction::UP:
             for (const auto& child : children) {
-                glm::vec2 csize = child->minimalSize();
+                glm::vec2 csize = child->minimal_size();
                 if (csize.x > minsize.x)
                     minsize.x = csize.x;
                 minsize.y += csize.y;
@@ -44,35 +44,35 @@ namespace Birdy3d {
     }
 
     void DirectionalLayout::arrange_full_size(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const {
-        std::list<Widget*> smallerWidgets;
+        std::list<Widget*> smaller_widgets;
         for (const auto& widget : children)
-            smallerWidgets.push_back(widget.get());
+            smaller_widgets.push_back(widget.get());
         float gapps = gap * (children.size() - 1);
         float weights = 0;
-        float widgetSize;
+        float widget_size;
         bool horizontal = dir == Direction::LEFT || dir == Direction::RIGHT;
 
         for (const auto& c : children)
             weights += c->weight;
 
         if (dir == Direction::LEFT || dir == Direction::RIGHT)
-            widgetSize = (size.x - gapps) / weights;
+            widget_size = (size.x - gapps) / weights;
         else if (dir == Direction::UP || dir == Direction::DOWN)
-            widgetSize = (size.y - gapps) / weights;
+            widget_size = (size.y - gapps) / weights;
 
         // Change widgetSize based on minimum size
         bool done = false;
         while (!done) {
             done = true;
             size_t i = 0;
-            for (std::list<Widget*>::iterator it = smallerWidgets.begin(); it != smallerWidgets.end();) {
+            for (std::list<Widget*>::iterator it = smaller_widgets.begin(); it != smaller_widgets.end();) {
                 Widget* w = *it;
-                float currentWidgetSize = (horizontal ? w->minimalSize().x : w->minimalSize().y);
-                if (widgetSize * w->weight < currentWidgetSize) {
-                    smallerWidgets.erase(it++);
+                float current_widget_size = (horizontal ? w->minimal_size().x : w->minimal_size().y);
+                if (widget_size * w->weight < current_widget_size) {
+                    smaller_widgets.erase(it++);
                     i--;
                     weights -= w->weight;
-                    widgetSize -= ((currentWidgetSize - widgetSize * w->weight) / weights);
+                    widget_size -= ((current_widget_size - widget_size * w->weight) / weights);
                     done = false;
                 } else {
                     it++;
@@ -83,29 +83,29 @@ namespace Birdy3d {
 
         float offset = 0;
         for (const auto& w : children) {
-            float currentWidgetSize = std::max(widgetSize * w->weight, horizontal ? w->minimalSize().x : w->minimalSize().y);
+            float current_widget_size = std::max(widget_size * w->weight, horizontal ? w->minimal_size().x : w->minimal_size().y);
             switch (dir) {
             case Direction::RIGHT:
-                w->arrange(pos + glm::vec2(offset, 0), glm::vec2(currentWidgetSize, size.y));
+                w->arrange(pos + glm::vec2(offset, 0), glm::vec2(current_widget_size, size.y));
                 break;
             case Direction::LEFT:
-                w->arrange(pos + glm::vec2(size.x - currentWidgetSize - offset, 0), glm::vec2(currentWidgetSize, size.y));
+                w->arrange(pos + glm::vec2(size.x - current_widget_size - offset, 0), glm::vec2(current_widget_size, size.y));
                 break;
             case Direction::DOWN:
-                w->arrange(pos + glm::vec2(0, size.y - currentWidgetSize - offset), glm::vec2(size.x, currentWidgetSize));
+                w->arrange(pos + glm::vec2(0, size.y - current_widget_size - offset), glm::vec2(size.x, current_widget_size));
                 break;
             case Direction::UP:
-                w->arrange(pos + glm::vec2(0, offset), glm::vec2(size.x, currentWidgetSize));
+                w->arrange(pos + glm::vec2(0, offset), glm::vec2(size.x, current_widget_size));
                 break;
             }
-            offset += currentWidgetSize + gap;
+            offset += current_widget_size + gap;
         }
     }
 
     void DirectionalLayout::arrange_preserve_size(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const {
         float offset = 0;
         for (const auto& w : children) {
-            glm::vec2 widget_size = w->preferredSize(size);
+            glm::vec2 widget_size = w->preferred_size(size);
             switch (dir) {
             case Direction::RIGHT:
                 w->arrange(pos + glm::vec2(offset, 0), widget_size);

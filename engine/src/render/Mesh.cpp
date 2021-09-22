@@ -10,7 +10,7 @@ namespace Birdy3d {
     Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
         : vertices(vertices)
         , indices(indices) {
-        setupMesh();
+        setup();
     }
 
     Mesh::~Mesh() {
@@ -19,7 +19,7 @@ namespace Birdy3d {
         glDeleteVertexArrays(1, &m_vao);
     }
 
-    void Mesh::setupMesh() {
+    void Mesh::setup() {
         // generate vao, vbo and ebo
         glGenVertexArrays(1, &m_vao);
         glGenBuffers(1, &m_vbo);
@@ -61,7 +61,7 @@ namespace Birdy3d {
         glBindVertexArray(0);
     }
 
-    void Mesh::renderDepth() const {
+    void Mesh::render_depth() const {
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -74,17 +74,17 @@ namespace Birdy3d {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-    glm::vec3 Mesh::findFurthestPoint(const glm::vec3 direction) const {
+    glm::vec3 Mesh::find_furthest_point(const glm::vec3 direction) const {
         float max = -std::numeric_limits<float>::infinity();
-        glm::vec3 furthestVertex;
+        glm::vec3 furthest_vertex;
         for (Vertex vertex : vertices) {
             float dot = glm::dot(vertex.position, direction);
             if (dot > max) {
                 max = dot;
-                furthestVertex = vertex.position;
+                furthest_vertex = vertex.position;
             }
         }
-        return furthestVertex;
+        return furthest_vertex;
     }
 
 }

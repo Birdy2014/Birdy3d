@@ -17,7 +17,7 @@ namespace Birdy3d {
         void start() override;
         void cleanup() override;
         void render();
-        void renderOutline(const GameObject*);
+        void render_outline(const Entity*);
         void render_collider_wireframe();
         void resize(int width, int height);
 
@@ -43,12 +43,12 @@ namespace Birdy3d {
 
         std::vector<std::shared_ptr<ModelComponent>> m_models;
 
-        void createGBuffer();
-        void deleteGBuffer();
-        void renderQuad();
-        void renderDeferred();
-        void renderForward(bool renderOpaque);
-        void renderNormals();
+        void create_gbuffer();
+        void delete_gbuffer();
+        void render_quad();
+        void render_deferred();
+        void render_forward(bool renderOpaque);
+        void render_normals();
     };
 
 }

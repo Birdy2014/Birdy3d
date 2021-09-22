@@ -3,18 +3,18 @@
 #include "core/Application.hpp"
 #include "events/EventBus.hpp"
 #include "events/TransformChangedEvent.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Birdy3d {
 
-    Transform3d::Transform3d(GameObject* object)
-        : m_object(object) { }
+    Transform3d::Transform3d(Entity* entity)
+        : m_entity(entity) { }
 
     void Transform3d::post_update() {
         compute_matrix();
         if (m_value_changed) {
-            Application::event_bus->emit<TransformChangedEvent>(m_object);
+            Application::event_bus->emit<TransformChangedEvent>(m_entity);
             m_value_changed = false;
         }
     }
@@ -27,14 +27,14 @@ namespace Birdy3d {
     }
 
     bool Transform3d::changed(bool updateStatus) {
-        if (position != m_old_position || orientation != m_old_orientation || scale != m_old_scale || (m_object->parent && m_object->parent->transform.matrix() != m_old_parent_matrix)) {
+        if (position != m_old_position || orientation != m_old_orientation || scale != m_old_scale || (m_entity->parent && m_entity->parent->transform.matrix() != m_old_parent_matrix)) {
             if (updateStatus) {
                 m_value_changed = true;
                 m_old_position = position;
                 m_old_orientation = orientation;
                 m_old_scale = scale;
-                if (m_object->parent)
-                    m_old_parent_matrix = m_object->parent->transform.matrix();
+                if (m_entity->parent)
+                    m_old_parent_matrix = m_entity->parent->transform.matrix();
             }
             return true;
         }
@@ -45,8 +45,8 @@ namespace Birdy3d {
         if (!changed(true))
             return m_matrix;
         glm::mat4 m(1);
-        if (m_object->parent)
-            m = m * m_object->parent->transform.matrix();
+        if (m_entity->parent)
+            m = m * m_entity->parent->transform.matrix();
         m = glm::translate(m, this->position);
         m = glm::rotate(m, this->orientation.x, glm::vec3(1, 0, 0));
         m = glm::rotate(m, this->orientation.y, glm::vec3(0, 1, 0));
@@ -56,20 +56,20 @@ namespace Birdy3d {
         return m;
     }
 
-    glm::vec3 Transform3d::worldPosition() {
+    glm::vec3 Transform3d::world_position() {
         return matrix() * glm::vec4(0, 0, 0, 1);
     }
 
-    glm::vec3 Transform3d::worldOrientation() {
-        if (m_object->parent)
-            return m_object->parent->transform.orientation + orientation;
+    glm::vec3 Transform3d::world_orientation() {
+        if (m_entity->parent)
+            return m_entity->parent->transform.orientation + orientation;
         else
             return orientation;
     }
 
-    glm::vec3 Transform3d::worldScale() {
-        if (m_object->parent)
-            return m_object->parent->transform.scale * scale;
+    glm::vec3 Transform3d::world_scale() {
+        if (m_entity->parent)
+            return m_entity->parent->transform.scale * scale;
         else
             return scale;
     }

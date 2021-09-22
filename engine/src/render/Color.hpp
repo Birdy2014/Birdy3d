@@ -6,9 +6,9 @@ namespace Birdy3d {
 
     class Color {
     public:
-        static Color NONE;
-        static Color WHITE;
-        static Color BLACK;
+        static const Color NONE;
+        static const Color WHITE;
+        static const Color BLACK;
 
         glm::vec4 value;
 

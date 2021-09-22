@@ -4,7 +4,7 @@
 #include "render/Camera.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 #include "scene/Scene.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -14,11 +14,11 @@ namespace Birdy3d {
         : Light(shadow_enabled)
         , ambient(ambient)
         , diffuse(diffuse) {
-        camOffset = 1000;
+        m_cam_offset = 1000;
     }
 
-    void DirectionalLight::setupShadowMap() {
-        m_depthShader = RessourceManager::getShader("directional_light_depth");
+    void DirectionalLight::setup_shadow_map() {
+        m_depthShader = RessourceManager::get_shader("directional_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map
@@ -27,8 +27,8 @@ namespace Birdy3d {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+        float border_color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         // bind framebuffer
@@ -41,25 +41,25 @@ namespace Birdy3d {
 
     void DirectionalLight::use(const Shader& lightShader, int id, int textureid) {
         if (!m_shadowMapUpdated) {
-            genShadowMap();
+            gen_shadow_map();
             m_shadowMapUpdated = true;
         }
         std::string name = "dirLights[" + std::to_string(id) + "].";
         lightShader.use();
-        lightShader.setBool(name + "shadow_enabled", shadow_enabled);
-        lightShader.setVec3(name + "position", object->scene->m_current_camera->object->transform.worldPosition() - object->absForward() * camOffset);
-        lightShader.setVec3(name + "direction", object->absForward());
-        lightShader.setVec3(name + "ambient", ambient);
-        lightShader.setVec3(name + "diffuse", diffuse);
+        lightShader.set_bool(name + "shadow_enabled", shadow_enabled);
+        lightShader.set_vec3(name + "position", entity->scene->m_current_camera->entity->transform.world_position() - entity->world_forward() * m_cam_offset);
+        lightShader.set_vec3(name + "direction", entity->world_forward());
+        lightShader.set_vec3(name + "ambient", ambient);
+        lightShader.set_vec3(name + "diffuse", diffuse);
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_2D, m_depthMap);
-        lightShader.setMat4(name + "lightSpaceMatrix", lightSpaceMatrix);
-        lightShader.setInt(name + "shadowMap", textureid);
+        lightShader.set_mat4(name + "lightSpaceMatrix", m_light_space_matrix);
+        lightShader.set_int(name + "shadowMap", textureid);
         // TODO: cascaded shadow map
     }
 
-    void DirectionalLight::genShadowMap() {
-        glm::vec3 absPos = object->scene->m_current_camera->object->transform.worldPosition() - object->absForward() * camOffset;
+    void DirectionalLight::gen_shadow_map() {
+        glm::vec3 world_pos = entity->scene->m_current_camera->entity->transform.world_position() - entity->world_forward() * m_cam_offset;
 
         GLint viewport[4];
         glGetIntegerv(GL_VIEWPORT, viewport);
@@ -70,13 +70,13 @@ namespace Birdy3d {
         glEnable(GL_DEPTH_TEST);
 
         m_depthShader->use();
-        float nearPlane = 1.0f, farPlane = 10000.0f;
-        glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-        glm::mat4 lightView = glm::lookAt(absPos, absPos + object->absForward(), object->absUp());
-        lightSpaceMatrix = lightProjection * lightView;
-        m_depthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        for (auto m : object->scene->get_components<ModelComponent>(false, true)) {
-            m->renderDepth(*m_depthShader);
+        float near_plane = 1.0f, far_plane = 10000.0f;
+        glm::mat4 light_projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+        glm::mat4 light_view = glm::lookAt(world_pos, world_pos + entity->world_forward(), entity->world_up());
+        m_light_space_matrix = light_projection * light_view;
+        m_depthShader->set_mat4("lightSpaceMatrix", m_light_space_matrix);
+        for (auto m : entity->scene->get_components<ModelComponent>(false, true)) {
+            m->render_depth(*m_depthShader);
         }
 
         // reset framebuffer and viewport

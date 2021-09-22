@@ -6,7 +6,7 @@ namespace Birdy3d {
 
     class Canvas;
     class EventBus;
-    class GameObject;
+    class Entity;
     class Scene;
     class TextRenderer;
     class Theme;
@@ -23,7 +23,7 @@ namespace Birdy3d {
         static float delta_time;
         static std::weak_ptr<Scene> scene;
         static std::weak_ptr<Canvas> canvas;
-        static GameObject* selected_object;
+        static Entity* selected_entity;
 
         static bool init(const char* windowName, int width, int height);
         static void cleanup();

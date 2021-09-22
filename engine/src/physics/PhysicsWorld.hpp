@@ -5,17 +5,17 @@
 
 namespace Birdy3d {
 
-    class GameObject;
+    class Entity;
     class Collision;
 
     class PhysicsWorld {
     public:
-        PhysicsWorld(GameObject* scene);
+        PhysicsWorld(Entity* scene);
         ~PhysicsWorld();
         void update();
 
     private:
-        GameObject* m_scene;
+        Entity* m_scene;
         std::vector<std::unique_ptr<Collision>> m_collisions;
     };
 

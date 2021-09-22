@@ -51,7 +51,7 @@ namespace Birdy3d {
             return std::static_pointer_cast<T>(widget);
         }
 
-        void toForeground(Widget* w);
+        void to_foreground(Widget* w);
 
         template <class T = Widget>
         std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
@@ -71,11 +71,11 @@ namespace Birdy3d {
         }
 
         // Returns the position relative to the parent's origin in pixels
-        glm::vec2 preferredPosition(glm::vec2 parentSize, glm::vec2 size);
+        glm::vec2 preferred_position(glm::vec2 parentSize, glm::vec2 size);
 
         // Returns the size in pixels
-        virtual glm::vec2 minimalSize();
-        glm::vec2 preferredSize(glm::vec2 parentSize);
+        virtual glm::vec2 minimal_size();
+        glm::vec2 preferred_size(glm::vec2 parentSize);
 
         virtual void arrange(glm::vec2 pos, glm::vec2 size);
         void set_canvas(Canvas*);

@@ -14,7 +14,7 @@ namespace Birdy3d {
         return pixels;
     }
 
-    float Unit::toPixels(float parentSize) {
+    float Unit::to_pixels(float parentSize) {
         return (percent / 100) * parentSize + pixels;
     }
 
@@ -126,17 +126,17 @@ namespace Birdy3d {
         return UIVector(x, y);
     }
 
-    glm::vec2 UIVector::toPixels(glm::vec2 parentSize) {
-        return glm::vec2(x.toPixels(parentSize.x), y.toPixels(parentSize.y));
+    glm::vec2 UIVector::to_pixels(glm::vec2 parentSize) {
+        return glm::vec2(x.to_pixels(parentSize.x), y.to_pixels(parentSize.y));
     }
 
     UIVector::operator glm::vec2() {
         return glm::vec2(x, y);
     }
 
-    glm::vec2 Utils::getRelativePosition(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement) {
-        glm::vec2 p = pos.toPixels(parentSize);
-        glm::vec2 s = size.toPixels(parentSize);
+    glm::vec2 Utils::get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement) {
+        glm::vec2 p = pos.to_pixels(parentSize);
+        glm::vec2 s = size.to_pixels(parentSize);
         glm::vec2 out;
 
         if (placement == Placement::TOP_LEFT || placement == Placement::BOTTOM_LEFT || placement == Placement::CENTER_LEFT) {

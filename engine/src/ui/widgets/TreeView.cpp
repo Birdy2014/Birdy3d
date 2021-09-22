@@ -1,7 +1,7 @@
 #include "ui/widgets/TreeView.hpp"
 
 #include "core/Input.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 #include "scene/Scene.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
@@ -49,15 +49,15 @@ namespace Birdy3d {
                 row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 60.0f : 30.0f));
                 row.second.m_collapse_button->draw(m_move);
             }
-            Application::theme->text_renderer()->renderText(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, Application::theme->font_size, Application::theme->color_fg);
+            Application::theme->text_renderer()->render_text(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, Application::theme->font_size, Application::theme->color_fg);
             offset_y += Application::theme->line_height;
         }
     }
 
-    glm::vec2 TreeView::minimalSize() {
+    glm::vec2 TreeView::minimal_size() {
         float max_width = 0;
         for (const auto& row : m_flat_tree_list) {
-            float width = Application::theme->text_renderer()->textSize(row.second.text, Application::theme->font_size).x;
+            float width = Application::theme->text_renderer()->text_size(row.second.text, Application::theme->font_size).x;
             width += row.first * m_indent_size + m_offset_x_left;
             if (width > max_width)
                 max_width = width;
@@ -77,7 +77,7 @@ namespace Birdy3d {
         if (event->action != GLFW_PRESS)
             return;
 
-        glm::vec2 local_pos = Input::cursorPos() - m_actual_pos;
+        glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
         local_pos = glm::vec2(local_pos.x, m_actual_size.y - local_pos.y);
         int offset_y = 0;
         for (auto& item : m_flat_tree_list) {
@@ -133,32 +133,32 @@ namespace Birdy3d {
     }
 
     void TreeView::sync_scene_tree(Scene* scene) {
-        std::function<void(const GameObject*, TreeItem&)> traverse = [&](const GameObject* object, TreeItem& item) {
+        std::function<void(const Entity*, TreeItem&)> traverse = [&](const Entity* entity, TreeItem& item) {
             // Remove old TreeItems
             for (auto child_item_it = item.children.cbegin(); child_item_it != item.children.cend();) {
                 const auto& child_item = *child_item_it;
                 child_item_it++;
-                if (child_item.data.type() != typeid(GameObject*)) {
+                if (child_item.data.type() != typeid(Entity*)) {
                     item.remove_child(&child_item);
                     continue;
                 }
-                auto it = std::find_if(object->children().begin(), object->children().end(), [&](const std::shared_ptr<GameObject>& child_object) {
-                    return child_object.get() == std::any_cast<GameObject*>(child_item.data);
+                auto it = std::find_if(entity->children().begin(), entity->children().end(), [&](const std::shared_ptr<Entity>& child_entity) {
+                    return child_entity.get() == std::any_cast<Entity*>(child_item.data);
                 });
-                if (it == object->children().end()) {
+                if (it == entity->children().end()) {
                     item.remove_child(&child_item);
                 }
             }
 
             // Add new TreeItems
-            for (const auto& child : object->children()) {
+            for (const auto& child : entity->children()) {
                 auto it = std::find_if(item.children.begin(), item.children.end(), [&](const TreeItem& child_item) {
-                    return child_item.data.type() == typeid(GameObject*) && std::any_cast<GameObject*>(child_item.data) == child.get();
+                    return child_item.data.type() == typeid(Entity*) && std::any_cast<Entity*>(child_item.data) == child.get();
                 });
                 if (it == item.children.end()) {
                     std::string name = child->name;
                     if (name.empty())
-                        name = "Unnamed Object";
+                        name = "Unnamed Entity";
                     TreeItem& new_item = item.add_child(name);
                     new_item.data = child.get();
                     traverse(child.get(), new_item);
@@ -168,7 +168,7 @@ namespace Birdy3d {
             }
         };
         m_root_item.text = scene->name;
-        m_root_item.data = (GameObject*)scene;
+        m_root_item.data = (Entity*)scene;
         traverse(scene, m_root_item);
         update_flat_tree_list();
     }

@@ -17,7 +17,7 @@ namespace Birdy3d {
 
     void Textarea::arrange(glm::vec2 pos, glm::vec2 size) {
         Widget::arrange(pos, size);
-        updateLines();
+        update_lines();
     }
 
     void Textarea::draw() {
@@ -41,13 +41,13 @@ namespace Birdy3d {
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                Application::theme->text_renderer()->renderText(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Application::theme->color_text_highlight);
+                Application::theme->text_renderer()->render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Application::theme->color_text_highlight);
             }
         }
         glDisable(GL_SCISSOR_TEST);
     }
 
-    void Textarea::updateLines() {
+    void Textarea::update_lines() {
         m_lines.clear();
         std::u32string line;
         size_t line_end;
@@ -60,7 +60,7 @@ namespace Birdy3d {
             line = m_text.substr(pos, eol - pos);
             line_end = eol;
             // Line is too long
-            length = Application::theme->text_renderer()->textSize(line, Application::theme->font_size).x;
+            length = Application::theme->text_renderer()->text_size(line, Application::theme->font_size).x;
             if (length > m_actual_size.x) {
                 nextspace = pos;
                 while (nextspace < eol) {
@@ -70,7 +70,7 @@ namespace Birdy3d {
                     line_end = nextspace;
 
                     // reached the space too far right
-                    length = Application::theme->text_renderer()->textSize(line, Application::theme->font_size).x;
+                    length = Application::theme->text_renderer()->text_size(line, Application::theme->font_size).x;
                     if (length > m_actual_size.x) {
                         // the line can't be broken using a space
                         if (prevspace == pos)
@@ -89,7 +89,7 @@ namespace Birdy3d {
 
     void Textarea::on_update() {
         if (m_selecting) {
-            int char_pos = cursorCharPos();
+            int char_pos = cursor_char_pos();
             if (m_selection_start == char_pos)
                 m_selection_end = -1;
             else
@@ -101,7 +101,7 @@ namespace Birdy3d {
         if (readonly)
             return;
 
-        size_t char_pos = cursorCharPos();
+        size_t char_pos = cursor_char_pos();
 
         if (event->action == GLFW_PRESS) {
             grab_cursor();
@@ -128,7 +128,7 @@ namespace Birdy3d {
 
     void Textarea::on_char(InputCharEvent* event) {
         TextField::on_char(event);
-        updateLines();
+        update_lines();
     }
 
     // TODO: key repeat
@@ -165,11 +165,11 @@ namespace Birdy3d {
             break;
         }
         }
-        updateLines();
+        update_lines();
     }
 
-    size_t Textarea::cursorCharPos() {
-        glm::vec2 local_pos = Input::cursorPos() - m_actual_pos;
+    size_t Textarea::cursor_char_pos() {
+        glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
 
         int y = m_tmpscroll + (m_actual_size.y - local_pos.y) / Application::theme->line_height;
         if (y >= m_lines.size())

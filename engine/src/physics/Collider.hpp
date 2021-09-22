@@ -39,9 +39,9 @@ namespace Birdy3d {
         bool line(glm::vec3& direction);
         bool triangle(glm::vec3& direction);
         bool tetrahedron(glm::vec3& direction);
-        bool sameDirection(glm::vec3 a, glm::vec3 b);
+        bool same_direction(glm::vec3 a, glm::vec3 b);
         void push_front(glm::vec3 point);
-        bool nextSimplex(glm::vec3& direction);
+        bool next_simplex(glm::vec3& direction);
     };
 
 }

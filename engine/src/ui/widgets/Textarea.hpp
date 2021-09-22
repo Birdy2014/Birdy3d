@@ -29,8 +29,8 @@ namespace Birdy3d {
         std::vector<size_t> m_lines;
         bool m_selecting = false;
 
-        void updateLines();
-        size_t cursorCharPos();
+        void update_lines();
+        size_t cursor_char_pos();
         glm::ivec2 get_2d_pos(size_t pos);
     };
 

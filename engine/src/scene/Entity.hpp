@@ -9,25 +9,25 @@ namespace Birdy3d {
     class Scene;
     class Shader;
 
-    class GameObject {
+    class Entity {
     public:
         std::string name;
         Transform3d transform = Transform3d(this);
-        GameObject* parent = nullptr;
+        Entity* parent = nullptr;
         Scene* scene = nullptr;
         bool hidden = false;
 
-        GameObject(std::string name = "New GameObject", glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
-        virtual ~GameObject() = default;
+        Entity(std::string name = "New Entity", glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
+        virtual ~Entity() = default;
 
-        const std::vector<std::shared_ptr<GameObject>>& children() const { return m_children; }
-        void add_child(std::shared_ptr<GameObject>);
-        template <class T = GameObject, typename... Args>
+        const std::vector<std::shared_ptr<Entity>>& children() const { return m_children; }
+        void add_child(std::shared_ptr<Entity>);
+        template <class T = Entity, typename... Args>
         std::shared_ptr<T> add_child(Args... args) {
-            static_assert(std::is_base_of<GameObject, T>::value);
-            auto object = std::make_shared<T>(args...);
-            add_child(object);
-            return std::static_pointer_cast<T>(object);
+            static_assert(std::is_base_of<Entity, T>::value);
+            auto entity = std::make_shared<T>(args...);
+            add_child(entity);
+            return std::static_pointer_cast<T>(entity);
         }
 
         const std::vector<std::shared_ptr<Component>>& components() const { return m_components; }
@@ -44,10 +44,10 @@ namespace Birdy3d {
         virtual void update();
         virtual void post_update();
         void cleanup();
-        glm::vec3 absForward();
-        glm::vec3 absRight();
-        glm::vec3 absUp();
-        void setScene(Scene* scene);
+        glm::vec3 world_forward();
+        glm::vec3 world_right();
+        glm::vec3 world_up();
+        void set_scene(Scene* scene);
 
         template <class T>
         void get_components(std::vector<std::shared_ptr<T>>& components, bool hidden = true, bool recursive = false) const {
@@ -112,10 +112,10 @@ namespace Birdy3d {
     private:
         friend void Component::remove();
 
-        std::vector<std::shared_ptr<GameObject>> m_children;
+        std::vector<std::shared_ptr<Entity>> m_children;
         std::vector<std::shared_ptr<Component>> m_components;
 
-        void remove_child(GameObject*);
+        void remove_child(Entity*);
         void remove_component(Component*);
     };
 

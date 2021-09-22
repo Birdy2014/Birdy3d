@@ -27,7 +27,7 @@ namespace Birdy3d {
         }
 
         template <typename T>
-        static void assertNotNull(void* obj, const T& message) {
+        static void assert_not_null(void* obj, const T& message) {
             if (obj == nullptr)
                 Logger::error("Assert not null failed: ", message);
         }

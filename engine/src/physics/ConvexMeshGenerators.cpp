@@ -21,7 +21,7 @@ namespace Birdy3d {
 
     std::shared_ptr<Model> ConvexMeshGenerators::copy(const Model& model) {
         std::vector<std::unique_ptr<Mesh>> meshes;
-        for (const auto& m : model.getMeshes()) {
+        for (const auto& m : model.get_meshes()) {
             std::vector<Vertex> vertices = m->vertices;
             std::vector<unsigned int> indices = m->indices;
             meshes.push_back(std::make_unique<Mesh>(vertices, indices));
@@ -31,13 +31,13 @@ namespace Birdy3d {
     }
 
     std::shared_ptr<Model> ConvexMeshGenerators::hull(const Model&) {
-        // TODO
+        // TODO: Quickhull
         BIRDY3D_TODO
         return nullptr;
     }
 
     std::shared_ptr<Model> ConvexMeshGenerators::decomposition(const Model&) {
-        // TODO
+        // TODO: Convex decomposition
         BIRDY3D_TODO
         return nullptr;
     }

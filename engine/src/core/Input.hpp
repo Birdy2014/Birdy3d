@@ -24,19 +24,19 @@ namespace Birdy3d {
 
         static void init();
         static void update();
-        static bool keyPressed(int key);
-        static glm::vec2 cursorPos();
-        static glm::vec2 cursorPosOffset();
-        static bool buttonPressed(int button);
-        static void setCursorHidden(bool hidden);
-        static void toggleCursorHidden();
-        static bool isCursorHidden();
-        static void setCursor(Cursor cursor);
+        static bool key_pressed(int key);
+        static glm::vec2 cursor_pos();
+        static glm::vec2 cursor_pos_offset();
+        static bool button_pressed(int button);
+        static void set_cursor_hidden(bool hidden);
+        static void toggle_cursor_hidden();
+        static bool is_cursor_hidden();
+        static void set_cursor(Cursor cursor);
 
     private:
-        static bool cursorHidden;
-        static glm::vec2 currentCursorPos;
-        static glm::vec2 lastCursorPos;
+        static bool cursor_hidden;
+        static glm::vec2 current_cursor_pos;
+        static glm::vec2 last_cursor_pos;
         static GLFWcursor* cursors[CURSOR_LAST];
     };
 

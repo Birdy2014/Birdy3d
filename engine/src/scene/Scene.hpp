@@ -2,34 +2,34 @@
 
 #include "core/Base.hpp"
 #include "physics/PhysicsWorld.hpp"
-#include "scene/GameObject.hpp"
+#include "scene/Entity.hpp"
 
 namespace Birdy3d {
 
     class Camera;
 
-    class Scene : public GameObject {
+    class Scene : public Entity {
     public:
         std::weak_ptr<Camera> main_camera;
         Camera* m_current_camera = nullptr;
 
         Scene(std::string name = "Scene")
-            : GameObject(name) { }
+            : Entity(name) { }
 
         void start() override {
-            setScene(this);
+            set_scene(this);
             m_physics_world = std::make_unique<PhysicsWorld>(this);
-            GameObject::start();
+            Entity::start();
         }
 
         void update() override {
-            GameObject::update();
+            Entity::update();
             m_physics_world->update();
         }
 
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(cereal::base_class<GameObject>(this));
+            ar(cereal::base_class<Entity>(this));
             ar(cereal::make_nvp("main_camera", main_camera));
         }
 
