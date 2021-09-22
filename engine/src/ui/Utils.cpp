@@ -32,24 +32,6 @@ namespace Birdy3d {
         return *this;
     }
 
-    Unit Unit::operator+(const float other) {
-        return Unit(pixels + other, percent);
-    }
-
-    Unit& Unit::operator+=(const float other) {
-        pixels += other;
-        return *this;
-    }
-
-    Unit Unit::operator+(const int other) {
-        return Unit(pixels + other, percent);
-    }
-
-    Unit& Unit::operator+=(const int other) {
-        pixels += other;
-        return *this;
-    }
-
     Unit Unit::operator-() {
         return Unit(-pixels, -percent);
     }
@@ -61,24 +43,6 @@ namespace Birdy3d {
     Unit& Unit::operator-=(const Unit& other) {
         pixels -= other.pixels;
         percent -= other.percent;
-        return *this;
-    }
-
-    Unit Unit::operator-(const float other) {
-        return Unit(pixels - other, percent);
-    }
-
-    Unit& Unit::operator-=(const float other) {
-        pixels -= other;
-        return *this;
-    }
-
-    Unit Unit::operator-(const int other) {
-        return Unit(pixels - other, percent);
-    }
-
-    Unit& Unit::operator-=(const int other) {
-        pixels -= other;
         return *this;
     }
 

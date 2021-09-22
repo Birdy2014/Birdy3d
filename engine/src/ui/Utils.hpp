@@ -28,17 +28,31 @@ namespace Birdy3d {
         bool operator==(const Unit& other);
         Unit operator+(const Unit& other);
         Unit& operator+=(const Unit& other);
-        Unit operator+(const float other);
-        Unit& operator+=(const float other);
-        Unit operator+(const int other);
-        Unit& operator+=(const int other);
         Unit operator-();
         Unit operator-(const Unit& other);
         Unit& operator-=(const Unit& other);
-        Unit operator-(const float other);
-        Unit& operator-=(const float other);
-        Unit operator-(const int other);
-        Unit& operator-=(const int other);
+
+        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
+        Unit operator+(const T& other) {
+            return Unit(pixels + other, percent);
+        }
+
+        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
+        Unit& operator+=(const T& other) {
+            pixels += other;
+            return *this;
+        }
+
+        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
+        Unit operator-(const T& other) {
+            return Unit(pixels - other, percent);
+        }
+
+        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
+        Unit& operator-=(const T& other) {
+            pixels -= other;
+            return *this;
+        }
     };
 
     Unit operator"" _px(long double value);
