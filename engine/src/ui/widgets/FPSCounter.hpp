@@ -17,7 +17,7 @@ namespace Birdy3d {
 
         void draw() override {
             int fps = 1 / Application::delta_time;
-            text->text = "FPS: " + std::to_string(fps);
+            text->text("FPS: " + std::to_string(fps));
             Widget::draw();
         }
 

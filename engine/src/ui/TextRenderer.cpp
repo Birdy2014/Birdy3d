@@ -2,6 +2,7 @@
 
 #include "core/Application.hpp"
 #include "core/Logger.hpp"
+#include "render/Shader.hpp"
 #include "ui/Rectangle.hpp"
 #include <ft2build.h>
 #include <glad/glad.h>
@@ -9,6 +10,8 @@
 #include FT_FREETYPE_H
 
 namespace Birdy3d {
+
+    std::wstring_convert<TextRenderer::deletable_facet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> TextRenderer::converter;
 
     TextRenderer::~TextRenderer() {
         FT_Done_Face(*m_face);
@@ -175,20 +178,116 @@ namespace Birdy3d {
         return text.size();
     }
 
+    Text::Text(UIVector pos, float fontSize, std::string text, Color color, Placement placement, TextRenderer* renderer)
+        : Shape(pos, 0_px, color, placement)
+        , fontSize(fontSize)
+        , renderer(renderer)
+        , m_shader(RessourceManager::getShader("ui")) {
+        m_text = TextRenderer::converter.from_bytes(text);
+        create_buffers();
+        m_dirty = true;
+    }
+
     void Text::draw(glm::mat4 move) {
         if (m_hidden)
             return;
 
         if (m_dirty) {
-            UIVector textSize = renderer->textSize(text, fontSize);
-            m_relativePos = Utils::getRelativePosition(m_position, textSize, m_parentSize, m_placement);
+            delete_buffers();
+            create_buffers();
+            glm::vec2 pos = Utils::getRelativePosition(m_position, m_size, m_parentSize, m_placement);
+            m_move_self = glm::mat4(1);
+            m_move_self = glm::translate(m_move_self, glm::vec3(pos, 0.0f));
+            if (m_rotation != 0)
+                m_move_self = glm::rotate(m_move_self, m_rotation, glm::vec3(0, 0, 1));
             m_dirty = false;
         }
-        renderer->renderText(text, m_relativePos.x, m_relativePos.y, fontSize, m_color, move);
+
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, renderer->m_texture_atlas);
+        m_shader->use();
+        m_shader->setInt("type", Shape::Type::TEXT);
+        m_shader->setMat4("projection", projection());
+        m_shader->setMat4("move", move);
+        m_shader->setMat4("move_self", m_move_self);
+        m_shader->setVec4("color", m_color);
+        m_shader->setInt("rectTexture", 0);
+        glBindVertexArray(m_vao);
+        glDrawElements(GL_TRIANGLES, m_text.size() * 6, GL_UNSIGNED_INT, 0);
     }
 
     bool Text::contains(glm::vec2) {
         return false;
+    }
+
+    std::string Text::text() {
+        return TextRenderer::converter.to_bytes(m_text);
+    }
+
+    void Text::text(std::string value) {
+        m_text = TextRenderer::converter.from_bytes(value);
+        m_dirty = true;
+    }
+
+    void Text::create_buffers() {
+        // Create buffers
+        glGenVertexArrays(1, &m_vao);
+        glGenBuffers(1, &m_vbo);
+        glGenBuffers(1, &m_ebo);
+        // Create data
+        std::vector<UIVertex> vertices;
+        std::vector<GLuint> indices;
+        vertices.reserve(4 * m_text.size());
+        float scale = (fontSize / renderer->m_fontSize);
+        float x = 0;
+        float y = fontSize / 5; // Offet between baseline and bottom
+        for (char32_t c : m_text) {
+            if (renderer->m_chars.count(c) == 0)
+                renderer->addChar(c);
+            Character ch = renderer->m_chars[c];
+            float bottomToOrigin = (ch.size.y - ch.bearing.y) / 1.5; // For some reason, the division by 1.5 is necessary.
+            float xpos = x + ch.bearing.x * scale;
+            float ypos = y - bottomToOrigin;
+            float w = ch.size.x * scale;
+            float h = ch.size.y * scale;
+
+            GLuint start_index = vertices.size();
+            vertices.emplace_back(glm::vec2(xpos, ypos), glm::vec2(ch.texcoord1.x, ch.texcoord2.y)); // Bottom Left
+            vertices.emplace_back(glm::vec2(xpos + w, ypos), glm::vec2(ch.texcoord2.x, ch.texcoord2.y)); // Bottom Right
+            vertices.emplace_back(glm::vec2(xpos, ypos + h), glm::vec2(ch.texcoord1.x, ch.texcoord1.y)); // Top Left
+            vertices.emplace_back(glm::vec2(xpos + w, ypos + h), glm::vec2(ch.texcoord2.x, ch.texcoord1.y)); // Top Right
+
+            indices.push_back(start_index + 0);
+            indices.push_back(start_index + 1);
+            indices.push_back(start_index + 2);
+
+            indices.push_back(start_index + 3);
+            indices.push_back(start_index + 2);
+            indices.push_back(start_index + 1);
+
+            x += (ch.advance >> 6) * scale;
+        }
+        m_size = glm::vec2(x, fontSize);
+        // Write to buffers
+        glBindVertexArray(m_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(UIVertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
+        // vertex positions
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        // uv coordinates
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    }
+
+    void Text::delete_buffers() {
+        glDeleteBuffers(1, &m_vbo);
+        glDeleteVertexArrays(1, &m_vao);
     }
 
 }

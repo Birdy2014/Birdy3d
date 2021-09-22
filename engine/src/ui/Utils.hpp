@@ -74,4 +74,9 @@ namespace Birdy3d {
         static glm::vec2 getRelativePosition(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement);
     };
 
+    struct UIVertex {
+        glm::vec2 position;
+        glm::vec2 texcoords;
+    };
+
 }

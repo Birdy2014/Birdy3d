@@ -15,8 +15,8 @@ namespace Birdy3d {
         Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), std::string name = "");
         void toForeground();
 
-        std::string title() { return m_title->text; }
-        void title(std::string title) { m_title->text = title; }
+        std::string title() { return m_title->text(); }
+        void title(std::string title) { m_title->text(title); }
         bool dragging() { return m_dragging; }
         bool resizing() { return m_resize_x_left || m_resize_x_right || m_resize_y_top || m_resize_y_bottom; }
         bool resizing_left() { return m_resize_x_left; }

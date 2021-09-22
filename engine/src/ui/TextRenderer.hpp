@@ -36,7 +36,7 @@ namespace Birdy3d {
         };
 
     public:
-        std::wstring_convert<deletable_facet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> converter;
+        static std::wstring_convert<deletable_facet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> converter;
 
         TextRenderer(std::string path, unsigned int fontSize);
         ~TextRenderer();
@@ -48,7 +48,9 @@ namespace Birdy3d {
         int char_index(std::u32string text, float font_size, float x_pos, bool between_chars = false);
 
     private:
-        std::map<char, Character> m_chars;
+        friend class Text;
+
+        std::map<char32_t, Character> m_chars;
         FT_Library* m_ft;
         FT_Face* m_face;
         std::unique_ptr<Rectangle> m_rect;
@@ -63,19 +65,21 @@ namespace Birdy3d {
     class Text : public Shape {
     public:
         float fontSize;
-        std::string text;
         TextRenderer* renderer;
 
-        Text(UIVector pos, float fontSize, std::string text, Color color, Placement placement, TextRenderer* renderer)
-            : Shape(pos, 0_px, color, placement)
-            , fontSize(fontSize)
-            , text(text)
-            , renderer(renderer) { }
+        Text(UIVector pos, float fontSize, std::string text, Color color, Placement placement, TextRenderer* renderer);
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
+        std::string text();
+        void text(std::string value);
 
     private:
-        glm::vec2 m_relativePos;
+        std::u32string m_text;
+        GLuint m_vao, m_vbo, m_ebo;
+        std::shared_ptr<Shader> m_shader;
+
+        void create_buffers();
+        void delete_buffers();
     };
 
 }
