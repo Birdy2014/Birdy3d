@@ -32,7 +32,7 @@ namespace Birdy3d {
             , m_placement(placement)
             , m_texCoordA(texCoordA)
             , m_texCoordB(texCoordB) { }
-        virtual ~Shape() {};
+        virtual ~Shape() = default;
         bool hidden() { return m_hidden; }
         bool hidden(bool hidden) { return m_hidden = hidden; }
         UIVector position() { return m_position; }

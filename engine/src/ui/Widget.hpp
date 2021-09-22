@@ -29,7 +29,7 @@ namespace Birdy3d {
         Canvas* canvas = nullptr;
 
         Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, std::string name = "");
-        virtual ~Widget() { }
+        virtual ~Widget() = default;
         virtual void draw();
 
         // Layout

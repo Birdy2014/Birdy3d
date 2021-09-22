@@ -10,6 +10,7 @@ namespace Birdy3d {
     public:
         GameObject* object = nullptr;
 
+        virtual ~Component() = default;
         void _start();
         void _update();
         void _cleanup();

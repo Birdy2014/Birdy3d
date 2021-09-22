@@ -18,6 +18,7 @@ namespace Birdy3d {
         bool hidden = false;
 
         GameObject(std::string name = "New GameObject", glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
+        virtual ~GameObject() = default;
 
         const std::vector<std::shared_ptr<GameObject>>& children() const { return m_children; }
         void add_child(std::shared_ptr<GameObject>);
