@@ -45,7 +45,7 @@ namespace Birdy3d {
     }
 
     Text* Widget::add_text(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
-        std::unique_ptr<Text> shape = std::make_unique<Text>(pos, fontSize, text, color, placement, Application::theme->text_renderer());
+        std::unique_ptr<Text> shape = std::make_unique<Text>(pos, fontSize, text, color, placement, &Application::theme->text_renderer());
         Text* ptr = shape.get();
         m_shapes.push_back(std::move(shape));
         return ptr;

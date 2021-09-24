@@ -68,7 +68,7 @@ namespace Birdy3d {
         item.m_child_rect_size = glm::vec2(0);
         for (const auto& child_item : item.children) {
             item.m_child_rect_size.y += Application::theme->line_height;
-            float text_width = Application::theme->text_renderer()->text_size(child_item.text, Application::theme->font_size).x;
+            float text_width = Application::theme->text_renderer().text_size(child_item.text, Application::theme->font_size).x;
             if (!child_item.children.empty())
                 text_width += m_arrow_size + 5;
             if (item.m_child_rect_size.x < text_width)
@@ -91,7 +91,7 @@ namespace Birdy3d {
                 m_submenu_triangle->rotation(glm::radians(30.0f));
                 m_submenu_triangle->draw(glm::mat4(1));
             }
-            Application::theme->text_renderer()->render_text(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, Application::theme->font_size, Application::theme->color_fg);
+            Application::theme->text_renderer().render_text(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, Application::theme->font_size, Application::theme->color_fg);
         }
         for (auto& child_item : item.children) {
             if (!child_item.children.empty() && child_item.opened) {

@@ -41,7 +41,7 @@ namespace Birdy3d {
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                Application::theme->text_renderer()->render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Application::theme->color_text_highlight);
+                Application::theme->text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Application::theme->color_text_highlight);
             }
         }
         glDisable(GL_SCISSOR_TEST);
@@ -60,7 +60,7 @@ namespace Birdy3d {
             line = m_text.substr(pos, eol - pos);
             line_end = eol;
             // Line is too long
-            length = Application::theme->text_renderer()->text_size(line, Application::theme->font_size).x;
+            length = Application::theme->text_renderer().text_size(line, Application::theme->font_size).x;
             if (length > m_actual_size.x) {
                 nextspace = pos;
                 while (nextspace < eol) {
@@ -70,7 +70,7 @@ namespace Birdy3d {
                     line_end = nextspace;
 
                     // reached the space too far right
-                    length = Application::theme->text_renderer()->text_size(line, Application::theme->font_size).x;
+                    length = Application::theme->text_renderer().text_size(line, Application::theme->font_size).x;
                     if (length > m_actual_size.x) {
                         // the line can't be broken using a space
                         if (prevspace == pos)
@@ -176,7 +176,7 @@ namespace Birdy3d {
             y = m_lines.size() - 1;
 
         size_t line_start = y > 0 ? m_lines[y - 1] : 0;
-        int char_pos = Application::theme->text_renderer()->char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), Application::theme->font_size, local_pos.x, true);
+        int char_pos = Application::theme->text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), Application::theme->font_size, local_pos.x, true);
         return line_start + char_pos;
     }
 

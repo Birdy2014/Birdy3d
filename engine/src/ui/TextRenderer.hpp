@@ -15,6 +15,7 @@ typedef struct FT_FaceRec_* FT_Face;
 namespace Birdy3d {
 
     class Rectangle;
+    class Theme;
 
     struct Character {
         glm::vec2 texcoord1;
@@ -38,36 +39,37 @@ namespace Birdy3d {
     public:
         static std::wstring_convert<DeletableFacet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> converter;
 
-        TextRenderer(std::string path, unsigned int fontSize);
+        TextRenderer(Theme&);
         ~TextRenderer();
-        void render_text(std::string text, float x, float y, float fontSize, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
-        void render_text(std::u32string text, float x, float y, float fontSize, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
-        UIVector text_size(std::string text, float fontSize);
-        UIVector text_size(std::u32string text, float fontSize);
-        float char_width(char32_t c, float fontSize);
+        void render_text(std::string text, float x, float y, float font_size, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
+        void render_text(std::u32string text, float x, float y, float font_size, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
+        UIVector text_size(std::string text, float font_size);
+        UIVector text_size(std::u32string text, float font_size);
+        float char_width(char32_t c, float font_size);
         int char_index(std::u32string text, float font_size, float x_pos, bool between_chars = false);
 
     private:
         friend class Text;
 
+        Theme& m_theme;
         std::map<char32_t, Character> m_chars;
         FT_Library* m_ft;
         FT_Face* m_face;
         std::unique_ptr<Rectangle> m_rect;
-        unsigned int m_fontSize;
+        unsigned int m_font_size;
         GLuint m_texture_atlas;
         glm::vec2 m_texture_atlas_size;
-        int m_texture_atlas_current_x;
+        glm::ivec2 m_texture_atlas_current_pos;
 
         bool add_char(char32_t c);
     };
 
     class Text : public Shape {
     public:
-        float fontSize;
+        float font_size;
         TextRenderer* renderer;
 
-        Text(UIVector pos, float fontSize, std::string text, Color color, Placement placement, TextRenderer* renderer);
+        Text(UIVector pos, float font_size, std::string text, Color color, Placement placement, TextRenderer* renderer);
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
         std::string text();

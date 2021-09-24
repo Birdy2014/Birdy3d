@@ -2,6 +2,7 @@
 
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+#include "ui/TextRenderer.hpp"
 
 namespace Birdy3d {
 
@@ -15,9 +16,11 @@ namespace Birdy3d {
         , color_text_highlight(color_text_highlight)
         , font(font)
         , font_size(font_size)
-        , line_height(font_size * 1.1) { }
+        , line_height(font_size * 1.1) {
+        m_text_renderer = std::make_unique<TextRenderer>(*this);
+    }
 
-    TextRenderer* Theme::text_renderer() {
-        return RessourceManager::get_text_renderer(font).get();
+    TextRenderer& Theme::text_renderer() {
+        return *m_text_renderer.get();
     }
 }

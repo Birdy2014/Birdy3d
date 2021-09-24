@@ -5,7 +5,7 @@
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
 #include "scene/PrimitiveGenerator.hpp"
-#include "ui/TextRenderer.hpp"
+#include "ui/Theme.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -21,7 +21,7 @@
 namespace Birdy3d {
 
     std::unordered_map<std::string, std::shared_ptr<Shader>> RessourceManager::m_shaders;
-    std::unordered_map<std::string, std::shared_ptr<TextRenderer>> RessourceManager::m_text_renderers;
+    std::unordered_map<std::string, std::shared_ptr<Theme>> RessourceManager::m_themes;
     std::unordered_map<std::string, std::shared_ptr<Model>> RessourceManager::m_models;
     std::unordered_map<std::string, std::shared_ptr<Texture>> RessourceManager::m_textures;
 
@@ -39,14 +39,18 @@ namespace Birdy3d {
         return shader;
     }
 
-    std::shared_ptr<TextRenderer> RessourceManager::get_text_renderer(const std::string& name) {
-        std::shared_ptr<TextRenderer> renderer = m_text_renderers[name];
-        if (!renderer) {
-            std::string path = get_ressource_path(name, RessourceType::FONT);
-            renderer = std::make_shared<TextRenderer>(path, 30);
-            m_text_renderers[name] = renderer;
+    std::shared_ptr<Theme> RessourceManager::get_theme(const std::string& name) {
+        // TODO: Loading Theme from file
+        BIRDY3D_TODO
+        std::shared_ptr<Theme> theme = m_themes[name];
+        /*
+        if (!theme) {
+            std::string path = get_ressource_path(name, RessourceType::THEME);
+            theme = std::make_shared<Theme>(path, 30);
+            m_themes[name] = theme;
         }
-        return renderer;
+        */
+        return theme;
     }
 
     std::shared_ptr<Model> RessourceManager::get_model(const std::string& name) {
@@ -132,6 +136,9 @@ namespace Birdy3d {
             break;
         case RessourceType::TEXTURE:
             subdir = "textures/";
+            break;
+        case RessourceType::THEME:
+            subdir = "themes/";
             break;
         case RessourceType::MODEL:
             subdir = "models/";

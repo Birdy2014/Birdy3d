@@ -46,10 +46,10 @@ namespace Birdy3d {
             }
             if (!row.second.children.empty()) {
                 row.second.m_collapse_button->position(glm::vec2(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y + (Application::theme->line_height - row.second.m_collapse_button->size().x) / 2.0f));
-                row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 60.0f : 30.0f));
+                row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 30.0f : 60.0f));
                 row.second.m_collapse_button->draw(m_move);
             }
-            Application::theme->text_renderer()->render_text(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, Application::theme->font_size, Application::theme->color_fg);
+            Application::theme->text_renderer().render_text(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, Application::theme->font_size, Application::theme->color_fg);
             offset_y += Application::theme->line_height;
         }
     }
@@ -57,7 +57,7 @@ namespace Birdy3d {
     glm::vec2 TreeView::minimal_size() {
         float max_width = 0;
         for (const auto& row : m_flat_tree_list) {
-            float width = Application::theme->text_renderer()->text_size(row.second.text, Application::theme->font_size).x;
+            float width = Application::theme->text_renderer().text_size(row.second.text, Application::theme->font_size).x;
             width += row.first * m_indent_size + m_offset_x_left;
             if (width > max_width)
                 max_width = width;

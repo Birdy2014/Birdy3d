@@ -22,7 +22,7 @@ namespace Birdy3d {
         }
 
         glm::vec2 minimal_size() override {
-            glm::vec2 min_size = Application::theme->text_renderer()->text_size("FPS: 000", text->fontSize) + 2.0f;
+            glm::vec2 min_size = Application::theme->text_renderer().text_size("FPS: 000", text->font_size) + 2.0f;
             return glm::max(min_size, Widget::minimal_size());
         }
     };

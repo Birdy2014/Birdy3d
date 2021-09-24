@@ -10,7 +10,7 @@ uniform mat4 move;
 uniform mat4 move_self;
 
 void main() {
-    gl_Position = projection * move * move_self * vec4(pos, 0, 1);
+    gl_Position = projection * (move * move_self * vec4(pos, 0, 1) + glm::vec4(0.5, 0.5, 0, 0));
     FragTex = tex;
 }
 

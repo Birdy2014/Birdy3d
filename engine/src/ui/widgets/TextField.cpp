@@ -12,11 +12,11 @@ namespace Birdy3d {
     }
 
     std::string TextField::text() {
-        return Application::theme->text_renderer()->converter.to_bytes(m_text);
+        return TextRenderer::converter.to_bytes(m_text);
     }
 
     void TextField::text(std::string text) {
-        std::u32string new_text = Application::theme->text_renderer()->converter.from_bytes(text);
+        std::u32string new_text = TextRenderer::converter.from_bytes(text);
         if (new_text != m_text)
             m_changed = true;
         m_text = new_text;
@@ -24,21 +24,21 @@ namespace Birdy3d {
 
     void TextField::append(std::string text) {
         m_changed = true;
-        m_text += Application::theme->text_renderer()->converter.from_bytes(text);
+        m_text += TextRenderer::converter.from_bytes(text);
     }
 
     void TextField::draw() {
         Widget::draw();
         glEnable(GL_SCISSOR_TEST);
         glScissor(m_actual_pos.x, m_actual_pos.y, m_actual_size.x, m_actual_size.y);
-        Application::theme->text_renderer()->render_text(m_text, 0, m_actual_size.y / 2 - Application::theme->font_size / 2, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Application::theme->color_text_highlight);
+        Application::theme->text_renderer().render_text(m_text, 0, m_actual_size.y / 2 - Application::theme->font_size / 2, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Application::theme->color_text_highlight);
         glDisable(GL_SCISSOR_TEST);
     }
 
     void TextField::on_update() {
         if (m_selecting) {
             glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
-            int char_pos = Application::theme->text_renderer()->char_index(m_text, Application::theme->font_size, local_pos.x, true);
+            int char_pos = Application::theme->text_renderer().char_index(m_text, Application::theme->font_size, local_pos.x, true);
             if (m_selection_start == char_pos)
                 m_selection_end = -1;
             else
@@ -53,7 +53,7 @@ namespace Birdy3d {
         if (event->action == GLFW_PRESS) {
             grab_cursor();
             glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
-            int char_pos = Application::theme->text_renderer()->char_index(m_text, Application::theme->font_size, local_pos.x, true);
+            int char_pos = Application::theme->text_renderer().char_index(m_text, Application::theme->font_size, local_pos.x, true);
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;

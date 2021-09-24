@@ -22,10 +22,12 @@ namespace Birdy3d {
         const int line_height;
 
         Theme(Color color_fg, Color color_bg, Color color_border, Color color_title_bar, Color color_input_bg, Color color_selected_bg, Color color_text_highlight, std::string font, int font_size);
-
-        TextRenderer* text_renderer();
+        TextRenderer& text_renderer();
 
         // TODO: load theme from file
+
+    private:
+        std::unique_ptr<TextRenderer> m_text_renderer;
     };
 
 }

@@ -7,7 +7,7 @@
 namespace Birdy3d {
 
     class Shader;
-    class TextRenderer;
+    class Theme;
     class Model;
     class Texture;
 
@@ -16,12 +16,13 @@ namespace Birdy3d {
         enum class RessourceType {
             SHADER,
             TEXTURE,
+            THEME,
             MODEL,
             FONT
         };
 
         static std::shared_ptr<Shader> get_shader(const std::string& name);
-        static std::shared_ptr<TextRenderer> get_text_renderer(const std::string& name);
+        static std::shared_ptr<Theme> get_theme(const std::string& name);
         static std::shared_ptr<Model> get_model(const std::string& name);
         static std::shared_ptr<Texture> get_texture(const std::string& name);
         static std::shared_ptr<Texture> get_color_texture(const Color&);
@@ -31,7 +32,7 @@ namespace Birdy3d {
 
     private:
         static std::unordered_map<std::string, std::shared_ptr<Shader>> m_shaders;
-        static std::unordered_map<std::string, std::shared_ptr<TextRenderer>> m_text_renderers;
+        static std::unordered_map<std::string, std::shared_ptr<Theme>> m_themes;
         static std::unordered_map<std::string, std::shared_ptr<Model>> m_models;
         static std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
 
