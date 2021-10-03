@@ -51,6 +51,7 @@
 #include "ui/Window.hpp"
 #include "ui/widgets/Button.hpp"
 #include "ui/widgets/CheckBox.hpp"
+#include "ui/widgets/CollapsibleBox.hpp"
 #include "ui/widgets/ContextMenu.hpp"
 #include "ui/widgets/FPSCounter.hpp"
 #include "ui/widgets/NumberInput.hpp"

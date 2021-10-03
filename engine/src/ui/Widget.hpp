@@ -105,6 +105,7 @@ namespace Birdy3d {
         glm::vec2 m_actual_pos = glm::vec2(1);
         glm::mat4 m_move = glm::mat4(1);
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
+        bool m_children_visible = true;
 
         virtual bool contains(glm::vec2) const;
 
@@ -121,8 +122,8 @@ namespace Birdy3d {
         // Shapes
         Rectangle* add_rectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
         Rectangle* add_filled_rectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
-        Triangle* add_triangle(UIVector pos, UIVector size, Color color);
-        Triangle* add_filled_triangle(UIVector pos, UIVector size, Color color);
+        Triangle* add_triangle(UIVector pos, UIVector size, Color color, Placement = Placement::BOTTOM_LEFT);
+        Triangle* add_filled_triangle(UIVector pos, UIVector size, Color color, Placement = Placement::BOTTOM_LEFT);
         Text* add_text(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
 
     private:

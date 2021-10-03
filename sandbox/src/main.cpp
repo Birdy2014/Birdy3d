@@ -212,9 +212,13 @@ int main() {
         inspector_window->hidden = !inspector_window->hidden;
     };
 
-    input_position_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
-    input_position_y = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
-    input_position_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    auto transform_box = inspector_window->add_child<CollapsibleBox>(UIVector(0_px, 5_px));
+    transform_box->title("Transform");
+    transform_box->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
+
+    input_position_x = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_position_y = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_position_z = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
 
     input_position_x->callback_change = [&] {
         if (Application::selected_entity)
@@ -231,9 +235,9 @@ int main() {
             Application::selected_entity->transform.position.z = input_position_z->value();
     };
 
-    input_scale_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
-    input_scale_y = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
-    input_scale_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_scale_x = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_scale_y = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_scale_z = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
 
     input_scale_x->min_value = 0;
     input_scale_y->min_value = 0;
@@ -254,9 +258,9 @@ int main() {
             Application::selected_entity->transform.scale.z = input_scale_z->value();
     };
 
-    input_orientation_x = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
-    input_orientation_y = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
-    input_orientation_z = inspector_window->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_orientation_x = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_orientation_y = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
+    input_orientation_z = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
 
     input_orientation_x->callback_change = [&] {
         if (Application::selected_entity)

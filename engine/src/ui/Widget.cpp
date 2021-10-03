@@ -30,15 +30,15 @@ namespace Birdy3d {
         return ptr;
     }
 
-    Triangle* Widget::add_triangle(UIVector pos, UIVector size, Color color) {
-        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::OUTLINE);
+    Triangle* Widget::add_triangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::OUTLINE, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
     }
 
-    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, Color color) {
-        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::FILLED);
+    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, Color color, Placement placement) {
+        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::FILLED, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
@@ -58,6 +58,8 @@ namespace Birdy3d {
         for (const auto& s : m_shapes)
             s->draw(m_move);
 
+        if (!m_children_visible)
+            return;
         for (const auto& child : m_children)
             child->draw();
     }
@@ -68,7 +70,7 @@ namespace Birdy3d {
 
     glm::vec2 Widget::minimal_size() {
         glm::vec2 children_minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
-        if (m_layout)
+        if (m_layout && m_children_visible)
             children_minsize += m_layout->minimal_size(m_children);
         return glm::max(children_minsize, size.to_pixels());
     }
@@ -86,7 +88,7 @@ namespace Birdy3d {
             s->parent_size(size);
         }
 
-        if (m_layout)
+        if (m_layout && m_children_visible)
             m_layout->arrange(m_children, pos + glm::vec2(m_padding[0], m_padding[2]), size - glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]));
     }
 
@@ -129,7 +131,7 @@ namespace Birdy3d {
         if (hidden)
             hover = false;
         for (auto it = m_children.rbegin(); it != m_children.rend(); it++) {
-            if ((*it)->update_hover(hover)) {
+            if ((*it)->update_hover(hover && m_children_visible) && m_children_visible) {
                 hover = false;
                 success = true;
             }
