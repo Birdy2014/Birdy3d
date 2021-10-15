@@ -79,7 +79,9 @@ namespace Birdy3d {
 
         glm::mat4 projection() {
             glm::vec2 viewport = Application::get_viewport_size();
-            return glm::ortho(0.0f, viewport.x, 0.0f, viewport.y);
+            // The -1 is necessary, because the parameter describes the rightmost/top coordinate, not the screen size
+            return glm::ortho(0.0f, viewport.x - 1, 0.0f, viewport.y - 1);
+            // TODO: Flip y-coordinate by swapping the last two parameters
         }
 
     protected:

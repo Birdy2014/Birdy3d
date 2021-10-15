@@ -70,8 +70,8 @@ namespace Birdy3d {
         glTexSubImage2D(GL_TEXTURE_2D, 0, m_texture_atlas_current_pos.x, m_texture_atlas_current_pos.y, (*m_face)->glyph->bitmap.width, (*m_face)->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, (*m_face)->glyph->bitmap.buffer);
         // store character
         Character character = {
-            glm::vec2((float)m_texture_atlas_current_pos.x / m_texture_atlas_size.x, (float)m_texture_atlas_current_pos.y / m_texture_atlas_size.y),
-            glm::vec2((float)(m_texture_atlas_current_pos.x + (*m_face)->glyph->bitmap.width) / (float)m_texture_atlas_size.x, (float)m_texture_atlas_current_pos.y / m_texture_atlas_size.y + (*m_face)->glyph->bitmap.rows / m_texture_atlas_size.y),
+            glm::vec2((m_texture_atlas_current_pos.x) / m_texture_atlas_size.x, (m_texture_atlas_current_pos.y) / m_texture_atlas_size.y),
+            glm::vec2((m_texture_atlas_current_pos.x + (*m_face)->glyph->bitmap.width) / (float)m_texture_atlas_size.x, (m_texture_atlas_current_pos.y + (*m_face)->glyph->bitmap.rows) / m_texture_atlas_size.y),
             glm::ivec2((*m_face)->glyph->bitmap.width, (*m_face)->glyph->bitmap.rows),
             glm::ivec2((*m_face)->glyph->bitmap_left, (*m_face)->glyph->bitmap_top),
             (*m_face)->glyph->advance.x
