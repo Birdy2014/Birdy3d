@@ -261,10 +261,10 @@ namespace Birdy3d {
         glDisable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        m_deferred_geometry_shader->use();
+        m_deferred_geometry_shader->set_mat4("projection", m_projection);
+        m_deferred_geometry_shader->set_mat4("view", view);
         for (auto m : m_models) {
-            m_deferred_geometry_shader->use();
-            m_deferred_geometry_shader->set_mat4("projection", m_projection);
-            m_deferred_geometry_shader->set_mat4("view", view);
             m->render(*m_deferred_geometry_shader, false);
         }
 

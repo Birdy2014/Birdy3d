@@ -33,7 +33,6 @@ namespace Birdy3d {
         if (material == nullptr)
             material = &m_embedded_material;
         glm::mat4 model = entity.transform.matrix();
-        shader.use();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
             if (transparent == material->transparent())
