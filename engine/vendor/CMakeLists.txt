@@ -23,8 +23,8 @@ else()
     FetchContent_MakeAvailable(freetype)
 endif()
 
-find_library(LIBRARY_GLM glm) # FIXME: This never finds glm
-if (NOT LIBRARY_GLM)
+find_path(LIBRARY_GLM glm)
+if(LIBRARY_GLM STREQUAL "LIBRARY_GLM-NOTFOUND")
     FetchContent_Declare(
         glm
         GIT_REPOSITORY https://github.com/g-truc/glm
@@ -33,6 +33,8 @@ if (NOT LIBRARY_GLM)
 
     FetchContent_MakeAvailable(glm)
     target_include_directories(Birdy3d_engine PUBLIC ${glm_SOURCE_DIR})
+else()
+    target_include_directories(Birdy3d_engine PUBLIC ${LIBRARY_GLM})
 endif()
 
 # TODO: uncomment find_library and change GIT_TAG once new-cursors-on-3.3-stable gets merged
