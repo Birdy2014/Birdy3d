@@ -14,7 +14,8 @@ namespace Birdy3d {
 
         Transform3d() = delete;
         Transform3d(Entity*);
-        void post_update();
+        Transform3d(const Transform3d&);
+        void update(bool changed = false);
         glm::mat4 matrix();
         glm::vec3 world_position();
         glm::vec3 world_orientation();
@@ -29,16 +30,11 @@ namespace Birdy3d {
     private:
         glm::mat4 m_matrix;
         Entity* m_entity = nullptr;
-        bool m_value_changed = false;
 
         // Copies for change detection
         glm::vec3 m_old_position = glm::vec3(0);
         glm::vec3 m_old_orientation = glm::vec3(0);
         glm::vec3 m_old_scale = glm::vec3(0);
-        glm::mat4 m_old_parent_matrix = glm::mat4(1);
-
-        bool changed(bool updateStatus = false);
-        glm::mat4 compute_matrix();
     };
 
 }

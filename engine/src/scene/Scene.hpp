@@ -24,7 +24,9 @@ namespace Birdy3d {
 
         void update() override {
             Entity::update();
+            transform.update();
             m_physics_world->update();
+            transform.update();
         }
 
         template <class Archive>

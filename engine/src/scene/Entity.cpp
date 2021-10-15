@@ -41,6 +41,7 @@ namespace Birdy3d {
     }
 
     void Entity::start() {
+        transform.update();
         for (const auto& c : m_components) {
             c->entity = this;
             c->external_start();
@@ -66,8 +67,6 @@ namespace Birdy3d {
     void Entity::post_update() {
         if (hidden)
             return;
-
-        transform.post_update();
 
         for (const auto& o : m_children) {
             o->post_update();
