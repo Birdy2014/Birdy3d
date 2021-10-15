@@ -11,7 +11,7 @@
 namespace Birdy3d {
 
     TreeItem::TreeItem(std::string text, TreeView* treeview)
-        : text(text)
+        : text(std::make_unique<Text>(0_px, Application::theme->font_size, text, Application::theme->color_fg, Placement::BOTTOM_LEFT, &Application::theme->text_renderer()))
         , m_treeview(treeview)
         , m_collapse_button(std::make_unique<Triangle>(0_px, UIVector(Application::theme->font_size / 2), Color::WHITE)) { }
 
@@ -49,7 +49,8 @@ namespace Birdy3d {
                 row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 30.0f : 60.0f));
                 row.second.m_collapse_button->draw(m_move);
             }
-            Application::theme->text_renderer().render_text(row.second.text, m_actual_pos.x + row.first * m_indent_size + m_offset_x_left, m_actual_pos.y + m_actual_size.y - offset_y, Application::theme->font_size, Application::theme->color_fg);
+            row.second.text->position(UIVector(row.first * m_indent_size + m_offset_x_left, m_actual_size.y - offset_y));
+            row.second.text->draw(m_move);
             offset_y += Application::theme->line_height;
         }
     }
@@ -57,7 +58,7 @@ namespace Birdy3d {
     glm::vec2 TreeView::minimal_size() {
         float max_width = 0;
         for (const auto& row : m_flat_tree_list) {
-            float width = Application::theme->text_renderer().text_size(row.second.text, Application::theme->font_size).x;
+            float width = row.second.text->size().x;
             width += row.first * m_indent_size + m_offset_x_left;
             if (width > max_width)
                 max_width = width;
@@ -167,7 +168,7 @@ namespace Birdy3d {
                 traverse(child.get(), *it);
             }
         };
-        m_root_item.text = scene->name;
+        m_root_item.text->text(scene->name);
         m_root_item.data = (Entity*)scene;
         traverse(scene, m_root_item);
         update_flat_tree_list();

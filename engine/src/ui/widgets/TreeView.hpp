@@ -11,7 +11,7 @@ namespace Birdy3d {
 
     class TreeItem {
     public:
-        std::string text;
+        std::unique_ptr<Text> text;
         std::list<TreeItem> children;
         bool collapsed = false;
         std::any data;
