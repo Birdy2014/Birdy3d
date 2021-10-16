@@ -4,8 +4,8 @@
 #include "render/Model.hpp"
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
-#include "scene/PrimitiveGenerator.hpp"
 #include "ui/Theme.hpp"
+#include "utils/PrimitiveGenerator.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <fstream>

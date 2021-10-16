@@ -1,4 +1,4 @@
-#include "ui/Utils.hpp"
+#include "ui/Units.hpp"
 
 namespace Birdy3d {
 
@@ -134,7 +134,7 @@ namespace Birdy3d {
         return glm::vec2(x, y);
     }
 
-    glm::vec2 Utils::get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement) {
+    glm::vec2 UIVector::get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement) {
         glm::vec2 p = pos.to_pixels(parentSize);
         glm::vec2 s = size.to_pixels(parentSize);
         glm::vec2 out;

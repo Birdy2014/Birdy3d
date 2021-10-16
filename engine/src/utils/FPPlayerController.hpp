@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene/Component.hpp"
+#include "ecs/Component.hpp"
 #include <memory>
 
 namespace Birdy3d {

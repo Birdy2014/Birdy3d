@@ -1,6 +1,6 @@
-#include "scene/Component.hpp"
+#include "ecs/Component.hpp"
 
-#include "scene/Entity.hpp"
+#include "ecs/Entity.hpp"
 
 namespace Birdy3d {
 

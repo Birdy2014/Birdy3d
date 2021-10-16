@@ -1,8 +1,8 @@
 #pragma once
 
 #include "core/Base.hpp"
-#include "scene/Component.hpp"
-#include "scene/Transform.hpp"
+#include "ecs/Component.hpp"
+#include "ecs/Transform.hpp"
 
 namespace Birdy3d {
 

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "ecs/Entity.hpp"
 #include "events/Event.hpp"
-#include "scene/Entity.hpp"
 
 namespace Birdy3d {
 

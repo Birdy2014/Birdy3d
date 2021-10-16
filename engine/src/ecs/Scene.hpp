@@ -1,8 +1,8 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "ecs/Entity.hpp"
 #include "physics/PhysicsWorld.hpp"
-#include "scene/Entity.hpp"
 
 namespace Birdy3d {
 

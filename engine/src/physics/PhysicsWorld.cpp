@@ -1,10 +1,10 @@
 #include "physics/PhysicsWorld.hpp"
 
 #include "core/Application.hpp"
+#include "ecs/Entity.hpp"
 #include "events/CollisionEvent.hpp"
 #include "physics/Collider.hpp"
 #include "physics/Collision.hpp"
-#include "scene/Entity.hpp"
 
 namespace Birdy3d {
 

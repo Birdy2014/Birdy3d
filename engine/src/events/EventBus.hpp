@@ -1,8 +1,8 @@
 #pragma once
 
+#include "ecs/Component.hpp"
+#include "ecs/Entity.hpp"
 #include "events/Event.hpp"
-#include "scene/Component.hpp"
-#include "scene/Entity.hpp"
 #include <any>
 #include <functional>
 #include <list>

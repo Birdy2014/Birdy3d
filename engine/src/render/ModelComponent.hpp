@@ -2,9 +2,9 @@
 
 #include "core/Base.hpp"
 #include "core/RessourceManager.hpp"
+#include "ecs/Component.hpp"
 #include "render/Material.hpp"
 #include "render/Model.hpp"
-#include "scene/Component.hpp"
 
 namespace Birdy3d {
 

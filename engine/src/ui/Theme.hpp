@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/Color.hpp"
+#include "utils/Color.hpp"
 #include <glm/glm.hpp>
 #include <string>
 

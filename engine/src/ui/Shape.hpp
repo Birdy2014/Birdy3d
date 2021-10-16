@@ -3,8 +3,8 @@
 #include "core/Application.hpp"
 #include "core/Base.hpp"
 #include "core/RessourceManager.hpp"
-#include "render/Color.hpp"
-#include "ui/Utils.hpp"
+#include "ui/Units.hpp"
+#include "utils/Color.hpp"
 
 namespace Birdy3d {
 

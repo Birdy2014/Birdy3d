@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
-#include "render/Color.hpp"
+#include "utils/Color.hpp"
 
 namespace Birdy3d {
 

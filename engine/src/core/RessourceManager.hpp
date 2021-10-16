@@ -2,7 +2,7 @@
 
 #include "core/Base.hpp"
 #include "core/Logger.hpp"
-#include "render/Color.hpp"
+#include "utils/Color.hpp"
 
 namespace Birdy3d {
 

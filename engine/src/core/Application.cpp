@@ -2,11 +2,11 @@
 
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
+#include "ecs/Scene.hpp"
 #include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "render/Camera.hpp"
-#include "scene/Scene.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"
 

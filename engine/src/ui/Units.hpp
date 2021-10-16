@@ -81,10 +81,6 @@ namespace Birdy3d {
         UIVector operator-=(const UIVector& other);
         glm::vec2 to_pixels(glm::vec2 parentSize = glm::vec2(0));
         operator glm::vec2();
-    };
-
-    class Utils {
-    public:
         static glm::vec2 get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement);
     };
 

@@ -1,8 +1,8 @@
 #include "ui/widgets/TreeView.hpp"
 
 #include "core/Input.hpp"
-#include "scene/Entity.hpp"
-#include "scene/Scene.hpp"
+#include "ecs/Entity.hpp"
+#include "ecs/Scene.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"

@@ -2,10 +2,15 @@
 
 // Core
 #include "core/Application.hpp"
-#include "core/FPPlayerController.hpp"
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+
+// Entity Component System
+#include "ecs/Component.hpp"
+#include "ecs/Entity.hpp"
+#include "ecs/Scene.hpp"
+#include "ecs/Transform.hpp"
 
 // Events
 #include "events/CollisionEvent.hpp"
@@ -22,7 +27,6 @@
 
 // Renderer
 #include "render/Camera.hpp"
-#include "render/Color.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/Material.hpp"
 #include "render/Model.hpp"
@@ -32,12 +36,6 @@
 #include "render/Spotlight.hpp"
 #include "render/Texture.hpp"
 
-// Scene
-#include "scene/Component.hpp"
-#include "scene/Entity.hpp"
-#include "scene/Scene.hpp"
-#include "scene/Transform.hpp"
-
 // UI
 #include "ui/AbsoluteLayout.hpp"
 #include "ui/Canvas.hpp"
@@ -46,7 +44,7 @@
 #include "ui/MaxLayout.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
-#include "ui/Utils.hpp"
+#include "ui/Units.hpp"
 #include "ui/Widget.hpp"
 #include "ui/Window.hpp"
 #include "ui/widgets/Button.hpp"
@@ -59,3 +57,8 @@
 #include "ui/widgets/Textarea.hpp"
 #include "ui/widgets/TreeView.hpp"
 #include "ui/widgets/WindowSnapArea.hpp"
+
+// Utils
+#include "utils/Color.hpp"
+#include "utils/FPPlayerController.hpp"
+#include "utils/PrimitiveGenerator.hpp"

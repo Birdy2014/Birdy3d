@@ -1,9 +1,9 @@
-#include "scene/Transform.hpp"
+#include "ecs/Transform.hpp"
 
 #include "core/Application.hpp"
+#include "ecs/Entity.hpp"
 #include "events/EventBus.hpp"
 #include "events/TransformChangedEvent.hpp"
-#include "scene/Entity.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Birdy3d {

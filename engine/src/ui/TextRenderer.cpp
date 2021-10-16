@@ -222,7 +222,7 @@ namespace Birdy3d {
         if (m_dirty) {
             delete_buffers();
             create_buffers();
-            glm::vec2 pos = Utils::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+            glm::vec2 pos = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
             m_move_self = glm::mat4(1);
             m_move_self = glm::translate(m_move_self, glm::vec3(pos, 0.0f));
             if (m_rotation != 0)

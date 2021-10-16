@@ -1,8 +1,8 @@
 #pragma once
 
+#include "ecs/Component.hpp"
 #include "events/EventBus.hpp"
 #include "physics/ConvexMeshGenerators.hpp"
-#include "scene/Component.hpp"
 #include <glm/glm.hpp>
 #include <vector>
 

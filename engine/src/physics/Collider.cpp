@@ -2,14 +2,14 @@
 
 #include "core/Application.hpp"
 #include "core/Logger.hpp"
+#include "ecs/Entity.hpp"
+#include "ecs/Scene.hpp"
 #include "events/CollisionEvent.hpp"
 #include "physics/Collision.hpp"
 #include "render/Mesh.hpp"
 #include "render/Model.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Vertex.hpp"
-#include "scene/Entity.hpp"
-#include "scene/Scene.hpp"
 
 namespace Birdy3d {
 

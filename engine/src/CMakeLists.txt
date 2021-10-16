@@ -1,6 +1,7 @@
 add_subdirectory(core)
+add_subdirectory(ecs)
 add_subdirectory(physics)
 add_subdirectory(render)
-add_subdirectory(scene)
 add_subdirectory(ui)
+add_subdirectory(utils)
 target_include_directories(Birdy3d_engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -1,12 +1,12 @@
-#include "core/FPPlayerController.hpp"
+#include "utils/FPPlayerController.hpp"
 
 #include "core/Application.hpp"
 #include "core/Input.hpp"
+#include "ecs/Entity.hpp"
 #include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "render/Camera.hpp"
-#include "scene/Entity.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Layout.hpp"
 

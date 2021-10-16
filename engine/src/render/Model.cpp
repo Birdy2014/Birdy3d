@@ -2,11 +2,11 @@
 
 #include "core/Logger.hpp"
 #include "core/RessourceManager.hpp"
+#include "ecs/Entity.hpp"
 #include "render/Mesh.hpp"
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
-#include "scene/Entity.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>

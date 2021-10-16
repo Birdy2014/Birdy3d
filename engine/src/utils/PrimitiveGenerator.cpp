@@ -1,4 +1,4 @@
-#include "scene/PrimitiveGenerator.hpp"
+#include "utils/PrimitiveGenerator.hpp"
 
 #include "core/Logger.hpp"
 #include "render/Mesh.hpp"

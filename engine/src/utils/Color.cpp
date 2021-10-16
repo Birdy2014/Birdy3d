@@ -1,4 +1,4 @@
-#include "render/Color.hpp"
+#include "utils/Color.hpp"
 
 #include "core/Logger.hpp"
 #include <iomanip>

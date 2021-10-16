@@ -1,10 +1,10 @@
 #include "render/PointLight.hpp"
 
 #include "core/RessourceManager.hpp"
+#include "ecs/Entity.hpp"
+#include "ecs/Scene.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/Shader.hpp"
-#include "scene/Entity.hpp"
-#include "scene/Scene.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Birdy3d {

@@ -1,6 +1,5 @@
 target_sources(Birdy3d_engine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Camera.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Color.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DirectionalLight.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Light.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Material.cpp
