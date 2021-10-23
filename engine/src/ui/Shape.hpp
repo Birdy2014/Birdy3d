@@ -22,7 +22,7 @@ namespace Birdy3d {
         std::string name;
         Type type;
 
-        Shape(UIVector position, UIVector size, Color color = Color::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
+        Shape(UIVector position, UIVector size, Color::Name color = Color::Name::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
             : name(name)
             , m_shader(RessourceManager::get_shader("ui"))
             , m_position(position)
@@ -56,8 +56,8 @@ namespace Birdy3d {
             m_dirty = true;
             m_size = size;
         }
-        Color color() { return m_color; }
-        Color color(Color color) { return m_color = color; }
+        Color::Name color() { return m_color; }
+        Color::Name color(Color::Name color) { return m_color = color; }
         Placement placement() { return m_placement; }
         Placement placement(Placement placement) {
             m_dirty = true;
@@ -94,7 +94,7 @@ namespace Birdy3d {
         float m_rotation;
         UIVector m_size;
         glm::mat4 m_move_self;
-        Color m_color;
+        Color::Name m_color;
         Placement m_placement;
         unsigned int m_texture = 0;
         glm::vec2 m_texCoordA;

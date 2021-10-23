@@ -1,8 +1,9 @@
 #pragma once
 
+#include "core/Base.hpp"
+#include "ui/TextRenderer.hpp"
 #include "utils/Color.hpp"
-#include <glm/glm.hpp>
-#include <string>
+#include "utils/serializer/Adapter.hpp"
 
 namespace Birdy3d {
 
@@ -10,23 +11,28 @@ namespace Birdy3d {
 
     class Theme {
     public:
-        const Color color_fg;
-        const Color color_bg;
-        const Color color_border;
-        const Color color_title_bar;
-        const Color color_input_bg;
-        const Color color_selected_bg;
-        const Color color_text_highlight;
-        const std::string font;
-        const int font_size;
-        const int line_height;
-
-        Theme(Color color_fg, Color color_bg, Color color_border, Color color_title_bar, Color color_input_bg, Color color_selected_bg, Color color_text_highlight, std::string font, int font_size);
+        Theme(const std::string& path);
         TextRenderer& text_renderer();
-
-        // TODO: load theme from file
+        Color color(Color::Name) const;
+        std::string font() const;
+        int font_size() const;
+        int line_height() const;
+        void serialize(serializer::Adapter&);
 
     private:
+        std::array<Color, 16> m_termcolors;
+        Color m_color_fg;
+        Color m_color_bg;
+        Color m_color_border;
+        Color m_color_bg_title_bar;
+        Color m_color_bg_input;
+        Color m_color_bg_selected;
+        Color m_color_text_highlight;
+
+        std::string m_font;
+        int m_font_size;
+        int m_line_height;
+
         std::unique_ptr<TextRenderer> m_text_renderer;
     };
 

@@ -112,14 +112,7 @@ int main() {
     std::shared_ptr<Birdy3d::NumberInput> input_orientation_z;
 
     // UI
-#ifdef BIRDY3D_PLATFORM_LINUX
-    std::string font = "TTF/DejaVuSans.ttf";
-#elif defined(BIRDY3D_PLATFORM_WINDOWS)
-    std::string font = "C:/Windows/Fonts/arial.ttf";
-#else
-    #error "Unknown Platform in main.cpp"
-#endif
-    Application::theme = new Theme("#fbf1c7", "#282828", "#98971a", "#3c3836", "#1d2021", "#ffffff11", "#0000a050", font, 18);
+    Application::theme = new Theme("gruvbox.json");
 
     auto canvas = std::make_shared<Canvas>();
     Application::canvas = canvas;
@@ -305,19 +298,7 @@ int main() {
     std::shared_ptr<Scene> scene;
     if (std::filesystem::exists("scene.json")) {
         serializer::JsonParser parser(RessourceManager::read_file("scene.json"));
-        auto parsed = parser.parse();
-        if (!parsed) {
-            std::cerr << "Invalid json" << std::endl;
-            exit(1);
-        }
-        auto object = parsed->as_object();
-        if (!object) {
-            std::cerr << "Invalid object" << std::endl;
-            exit(1);
-        }
-        serializer::Adapter adapter(object, true);
-        adapter("scene", scene);
-        serializer::PointerRegistry::clear();
+        serializer::Serializer::deserialize(RessourceManager::read_file("scene.json"), "scene", scene);
         Application::scene = scene;
     } else {
         scene = std::make_shared<Scene>("Scene");
@@ -416,11 +397,7 @@ int main() {
 
     std::fstream filestream;
     filestream.open("scene.json", std::fstream::out);
-    serializer::Object object;
-    serializer::Adapter adapter(&object, false);
-    adapter("scene", scene);
-    serializer::PrettyJsonGenerator generator(filestream);
-    generator.generate(object);
+    serializer::Serializer::serialize(serializer::GeneratorType::JSON_PRETTY, "scene", scene, filestream);
     filestream.close();
 
     return 0;

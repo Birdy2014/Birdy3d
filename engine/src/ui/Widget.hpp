@@ -120,11 +120,11 @@ namespace Birdy3d {
         virtual void on_focus_lost() { }
 
         // Shapes
-        Rectangle* add_rectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
-        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, Color color, Placement placement = Placement::BOTTOM_LEFT);
-        Triangle* add_triangle(UIVector pos, UIVector size, Color color, Placement = Placement::BOTTOM_LEFT);
-        Triangle* add_filled_triangle(UIVector pos, UIVector size, Color color, Placement = Placement::BOTTOM_LEFT);
-        Text* add_text(UIVector pos, float fontSize, std::string text, Color color, Placement placement);
+        Rectangle* add_rectangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Triangle* add_triangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Triangle* add_filled_triangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Text* add_text(UIVector pos, std::string text, Color::Name, Placement = Placement::BOTTOM_LEFT, float font_size = 0);
 
     private:
         bool m_hovered_last_frame = false;

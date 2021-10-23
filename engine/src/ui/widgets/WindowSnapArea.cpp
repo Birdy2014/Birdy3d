@@ -14,7 +14,7 @@ namespace Birdy3d {
         , mode(mode) {
         Application::event_bus->subscribe(this, &WindowSnapArea::on_click_raw);
         Application::event_bus->subscribe(this, &WindowSnapArea::on_resize_raw);
-        m_background_rect = add_filled_rectangle(0_px, 100_p, Application::theme->color_bg);
+        m_background_rect = add_filled_rectangle(0_px, 100_p, Color::Name::BG);
     }
 
     void WindowSnapArea::on_update() {
@@ -123,7 +123,7 @@ namespace Birdy3d {
             case Mode::STACKING:
                 window->pos = m_actual_pos;
                 window->size = new_size;
-                new_size.y -= Application::theme->line_height;
+                new_size.y -= Application::theme->line_height();
                 break;
             case Mode::HORIZONTAL: {
                 if (focused_window && (focused_window->resizing_left() || focused_window->resizing_right())) {

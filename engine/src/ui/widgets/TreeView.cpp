@@ -6,14 +6,15 @@
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
+#include "ui/Triangle.hpp"
 #include "ui/widgets/ContextMenu.hpp"
 
 namespace Birdy3d {
 
     TreeItem::TreeItem(std::string text, TreeView* treeview)
-        : text(std::make_unique<Text>(0_px, Application::theme->font_size, text, Application::theme->color_fg, Placement::BOTTOM_LEFT, &Application::theme->text_renderer()))
+        : text(std::make_unique<Text>(0_px, text, Color::Name::FG, Placement::BOTTOM_LEFT))
         , m_treeview(treeview)
-        , m_collapse_button(std::make_unique<Triangle>(0_px, UIVector(Application::theme->font_size / 2), Color::WHITE)) { }
+        , m_collapse_button(std::make_unique<Triangle>(0_px, UIVector(Application::theme->font_size() / 2), Color::Name::FG)) { }
 
     TreeItem& TreeItem::add_child(std::string text) {
         m_treeview->m_items_changed = true;
@@ -33,25 +34,25 @@ namespace Birdy3d {
     TreeView::TreeView(UIVector pos, UIVector size, Placement placement)
         : Widget(pos, size, placement)
         , m_root_item(TreeItem("Root", this)) {
-        m_item_highlight_rect = add_filled_rectangle(0_px, UIVector(100_p, Application::theme->line_height), Application::theme->color_selected_bg, Placement::TOP_LEFT);
+        m_item_highlight_rect = add_filled_rectangle(0_px, UIVector(100_p, Application::theme->line_height()), Color::Name::BG_SELECTED, Placement::TOP_LEFT);
         m_item_highlight_rect->hidden(true);
     }
 
     void TreeView::draw() {
-        int offset_y = Application::theme->line_height;
+        int offset_y = Application::theme->line_height();
         for (const auto& row : m_flat_tree_list) {
             if (m_selected_item == &row.second) {
-                m_item_highlight_rect->position(UIVector(0_px, -offset_y + (int)Application::theme->line_height));
+                m_item_highlight_rect->position(UIVector(0_px, -offset_y + (int)Application::theme->line_height()));
                 m_item_highlight_rect->draw(m_move);
             }
             if (!row.second.children.empty()) {
-                row.second.m_collapse_button->position(glm::vec2(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y + (Application::theme->line_height - row.second.m_collapse_button->size().x) / 2.0f));
+                row.second.m_collapse_button->position(glm::vec2(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y + (Application::theme->line_height() - row.second.m_collapse_button->size().x) / 2.0f));
                 row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 30.0f : 60.0f));
                 row.second.m_collapse_button->draw(m_move);
             }
             row.second.text->position(UIVector(row.first * m_indent_size + m_offset_x_left, m_actual_size.y - offset_y));
             row.second.text->draw(m_move);
-            offset_y += Application::theme->line_height;
+            offset_y += Application::theme->line_height();
         }
     }
 
@@ -63,7 +64,7 @@ namespace Birdy3d {
             if (width > max_width)
                 max_width = width;
         }
-        return glm::vec2(max_width, m_flat_tree_list.size() * Application::theme->line_height);
+        return glm::vec2(max_width, m_flat_tree_list.size() * Application::theme->line_height());
     }
 
     void TreeView::on_update() {
@@ -82,7 +83,7 @@ namespace Birdy3d {
         local_pos = glm::vec2(local_pos.x, m_actual_size.y - local_pos.y);
         int offset_y = 0;
         for (auto& item : m_flat_tree_list) {
-            offset_y += Application::theme->line_height;
+            offset_y += Application::theme->line_height();
             if (local_pos.y < offset_y) {
                 if (local_pos.x > m_offset_x_left + item.first * m_indent_size) {
                     // Select

@@ -40,16 +40,12 @@ namespace Birdy3d {
     }
 
     std::shared_ptr<Theme> RessourceManager::get_theme(const std::string& name) {
-        // TODO: Loading Theme from file
-        BIRDY3D_TODO
         std::shared_ptr<Theme> theme = m_themes[name];
-        /*
         if (!theme) {
             std::string path = get_ressource_path(name, RessourceType::THEME);
-            theme = std::make_shared<Theme>(path, 30);
+            theme = std::make_shared<Theme>(path);
             m_themes[name] = theme;
         }
-        */
         return theme;
     }
 
@@ -145,7 +141,13 @@ namespace Birdy3d {
             break;
         case RessourceType::FONT:
             subdir = "fonts/";
+#if defined(BIRDY3D_PLATFORM_LINUX)
             default_dir = "/usr/share/fonts/";
+#elif defined(BIRDY3D_PLATFORM_WINDOWS)
+            default_dir = "C:/Windows/Fonts/";
+#else
+            default_dir = "";
+#endif
             if (extension.size() == 0)
                 extension = ".ttf";
             break;

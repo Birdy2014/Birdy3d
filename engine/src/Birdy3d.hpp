@@ -62,5 +62,4 @@
 #include "utils/Color.hpp"
 #include "utils/FPPlayerController.hpp"
 #include "utils/PrimitiveGenerator.hpp"
-#include "utils/serializer/Adapter.hpp"
-#include "utils/serializer/Json.hpp"
+#include "utils/serializer/Serializer.hpp"

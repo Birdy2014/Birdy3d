@@ -21,10 +21,10 @@ namespace Birdy3d {
     ContextMenu::ContextMenu()
         : Widget()
         , root_item(ContextItem("Root", nullptr)) {
-        m_arrow_size = Application::theme->font_size / 2;
-        m_background_rect = add_filled_rectangle(0_px, 0_px, Application::theme->color_bg, Placement::BOTTOM_LEFT);
-        m_border_rect = add_rectangle(0_px, 0_px, Application::theme->color_border, Placement::BOTTOM_LEFT);
-        m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), Application::theme->color_fg);
+        m_arrow_size = Application::theme->font_size() / 2;
+        m_background_rect = add_filled_rectangle(0_px, 0_px, Color::Name::BG, Placement::BOTTOM_LEFT);
+        m_border_rect = add_rectangle(0_px, 0_px, Color::Name::BORDER, Placement::BOTTOM_LEFT);
+        m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), Color::Name::FG);
         hidden = true;
     }
 
@@ -67,8 +67,8 @@ namespace Birdy3d {
     void ContextMenu::draw_context_item_children(ContextItem& item) {
         item.m_child_rect_size = glm::vec2(0);
         for (const auto& child_item : item.children) {
-            item.m_child_rect_size.y += Application::theme->line_height;
-            float text_width = Application::theme->text_renderer().text_size(child_item.text, Application::theme->font_size).x;
+            item.m_child_rect_size.y += Application::theme->line_height();
+            float text_width = Application::theme->text_renderer().text_size(child_item.text, Application::theme->font_size()).x;
             if (!child_item.children.empty())
                 text_width += m_arrow_size + 5;
             if (item.m_child_rect_size.x < text_width)
@@ -85,13 +85,13 @@ namespace Birdy3d {
 
         int offset_y = item.m_child_rect_size.y - m_padding;
         for (const auto& child_item : item.children) {
-            offset_y -= Application::theme->line_height;
+            offset_y -= Application::theme->line_height();
             if (!child_item.children.empty()) {
-                m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size - m_padding, offset_y + (Application::theme->line_height - m_arrow_size) / 2));
+                m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size - m_padding, offset_y + (Application::theme->line_height() - m_arrow_size) / 2));
                 m_submenu_triangle->rotation(glm::radians(30.0f));
                 m_submenu_triangle->draw(glm::mat4(1));
             }
-            Application::theme->text_renderer().render_text(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, Application::theme->font_size, Application::theme->color_fg);
+            Application::theme->text_renderer().render_text(child_item.text, item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y, Application::theme->font_size(), Color::Name::FG);
         }
         for (auto& child_item : item.children) {
             if (!child_item.children.empty() && child_item.opened) {
@@ -107,7 +107,7 @@ namespace Birdy3d {
         if (local_pos.x > 0 && local_pos.x < item.m_child_rect_size.x && local_pos.y > 0 && local_pos.y < item.m_child_rect_size.y) {
             int offset_y = item.m_child_rect_size.y - m_padding;
             for (auto& child_item : item.children) {
-                offset_y -= Application::theme->line_height;
+                offset_y -= Application::theme->line_height();
                 if (!found) {
                     if (offset_y < local_pos.y) {
                         if (click && child_item.children.empty()) {
@@ -124,10 +124,10 @@ namespace Birdy3d {
                                 child_item.m_child_rect_pos.x = item.m_child_rect_pos.x - child_item.m_child_rect_size.x; // Left
                             else
                                 child_item.m_child_rect_pos.x = item.m_child_rect_pos.x + item.m_child_rect_size.x; // Right
-                            if (item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height + m_padding < 0)
+                            if (item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height() + m_padding < 0)
                                 child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - m_padding; // Up
                             else
-                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height + m_padding; // Down
+                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height() + m_padding; // Down
 
                             // Close all children of newly opened item
                             for (auto& child_child_item : child_item.children)

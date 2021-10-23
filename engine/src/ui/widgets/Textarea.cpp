@@ -24,7 +24,7 @@ namespace Birdy3d {
         Widget::draw();
         glEnable(GL_SCISSOR_TEST);
         glScissor(m_actual_pos.x, m_actual_pos.y, m_actual_size.x, m_actual_size.y);
-        int linec = m_actual_size.y / Application::theme->line_height;
+        int linec = m_actual_size.y / Application::theme->line_height();
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
             // smooth scrolling
@@ -35,13 +35,13 @@ namespace Birdy3d {
 
             // draw lines
             line = l + floor(m_tmpscroll);
-            int y = m_actual_size.y - (l + 1) * Application::theme->line_height + (m_tmpscroll - floor(m_tmpscroll)) * Application::theme->line_height;
+            int y = m_actual_size.y - (l + 1) * Application::theme->line_height() + (m_tmpscroll - floor(m_tmpscroll)) * Application::theme->line_height();
             int selection_start = m_selection_start <= m_selection_end ? m_selection_start : m_selection_end;
             int selection_end = m_selection_start <= m_selection_end ? m_selection_end + 1 : m_selection_start;
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                Application::theme->text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size, Application::theme->color_fg, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Application::theme->color_text_highlight);
+                Application::theme->text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size(), Color::Name::FG, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Color::Name::TEXT_HIGHLIGHT);
             }
         }
         glDisable(GL_SCISSOR_TEST);
@@ -60,7 +60,7 @@ namespace Birdy3d {
             line = m_text.substr(pos, eol - pos);
             line_end = eol;
             // Line is too long
-            length = Application::theme->text_renderer().text_size(line, Application::theme->font_size).x;
+            length = Application::theme->text_renderer().text_size(line, Application::theme->font_size()).x;
             if (length > m_actual_size.x) {
                 nextspace = pos;
                 while (nextspace < eol) {
@@ -70,7 +70,7 @@ namespace Birdy3d {
                     line_end = nextspace;
 
                     // reached the space too far right
-                    length = Application::theme->text_renderer().text_size(line, Application::theme->font_size).x;
+                    length = Application::theme->text_renderer().text_size(line, Application::theme->font_size()).x;
                     if (length > m_actual_size.x) {
                         // the line can't be broken using a space
                         if (prevspace == pos)
@@ -171,12 +171,12 @@ namespace Birdy3d {
     size_t Textarea::cursor_char_pos() {
         glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
 
-        int y = m_tmpscroll + (m_actual_size.y - local_pos.y) / Application::theme->line_height;
+        int y = m_tmpscroll + (m_actual_size.y - local_pos.y) / Application::theme->line_height();
         if (y >= m_lines.size())
             y = m_lines.size() - 1;
 
         size_t line_start = y > 0 ? m_lines[y - 1] : 0;
-        int char_pos = Application::theme->text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), Application::theme->font_size, local_pos.x, true);
+        int char_pos = Application::theme->text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), Application::theme->font_size(), local_pos.x, true);
         return line_start + char_pos;
     }
 

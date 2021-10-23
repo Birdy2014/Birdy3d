@@ -69,6 +69,7 @@ namespace Birdy3d::serializer {
         Parser(std::string content)
             : m_content(content)
             , m_pos(0) { }
+        virtual ~Parser() = default;
         virtual std::unique_ptr<Value> parse() = 0;
 
     protected:
@@ -123,6 +124,7 @@ namespace Birdy3d::serializer {
     public:
         Generator(std::ostream& stream)
             : m_stream(stream) { }
+        virtual ~Generator() = default;
         virtual void generate(Value&) = 0;
 
     protected:

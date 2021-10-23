@@ -12,7 +12,7 @@ namespace Birdy3d {
 
         FPSCounter(UIVector position, Placement placement)
             : Widget(position, 0_px, placement) {
-            text = add_text(0_px, 15, "FPS: ", Color::WHITE, Placement::CENTER_LEFT);
+            text = add_text(0_px, "FPS: ", Color::Name::FG, Placement::CENTER_LEFT);
         }
 
         void draw() override {

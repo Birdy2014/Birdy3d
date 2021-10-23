@@ -2,6 +2,7 @@
 
 #include "core/Logger.hpp"
 #include <iomanip>
+#include <sstream>
 
 namespace Birdy3d {
 

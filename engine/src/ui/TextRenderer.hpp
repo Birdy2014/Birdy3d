@@ -41,8 +41,8 @@ namespace Birdy3d {
 
         TextRenderer(Theme&);
         ~TextRenderer();
-        void render_text(std::string text, float x, float y, float font_size, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
-        void render_text(std::u32string text, float x, float y, float font_size, Color color, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color hlcolor = Color::BLACK);
+        void render_text(std::string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
+        void render_text(std::u32string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
         UIVector text_size(std::string text, float font_size);
         UIVector text_size(std::u32string text, float font_size);
         float char_width(char32_t c, float font_size);
@@ -67,9 +67,8 @@ namespace Birdy3d {
     class Text : public Shape {
     public:
         float font_size;
-        TextRenderer* renderer;
 
-        Text(UIVector pos, float font_size, std::string text, Color color, Placement placement, TextRenderer* renderer);
+        Text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size = 0);
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
         std::string text();

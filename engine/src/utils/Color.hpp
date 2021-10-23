@@ -6,6 +6,32 @@ namespace Birdy3d {
 
     class Color {
     public:
+        enum class Name {
+            BLACK,
+            RED,
+            GREEN,
+            YELLOW,
+            BLUE,
+            PURPLE,
+            CYAN,
+            WHITE,
+            GRAY,
+            LIGHT_RED,
+            LIGHT_GREEN,
+            LIGHT_YELLOW,
+            LIGHT_BLUE,
+            LIGHT_PURPLE,
+            LIGHT_CYAN,
+            LIGHT_WHITE,
+            FG,
+            BG,
+            BORDER,
+            BG_TITLE_BAR,
+            BG_INPUT,
+            BG_SELECTED,
+            TEXT_HIGHLIGHT,
+        };
+
         static const Color NONE;
         static const Color WHITE;
         static const Color BLACK;

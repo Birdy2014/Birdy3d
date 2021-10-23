@@ -16,36 +16,36 @@ namespace Birdy3d {
         , size(size)
         , placement(placement) { }
 
-    Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+    Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::OUTLINE, placement);
         Rectangle* ptr = rectangle.get();
         m_shapes.push_back(std::move(rectangle));
         return ptr;
     }
 
-    Rectangle* Widget::add_filled_rectangle(UIVector pos, UIVector size, Color color, Placement placement) {
+    Rectangle* Widget::add_filled_rectangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::FILLED, placement);
         Rectangle* ptr = rectangle.get();
         m_shapes.push_back(std::move(rectangle));
         return ptr;
     }
 
-    Triangle* Widget::add_triangle(UIVector pos, UIVector size, Color color, Placement placement) {
+    Triangle* Widget::add_triangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
         std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::OUTLINE, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
     }
 
-    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, Color color, Placement placement) {
+    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
         std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::FILLED, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
     }
 
-    Text* Widget::add_text(UIVector pos, float fontSize, std::string text, Color color, Placement placement) {
-        std::unique_ptr<Text> shape = std::make_unique<Text>(pos, fontSize, text, color, placement, &Application::theme->text_renderer());
+    Text* Widget::add_text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size) {
+        std::unique_ptr<Text> shape = std::make_unique<Text>(pos, text, color, placement, font_size);
         Text* ptr = shape.get();
         m_shapes.push_back(std::move(shape));
         return ptr;

@@ -3,11 +3,12 @@
 #include "core/RessourceManager.hpp"
 #include "render/Shader.hpp"
 #include "ui/Canvas.hpp"
+#include "ui/Theme.hpp"
 #include <glad/glad.h>
 
 namespace Birdy3d {
 
-    Triangle::Triangle(UIVector position, UIVector size, Color color, Type type, Placement placement)
+    Triangle::Triangle(UIVector position, UIVector size, Color::Name color, Type type, Placement placement)
         : Shape(position, size, color, placement) {
         this->type = type;
     }
@@ -39,7 +40,7 @@ namespace Birdy3d {
         m_shader->set_mat4("projection", projection());
         m_shader->set_mat4("move", move);
         m_shader->set_mat4("move_self", m_move_self);
-        m_shader->set_vec4("color", m_color);
+        m_shader->set_vec4("color", Application::theme->color(m_color));
         m_shader->set_int("rectTexture", 0);
         glBindVertexArray(m_vao);
         if (type == Shape::OUTLINE)
