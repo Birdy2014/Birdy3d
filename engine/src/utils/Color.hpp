@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "utils/serializer/Adapter.hpp"
 
 namespace Birdy3d {
 
@@ -54,5 +55,15 @@ namespace Birdy3d {
         void g(float v) { value.g = v; }
         void b(float v) { value.b = v; }
     };
+
+    namespace serializer {
+
+        template <>
+        std::unique_ptr<Value> adapter_save(Color&);
+
+        template <>
+        void adapter_load(Value*, Color&);
+
+    }
 
 }

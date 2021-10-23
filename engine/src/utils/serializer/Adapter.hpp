@@ -1,6 +1,5 @@
 #pragma once
 
-#include "utils/Color.hpp"
 #include "utils/serializer/PointerRegistry.hpp"
 #include "utils/serializer/Types.hpp"
 #include <glm/glm.hpp>
@@ -28,8 +27,6 @@ namespace Birdy3d::serializer {
     std::unique_ptr<Value> adapter_save(glm::vec3& value);
     template <>
     std::unique_ptr<Value> adapter_save(glm::vec4& value);
-    template <>
-    std::unique_ptr<Value> adapter_save(Color& value);
     template <typename T>
     std::unique_ptr<Value> adapter_save(std::vector<T>& value);
     template <typename T, std::size_t N>
@@ -59,8 +56,6 @@ namespace Birdy3d::serializer {
     void adapter_load(Value* from, glm::vec3& to);
     template <>
     void adapter_load(Value* from, glm::vec4& to);
-    template <>
-    void adapter_load(Value* from, Color& to);
     template <typename T>
     void adapter_load(Value* from, std::vector<T>& to);
     template <typename T, std::size_t N>

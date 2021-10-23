@@ -41,11 +41,6 @@ namespace Birdy3d::serializer {
         return object;
     }
 
-    template <>
-    std::unique_ptr<Value> adapter_save(Color& value) {
-        return std::make_unique<String>(value.to_string());
-    }
-
     /* --- Load --- */
 
     template <>
@@ -84,13 +79,6 @@ namespace Birdy3d::serializer {
             to.y = (*object_ptr)["y"]->as_number()->value;
             to.z = (*object_ptr)["z"]->as_number()->value;
             to.w = (*object_ptr)["w"]->as_number()->value;
-        }
-    }
-
-    template <>
-    void adapter_load(Value* from, Color& to) {
-        if (auto* string_ptr = from->as_string()) {
-            to = Color::parse(string_ptr->value);
         }
     }
 

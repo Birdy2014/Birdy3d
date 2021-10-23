@@ -74,4 +74,20 @@ namespace Birdy3d {
     Color const Color::WHITE = Color("#FFFFFFFF");
     Color const Color::BLACK = Color("#000000FF");
 
+    namespace serializer {
+
+        template <>
+        std::unique_ptr<Value> adapter_save(Color& value) {
+            return std::make_unique<String>(value.to_string());
+        }
+
+        template <>
+        void adapter_load(Value* from, Color& to) {
+            if (auto* string_ptr = from->as_string()) {
+                to = Color::parse(string_ptr->value);
+            }
+        }
+
+    }
+
 }
