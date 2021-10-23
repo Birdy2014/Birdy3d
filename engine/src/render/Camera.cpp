@@ -516,4 +516,10 @@ namespace Birdy3d {
         }
     }
 
+    void Camera::serialize(serializer::Adapter& adapter) {
+        adapter("deferred", m_deferred_enabled);
+    }
+
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, Camera);
+
 }

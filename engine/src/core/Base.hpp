@@ -6,11 +6,6 @@
 // clang-format on
 #include <algorithm>
 #include <array>
-#include <cereal/archives/json.hpp>
-#include <cereal/types/memory.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/vector.hpp>
 #include <functional>
 #include <glm/glm.hpp>
 #include <list>
@@ -42,22 +37,3 @@
 #endif
 
 #include "core/Logger.hpp"
-
-namespace glm {
-
-    template <class Archive>
-    void serialize(Archive& ar, glm::vec2& v) {
-        ar(cereal::make_nvp("x", v.x), cereal::make_nvp("y", v.y));
-    }
-
-    template <class Archive>
-    void serialize(Archive& ar, glm::vec3& v) {
-        ar(cereal::make_nvp("x", v.x), cereal::make_nvp("y", v.y), cereal::make_nvp("z", v.z));
-    }
-
-    template <class Archive>
-    void serialize(Archive& ar, glm::vec4& v) {
-        ar(cereal::make_nvp("x", v.x), cereal::make_nvp("y", v.y), cereal::make_nvp("z", v.z), cereal::make_nvp("w", v.w));
-    }
-
-}

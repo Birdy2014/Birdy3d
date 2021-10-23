@@ -13,30 +13,15 @@ namespace Birdy3d {
         std::weak_ptr<Camera> main_camera;
         Camera* m_current_camera = nullptr;
 
-        Scene(std::string name = "Scene")
-            : Entity(name) { }
-
-        void start() override {
-            set_scene(this);
-            m_physics_world = std::make_unique<PhysicsWorld>(this);
-            Entity::start();
-        }
-
-        void update() override {
-            Entity::update();
-            transform.update();
-            m_physics_world->update();
-            transform.update();
-        }
-
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(cereal::base_class<Entity>(this));
-            ar(cereal::make_nvp("main_camera", main_camera));
-        }
+        Scene(std::string name = "Scene");
+        void start() override;
+        void update() override;
+        void serialize(serializer::Adapter&) override;
 
     private:
         std::unique_ptr<PhysicsWorld> m_physics_world;
+
+        BIRDY3D_REGISTER_TYPE_DEC(Scene);
     };
 
 }

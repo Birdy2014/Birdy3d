@@ -20,11 +20,7 @@ namespace Birdy3d {
         void render_outline(const Entity*);
         void render_collider_wireframe();
         void resize(int width, int height);
-
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(cereal::make_nvp("deferred", m_deferred_enabled));
-        }
+        void serialize(serializer::Adapter&) override;
 
     private:
         unsigned int m_gbuffer, m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo_spec, m_rbo_depth;
@@ -49,9 +45,8 @@ namespace Birdy3d {
         void render_deferred();
         void render_forward(bool renderOpaque);
         void render_normals();
+
+        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, Camera);
     };
 
 }
-
-CEREAL_REGISTER_TYPE(Birdy3d::Camera);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, Birdy3d::Camera);

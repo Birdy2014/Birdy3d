@@ -27,16 +27,6 @@ namespace Birdy3d {
         void r(float v) { value.r = v; }
         void g(float v) { value.g = v; }
         void b(float v) { value.b = v; }
-
-        template <class Archive>
-        std::string save_minimal(Archive const&) const {
-            return to_string();
-        }
-
-        template <class Archive>
-        void load_minimal(Archive const&, std::string const& str) {
-            value = parse(str);
-        }
     };
 
 }

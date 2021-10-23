@@ -18,11 +18,7 @@ namespace Birdy3d {
         void start() override;
         void cleanup() override;
         void update() override;
-
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(CEREAL_NVP(flashlight));
-        }
+        void serialize(serializer::Adapter&) override;
 
     private:
         std::weak_ptr<Camera> m_cam;
@@ -30,9 +26,8 @@ namespace Birdy3d {
 
         void on_resize(WindowResizeEvent* event);
         void on_key(InputKeyEvent* event);
+
+        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, FPPlayerController);
     };
 
 }
-
-CEREAL_REGISTER_TYPE(Birdy3d::FPPlayerController);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, Birdy3d::FPPlayerController);

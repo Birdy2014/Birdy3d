@@ -63,12 +63,3 @@ if (NOT LIBRARY_ASSIMP)
 
     FetchContent_MakeAvailable(assimp)
 endif()
-
-FetchContent_Declare(
-    cereal
-    GIT_REPOSITORY   https://github.com/USCiLab/cereal
-    GIT_TAG          master
-)
-
-FetchContent_Populate(cereal)
-target_include_directories(Birdy3d_engine PUBLIC ${cereal_SOURCE_DIR}/include)

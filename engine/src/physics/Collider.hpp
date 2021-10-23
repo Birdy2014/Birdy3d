@@ -20,12 +20,7 @@ namespace Birdy3d {
         void start() override;
         CollisionPoints collides(Collider&);
         void render_wireframe(Shader&);
-
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(cereal::make_nvp("model_name", m_model_name));
-            ar(cereal::make_nvp("generaton_mode", m_generation_mode));
-        }
+        void serialize(serializer::Adapter&) override;
 
     private:
         std::string m_model_name;
@@ -42,9 +37,8 @@ namespace Birdy3d {
         bool same_direction(glm::vec3 a, glm::vec3 b);
         void push_front(glm::vec3 point);
         bool next_simplex(glm::vec3& direction);
+
+        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, Collider);
     };
 
 }
-
-CEREAL_REGISTER_TYPE(Birdy3d::Collider);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, Birdy3d::Collider);

@@ -3,6 +3,7 @@
 #include "core/Base.hpp"
 #include "ecs/Component.hpp"
 #include "ecs/Transform.hpp"
+#include "utils/serializer/Adapter.hpp"
 
 namespace Birdy3d {
 
@@ -99,15 +100,7 @@ namespace Birdy3d {
         }
 
         void remove();
-
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(cereal::make_nvp("name", name));
-            ar(cereal::make_nvp("transform", transform));
-            ar(cereal::make_nvp("hidden", hidden));
-            ar(cereal::make_nvp("components", m_components));
-            ar(cereal::make_nvp("children", m_children));
-        }
+        virtual void serialize(serializer::Adapter&);
 
     private:
         friend void Component::remove();
@@ -117,6 +110,8 @@ namespace Birdy3d {
 
         void remove_child(Entity*);
         void remove_component(Component*);
+
+        BIRDY3D_REGISTER_TYPE_DEC(Entity);
     };
 
 }

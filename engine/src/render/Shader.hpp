@@ -49,15 +49,3 @@ namespace Birdy3d {
     };
 
 }
-
-namespace cereal {
-    template <>
-    struct LoadAndConstruct<Birdy3d::Shader> {
-        template <class Archive>
-        static void load_and_construct(Archive& ar, cereal::construct<Birdy3d::Shader>& construct) {
-            std::string name;
-            ar(cereal::make_nvp("name", name));
-            construct(name);
-        }
-    };
-}

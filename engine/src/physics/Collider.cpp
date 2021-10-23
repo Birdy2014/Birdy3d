@@ -42,6 +42,18 @@ namespace Birdy3d {
         m_model->render_wireframe(*entity, shader);
     }
 
+    void Collider::serialize(serializer::Adapter& adapter) {
+        adapter("model_name", m_model_name);
+        if (adapter.load()) {
+            int mode;
+            adapter("generaton_mode", mode);
+            m_generation_mode = (GenerationMode)mode;
+        } else {
+            int mode = (int)m_generation_mode;
+            adapter("generaton_mode", mode);
+        }
+    }
+
     CollisionPoints Collider::collides(Collider& collider) {
         CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
         if (!m_model || !collider.m_model)
@@ -218,5 +230,7 @@ namespace Birdy3d {
     bool Collider::same_direction(glm::vec3 a, glm::vec3 b) {
         return glm::dot(a, b) > 0;
     }
+
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, Collider);
 
 }

@@ -86,4 +86,13 @@ namespace Birdy3d {
         glCullFace(GL_BACK);
     }
 
+    void DirectionalLight::serialize(serializer::Adapter& adapter) {
+        adapter("shadow_enabled", shadow_enabled);
+        adapter("ambient", ambient);
+        adapter("diffuse", diffuse);
+        adapter("cam_offset", m_cam_offset);
+    }
+
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, DirectionalLight);
+
 }

@@ -64,4 +64,10 @@ namespace Birdy3d {
             return scale;
     }
 
+    void Transform3d::serialize(serializer::Adapter& adapter) {
+        adapter("position", position);
+        adapter("orientation", orientation);
+        adapter("scale", scale);
+    }
+
 }

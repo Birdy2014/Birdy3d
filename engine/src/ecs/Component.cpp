@@ -28,4 +28,6 @@ namespace Birdy3d {
             entity->remove_component(this);
     }
 
+    BIRDY3D_REGISTER_TYPE_DEF(Component);
+
 }

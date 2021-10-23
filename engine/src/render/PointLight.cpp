@@ -95,4 +95,15 @@ namespace Birdy3d {
         glCullFace(GL_BACK);
     }
 
+    void PointLight::serialize(serializer::Adapter& adapter) {
+        adapter("shadow_enabled", shadow_enabled);
+        adapter("ambient", ambient);
+        adapter("diffuse", diffuse);
+        adapter("linear", linear);
+        adapter("quadratic", quadratic);
+        adapter("far", m_far);
+    }
+
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, PointLight);
+
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "utils/serializer/Adapter.hpp"
 
 namespace Birdy3d {
 
@@ -20,12 +21,7 @@ namespace Birdy3d {
         glm::vec3 world_position();
         glm::vec3 world_orientation();
         glm::vec3 world_scale();
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(cereal::make_nvp("position", position));
-            ar(cereal::make_nvp("orientation", orientation));
-            ar(cereal::make_nvp("scale", scale));
-        }
+        void serialize(serializer::Adapter&);
 
     private:
         glm::mat4 m_matrix;

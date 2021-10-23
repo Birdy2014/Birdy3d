@@ -103,4 +103,14 @@ namespace Birdy3d {
         }
     }
 
+    void Entity::serialize(serializer::Adapter& adapter) {
+        adapter("name", name);
+        adapter("hidden", hidden);
+        adapter("transform", transform);
+        adapter("components", m_components);
+        adapter("children", m_children);
+    }
+
+    BIRDY3D_REGISTER_TYPE_DEF(Entity);
+
 }

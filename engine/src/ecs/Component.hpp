@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "utils/serializer/Adapter.hpp"
 
 namespace Birdy3d {
 
@@ -16,8 +17,7 @@ namespace Birdy3d {
         void external_cleanup();
         bool loaded() const { return m_loaded; }
         void remove();
-        template <class Archive>
-        void serialize(Archive& ar) { }
+        virtual void serialize(serializer::Adapter&) { }
 
     protected:
         bool m_loaded = false;
@@ -25,6 +25,8 @@ namespace Birdy3d {
         virtual void start() {};
         virtual void update() {};
         virtual void cleanup() {};
+
+        BIRDY3D_REGISTER_TYPE_DEC(Component);
     };
 
 }

@@ -34,10 +34,11 @@ public:
             break;
         }
     }
+
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, TestComponent);
 };
 
-CEREAL_REGISTER_TYPE(TestComponent);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, TestComponent);
+BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, TestComponent);
 
 class MoveUpDown : public Component {
 public:
@@ -58,11 +59,10 @@ public:
         }
     }
 
-    template <class Archive>
-    void serialize(Archive& ar) {
-        ar(cereal::make_nvp("speed", m_speed));
-        ar(cereal::make_nvp("limit_down", m_limit_down));
-        ar(cereal::make_nvp("limit_up", m_limit_up));
+    void serialize(serializer::Adapter& adapter) override {
+        adapter("speed", m_speed);
+        adapter("limit_down", m_limit_down);
+        adapter("limit_up", m_limit_up);
     }
 
 private:
@@ -70,10 +70,11 @@ private:
     float m_speed;
     float m_limit_down;
     float m_limit_up;
+
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, MoveUpDown);
 };
 
-CEREAL_REGISTER_TYPE(MoveUpDown);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, MoveUpDown);
+BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, MoveUpDown);
 
 #ifdef BIRDY3D_PLATFORM_LINUX
 void handler(int sig) {
@@ -303,10 +304,20 @@ int main() {
     // Entities
     std::shared_ptr<Scene> scene;
     if (std::filesystem::exists("scene.json")) {
-        std::fstream filestream;
-        filestream.open("scene.json", std::fstream::in);
-        cereal::JSONInputArchive iarchive(filestream);
-        iarchive(cereal::make_nvp("scene", scene));
+        serializer::JsonParser parser(RessourceManager::read_file("scene.json"));
+        auto parsed = parser.parse();
+        if (!parsed) {
+            std::cerr << "Invalid json" << std::endl;
+            exit(1);
+        }
+        auto object = parsed->as_object();
+        if (!object) {
+            std::cerr << "Invalid object" << std::endl;
+            exit(1);
+        }
+        serializer::Adapter adapter(object, true);
+        adapter("scene", scene);
+        serializer::PointerRegistry::clear();
         Application::scene = scene;
     } else {
         scene = std::make_shared<Scene>("Scene");
@@ -405,8 +416,12 @@ int main() {
 
     std::fstream filestream;
     filestream.open("scene.json", std::fstream::out);
-    cereal::JSONOutputArchive oarchive(filestream);
-    oarchive(cereal::make_nvp("scene", scene));
+    serializer::Object object;
+    serializer::Adapter adapter(&object, false);
+    adapter("scene", scene);
+    serializer::PrettyJsonGenerator generator(filestream);
+    generator.generate(object);
+    filestream.close();
 
     return 0;
 }

@@ -100,4 +100,10 @@ namespace Birdy3d {
         }
     }
 
+    void FPPlayerController::serialize(serializer::Adapter& adapter) {
+        adapter("flashlight", flashlight);
+    }
+
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, FPPlayerController);
+
 }

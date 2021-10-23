@@ -17,4 +17,8 @@ namespace Birdy3d {
 
     void Light::cleanup() { }
 
+    void Light::serialize(serializer::Adapter& adapter) {
+        adapter("shadow_enabled", shadow_enabled);
+    }
+
 }

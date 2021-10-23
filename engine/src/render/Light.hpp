@@ -18,11 +18,7 @@ namespace Birdy3d {
         void start() override;
         void update() override;
         void cleanup() override;
-
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(CEREAL_NVP(shadow_enabled));
-        }
+        void serialize(serializer::Adapter&) override;
 
     protected:
         std::shared_ptr<Shader> m_depthShader;
@@ -32,6 +28,3 @@ namespace Birdy3d {
     };
 
 }
-
-CEREAL_REGISTER_TYPE(Birdy3d::Light);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Birdy3d::Component, Birdy3d::Light);
