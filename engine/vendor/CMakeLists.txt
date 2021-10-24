@@ -40,6 +40,9 @@ endif()
 # TODO: uncomment find_library and change GIT_TAG once new-cursors-on-3.3-stable gets merged
 #find_library(LIBRARY_GLFW glfw)
 #if (NOT LIBRARY_GLFW)
+    set(GLFW_BUILD_EXAMPLES OFF)
+    set(GLFW_BUILD_TESTS OFF)
+
     FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw
