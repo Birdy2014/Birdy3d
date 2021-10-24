@@ -44,8 +44,8 @@ namespace Birdy3d {
         bool handle_context_item_children_click(ContextItem&, bool click);
         bool context_item_contains(const ContextItem&, glm::vec2) const;
 
-        void on_click(InputClickEvent* event) override;
-        void on_key(InputKeyEvent* event) override;
+        void on_click(const InputClickEvent& event) override;
+        void on_key(const InputKeyEvent& event) override;
         void on_focus_lost() override;
     };
 

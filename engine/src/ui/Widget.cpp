@@ -178,22 +178,22 @@ namespace Birdy3d {
         m_children.splice(m_children.end(), m_children, element);
     }
 
-    void Widget::on_scroll(InputScrollEvent* event) {
+    void Widget::on_scroll(const InputScrollEvent& event) {
         if (parent)
             parent->on_scroll(event);
     }
 
-    void Widget::on_click(InputClickEvent* event) {
+    void Widget::on_click(const InputClickEvent& event) {
         if (parent)
             parent->on_click(event);
     }
 
-    void Widget::on_key(InputKeyEvent* event) {
+    void Widget::on_key(const InputKeyEvent& event) {
         if (parent)
             parent->on_key(event);
     }
 
-    void Widget::on_char(InputCharEvent* event) {
+    void Widget::on_char(const InputCharEvent& event) {
         if (parent)
             parent->on_char(event);
     }

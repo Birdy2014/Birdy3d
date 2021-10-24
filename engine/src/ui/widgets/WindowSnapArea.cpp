@@ -26,8 +26,8 @@ namespace Birdy3d {
             rearrange_windows();
     }
 
-    void WindowSnapArea::on_click_raw(InputClickEvent* event) {
-        if (event->button != GLFW_MOUSE_BUTTON_LEFT || event->action != GLFW_RELEASE)
+    void WindowSnapArea::on_click_raw(const InputClickEvent& event) {
+        if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_RELEASE)
             return;
 
         Widget* focused_widget = canvas->focused_widget();
@@ -97,7 +97,7 @@ namespace Birdy3d {
         rearrange_windows();
     }
 
-    void WindowSnapArea::on_resize_raw(WindowResizeEvent* event) {
+    void WindowSnapArea::on_resize_raw(const WindowResizeEvent& event) {
         rearrange_windows();
     }
 

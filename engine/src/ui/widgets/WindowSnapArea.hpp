@@ -25,8 +25,8 @@ namespace Birdy3d {
         Rectangle* m_background_rect;
         std::vector<Window*> m_windows;
 
-        void on_click_raw(InputClickEvent*);
-        void on_resize_raw(WindowResizeEvent*);
+        void on_click_raw(const InputClickEvent&);
+        void on_resize_raw(const WindowResizeEvent&);
         void rearrange_windows();
     };
 

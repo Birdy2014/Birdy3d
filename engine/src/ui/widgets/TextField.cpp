@@ -46,41 +46,41 @@ namespace Birdy3d {
         }
     }
 
-    void TextField::on_click(InputClickEvent* event) {
-        if (readonly || event->button != GLFW_MOUSE_BUTTON_LEFT)
+    void TextField::on_click(const InputClickEvent& event) {
+        if (readonly || event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
-        if (event->action == GLFW_PRESS) {
+        if (event.action == GLFW_PRESS) {
             grab_cursor();
             glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
             int char_pos = Application::theme->text_renderer().char_index(m_text, Application::theme->font_size(), local_pos.x, true);
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;
-        } else if (event->action == GLFW_RELEASE && m_selection_end == -1) {
+        } else if (event.action == GLFW_RELEASE && m_selection_end == -1) {
             ungrab_cursor();
             m_selecting = false;
             m_cursor_pos = m_selection_start;
             m_selection_start = -1;
             m_selection_end = -1;
-        } else if (event->action == GLFW_RELEASE) {
+        } else if (event.action == GLFW_RELEASE) {
             ungrab_cursor();
             m_selecting = false;
         }
     }
 
-    void TextField::on_key(InputKeyEvent* event) {
-        if (readonly || event->action != GLFW_PRESS)
+    void TextField::on_key(const InputKeyEvent& event) {
+        if (readonly || event.action != GLFW_PRESS)
             return;
 
         if (m_selection_start >= 0 && m_selection_end >= 0) {
-            if (event->key == GLFW_KEY_DELETE || event->key == GLFW_KEY_BACKSPACE)
+            if (event.key == GLFW_KEY_DELETE || event.key == GLFW_KEY_BACKSPACE)
                 clear_selection();
             return;
         }
 
         if (m_cursor_pos >= 0) {
-            switch (event->key) {
+            switch (event.key) {
             case GLFW_KEY_DELETE:
                 if (m_cursor_pos == (int)m_text.length())
                     break;
@@ -106,7 +106,7 @@ namespace Birdy3d {
         }
     }
 
-    void TextField::on_char(InputCharEvent* event) {
+    void TextField::on_char(const InputCharEvent& event) {
         if (readonly)
             return;
 
@@ -116,7 +116,7 @@ namespace Birdy3d {
             return;
 
         char32_t c[2];
-        c[0] = event->codepoint;
+        c[0] = event.codepoint;
         c[1] = 0;
         m_text.insert(m_cursor_pos, c);
         m_cursor_pos++;

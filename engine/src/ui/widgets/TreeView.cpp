@@ -75,8 +75,8 @@ namespace Birdy3d {
         }
     }
 
-    void TreeView::on_click(InputClickEvent* event) {
-        if (event->action != GLFW_PRESS)
+    void TreeView::on_click(const InputClickEvent& event) {
+        if (event.action != GLFW_PRESS)
             return;
 
         glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
@@ -91,7 +91,7 @@ namespace Birdy3d {
                     m_selected_item = &item.second;
                     if (callback_select)
                         callback_select(item.second);
-                    if (event->button == GLFW_MOUSE_BUTTON_RIGHT) {
+                    if (event.button == GLFW_MOUSE_BUTTON_RIGHT) {
                         if (auto menu = context_menu.lock())
                             menu->open();
                     }
@@ -105,10 +105,10 @@ namespace Birdy3d {
         }
     }
 
-    void TreeView::on_key(InputKeyEvent* event) {
+    void TreeView::on_key(const InputKeyEvent& event) {
     }
 
-    void TreeView::on_char(InputCharEvent* event) {
+    void TreeView::on_char(const InputCharEvent& event) {
     }
 
     void TreeView::on_mouse_enter() {

@@ -22,8 +22,8 @@ public:
         Application::event_bus->unsubscribe(this, &TestComponent::on_collision);
     }
 
-    void on_collision(CollisionEvent* event) {
-        switch (event->type) {
+    void on_collision(const CollisionEvent& event) {
+        switch (event.type) {
         case CollisionEvent::ENTER:
             Logger::debug("ENTER");
             break;
@@ -129,7 +129,7 @@ int main() {
     menu->name = "menu";
 
     auto close_button = menu->add_child<Button>(0_px, Placement::BOTTOM_LEFT, "Close");
-    close_button->callback_click = [](InputClickEvent*) {
+    close_button->callback_click = [](const InputClickEvent&) {
         glfwSetWindowShouldClose(Application::get_window(), true);
     };
 
@@ -271,23 +271,23 @@ int main() {
             Application::selected_entity->transform.orientation.z = input_orientation_z->value();
     };
 
-    Application::event_bus->subscribe<TransformChangedEvent>([&](TransformChangedEvent* event) {
-        if (event->entity != Birdy3d::Application::selected_entity)
+    Application::event_bus->subscribe<TransformChangedEvent>([&](const TransformChangedEvent& event) {
+        if (event.entity != Birdy3d::Application::selected_entity)
             return;
-        input_position_x->value(event->entity->transform.position.x);
-        input_position_y->value(event->entity->transform.position.y);
-        input_position_z->value(event->entity->transform.position.z);
-        input_scale_x->value(event->entity->transform.scale.x);
-        input_scale_y->value(event->entity->transform.scale.y);
-        input_scale_z->value(event->entity->transform.scale.z);
-        input_orientation_x->value(event->entity->transform.orientation.x);
-        input_orientation_y->value(event->entity->transform.orientation.y);
-        input_orientation_z->value(event->entity->transform.orientation.z);
+        input_position_x->value(event.entity->transform.position.x);
+        input_position_y->value(event.entity->transform.position.y);
+        input_position_z->value(event.entity->transform.position.z);
+        input_scale_x->value(event.entity->transform.scale.x);
+        input_scale_y->value(event.entity->transform.scale.y);
+        input_scale_z->value(event.entity->transform.scale.z);
+        input_orientation_x->value(event.entity->transform.orientation.x);
+        input_orientation_y->value(event.entity->transform.orientation.y);
+        input_orientation_z->value(event.entity->transform.orientation.z);
     });
 
     auto test_checkbox = inspector_window->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
 
-    test_button->callback_click = [&inspector_window](InputClickEvent*) {
+    test_button->callback_click = [&inspector_window](const InputClickEvent&) {
         inspector_window->hidden = !inspector_window->hidden;
     };
 
@@ -352,13 +352,13 @@ int main() {
         auto spot_light = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
         spot_light->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
 
-        Application::event_bus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
+        Application::event_bus->subscribe<InputKeyEvent>([&](const InputKeyEvent&) {
             point_light->hidden = !point_light->hidden;
         },
             GLFW_KEY_L);
     }
 
-    Application::event_bus->subscribe<InputKeyEvent>([&](InputKeyEvent*) {
+    Application::event_bus->subscribe<InputKeyEvent>([&](const InputKeyEvent&) {
         auto random = [](float min, float max) {
             float zero_to_one = ((float)std::rand() / (float)RAND_MAX);
             return zero_to_one * (std::abs(min) + std::abs(max)) + min;
@@ -375,12 +375,12 @@ int main() {
     },
         GLFW_KEY_N);
 
-    Application::event_bus->subscribe<InputKeyEvent>([](InputKeyEvent*) {
+    Application::event_bus->subscribe<InputKeyEvent>([](const InputKeyEvent&) {
         Application::option_toggle(Option::VSYNC);
     },
         GLFW_KEY_V);
 
-    Application::event_bus->subscribe<InputKeyEvent>([](InputKeyEvent*) {
+    Application::event_bus->subscribe<InputKeyEvent>([](const InputKeyEvent&) {
         Application::option_toggle(Option::SHOW_COLLIDERS);
     },
         GLFW_KEY_P);

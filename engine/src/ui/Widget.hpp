@@ -110,10 +110,10 @@ namespace Birdy3d {
         virtual bool contains(glm::vec2) const;
 
         // Events
-        virtual void on_scroll(InputScrollEvent* event);
-        virtual void on_click(InputClickEvent* event);
-        virtual void on_key(InputKeyEvent* event);
-        virtual void on_char(InputCharEvent* event);
+        virtual void on_scroll(const InputScrollEvent& event);
+        virtual void on_click(const InputClickEvent& event);
+        virtual void on_key(const InputKeyEvent& event);
+        virtual void on_char(const InputCharEvent& event);
         virtual void on_mouse_enter() { }
         virtual void on_mouse_leave() { }
         virtual void on_focus() { }

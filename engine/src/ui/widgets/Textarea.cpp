@@ -97,47 +97,47 @@ namespace Birdy3d {
         }
     }
 
-    void Textarea::on_click(InputClickEvent* event) {
+    void Textarea::on_click(const InputClickEvent& event) {
         if (readonly)
             return;
 
         size_t char_pos = cursor_char_pos();
 
-        if (event->action == GLFW_PRESS) {
+        if (event.action == GLFW_PRESS) {
             grab_cursor();
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;
-        } else if (event->action == GLFW_RELEASE && char_pos == m_selection_start) {
+        } else if (event.action == GLFW_RELEASE && char_pos == m_selection_start) {
             ungrab_cursor();
             m_selecting = false;
             m_cursor_pos = m_selection_start;
             m_selection_start = -1;
             m_selection_end = -1;
-        } else if (event->action == GLFW_RELEASE && char_pos != m_selection_start) {
+        } else if (event.action == GLFW_RELEASE && char_pos != m_selection_start) {
             ungrab_cursor();
             m_selecting = false;
         }
     }
 
-    void Textarea::on_scroll(InputScrollEvent* event) {
-        scrollpos -= event->yoffset;
+    void Textarea::on_scroll(const InputScrollEvent& event) {
+        scrollpos -= event.yoffset;
         if (scrollpos < 0)
             scrollpos = 0;
     }
 
-    void Textarea::on_char(InputCharEvent* event) {
+    void Textarea::on_char(const InputCharEvent& event) {
         TextField::on_char(event);
         update_lines();
     }
 
     // TODO: key repeat
-    void Textarea::on_key(InputKeyEvent* event) {
+    void Textarea::on_key(const InputKeyEvent& event) {
         TextField::on_key(event);
-        if (readonly || event->action != GLFW_PRESS || m_cursor_pos <= 0)
+        if (readonly || event.action != GLFW_PRESS || m_cursor_pos <= 0)
             return;
         glm::ivec2 pos = get_2d_pos(m_cursor_pos);
-        switch (event->key) {
+        switch (event.key) {
         case GLFW_KEY_UP: {
             if (m_cursor_pos < m_lines[0])
                 break;

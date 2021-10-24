@@ -125,16 +125,16 @@ namespace Birdy3d {
         m_actual_size = glm::vec2(std::max(size.x.to_pixels(), minimal_size().x), std::max(size.y.to_pixels(), minimal_size().y));
     }
 
-    void Window::on_click(InputClickEvent* event) {
-        if (event->button != GLFW_MOUSE_BUTTON_LEFT)
+    void Window::on_click(const InputClickEvent& event) {
+        if (event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
-        if (event->action == GLFW_PRESS)
+        if (event.action == GLFW_PRESS)
             toForeground();
 
         glm::vec2 local_cursor_pos = Input::cursor_pos() - m_actual_pos;
 
-        if (event->action == GLFW_RELEASE) {
+        if (event.action == GLFW_RELEASE) {
             ungrab_cursor();
             m_dragging = false;
             m_resize_x_left = false;

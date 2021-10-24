@@ -166,15 +166,15 @@ namespace Birdy3d {
         return false;
     }
 
-    void ContextMenu::on_click(InputClickEvent* event) {
-        if (event->button != GLFW_MOUSE_BUTTON_LEFT || event->action != GLFW_PRESS)
+    void ContextMenu::on_click(const InputClickEvent& event) {
+        if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
             return;
 
         if (!handle_context_item_children_click(root_item, true))
             hidden = true;
     }
 
-    void ContextMenu::on_key(InputKeyEvent* event) {
+    void ContextMenu::on_key(const InputKeyEvent& event) {
         hidden = true;
     }
 

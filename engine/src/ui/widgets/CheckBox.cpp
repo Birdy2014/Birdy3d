@@ -19,8 +19,8 @@ namespace Birdy3d {
         Widget::draw();
     }
 
-    void CheckBox::on_click(InputClickEvent* event) {
-        if (event->button != GLFW_MOUSE_BUTTON_LEFT || event->action != GLFW_PRESS)
+    void CheckBox::on_click(const InputClickEvent& event) {
+        if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
             return;
 
         checked = !checked;

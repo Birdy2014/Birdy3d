@@ -54,9 +54,9 @@ namespace Birdy3d {
         TreeItem* m_selected_item = nullptr;
 
         virtual void on_update() override;
-        virtual void on_click(InputClickEvent* event) override;
-        virtual void on_key(InputKeyEvent* event) override;
-        virtual void on_char(InputCharEvent* event) override;
+        virtual void on_click(const InputClickEvent& event) override;
+        virtual void on_key(const InputKeyEvent& event) override;
+        virtual void on_char(const InputCharEvent& event) override;
         virtual void on_mouse_enter() override;
         virtual void on_mouse_leave() override;
         virtual void on_focus_lost() override;

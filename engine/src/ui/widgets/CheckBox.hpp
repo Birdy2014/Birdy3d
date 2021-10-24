@@ -18,7 +18,7 @@ namespace Birdy3d {
         Text* m_text_shape;
         Rectangle* m_check_shape;
 
-        void on_click(InputClickEvent*) override;
+        void on_click(const InputClickEvent&) override;
     };
 
 }

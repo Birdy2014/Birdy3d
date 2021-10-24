@@ -32,7 +32,7 @@ namespace Birdy3d {
     template <class T, class EventType>
     class MemberFunctionHandler : public HandlerFunctionBase {
     public:
-        typedef void (T::*MemberFunction)(EventType*);
+        typedef void (T::*MemberFunction)(const EventType&);
 
         MemberFunctionHandler(T* instance, MemberFunction memberFunction, std::any options)
             : HandlerFunctionBase(options)
@@ -43,7 +43,7 @@ namespace Birdy3d {
             if (m_options.has_value() && !event->check_options(m_options))
                 return;
             EventType* casted_event = static_cast<EventType*>(event);
-            (m_instance->*m_member_function)(casted_event);
+            (m_instance->*m_member_function)(*std::as_const(casted_event));
         }
 
     private:
@@ -55,7 +55,7 @@ namespace Birdy3d {
     template <class EventType>
     class FunctionHandler : public HandlerFunctionBase {
     public:
-        typedef std::function<void(EventType*)> HandlerFunction;
+        typedef std::function<void(const EventType&)> HandlerFunction;
 
         FunctionHandler(HandlerFunction func, std::any options)
             : HandlerFunctionBase(options)
@@ -64,7 +64,7 @@ namespace Birdy3d {
         void exec(Event* event) override {
             if (m_options.has_value() && !event->check_options(m_options))
                 return;
-            m_function(static_cast<EventType*>(event));
+            m_function(std::as_const(*static_cast<EventType*>(event)));
         }
 
     private:
@@ -88,7 +88,7 @@ namespace Birdy3d {
         }
 
         template <class T, class EventType>
-        void subscribe(T* instance, void (T::*memberFunction)(EventType*), std::any options = {}) {
+        void subscribe(T* instance, void (T::*memberFunction)(const EventType&), std::any options = {}) {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr) {
@@ -101,7 +101,7 @@ namespace Birdy3d {
         }
 
         template <class EventType>
-        void subscribe(std::function<void(EventType*)> func, std::any options = {}) {
+        void subscribe(std::function<void(const EventType&)> func, std::any options = {}) {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr) {
@@ -114,7 +114,7 @@ namespace Birdy3d {
         }
 
         template <class T, class EventType>
-        void unsubscribe(T* instance, void (T::*memberFunction)(EventType*), std::any options = {}) {
+        void unsubscribe(T* instance, void (T::*memberFunction)(const EventType&), std::any options = {}) {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr)
@@ -135,7 +135,7 @@ namespace Birdy3d {
         }
 
         template <class EventType>
-        void unsubscribe(std::function<void(EventType*)> func, std::any options = {}) {
+        void unsubscribe(std::function<void(const EventType&)> func, std::any options = {}) {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr)

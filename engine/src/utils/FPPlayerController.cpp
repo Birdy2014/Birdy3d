@@ -76,15 +76,15 @@ namespace Birdy3d {
             entity->transform.orientation.x = -max_pitch;
     }
 
-    void FPPlayerController::on_resize(WindowResizeEvent* event) {
+    void FPPlayerController::on_resize(const WindowResizeEvent& event) {
         if (auto cam_ptr = m_cam.lock())
-            cam_ptr->resize(event->width, event->height);
+            cam_ptr->resize(event.width, event.height);
     }
 
-    void FPPlayerController::on_key(InputKeyEvent* event) {
-        if (event->action != GLFW_PRESS)
+    void FPPlayerController::on_key(const InputKeyEvent& event) {
+        if (event.action != GLFW_PRESS)
             return;
-        switch (event->key) {
+        switch (event.key) {
         case GLFW_KEY_CAPS_LOCK:
         case GLFW_KEY_ESCAPE: {
             Input::toggle_cursor_hidden();
