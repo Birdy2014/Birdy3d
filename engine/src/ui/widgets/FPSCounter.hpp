@@ -15,14 +15,13 @@ namespace Birdy3d {
             text = add_text(0_px, "FPS: ", Color::Name::FG, Placement::CENTER_LEFT);
         }
 
-        void draw() override {
+        void on_update() override {
             int fps = 1 / Application::delta_time;
             text->text("FPS: " + std::to_string(fps));
-            Widget::draw();
         }
 
         glm::vec2 minimal_size() override {
-            glm::vec2 min_size = Application::theme->text_renderer().text_size("FPS: 000", text->font_size) + 2.0f;
+            glm::vec2 min_size = Application::theme->text_renderer().text_size("FPS: 000") + 2.0f;
             return glm::max(min_size, Widget::minimal_size());
         }
     };

@@ -168,6 +168,8 @@ namespace Birdy3d {
     }
 
     UIVector TextRenderer::text_size(std::u32string text, float font_size) {
+        if (!font_size)
+            font_size = m_font_size;
         float scale = (font_size / m_font_size);
         UIVector size(0_px, font_size);
         float current_x = 0;
@@ -188,6 +190,8 @@ namespace Birdy3d {
     }
 
     float TextRenderer::char_width(char32_t c, float font_size) {
+        if (!font_size)
+            font_size = m_font_size;
         if (m_chars.count(c) == 0)
             add_char(c);
         Character ch = m_chars[c];
