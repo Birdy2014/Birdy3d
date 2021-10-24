@@ -80,6 +80,9 @@ namespace Birdy3d {
     }
 
     void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
+        bool resized = false;
+        if (size != m_actual_size)
+            resized = true;
         m_actual_pos = pos;
         m_actual_size = size;
         m_move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
@@ -90,6 +93,9 @@ namespace Birdy3d {
 
         if (m_layout && m_children_visible)
             m_layout->arrange(m_children, pos + glm::vec2(m_padding[0], m_padding[2]), size - glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]));
+
+        if (resized)
+            on_resize();
     }
 
     void Widget::set_canvas(Canvas* c) {

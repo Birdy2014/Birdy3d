@@ -118,6 +118,7 @@ namespace Birdy3d {
         virtual void on_mouse_leave() { }
         virtual void on_focus() { }
         virtual void on_focus_lost() { }
+        virtual void on_resize() { }
 
         // Shapes
         Rectangle* add_rectangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);

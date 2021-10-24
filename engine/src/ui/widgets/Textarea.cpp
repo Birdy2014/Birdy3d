@@ -15,11 +15,6 @@ namespace Birdy3d {
         m_tmpscroll = 0;
     }
 
-    void Textarea::arrange(glm::vec2 pos, glm::vec2 size) {
-        Widget::arrange(pos, size);
-        update_lines();
-    }
-
     void Textarea::draw() {
         Widget::draw();
         glEnable(GL_SCISSOR_TEST);
@@ -165,6 +160,10 @@ namespace Birdy3d {
             break;
         }
         }
+        update_lines();
+    }
+
+    void Textarea::on_resize() {
         update_lines();
     }
 

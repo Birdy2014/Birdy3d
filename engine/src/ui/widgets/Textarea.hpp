@@ -14,7 +14,6 @@ namespace Birdy3d {
         float scrollpos;
 
         Textarea(UIVector pos, UIVector size, Placement placement);
-        void arrange(glm::vec2 pos, glm::vec2 size) override;
         void draw() override;
 
     protected:
@@ -23,6 +22,7 @@ namespace Birdy3d {
         void on_scroll(const InputScrollEvent& event) override;
         void on_char(const InputCharEvent& event) override;
         void on_key(const InputKeyEvent& event) override;
+        void on_resize() override;
 
     private:
         float m_tmpscroll;
