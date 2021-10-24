@@ -14,10 +14,10 @@ namespace Birdy3d {
         Canvas()
             : Widget(0_px, 100_p) {
             canvas = this;
-            Application::event_bus->subscribe(this, &Canvas::on_scroll);
-            Application::event_bus->subscribe(this, &Canvas::on_click);
-            Application::event_bus->subscribe(this, &Canvas::on_key);
-            Application::event_bus->subscribe(this, &Canvas::on_char);
+            Application::event_bus->subscribe(this, &Canvas::on_scroll_raw);
+            Application::event_bus->subscribe(this, &Canvas::on_click_raw);
+            Application::event_bus->subscribe(this, &Canvas::on_key_raw);
+            Application::event_bus->subscribe(this, &Canvas::on_char_raw);
             set_layout<AbsoluteLayout>();
         };
 
@@ -51,7 +51,7 @@ namespace Birdy3d {
         Widget* m_focused_widget = nullptr;
         bool m_cursor_grabbed = false;
 
-        void on_scroll(InputScrollEvent* event) override {
+        void on_scroll_raw(InputScrollEvent* event) {
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_scroll(event);
@@ -60,7 +60,7 @@ namespace Birdy3d {
             }
         }
 
-        void on_click(InputClickEvent* event) override {
+        void on_click_raw(InputClickEvent* event) {
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_click(event);
@@ -71,12 +71,12 @@ namespace Birdy3d {
             }
         }
 
-        void on_key(InputKeyEvent* event) override {
+        void on_key_raw(InputKeyEvent* event) {
             if (m_focused_widget && m_focused_widget != this)
                 m_focused_widget->on_key(event);
         }
 
-        void on_char(InputCharEvent* event) override {
+        void on_char_raw(InputCharEvent* event) {
             if (m_focused_widget && m_focused_widget != this)
                 m_focused_widget->on_char(event);
         }
