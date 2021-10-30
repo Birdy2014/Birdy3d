@@ -259,6 +259,7 @@ namespace Birdy3d {
 
     void Text::text(std::string value) {
         m_text = TextRenderer::converter.from_bytes(value);
+        m_size = Application::theme->text_renderer().text_size(m_text, font_size);
         m_dirty = true;
     }
 

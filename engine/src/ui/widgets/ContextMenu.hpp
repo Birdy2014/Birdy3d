@@ -7,7 +7,8 @@ namespace Birdy3d {
     class ContextItem {
     public:
         typedef std::function<void()> ClickFunc;
-        std::string text;
+
+        std::unique_ptr<Text> text;
         std::list<ContextItem> children;
         ClickFunc callback_click;
         bool opened = false;
