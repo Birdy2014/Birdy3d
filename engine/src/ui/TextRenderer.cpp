@@ -272,9 +272,9 @@ namespace Birdy3d {
         std::vector<UIVertex> vertices;
         std::vector<GLuint> indices;
         vertices.reserve(4 * m_text.size());
-        float scale = (font_size / renderer.m_font_size);
         if (font_size == 0)
-            scale = 1;
+            font_size = renderer.m_font_size;
+        float scale = (font_size / renderer.m_font_size);
         float x = 0;
         float y = font_size / 5; // Offet between baseline and bottom
         for (char32_t c : m_text) {
