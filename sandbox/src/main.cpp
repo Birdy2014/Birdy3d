@@ -352,7 +352,7 @@ int main() {
         auto spot_light = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
         spot_light->add_component<Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
 
-        Application::event_bus->subscribe<InputKeyEvent>([&](const InputKeyEvent&) {
+        Application::event_bus->subscribe<InputKeyEvent>([point_light](const InputKeyEvent&) {
             point_light->hidden = !point_light->hidden;
         },
             GLFW_KEY_L);
