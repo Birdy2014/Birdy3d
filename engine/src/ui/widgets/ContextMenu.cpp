@@ -198,7 +198,7 @@ namespace Birdy3d {
 
     MenuBar::MenuBar(UIVector pos, UIVector size, Placement placement)
         : Widget(pos, size, placement) {
-        add_filled_rectangle(0_px, 100_px, Color::Name::BG);
+        add_filled_rectangle(0_p, 100_p, Color::Name::BG);
     }
 
     ContextItem& MenuBar::add_item(std::string text) {
@@ -223,7 +223,7 @@ namespace Birdy3d {
             menu->root_item.text->position(UIVector(x, 0));
             menu->root_item.text->draw(m_move);
             menu->draw();
-            x += menu->root_item.text->size().x;
+            x += menu->root_item.text->size().x + m_menu_gap;
         }
     }
 
@@ -244,6 +244,9 @@ namespace Birdy3d {
                 m_menu_opened = true;
                 return;
             }
+            x += m_menu_gap;
+            if (curosr_x < x)
+                return;
         }
     }
 
