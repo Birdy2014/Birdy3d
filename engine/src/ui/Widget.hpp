@@ -82,6 +82,7 @@ namespace Birdy3d {
 
         bool is_hovering();
         bool is_focused();
+        bool was_last_focused();
         void focus();
         void grab_cursor();
         void ungrab_cursor();

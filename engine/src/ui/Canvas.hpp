@@ -42,6 +42,7 @@ namespace Birdy3d {
 
         Widget* hovering_widget() { return m_hovering_widget; }
         Widget* focused_widget() { return m_focused_widget; }
+        Widget* last_focused_widget() { return m_last_focused_widget; }
         bool cursor_grabbed() { return m_cursor_grabbed; }
 
     private:
@@ -49,6 +50,7 @@ namespace Birdy3d {
 
         Widget* m_hovering_widget = nullptr;
         Widget* m_focused_widget = nullptr;
+        Widget* m_last_focused_widget = nullptr;
         bool m_cursor_grabbed = false;
 
         void on_scroll_raw(const InputScrollEvent& event) {
@@ -65,7 +67,7 @@ namespace Birdy3d {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_click(event);
             } else if (m_hovering_widget && m_hovering_widget != this) {
-                if (m_hovering_widget != m_focused_widget && event.action == GLFW_PRESS)
+                if (event.action == GLFW_PRESS)
                     m_hovering_widget->focus();
                 m_hovering_widget->on_click(event);
             }

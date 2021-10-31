@@ -112,9 +112,18 @@ namespace Birdy3d {
         return canvas->m_focused_widget == this;
     }
 
+    bool Widget::was_last_focused() {
+        return canvas->m_last_focused_widget == this;
+    }
+
     void Widget::focus() {
+        if (canvas->m_focused_widget == this) {
+            canvas->m_last_focused_widget = canvas->m_focused_widget;
+            return;
+        }
         if (canvas->m_focused_widget)
             canvas->m_focused_widget->on_focus_lost();
+        canvas->m_last_focused_widget = canvas->m_focused_widget;
         canvas->m_focused_widget = this;
         canvas->m_cursor_grabbed = false;
         canvas->m_focused_widget->on_focus();

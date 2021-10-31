@@ -62,7 +62,6 @@ namespace Birdy3d {
 
     private:
         std::vector<std::unique_ptr<ContextMenu>> m_menus;
-        bool m_menu_opened = false; // FIXME: This will stay true if the ContextMenu is closed by clicking somewhere else. Find some other way to prevent reopening the menu when clicking the title.
         int m_menu_gap = 20;
 
         void on_click(const InputClickEvent& event) override;

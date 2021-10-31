@@ -235,13 +235,10 @@ namespace Birdy3d {
         for (auto& menu : m_menus) {
             x += menu->root_item.text->size().x;
             if (curosr_x < x) {
-                if (m_menu_opened) {
-                    m_menu_opened = false;
+                if (menu->was_last_focused())
                     return;
-                }
                 glm::vec2 open_pos = m_actual_pos + glm::vec2(x - menu->root_item.text->size().x, -menu->root_item.m_child_rect_size.y);
                 menu->open(open_pos);
-                m_menu_opened = true;
                 return;
             }
             x += m_menu_gap;
