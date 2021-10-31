@@ -117,6 +117,13 @@ int main() {
     auto canvas = std::make_shared<Canvas>();
     Application::canvas = canvas;
 
+    // FIXME: Something about positioning is broken with percentages; this may also be the cause of jittering when resizing
+    auto menu_bar = canvas->add_child<MenuBar>(0_px, UIVector(100_p, Application::theme->line_height()), Placement::TOP_LEFT);
+    auto& bar_item1 = menu_bar->add_item("Item 1");
+    bar_item1.add_child("Hallo");
+    auto& bar_item2 = menu_bar->add_item("Item 2");
+    bar_item2.add_child("Welt");
+
     auto snap_area = canvas->add_child<WindowSnapArea>(0_px, UIVector(600_px, 400_px), Placement::BOTTOM_RIGHT);
     snap_area->mode = WindowSnapArea::Mode::HORIZONTAL;
 

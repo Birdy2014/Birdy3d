@@ -15,9 +15,11 @@ namespace Birdy3d {
 
         ContextItem(std::string, ClickFunc);
         ContextItem& add_child(std::string, ClickFunc = nullptr);
+        void remove_child(std::string);
 
     private:
         friend class ContextMenu;
+        friend class MenuBar;
 
         glm::vec2 m_child_rect_pos;
         glm::vec2 m_child_rect_size;
@@ -29,6 +31,7 @@ namespace Birdy3d {
 
         ContextMenu();
         void draw() override;
+        void open(glm::vec2);
         void open();
         void on_update() override;
 
@@ -48,6 +51,20 @@ namespace Birdy3d {
         void on_click(const InputClickEvent& event) override;
         void on_key(const InputKeyEvent& event) override;
         void on_focus_lost() override;
+    };
+
+    class MenuBar : public Widget {
+    public:
+        MenuBar(UIVector pos, UIVector size, Placement);
+        ContextItem& add_item(std::string);
+        void remove_item(std::string);
+        void draw() override;
+
+    private:
+        std::vector<std::unique_ptr<ContextMenu>> m_menus;
+        bool m_menu_opened = false;
+
+        void on_click(const InputClickEvent& event) override;
     };
 
 }

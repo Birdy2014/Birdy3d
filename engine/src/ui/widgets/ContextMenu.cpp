@@ -18,6 +18,12 @@ namespace Birdy3d {
         return children.emplace_back(text, func);
     }
 
+    void ContextItem::remove_child(std::string text) {
+        std::remove_if(children.begin(), children.end(), [&text](const ContextItem& item) {
+            return text == item.text->text();
+        });
+    }
+
     ContextMenu::ContextMenu()
         : Widget()
         , root_item(ContextItem("Root", nullptr)) {
@@ -35,6 +41,16 @@ namespace Birdy3d {
         draw_context_item_children(root_item);
     }
 
+    void ContextMenu::open(glm::vec2 open_pos) {
+        pos = open_pos;
+        m_actual_pos = pos;
+        hidden = false;
+        focus();
+        canvas->to_foreground(this);
+        for (auto& child_item : root_item.children)
+            child_item.opened = false;
+    }
+
     void ContextMenu::open() {
         glm::vec2 open_pos = Input::cursor_pos();
         glm::vec2 viewport = Application::get_viewport_size();
@@ -46,11 +62,7 @@ namespace Birdy3d {
             pos.y = open_pos.y; // Up
         else
             pos.y = open_pos.y - root_item.m_child_rect_size.y; // Down
-        hidden = false;
-        focus();
-        canvas->to_foreground(this);
-        for (auto& child_item : root_item.children)
-            child_item.opened = false;
+        open(pos);
     }
 
     void ContextMenu::on_update() {
@@ -65,6 +77,7 @@ namespace Birdy3d {
     }
 
     void ContextMenu::draw_context_item_children(ContextItem& item) {
+        // FIXME: This needs to be done before opening for the first time after adding/removing items
         item.m_child_rect_size = glm::vec2(0);
         for (const auto& child_item : item.children) {
             item.m_child_rect_size.y += Application::theme->line_height();
@@ -181,6 +194,57 @@ namespace Birdy3d {
 
     void ContextMenu::on_focus_lost() {
         hidden = true;
+    }
+
+    MenuBar::MenuBar(UIVector pos, UIVector size, Placement placement)
+        : Widget(pos, size, placement) {
+        add_filled_rectangle(0_px, 100_px, Color::Name::BG);
+    }
+
+    ContextItem& MenuBar::add_item(std::string text) {
+        auto menu = std::make_unique<ContextMenu>();
+        menu->canvas = canvas;
+        menu->root_item.text->text(text);
+        ContextItem& item = menu->root_item;
+        m_menus.push_back(std::move(menu));
+        return item;
+    }
+
+    void MenuBar::remove_item(std::string text) {
+        std::remove_if(m_menus.begin(), m_menus.end(), [&text](const std::unique_ptr<ContextMenu>& menu) {
+            return text == menu->root_item.text->text();
+        });
+    }
+
+    void MenuBar::draw() {
+        Widget::draw();
+        int x = 0;
+        for (auto& menu : m_menus) {
+            menu->root_item.text->position(UIVector(x, 0));
+            menu->root_item.text->draw(m_move);
+            menu->draw();
+            x += menu->root_item.text->size().x;
+        }
+    }
+
+    void MenuBar::on_click(const InputClickEvent& event) {
+        if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
+            return;
+        int curosr_x = Input::cursor_pos().x - m_actual_pos.x;
+        int x = 0;
+        for (auto& menu : m_menus) {
+            x += menu->root_item.text->size().x;
+            if (curosr_x < x) {
+                if (m_menu_opened) {
+                    m_menu_opened = false;
+                    return;
+                }
+                glm::vec2 open_pos = m_actual_pos + glm::vec2(x - menu->root_item.text->size().x, -menu->root_item.m_child_rect_size.y);
+                menu->open(open_pos);
+                m_menu_opened = true;
+                return;
+            }
+        }
     }
 
 }
