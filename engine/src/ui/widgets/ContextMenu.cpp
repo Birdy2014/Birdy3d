@@ -90,7 +90,7 @@ namespace Birdy3d {
             if (item.m_child_rect_size.x < text_width)
                 item.m_child_rect_size.x = text_width;
         }
-        item.m_child_rect_size.x += m_padding * 2;
+        item.m_child_rect_size.x += item.m_padding * 2;
 
         m_background_rect->position(item.m_child_rect_pos);
         m_background_rect->size(item.m_child_rect_size);
@@ -99,15 +99,15 @@ namespace Birdy3d {
         m_border_rect->size(item.m_child_rect_size);
         m_border_rect->draw(glm::mat4(1));
 
-        int offset_y = item.m_child_rect_size.y - m_padding;
+        int offset_y = item.m_child_rect_size.y - item.m_padding;
         for (const auto& child_item : item.children) {
             offset_y -= Application::theme->line_height();
             if (!child_item.children.empty()) {
-                m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size - m_padding, offset_y + (Application::theme->line_height() - m_arrow_size) / 2));
+                m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size - item.m_padding, offset_y + (Application::theme->line_height() - m_arrow_size) / 2));
                 m_submenu_triangle->rotation(glm::radians(30.0f));
                 m_submenu_triangle->draw(glm::mat4(1));
             }
-            child_item.text->position(UIVector(item.m_child_rect_pos.x + m_padding, item.m_child_rect_pos.y + offset_y));
+            child_item.text->position(UIVector(item.m_child_rect_pos.x + item.m_padding, item.m_child_rect_pos.y + offset_y));
             child_item.text->draw(glm::mat4(1));
         }
         for (auto& child_item : item.children) {
@@ -122,7 +122,7 @@ namespace Birdy3d {
         glm::vec2 local_pos = Input::cursor_pos() - item.m_child_rect_pos;
         bool found = false;
         if (local_pos.x > 0 && local_pos.x < item.m_child_rect_size.x && local_pos.y > 0 && local_pos.y < item.m_child_rect_size.y) {
-            int offset_y = item.m_child_rect_size.y - m_padding;
+            int offset_y = item.m_child_rect_size.y - item.m_padding;
             for (auto& child_item : item.children) {
                 offset_y -= Application::theme->line_height();
                 if (!found) {
@@ -141,10 +141,10 @@ namespace Birdy3d {
                                 child_item.m_child_rect_pos.x = item.m_child_rect_pos.x - child_item.m_child_rect_size.x; // Left
                             else
                                 child_item.m_child_rect_pos.x = item.m_child_rect_pos.x + item.m_child_rect_size.x; // Right
-                            if (item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height() + m_padding < 0)
-                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - m_padding; // Up
+                            if (item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height() + item.m_padding < 0)
+                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - item.m_padding; // Up
                             else
-                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height() + m_padding; // Down
+                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme->line_height() + item.m_padding; // Down
 
                             // Close all children of newly opened item
                             for (auto& child_child_item : child_item.children)

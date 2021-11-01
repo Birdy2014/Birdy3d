@@ -21,7 +21,6 @@ namespace Birdy3d {
         friend class ContextMenu;
         friend class MenuBar;
 
-        // TODO: m_padding exists in ContextItem and ContextMenu.
         int m_padding = 10;
         glm::vec2 m_child_rect_pos;
         glm::vec2 m_child_rect_size;
@@ -38,7 +37,6 @@ namespace Birdy3d {
         void on_update() override;
 
     private:
-        int m_padding = 10;
         int m_arrow_size;
         Rectangle* m_background_rect;
         Rectangle* m_border_rect;
