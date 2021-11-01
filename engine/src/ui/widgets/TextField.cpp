@@ -29,10 +29,7 @@ namespace Birdy3d {
 
     void TextField::draw() {
         Widget::draw();
-        glEnable(GL_SCISSOR_TEST);
-        glScissor(m_actual_pos.x, m_actual_pos.y, m_actual_size.x, m_actual_size.y);
         Application::theme->text_renderer().render_text(m_text, 0, m_actual_size.y / 2 - Application::theme->font_size() / 2, Application::theme->font_size(), Color::Name::FG, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Color::Name::TEXT_HIGHLIGHT);
-        glDisable(GL_SCISSOR_TEST);
     }
 
     void TextField::on_update() {

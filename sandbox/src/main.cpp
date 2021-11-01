@@ -149,7 +149,10 @@ int main() {
     tree_window->set_layout<MaxLayout>();
     tree_window->title("Scene");
 
-    auto tree = tree_window->add_child<TreeView>(0_px, 100_p, Placement::TOP_LEFT);
+    auto tree_scroll_view = tree_window->add_child<ScrollView>(0_px, 100_p);
+    tree_scroll_view->set_layout<MaxLayout>();
+
+    auto tree = tree_scroll_view->add_child<TreeView>(0_px, 100_p, Placement::TOP_LEFT);
     tree->callback_select = [&](TreeItem& item) {
         if (item.data.type() == typeid(Entity*)) {
             Application::selected_entity = std::any_cast<Entity*>(item.data);
@@ -204,7 +207,7 @@ int main() {
     });
 
     auto inspector_window = canvas->add_child<Window>(0_px, 500_px);
-    inspector_window->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
+    inspector_window->set_layout<MaxLayout>();
     inspector_window->hidden = true;
     inspector_window->title("Inspector");
 
@@ -212,7 +215,10 @@ int main() {
         inspector_window->hidden = !inspector_window->hidden;
     };
 
-    auto transform_box = inspector_window->add_child<CollapsibleBox>(UIVector(0_px, 5_px));
+    auto inspector_scroll_view = inspector_window->add_child<ScrollView>(0_px, 100_p, Placement::BOTTOM_LEFT);
+    inspector_scroll_view->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
+
+    auto transform_box = inspector_scroll_view->add_child<CollapsibleBox>(UIVector(0_px, 5_px));
     transform_box->title("Transform");
     transform_box->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 10, true);
 
@@ -291,7 +297,7 @@ int main() {
         input_orientation_z->value(event.entity->transform.orientation.z);
     });
 
-    auto test_checkbox = inspector_window->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
+    auto test_checkbox = inspector_scroll_view->add_child<CheckBox>(UIVector(0_px, -50_px), Placement::TOP_LEFT, "Textures");
 
     test_button->callback_click = [&inspector_window](const InputClickEvent&) {
         inspector_window->hidden = !inspector_window->hidden;

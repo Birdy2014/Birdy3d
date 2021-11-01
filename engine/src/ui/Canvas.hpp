@@ -26,6 +26,7 @@ namespace Birdy3d {
                 updated = true;
                 glm::vec2 viewport = Application::get_viewport_size();
                 Widget::arrange(glm::vec2(0), viewport);
+                Widget::update_visible_area(glm::vec2(0), viewport);
                 if (!m_cursor_grabbed)
                     Widget::update_hover(true);
                 Widget::on_update();
@@ -36,7 +37,9 @@ namespace Birdy3d {
         void draw() override {
             if (updated) {
                 glClear(GL_DEPTH_BUFFER_BIT);
+                glEnable(GL_SCISSOR_TEST);
                 Widget::draw();
+                glDisable(GL_SCISSOR_TEST);
             }
         }
 

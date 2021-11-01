@@ -92,7 +92,8 @@ namespace Birdy3d {
         glm::vec2 actual_size() { return m_actual_size; }
 
         // External Event calls
-        virtual bool update_hover(bool hover);
+        bool update_hover(bool hover);
+        void update_visible_area(glm::vec2 parent_visible_bottom_left, glm::vec2 parent_visible_top_right);
         virtual void late_update();
         virtual void on_update();
 
@@ -104,6 +105,8 @@ namespace Birdy3d {
         std::unique_ptr<Layout> m_layout = std::make_unique<EmptyLayout>();
         glm::vec2 m_actual_size = glm::vec2(1);
         glm::vec2 m_actual_pos = glm::vec2(1);
+        glm::vec2 m_visible_size = glm::vec2(1);
+        glm::vec2 m_visible_pos = glm::vec2(1);
         glm::mat4 m_move = glm::mat4(1);
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
         bool m_children_visible = true;

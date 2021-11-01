@@ -17,8 +17,6 @@ namespace Birdy3d {
 
     void Textarea::draw() {
         Widget::draw();
-        glEnable(GL_SCISSOR_TEST);
-        glScissor(m_actual_pos.x, m_actual_pos.y, m_actual_size.x, m_actual_size.y);
         int linec = m_actual_size.y / Application::theme->line_height();
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
@@ -39,7 +37,6 @@ namespace Birdy3d {
                 Application::theme->text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme->font_size(), Color::Name::FG, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Color::Name::TEXT_HIGHLIGHT);
             }
         }
-        glDisable(GL_SCISSOR_TEST);
     }
 
     void Textarea::update_lines() {

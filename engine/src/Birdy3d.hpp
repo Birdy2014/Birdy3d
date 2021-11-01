@@ -53,6 +53,7 @@
 #include "ui/widgets/ContextMenu.hpp"
 #include "ui/widgets/FPSCounter.hpp"
 #include "ui/widgets/NumberInput.hpp"
+#include "ui/widgets/ScrollView.hpp"
 #include "ui/widgets/TextField.hpp"
 #include "ui/widgets/Textarea.hpp"
 #include "ui/widgets/TreeView.hpp"

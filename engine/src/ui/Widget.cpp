@@ -55,6 +55,7 @@ namespace Birdy3d {
         if (hidden)
             return;
 
+        glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x, m_visible_size.y);
         for (const auto& s : m_shapes)
             s->draw(m_move);
 
@@ -138,7 +139,7 @@ namespace Birdy3d {
     }
 
     bool Widget::contains(glm::vec2 point) const {
-        return point.x > m_actual_pos.x && point.y > m_actual_pos.y && point.x < m_actual_pos.x + m_actual_size.x && point.y < m_actual_pos.y + m_actual_size.y;
+        return point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y;
     }
 
     bool Widget::update_hover(bool hover) {
@@ -165,6 +166,18 @@ namespace Birdy3d {
             m_hovered_last_frame = false;
         }
         return success;
+    }
+
+    void Widget::update_visible_area(glm::vec2 parent_visible_bottom_left, glm::vec2 parent_visible_top_right) {
+        if (hidden)
+            return;
+        m_visible_pos = glm::vec2(std::max(parent_visible_bottom_left.x, m_actual_pos.x), std::max(parent_visible_bottom_left.y, m_actual_pos.y));
+        glm::vec2 actual_pos2 = m_actual_pos + m_actual_size;
+        glm::vec2 visible_pos2 = glm::vec2(std::min(parent_visible_top_right.x, actual_pos2.x), std::min(parent_visible_top_right.y, actual_pos2.y));
+        m_visible_size = visible_pos2 - m_visible_pos;
+
+        for (const auto& child : m_children)
+            child->update_visible_area(m_visible_pos, visible_pos2);
     }
 
     void Widget::on_update() {
