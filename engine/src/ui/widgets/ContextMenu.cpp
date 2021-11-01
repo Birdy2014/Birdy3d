@@ -12,16 +12,20 @@ namespace Birdy3d {
 
     ContextItem::ContextItem(std::string text, ClickFunc func)
         : text(std::make_unique<Text>(0_px, text, Color::Name::FG, Placement::BOTTOM_LEFT))
-        , callback_click(func) { }
+        , callback_click(func)
+        , m_child_rect_size(glm::vec2(m_padding * 2)) { }
 
     ContextItem& ContextItem::add_child(std::string text, ClickFunc func) {
+        m_child_rect_size.y += Application::theme->line_height();
         return children.emplace_back(text, func);
     }
 
     void ContextItem::remove_child(std::string text) {
-        std::remove_if(children.begin(), children.end(), [&text](const ContextItem& item) {
+        auto it = std::remove_if(children.begin(), children.end(), [&text](const ContextItem& item) {
             return text == item.text->text();
         });
+        if (it != children.end())
+            m_child_rect_size.y -= Application::theme->line_height();
     }
 
     ContextMenu::ContextMenu()
@@ -77,17 +81,16 @@ namespace Birdy3d {
     }
 
     void ContextMenu::draw_context_item_children(ContextItem& item) {
-        // FIXME: This needs to be done before opening for the first time after adding/removing items
-        item.m_child_rect_size = glm::vec2(0);
+        // TODO: Put the x size calculation in the ContextItem and figure out how to add the arrow length after children are added.
+        item.m_child_rect_size.x = 0;
         for (const auto& child_item : item.children) {
-            item.m_child_rect_size.y += Application::theme->line_height();
             float text_width = child_item.text->size().x;
             if (!child_item.children.empty())
                 text_width += m_arrow_size + 5;
             if (item.m_child_rect_size.x < text_width)
                 item.m_child_rect_size.x = text_width;
         }
-        item.m_child_rect_size += glm::vec2(m_padding * 2);
+        item.m_child_rect_size.x += m_padding * 2;
 
         m_background_rect->position(item.m_child_rect_pos);
         m_background_rect->size(item.m_child_rect_size);
