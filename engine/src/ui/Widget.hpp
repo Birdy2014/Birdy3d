@@ -30,7 +30,6 @@ namespace Birdy3d {
 
         Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, std::string name = "");
         virtual ~Widget() = default;
-        virtual void draw();
 
         // Layout
         template <class T, typename... Args>
@@ -92,6 +91,7 @@ namespace Birdy3d {
         glm::vec2 actual_size() { return m_actual_size; }
 
         // External Event calls
+        void external_draw();
         bool update_hover(bool hover);
         void update_visible_area(glm::vec2 parent_visible_bottom_left, glm::vec2 parent_visible_top_right);
         virtual void late_update();
@@ -111,6 +111,7 @@ namespace Birdy3d {
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
         bool m_children_visible = true;
 
+        virtual void draw();
         virtual bool contains(glm::vec2) const;
 
         // Events

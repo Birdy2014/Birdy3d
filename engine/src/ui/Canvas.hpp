@@ -34,11 +34,11 @@ namespace Birdy3d {
             }
         }
 
-        void draw() override {
+        void draw_canvas() {
             if (updated) {
                 glClear(GL_DEPTH_BUFFER_BIT);
                 glEnable(GL_SCISSOR_TEST);
-                Widget::draw();
+                Widget::external_draw();
                 glDisable(GL_SCISSOR_TEST);
             }
         }

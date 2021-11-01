@@ -39,10 +39,10 @@ namespace Birdy3d {
     }
 
     void ContextMenu::draw() {
-        if (hidden)
-            return;
         root_item.m_child_rect_pos = m_actual_pos;
+        glDisable(GL_SCISSOR_TEST);
         draw_context_item_children(root_item);
+        glEnable(GL_SCISSOR_TEST);
     }
 
     void ContextMenu::open(glm::vec2 open_pos) {
@@ -225,7 +225,9 @@ namespace Birdy3d {
         for (auto& menu : m_menus) {
             menu->root_item.text->position(UIVector(x, 0));
             menu->root_item.text->draw(m_move);
-            menu->draw();
+            // menu->external_draw() would reset glScissor, but menu->draw() doesn't check for hidden.
+            if (!menu->hidden)
+                menu->draw();
             x += menu->root_item.text->size().x + m_menu_gap;
         }
     }

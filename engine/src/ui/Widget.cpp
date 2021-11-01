@@ -51,18 +51,23 @@ namespace Birdy3d {
         return ptr;
     }
 
-    void Widget::draw() {
+    void Widget::external_draw() {
         if (hidden)
             return;
 
         glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x, m_visible_size.y);
-        for (const auto& s : m_shapes)
-            s->draw(m_move);
+
+        draw();
 
         if (!m_children_visible)
             return;
         for (const auto& child : m_children)
-            child->draw();
+            child->external_draw();
+    }
+
+    void Widget::draw() {
+        for (const auto& s : m_shapes)
+            s->draw(m_move);
     }
 
     glm::vec2 Widget::preferred_position(glm::vec2 parentSize, glm::vec2 size) {

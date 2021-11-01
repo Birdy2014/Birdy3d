@@ -98,7 +98,7 @@ namespace Birdy3d {
             }
 
             if (canvas_ptr)
-                canvas_ptr->draw();
+                canvas_ptr->draw_canvas();
 
             if (scene_ptr)
                 scene_ptr->post_update();
