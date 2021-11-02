@@ -13,11 +13,17 @@ namespace Birdy3d {
         add_filled_rectangle(0_px, UIVector(100_p, Application::theme->line_height()), Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);
         add_rectangle(0_px, 100_p, Color::Name::BORDER);
         m_close_button = add_filled_rectangle(-4_px, 14_px, Color::Name::RED, Placement::TOP_RIGHT);
-        m_title = add_text(UIVector(10_px, 0_px), "", Color::Name::FG, Placement::TOP_LEFT);
+        m_title = add_text(UIVector(10_px, 3_px), "", Color::Name::FG, Placement::TOP_LEFT);
     }
 
     void Window::toForeground() {
         parent->to_foreground(this);
+    }
+
+    glm::vec2 Window::minimal_size() {
+        glm::vec2 layout_minsize = Widget::minimal_size();
+        float min_width = m_title->size().x + m_close_button->size().x + BORDER_SIZE * 2 + 14;
+        return glm::vec2(std::max(layout_minsize.x, min_width), layout_minsize.y);
     }
 
     void Window::on_update() {
