@@ -17,7 +17,7 @@ namespace Birdy3d::serializer {
         static void serialize(GeneratorType type, std::string name, auto& value, std::ostream& stream) {
             serializer::Object object;
             serializer::Adapter adapter(&object, false);
-            adapter("scene", value);
+            adapter(name, value);
             std::unique_ptr<Generator> generator;
             switch (type) {
             case GeneratorType::JSON_PRETTY:
