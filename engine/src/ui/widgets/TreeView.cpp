@@ -105,21 +105,6 @@ namespace Birdy3d {
         }
     }
 
-    void TreeView::on_key(const InputKeyEvent& event) {
-    }
-
-    void TreeView::on_char(const InputCharEvent& event) {
-    }
-
-    void TreeView::on_mouse_enter() {
-    }
-
-    void TreeView::on_mouse_leave() {
-    }
-
-    void TreeView::on_focus_lost() {
-    }
-
     void TreeView::update_flat_tree_list() {
         m_flat_tree_list.clear();
         update_flat_tree_list(m_root_item, 0);

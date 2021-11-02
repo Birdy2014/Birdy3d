@@ -191,7 +191,7 @@ namespace Birdy3d {
             hidden = true;
     }
 
-    void ContextMenu::on_key(const InputKeyEvent& event) {
+    void ContextMenu::on_key(const InputKeyEvent&) {
         hidden = true;
     }
 

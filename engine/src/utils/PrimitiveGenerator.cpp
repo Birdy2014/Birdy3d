@@ -153,7 +153,7 @@ namespace Birdy3d {
         return std::make_shared<Model>(std::move(mesh));
     }
 
-    std::shared_ptr<Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution) {
+    std::shared_ptr<Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution [[maybe_unused]]) {
         // TODO: ico sphere primitive
         BIRDY3D_TODO
         return nullptr;

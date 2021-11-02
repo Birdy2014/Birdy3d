@@ -17,7 +17,7 @@ namespace Birdy3d {
             }
         }
 
-        glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override {
+        glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children [[maybe_unused]]) const override {
             return glm::vec2(0);
         }
     };

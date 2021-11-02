@@ -97,7 +97,7 @@ namespace Birdy3d {
         rearrange_windows();
     }
 
-    void WindowSnapArea::on_resize_raw(const WindowResizeEvent& event) {
+    void WindowSnapArea::on_resize_raw(const WindowResizeEvent&) {
         rearrange_windows();
     }
 
