@@ -78,7 +78,7 @@ namespace Birdy3d {
         glm::vec2 children_minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
         if (m_layout && m_children_visible)
             children_minsize += m_layout->minimal_size(m_children);
-        return glm::max(children_minsize, size.to_pixels());
+        return glm::vec2(std::max(children_minsize.x, size.x.to_pixels()), std::max(children_minsize.y, size.y.to_pixels()));
     }
 
     glm::vec2 Widget::preferred_size(glm::vec2 parentSize) {
