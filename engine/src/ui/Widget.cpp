@@ -55,7 +55,7 @@ namespace Birdy3d {
         if (hidden)
             return;
 
-        glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x, m_visible_size.y);
+        glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
 
         draw();
 
