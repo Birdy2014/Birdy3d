@@ -18,7 +18,7 @@ namespace Birdy3d {
         return (percent / 100) * parentSize + pixels;
     }
 
-    bool Unit::operator==(const Unit& other) {
+    bool Unit::operator==(const Unit& other) const {
         return pixels == other.pixels && percent == other.percent;
     }
 
@@ -88,7 +88,7 @@ namespace Birdy3d {
         return *this;
     }
 
-    bool UIVector::operator==(const UIVector& other) {
+    bool UIVector::operator==(const UIVector& other) const {
         return x == other.x && y == other.y;
     }
 
