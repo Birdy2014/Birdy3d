@@ -209,6 +209,15 @@ namespace Birdy3d {
         return text.size();
     }
 
+    struct UIVertex {
+        glm::vec2 position;
+        glm::vec2 texcoords;
+
+        UIVertex(glm::vec2 position, glm::vec2 texcoords)
+            : position(position)
+            , texcoords(texcoords) { }
+    };
+
     Text::Text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size)
         : Shape(pos, 0_px, color, placement)
         , font_size(font_size)

@@ -25,7 +25,7 @@ namespace Birdy3d {
         void operator=(float value);
         operator float();
         float to_pixels(float parentSize = 0);
-        bool operator==(const Unit& other);
+        bool operator==(const Unit& other) const;
         Unit operator+(const Unit& other);
         Unit& operator+=(const Unit& other);
         Unit operator-();
@@ -71,7 +71,7 @@ namespace Birdy3d {
         UIVector(Unit x);
         UIVector(Unit x, Unit y);
         UIVector& operator=(const UIVector& other);
-        bool operator==(const UIVector& other);
+        bool operator==(const UIVector& other) const;
         UIVector operator+(const UIVector& other);
         UIVector operator+(const float other);
         UIVector operator-();
@@ -82,11 +82,6 @@ namespace Birdy3d {
         glm::vec2 to_pixels(glm::vec2 parentSize = glm::vec2(0));
         operator glm::vec2();
         static glm::vec2 get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement);
-    };
-
-    struct UIVertex {
-        glm::vec2 position;
-        glm::vec2 texcoords;
     };
 
 }
