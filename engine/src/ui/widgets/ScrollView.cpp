@@ -1,5 +1,6 @@
 #include "ui/widgets/ScrollView.hpp"
 
+#include "core/Input.hpp"
 #include "ui/Rectangle.hpp"
 
 namespace Birdy3d {
@@ -8,6 +9,7 @@ namespace Birdy3d {
         : Widget(pos, size, placement, name) {
         m_scrollbar_background = add_filled_rectangle(0_px, UIVector(10_px, 100_p), Color::Name::BG, Placement::TOP_RIGHT);
         m_scrollbar_bar = add_filled_rectangle(0_px, UIVector(10_px, 100_p), Color::Name::FG, Placement::TOP_RIGHT);
+        m_padding = glm::vec4(0, 10, 0, 0);
     }
 
     glm::vec2 ScrollView::minimal_size() {
@@ -55,6 +57,31 @@ namespace Birdy3d {
         m_scroll_offset.x -= event.xoffset * acceleration;
         m_scroll_offset.y -= event.yoffset * acceleration;
 
+        check_scroll_bounds();
+    }
+
+    // FIXME: on_click is not called if the ScrollView is also scrolled horizontally
+    void ScrollView::on_click(const InputClickEvent& event) {
+        if (event.button != GLFW_MOUSE_BUTTON_LEFT)
+            return;
+        if (event.action == GLFW_PRESS && m_scrollbar_bar->contains(Input::cursor_pos() - m_actual_pos)) {
+            m_scrollbar_grabbed = true;
+            grab_cursor();
+        } else if (m_scrollbar_grabbed) {
+            m_scrollbar_grabbed = false;
+            ungrab_cursor();
+        }
+    }
+
+    void ScrollView::on_update() {
+        if (!m_scrollbar_grabbed)
+            return;
+        m_scroll_offset.y -= Input::cursor_pos_offset().y * (m_content_size.y / m_actual_size.y);
+
+        check_scroll_bounds();
+    }
+
+    void ScrollView::check_scroll_bounds() {
         if (m_scroll_offset.x < 0)
             m_scroll_offset.x = 0;
         if (m_scroll_offset.x > m_max_scroll_offset.x)
