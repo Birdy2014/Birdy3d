@@ -16,8 +16,12 @@ namespace Birdy3d {
         glm::vec2 m_scroll_offset = glm::vec2(0);
         Rectangle* m_scrollbar_background;
         Rectangle* m_scrollbar_bar;
+        bool m_scrollbar_grabbed = false;
 
         void on_scroll(const InputScrollEvent& event) override;
+        void on_click(const InputClickEvent& event) override;
+        void on_update() override;
+        void check_scroll_bounds();
     };
 
 }
