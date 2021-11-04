@@ -74,11 +74,11 @@ namespace Birdy3d {
     }
 
     void ScrollView::on_update() {
-        if (!m_scrollbar_grabbed)
-            return;
-        m_scroll_offset.y -= Input::cursor_pos_offset().y * (m_content_size.y / m_actual_size.y);
-
-        check_scroll_bounds();
+        if (m_scrollbar_grabbed) {
+            m_scroll_offset.y -= Input::cursor_pos_offset().y * (m_content_size.y / m_actual_size.y);
+            check_scroll_bounds();
+        }
+        Widget::on_update();
     }
 
     void ScrollView::check_scroll_bounds() {
