@@ -12,7 +12,7 @@
 
 namespace Birdy3d {
 
-    Theme* Application::theme = nullptr;
+    std::unique_ptr<Theme> Application::theme = nullptr;
     EventBus* Application::event_bus = nullptr;
     float Application::delta_time = 0;
     std::weak_ptr<Scene> Application::scene;
@@ -21,14 +21,14 @@ namespace Birdy3d {
     GLFWwindow* Application::m_window = nullptr;
     std::unordered_map<Option, bool> Application::m_options_bool;
 
-    bool Application::init(const char* windowName, int width, int height) {
+    bool Application::init(const char* window_name, int width, int height, const std::string& theme_name) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create Window
-        Application::m_window = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
+        Application::m_window = glfwCreateWindow(width, height, window_name, nullptr, nullptr);
         if (m_window == nullptr) {
             Logger::error("Failed to create GLFW window");
             glfwTerminate();
@@ -59,6 +59,7 @@ namespace Birdy3d {
         // Init variables
         RessourceManager::init();
         event_bus = new EventBus();
+        theme = std::make_unique<Theme>(theme_name);
 
         return true;
     }

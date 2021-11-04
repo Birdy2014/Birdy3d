@@ -15,8 +15,6 @@ namespace Birdy3d {
 
         Button(UIVector pos, Placement placement, std::string text, UIVector size = UIVector(0))
             : Widget(pos, size, placement) {
-            Logger::assert_not_null(Application::theme, "no default theme set");
-
             add_filled_rectangle(UIVector(0_px), UIVector(100_p), Color::Name::BG, Placement::BOTTOM_LEFT);
             add_rectangle(UIVector(0_px), UIVector(100_p), Color::Name::BORDER, Placement::BOTTOM_LEFT);
             button_text = add_text(UIVector(0_px), text, Color::Name::FG, Placement::CENTER);
