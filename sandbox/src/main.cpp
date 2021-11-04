@@ -96,7 +96,7 @@ int main() {
     signal(SIGSEGV, handler);
 #endif
 
-    if (!Application::init("Birdy3d", 1280, 720)) {
+    if (!Application::init("Birdy3d", 1280, 720, "gruvbox.json")) {
         return -1;
     }
     Input::init();
@@ -112,8 +112,6 @@ int main() {
     std::shared_ptr<Birdy3d::NumberInput> input_orientation_z;
 
     // UI
-    Application::theme = new Theme("gruvbox.json");
-
     auto canvas = std::make_shared<Canvas>();
     Application::canvas = canvas;
 

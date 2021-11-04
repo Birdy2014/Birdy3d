@@ -18,14 +18,14 @@ namespace Birdy3d {
 
     class Application {
     public:
-        static Theme* theme;
+        static std::unique_ptr<Theme> theme;
         static EventBus* event_bus;
         static float delta_time;
         static std::weak_ptr<Scene> scene;
         static std::weak_ptr<Canvas> canvas;
         static Entity* selected_entity;
 
-        static bool init(const char* windowName, int width, int height);
+        static bool init(const char* window_name, int width, int height, const std::string& theme_name);
         static void cleanup();
         static void mainloop();
         static GLFWwindow* get_window();
