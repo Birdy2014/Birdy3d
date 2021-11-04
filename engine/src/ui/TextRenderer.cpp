@@ -227,13 +227,16 @@ namespace Birdy3d {
         m_dirty = true;
     }
 
+    Text::~Text() {
+        delete_buffers();
+    }
+
     void Text::draw(glm::mat4 move) {
         if (m_hidden)
             return;
 
         if (m_dirty) {
-            delete_buffers();
-            create_buffers();
+            update_buffers();
             glm::vec2 pos = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
             m_move_self = glm::mat4(1);
             m_move_self = glm::translate(m_move_self, glm::vec3(pos, 0.0f));
@@ -272,12 +275,41 @@ namespace Birdy3d {
     }
 
     void Text::create_buffers() {
-        TextRenderer& renderer = Application::theme->text_renderer();
         // Create buffers
         glGenVertexArrays(1, &m_vao);
         glGenBuffers(1, &m_vbo);
         glGenBuffers(1, &m_ebo);
+        // Allocate buffers
+        glBindVertexArray(m_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(UIVertex) * m_text_length * 4, 0, GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_text_length * 6, 0, GL_STATIC_DRAW);
+        // vertex positions
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        // uv coordinates
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    }
+
+    void Text::delete_buffers() {
+        glDeleteBuffers(1, &m_vbo);
+        glDeleteVertexArrays(1, &m_vao);
+    }
+
+    void Text::update_buffers() {
+        // Resize buffers
+        if (m_text.size() != m_text_length) {
+            m_text_length = m_text.size();
+            glBindVertexArray(m_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(UIVertex) * m_text_length * 4, 0, GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_text_length * 6, 0, GL_STATIC_DRAW);
+        }
         // Create data
+        TextRenderer& renderer = Application::theme->text_renderer();
         std::vector<UIVertex> vertices;
         std::vector<GLuint> indices;
         vertices.reserve(4 * m_text.size());
@@ -322,20 +354,9 @@ namespace Birdy3d {
         // Write to buffers
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(UIVertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(UIVertex) * vertices.size(), vertices.data());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
-        // vertex positions
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-        // uv coordinates
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-    }
-
-    void Text::delete_buffers() {
-        glDeleteBuffers(1, &m_vbo);
-        glDeleteVertexArrays(1, &m_vao);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * indices.size(), indices.data());
     }
 
 }

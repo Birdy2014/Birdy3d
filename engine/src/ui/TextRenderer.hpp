@@ -69,6 +69,7 @@ namespace Birdy3d {
         float font_size;
 
         Text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size = 0);
+        ~Text();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
         std::string text();
@@ -78,9 +79,11 @@ namespace Birdy3d {
         std::u32string m_text;
         GLuint m_vao, m_vbo, m_ebo;
         std::shared_ptr<Shader> m_shader;
+        std::size_t m_text_length = 0;
 
         void create_buffers();
         void delete_buffers();
+        void update_buffers();
     };
 
 }
