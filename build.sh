@@ -6,18 +6,8 @@ trap exit INT
 cd "$(dirname "$0")"
 
 build() {
-    if [ ! -d build ]; then
-        mkdir build
-        cd build
-        cmake .. "-DCMAKE_BUILD_TYPE=$1" -G Ninja
-    else
-        cd build
-        [[ -f Birdy3d_sandbox ]] && rm Birdy3d_sandbox
-    fi
-    ninja Birdy3d_sandbox || exit 1
-
-    # Return to starting directory
-    cd ..
+    cmake -B build "-DBUILD_RELEASE=$1" -G Ninja
+    cmake --build build || exit 1
 
     # Copy compile_commands.json
     [[ -f build/compile_commands.json ]] && cp build/compile_commands.json compile_commands.json
@@ -30,13 +20,13 @@ fi
 
 case $1 in
     run)
-        build DEBUG && ./build/out/bin/Birdy3d_sandbox
+        build FALSE && ./build/out/bin/Birdy3d_sandbox
         ;;
     build)
-        build DEBUG
+        build FALSE
         ;;
     release)
-        build RELEASE
+        build TRUE
         ;;
     clean)
         rm -rf build

@@ -16,7 +16,7 @@ On Linux you need the following dependencies:
 - freetype2 (optional)
 
 ```
-cmake -B build -DCMAKE_BUILD_TYPE=RELEASE -G Make
+cmake -B build -DBUILD_RELEASE=TRUE -G Make
 cmake --build build -- -j4
 ```
 
@@ -28,7 +28,7 @@ On Windows, you need:
 - freetype2 (optional)
 
 ```
-cmake -B build -DCMAKE_BUILD_TYPE=RELEASE -G 'Visual Studio 16 2019'
+cmake -B build -DBUILD_RELEASE=TRUE -G 'Visual Studio 16 2019'
 cmake --build build --config RELEASE
 ```
 
