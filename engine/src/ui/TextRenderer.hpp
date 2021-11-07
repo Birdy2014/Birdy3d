@@ -2,9 +2,7 @@
 
 #include "ui/Shape.hpp"
 #include "ui/Units.hpp"
-#include <codecvt>
 #include <glm/glm.hpp>
-#include <locale>
 #include <map>
 #include <memory>
 #include <string>
@@ -26,19 +24,7 @@ namespace Birdy3d {
     };
 
     class TextRenderer {
-    private:
-        // What is this and why is it needed?
-        template <class Facet>
-        struct DeletableFacet : Facet {
-            template <class... Args>
-            DeletableFacet(Args&&... args)
-                : Facet(std::forward<Args>(args)...) { }
-            ~DeletableFacet() { }
-        };
-
     public:
-        static std::wstring_convert<DeletableFacet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> converter;
-
         TextRenderer(Theme&);
         ~TextRenderer();
         void render_text(std::string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);

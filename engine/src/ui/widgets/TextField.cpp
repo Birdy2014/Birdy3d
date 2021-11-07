@@ -3,6 +3,7 @@
 #include "core/Input.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
+#include "utils/Unicode.hpp"
 
 namespace Birdy3d {
 
@@ -12,11 +13,11 @@ namespace Birdy3d {
     }
 
     std::string TextField::text() {
-        return TextRenderer::converter.to_bytes(m_text);
+        return Unicode::utf32_to_utf8(m_text);
     }
 
     void TextField::text(std::string text) {
-        std::u32string new_text = TextRenderer::converter.from_bytes(text);
+        std::u32string new_text = Unicode::utf8_to_utf32(text);
         if (new_text != m_text)
             m_changed = true;
         m_text = new_text;
@@ -24,7 +25,7 @@ namespace Birdy3d {
 
     void TextField::append(std::string text) {
         m_changed = true;
-        m_text += TextRenderer::converter.from_bytes(text);
+        m_text += Unicode::utf8_to_utf32(text);
     }
 
     void TextField::draw() {

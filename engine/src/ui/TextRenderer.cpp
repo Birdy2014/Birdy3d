@@ -5,14 +5,13 @@
 #include "render/Shader.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/Theme.hpp"
+#include "utils/Unicode.hpp"
 #include <ft2build.h>
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include FT_FREETYPE_H
 
 namespace Birdy3d {
-
-    std::wstring_convert<TextRenderer::DeletableFacet<std::codecvt<char32_t, char, std::mbstate_t>>, char32_t> TextRenderer::converter;
 
     TextRenderer::~TextRenderer() {
         FT_Done_Face(*m_face);
@@ -82,7 +81,7 @@ namespace Birdy3d {
     }
 
     void TextRenderer::render_text(std::string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color::Name hlcolor) {
-        std::u32string converted = converter.from_bytes(text);
+        std::u32string converted = Unicode::utf8_to_utf32(text);
         render_text(converted, x, y, font_size, color, move, cursorpos, highlight, hlstart, hlend, hlcolor);
     }
 
@@ -163,7 +162,7 @@ namespace Birdy3d {
     }
 
     UIVector TextRenderer::text_size(std::string text, float font_size) {
-        std::u32string converted = converter.from_bytes(text);
+        std::u32string converted = Unicode::utf8_to_utf32(text);
         return text_size(converted, font_size);
     }
 
@@ -222,7 +221,7 @@ namespace Birdy3d {
         : Shape(pos, 0_px, color, placement)
         , font_size(font_size)
         , m_shader(RessourceManager::get_shader("ui")) {
-        m_text = TextRenderer::converter.from_bytes(text);
+        m_text = Unicode::utf8_to_utf32(text);
         create_buffers();
         m_dirty = true;
     }
@@ -266,11 +265,11 @@ namespace Birdy3d {
     }
 
     std::string Text::text() {
-        return TextRenderer::converter.to_bytes(m_text);
+        return Unicode::utf32_to_utf8(m_text);
     }
 
     void Text::text(std::string value) {
-        m_text = TextRenderer::converter.from_bytes(value);
+        m_text = Unicode::utf8_to_utf32(value);
         m_dirty = true;
     }
 
