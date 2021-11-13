@@ -24,6 +24,8 @@ namespace Birdy3d {
         void on_key(const InputKeyEvent& event) override;
         void on_resize() override;
 
+        void on_callback_change() override;
+
     private:
         float m_tmpscroll;
         std::vector<size_t> m_lines;

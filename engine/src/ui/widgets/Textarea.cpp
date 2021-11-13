@@ -164,6 +164,11 @@ namespace Birdy3d {
         update_lines();
     }
 
+    void Textarea::on_callback_change() {
+        update_lines();
+        TextField::on_callback_change();
+    }
+
     size_t Textarea::cursor_char_pos() {
         glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
 
