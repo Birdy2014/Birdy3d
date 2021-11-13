@@ -507,6 +507,7 @@ namespace Birdy3d {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT);
 
+        glDisable(GL_CULL_FACE);
         m_simple_color_shader->use();
         m_simple_color_shader->set_mat4("projection", m_projection);
         m_simple_color_shader->set_mat4("view", view);
@@ -514,6 +515,7 @@ namespace Birdy3d {
         for (auto c : entity->scene->get_components<Collider>(false, true)) {
             c->render_wireframe(*m_simple_color_shader);
         }
+        glEnable(GL_CULL_FACE);
     }
 
     void Camera::serialize(serializer::Adapter& adapter) {
