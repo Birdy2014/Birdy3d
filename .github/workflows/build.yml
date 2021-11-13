@@ -7,8 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
+  BUILD_TYPE: RELEASE
 
 jobs:
   build-linux-x11:
@@ -28,13 +27,14 @@ jobs:
         sudo apt install libassimp-dev ccache
 
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G 'Unix Makefiles'
+      run: cmake -B ${{github.workspace}}/build -DBUILD_RELEASE=TRUE -G 'Unix Makefiles'
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target Birdy3d_engine Birdy3d_sandbox -- -j4
+      run: cmake --build ${{github.workspace}}/build --target Birdy3d_engine Birdy3d_sandbox -- -j4
+
+    - name: Check Executable
+      run: test -f build/out/bin/Birdy3d_sandbox
 
   build-windows:
     runs-on: windows-latest
@@ -43,10 +43,12 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G 'Visual Studio 16 2019'
+      run: cmake -B ${{github.workspace}}/build -G 'Visual Studio 16 2019'
 
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target Birdy3d_engine Birdy3d_sandbox
+
+    - name: Check Executable
+      shell: bash
+      run: test -f build/out/bin/Birdy3d_sandbox.exe
