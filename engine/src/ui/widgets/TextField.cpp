@@ -28,6 +28,10 @@ namespace Birdy3d {
         m_text += Unicode::utf8_to_utf32(text);
     }
 
+    void TextField::clear() {
+        m_text.clear();
+    }
+
     void TextField::draw() {
         Widget::draw();
         Application::theme->text_renderer().render_text(m_text, 0, m_actual_size.y / 2 - Application::theme->font_size() / 2, Application::theme->font_size(), Color::Name::FG, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Color::Name::TEXT_HIGHLIGHT);
@@ -70,6 +74,9 @@ namespace Birdy3d {
     void TextField::on_key(const InputKeyEvent& event) {
         if (readonly || event.action != GLFW_PRESS)
             return;
+
+        if (event.key == GLFW_KEY_ENTER && callback_accept)
+            return callback_accept();
 
         if (m_selection_start >= 0 && m_selection_end >= 0) {
             if (event.key == GLFW_KEY_DELETE || event.key == GLFW_KEY_BACKSPACE)
@@ -134,6 +141,11 @@ namespace Birdy3d {
         m_cursor_pos = -1;
     }
 
+    void TextField::on_callback_change() {
+        if (callback_change)
+            callback_change();
+    }
+
     void TextField::clear_selection() {
         if (m_selection_start != -1 && m_selection_end != -1) {
             if (m_selection_start > m_selection_end)
@@ -150,8 +162,8 @@ namespace Birdy3d {
 
     void TextField::late_update() {
         Widget::late_update();
-        if (m_changed && callback_change) {
-            callback_change();
+        if (m_changed) {
+            on_callback_change();
             m_changed = false;
         }
     }

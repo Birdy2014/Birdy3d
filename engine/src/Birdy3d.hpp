@@ -46,6 +46,7 @@
 #include "ui/Units.hpp"
 #include "ui/Widget.hpp"
 #include "ui/Window.hpp"
+#include "ui/console/Console.hpp"
 #include "ui/widgets/Button.hpp"
 #include "ui/widgets/CheckBox.hpp"
 #include "ui/widgets/CollapsibleBox.hpp"

@@ -9,11 +9,13 @@ namespace Birdy3d {
     public:
         bool readonly = false;
         std::function<void()> callback_change;
+        std::function<void()> callback_accept;
 
         TextField(UIVector position, UIVector size, Placement placement = Placement::BOTTOM_LEFT);
         std::string text();
         void text(std::string);
         void append(std::string);
+        void clear();
         virtual void draw() override;
 
     protected:
@@ -32,6 +34,10 @@ namespace Birdy3d {
         virtual void on_mouse_enter() override;
         virtual void on_mouse_leave() override;
         virtual void on_focus_lost() override;
+
+        // TextField Events
+        virtual void on_callback_change();
+        // TODO: Unified UI events: Widget::add_event(std::string name, ...)
 
         void clear_selection();
         void late_update() override;
