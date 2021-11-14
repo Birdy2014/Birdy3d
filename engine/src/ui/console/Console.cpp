@@ -33,7 +33,7 @@ namespace Birdy3d {
 
         m_console_input = m_console_window->add_child<TextField>(0_px, UIVector(100_p, 20_px));
         m_console_input->weight = 0;
-        m_console_input->callback_accept = input_callback;
+        m_console_input->add_callback("accept", input_callback);
     }
 
     void Console::input_callback() {

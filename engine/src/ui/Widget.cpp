@@ -231,4 +231,17 @@ namespace Birdy3d {
             parent->on_char(event);
     }
 
+    void Widget::add_callback(const std::string& name, CallbackType callback) {
+        m_callbacks[name].push_back(callback);
+    }
+
+    void Widget::execute_callbacks(const std::string& name) {
+        for (auto& callback : m_callbacks[name])
+            std::invoke(callback);
+    }
+
+    bool Widget::has_callbacks(const std::string& name) {
+        return !m_callbacks[name].empty();
+    }
+
 }

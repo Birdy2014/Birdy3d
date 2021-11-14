@@ -97,6 +97,11 @@ namespace Birdy3d {
         virtual void late_update();
         virtual void on_update();
 
+        // Callbacks
+        typedef std::function<void()> CallbackType;
+
+        void add_callback(const std::string& name, CallbackType callback);
+
     protected:
         friend class Canvas;
 
@@ -113,6 +118,10 @@ namespace Birdy3d {
 
         virtual void draw();
         virtual bool contains(glm::vec2) const;
+
+        // Callbacks
+        void execute_callbacks(const std::string& name);
+        bool has_callbacks(const std::string& name);
 
         // Events
         virtual void on_scroll(const InputScrollEvent& event);
@@ -134,6 +143,7 @@ namespace Birdy3d {
 
     private:
         bool m_hovered_last_frame = false;
+        std::map<std::string, std::vector<CallbackType>> m_callbacks;
     };
 
 }
