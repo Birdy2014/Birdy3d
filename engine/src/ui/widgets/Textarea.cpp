@@ -13,6 +13,7 @@ namespace Birdy3d {
         : TextField(pos, size, placement) {
         scrollpos = 0;
         m_tmpscroll = 0;
+        add_callback("change", [this]() { update_lines(); });
     }
 
     void Textarea::draw() {
@@ -162,11 +163,6 @@ namespace Birdy3d {
 
     void Textarea::on_resize() {
         update_lines();
-    }
-
-    void Textarea::on_callback_change() {
-        update_lines();
-        TextField::on_callback_change();
     }
 
     size_t Textarea::cursor_char_pos() {

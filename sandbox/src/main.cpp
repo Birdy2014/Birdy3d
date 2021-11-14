@@ -226,20 +226,20 @@ int main() {
     input_position_y = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
     input_position_z = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
 
-    input_position_x->callback_change = [&] {
+    input_position_x->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.position.x = input_position_x->value();
-    };
+    });
 
-    input_position_y->callback_change = [&] {
+    input_position_y->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.position.y = input_position_y->value();
-    };
+    });
 
-    input_position_z->callback_change = [&] {
+    input_position_z->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.position.z = input_position_z->value();
-    };
+    });
 
     input_scale_x = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
     input_scale_y = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
@@ -249,39 +249,39 @@ int main() {
     input_scale_y->min_value = 0;
     input_scale_z->min_value = 0;
 
-    input_scale_x->callback_change = [&] {
+    input_scale_x->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.scale.x = input_scale_x->value();
-    };
+    });
 
-    input_scale_y->callback_change = [&] {
+    input_scale_y->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.scale.y = input_scale_y->value();
-    };
+    });
 
-    input_scale_z->callback_change = [&] {
+    input_scale_z->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.scale.z = input_scale_z->value();
-    };
+    });
 
     input_orientation_x = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
     input_orientation_y = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
     input_orientation_z = transform_box->add_child<NumberInput>(0_px, UIVector(100_p, 25_px), Placement::BOTTOM_LEFT, 0);
 
-    input_orientation_x->callback_change = [&] {
+    input_orientation_x->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.orientation.x = input_orientation_x->value();
-    };
+    });
 
-    input_orientation_y->callback_change = [&] {
+    input_orientation_y->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.orientation.y = input_orientation_y->value();
-    };
+    });
 
-    input_orientation_z->callback_change = [&] {
+    input_orientation_z->add_callback("change", [&] {
         if (Application::selected_entity)
             Application::selected_entity->transform.orientation.z = input_orientation_z->value();
-    };
+    });
 
     Application::event_bus->subscribe<TransformChangedEvent>([&](const TransformChangedEvent& event) {
         if (event.entity != Birdy3d::Application::selected_entity)

@@ -75,8 +75,8 @@ namespace Birdy3d {
         if (readonly || event.action != GLFW_PRESS)
             return;
 
-        if (event.key == GLFW_KEY_ENTER && callback_accept)
-            return callback_accept();
+        if (event.key == GLFW_KEY_ENTER && has_callbacks("accept"))
+            return execute_callbacks("accept");
 
         if (m_selection_start >= 0 && m_selection_end >= 0) {
             if (event.key == GLFW_KEY_DELETE || event.key == GLFW_KEY_BACKSPACE)
@@ -141,11 +141,6 @@ namespace Birdy3d {
         m_cursor_pos = -1;
     }
 
-    void TextField::on_callback_change() {
-        if (callback_change)
-            callback_change();
-    }
-
     void TextField::clear_selection() {
         if (m_selection_start != -1 && m_selection_end != -1) {
             if (m_selection_start > m_selection_end)
@@ -163,7 +158,7 @@ namespace Birdy3d {
     void TextField::late_update() {
         Widget::late_update();
         if (m_changed) {
-            on_callback_change();
+            execute_callbacks("change");
             m_changed = false;
         }
     }
