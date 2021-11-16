@@ -8,7 +8,7 @@ struct DirectionalLight {
     vec3 diffuse;
 
     mat4 lightSpaceMatrix;
-    sampler2D shadowMap;
+    sampler2DShadow shadowMap;
 };
 
 struct PointLight {
@@ -24,7 +24,7 @@ struct PointLight {
 
     float far;
 
-    samplerCube shadowMap;
+    samplerCubeShadow shadowMap;
 };
 
 struct Spotlight {
@@ -42,7 +42,7 @@ struct Spotlight {
     float quadratic;
 
     mat4 lightSpaceMatrix;
-    sampler2D shadowMap;
+    sampler2DShadow shadowMap;
 };
 
 uniform DirectionalLight dirLights[MAX_DIRECTIONAL_LIGHTS];
@@ -82,24 +82,12 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDi
     vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos, 1.0);
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
-    float currentDepth = projCoords.z;
     //float bias = max(0.0001 * (1.0 - dot(normal, lightDir)), 0.0);
     float bias = 0;
 
-    float shadow = 0;
-    vec2 texelSize = 1.0 / textureSize(light.shadowMap, 0);
-    texelSize *= 0.4;
-    for (int x = -2; x <= 2; x++) {
-        for (int y = -2; y <= 2; y++) {
-            float pcfDepth = texture(light.shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += ((currentDepth - bias) > pcfDepth) ? 1.0 : 0.0;
-        }
-    }
-    shadow /= 25.0;
+    float shadow = texture(light.shadowMap, projCoords, bias);
 
-    if (projCoords.z > 1.0)
-        shadow = 0.0;
-    return lighting * (1 - shadow) + ambient;
+    return lighting * shadow + ambient;
 }
 
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess, float ambient_occlusion) {
@@ -127,9 +115,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
     vec3 fragToLight = fragPos - light.position;
     float currentDepth = length(fragToLight);
     float bias = 0.00;
-    float closestDepth = texture(light.shadowMap, fragToLight).r;
-    closestDepth *= light.far;
-    float shadow = (currentDepth - bias < closestDepth) ? 1.0 : 0.0;
+    float shadow = texture(light.shadowMap, vec4(fragToLight, currentDepth), bias);
 
     return lighting * shadow + ambient;
 }
@@ -163,11 +149,9 @@ vec3 calcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos, 1.0);
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
-    float closestDepth = texture(light.shadowMap, projCoords.xy).r;
-    float currentDepth = projCoords.z;
     lightDir = normalize(light.position - fragPos);
     float bias = 0;
-    float shadow = (currentDepth - bias < closestDepth) ? 1.0 : 0.0;
+    float shadow = texture(light.shadowMap, projCoords, bias);
 
     return lighting * shadow + ambient;
 }
