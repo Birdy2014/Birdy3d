@@ -16,7 +16,7 @@ namespace Birdy3d {
         m_title = add_text(UIVector(10_px, 3_px), "", Color::Name::FG, Placement::TOP_LEFT);
     }
 
-    void Window::toForeground() {
+    void Window::to_foreground() {
         parent->to_foreground(this);
     }
 
@@ -136,7 +136,7 @@ namespace Birdy3d {
             return;
 
         if (event.action == GLFW_PRESS)
-            toForeground();
+            to_foreground();
 
         glm::vec2 local_cursor_pos = Input::cursor_pos() - m_actual_pos;
 

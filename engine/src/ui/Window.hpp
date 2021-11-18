@@ -13,7 +13,7 @@ namespace Birdy3d {
         std::function<void()> callback_close;
 
         Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), std::string name = "");
-        void toForeground();
+        void to_foreground();
         glm::vec2 minimal_size() override;
 
         std::string title() { return m_title->text(); }

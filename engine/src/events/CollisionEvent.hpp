@@ -2,10 +2,9 @@
 
 #include "ecs/Entity.hpp"
 #include "events/Event.hpp"
+#include "physics/Collider.hpp"
 
 namespace Birdy3d {
-
-    class Collider;
 
     class CollisionEvent : public Event {
     public:
