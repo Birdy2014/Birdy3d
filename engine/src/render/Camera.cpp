@@ -165,7 +165,7 @@ namespace Birdy3d {
 
         // finally check if framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            Logger::error("Framebuffer not complete!");
+            Logger::critical("Framebuffer not complete!");
 
         // SSAO
         glGenFramebuffers(1, &m_ssao_fbo);

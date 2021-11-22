@@ -60,12 +60,12 @@ namespace Birdy3d::serializer {
             serializer::JsonParser parser(text);
             auto parsed = parser.parse();
             if (!parsed) {
-                Logger::error("Invalid JSON");
+                Logger::critical("Invalid JSON");
                 exit(1);
             }
             auto object = parsed->as_object();
             if (!object) {
-                Logger::error("Invalid Object");
+                Logger::critical("Invalid Object");
                 exit(1);
             }
             serializer::Adapter adapter(object, true);
@@ -77,7 +77,7 @@ namespace Birdy3d::serializer {
             serializer::JsonParser parser(text);
             auto parsed = parser.parse();
             if (!parsed) {
-                Logger::error("Invalid JSON");
+                Logger::critical("Invalid JSON");
                 exit(1);
             }
             adapter_load(parsed.get(), value);

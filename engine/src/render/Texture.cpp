@@ -29,7 +29,7 @@ namespace Birdy3d {
             else if (nrChannels == 4)
                 format = GL_RGBA;
             else
-                Logger::error("Invalid number of texture channels: ", nrChannels);
+                Logger::critical("Invalid number of texture channels: ", nrChannels);
 
             m_transparent = format == GL_RGBA;
 

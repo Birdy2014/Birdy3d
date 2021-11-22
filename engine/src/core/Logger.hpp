@@ -23,13 +23,19 @@ namespace Birdy3d {
         static void error(Args... args) {
             std::cerr << "ERROR: ";
             print(true, std::cerr, args...);
+        }
+
+        template <typename... Args>
+        static void critical(Args... args) {
+            std::cerr << "CRITICAL: ";
+            print(true, std::cerr, args...);
             std::abort();
         }
 
         template <typename T>
         static void assert_not_null(void* obj, const T& message) {
             if (obj == nullptr)
-                Logger::error("Assert not null failed: ", message);
+                Logger::critical("Assert not null failed: ", message);
         }
 
     private:
@@ -53,4 +59,4 @@ namespace Birdy3d {
 
 }
 
-#define BIRDY3D_TODO Logger::error("Not implemented: ", __PRETTY_FUNCTION__);
+#define BIRDY3D_TODO Logger::critical("Not implemented: ", __PRETTY_FUNCTION__);
