@@ -30,7 +30,7 @@ namespace Birdy3d {
         // Create Window
         Application::m_window = glfwCreateWindow(width, height, window_name, nullptr, nullptr);
         if (m_window == nullptr) {
-            Logger::error("Failed to create GLFW window");
+            Logger::critical("Failed to create GLFW window");
             glfwTerminate();
             return false;
         }
@@ -38,7 +38,7 @@ namespace Birdy3d {
 
         // Load OpenGL
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-            Logger::error("Failed to initialize GLAD");
+            Logger::critical("Failed to initialize GLAD");
             return false;
         }
 

@@ -78,14 +78,14 @@ namespace Birdy3d {
 
         while (true) {
             if (direction == glm::vec3(0))
-                Logger::error("direction ist 0 in loop. point_count: ", m_point_count);
+                Logger::critical("direction ist 0 in loop. point_count: ", m_point_count);
             s = support(mesh_a, mesh_b, transform_a, transform_b, direction);
 
             if (glm::dot(s, direction) <= 0)
                 return false;
 
             if (m_points[0] == s)
-                Logger::error("points are the same collides 1 nr:", m_point_count);
+                Logger::critical("points are the same collides 1 nr:", m_point_count);
             push_front(s);
 
             if (next_simplex(direction))
@@ -112,7 +112,7 @@ namespace Birdy3d {
 
     void Collider::push_front(glm::vec3 point) {
         if (m_point_count >= 4 || m_point_count < 0)
-            Logger::error("Simplex has a maximum size of 4");
+            Logger::critical("Simplex has a maximum size of 4");
 
         for (int i = m_point_count; i > 0; i--) {
             m_points[i] = m_points[i - 1];

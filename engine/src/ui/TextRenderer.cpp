@@ -27,9 +27,9 @@ namespace Birdy3d {
         m_ft = (FT_Library*)malloc(sizeof(FT_Library));
         m_face = (FT_Face*)malloc(sizeof(FT_Face));
         if (FT_Init_FreeType(m_ft))
-            Logger::error("freetype: Could not init FreeType Library");
+            Logger::critical("freetype: Could not init FreeType Library");
         if (FT_New_Face(*m_ft, path.c_str(), 0, m_face))
-            Logger::error("freetype: Failed to load font");
+            Logger::critical("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, m_font_size);
         m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::Name::FG, Rectangle::Type::TEXT);
 
