@@ -18,7 +18,7 @@ namespace Birdy3d {
 
     class Application {
     public:
-        static std::unique_ptr<Theme> theme;
+        static std::shared_ptr<Theme> theme;
         static EventBus* event_bus;
         static float delta_time;
         static std::weak_ptr<Scene> scene;

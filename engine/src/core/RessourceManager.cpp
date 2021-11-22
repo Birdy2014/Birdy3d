@@ -43,7 +43,10 @@ namespace Birdy3d {
         std::shared_ptr<Theme> theme = m_themes[name];
         if (!theme) {
             std::string path = get_ressource_path(name, RessourceType::THEME);
-            theme = std::make_shared<Theme>(path);
+            auto file_content = RessourceManager::read_file(RessourceManager::get_ressource_path(path, RessourceManager::RessourceType::THEME));
+            if (file_content.empty())
+                return nullptr;
+            theme = std::make_shared<Theme>(file_content);
             m_themes[name] = theme;
         }
         return theme;

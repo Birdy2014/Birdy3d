@@ -12,7 +12,7 @@
 
 namespace Birdy3d {
 
-    std::unique_ptr<Theme> Application::theme = nullptr;
+    std::shared_ptr<Theme> Application::theme = nullptr;
     EventBus* Application::event_bus = nullptr;
     float Application::delta_time = 0;
     std::weak_ptr<Scene> Application::scene;
@@ -59,7 +59,7 @@ namespace Birdy3d {
         // Init variables
         RessourceManager::init();
         event_bus = new EventBus();
-        theme = std::make_unique<Theme>(theme_name);
+        theme = RessourceManager::get_theme(theme_name);
 
         return true;
     }
