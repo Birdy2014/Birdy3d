@@ -7,8 +7,7 @@
 
 namespace Birdy3d {
 
-    Theme::Theme(const std::string& path) {
-        std::string file_content = RessourceManager::read_file(RessourceManager::get_ressource_path(path, RessourceManager::RessourceType::THEME));
+    Theme::Theme(const std::string& file_content) {
         serializer::Serializer::deserialize(file_content, *this);
     }
 

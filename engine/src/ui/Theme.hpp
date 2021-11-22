@@ -11,7 +11,7 @@ namespace Birdy3d {
 
     class Theme {
     public:
-        Theme(const std::string& path);
+        Theme(const std::string& file_content);
         TextRenderer& text_renderer();
         Color color(Color::Name) const;
         std::string font() const;
