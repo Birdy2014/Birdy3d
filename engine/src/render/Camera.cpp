@@ -243,14 +243,14 @@ namespace Birdy3d {
         std::uniform_real_distribution<float> random_floats(0.0, 1.0);
         std::default_random_engine generator;
         std::array<glm::vec3, 64> ssao_kernel;
-        for (unsigned int i = 0; i < 64; ++i) {
+        for (unsigned int i = 0; i < ssao_kernel.size(); ++i) {
             glm::vec3 sample(
                 random_floats(generator) * 2.0 - 1.0,
                 random_floats(generator) * 2.0 - 1.0,
                 random_floats(generator));
             sample = glm::normalize(sample);
             sample *= random_floats(generator);
-            float scale = float(i) / 64.0;
+            float scale = float(i) / ssao_kernel.size();
             scale = lerp(0.1f, 1.0f, scale * scale);
             sample *= scale;
             ssao_kernel[i] = sample;
@@ -278,11 +278,10 @@ namespace Birdy3d {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, m_ssao_noise);
         m_ssao_shader->use();
-        for (unsigned int i = 0; i < 64; i++)
+        for (unsigned int i = 0; i < ssao_kernel.size(); i++)
             m_ssao_shader->set_vec3("samples[" + std::to_string(i) + "]", ssao_kernel[i]);
         m_ssao_shader->set_mat4("projection", m_projection);
-        glm::vec2 viewport = Application::get_viewport_size();
-        m_ssao_shader->set_vec2("noise_scale", viewport / 4.0f);
+        m_ssao_shader->set_mat4("view", view);
         render_quad();
 
         // 3. blur SSAO
@@ -319,7 +318,6 @@ namespace Birdy3d {
             spotlights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
 
         m_deferred_light_shader->set_vec3("viewPos", world_pos);
-        m_deferred_light_shader->set_mat4("inverse_view", glm::inverse(view));
         render_quad();
     }
 
