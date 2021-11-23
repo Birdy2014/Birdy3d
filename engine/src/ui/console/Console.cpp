@@ -3,12 +3,14 @@
 #include "ui/Canvas.hpp"
 #include "ui/DirectionalLayout.hpp"
 #include "ui/Window.hpp"
+#include "ui/console/Commands.hpp"
 #include "ui/widgets/TextField.hpp"
 #include "ui/widgets/Textarea.hpp"
 #include <numeric>
 
 namespace Birdy3d {
 
+    std::map<std::string, CommandCallback> Console::m_commands;
     std::shared_ptr<Window> Console::m_console_window;
     std::shared_ptr<Textarea> Console::m_console_output;
     std::shared_ptr<TextField> Console::m_console_input;
@@ -85,25 +87,21 @@ namespace Birdy3d {
     }
 
     void Console::exec(std::string name, std::vector<std::string> args) {
-        if (!CommandRegister::exec(name, args))
+        if (!m_commands.contains(name)) {
             println("Command not found");
+            return;
+        }
+        m_commands[name](args);
     }
 
-    std::map<std::string, CommandCallback> CommandRegister::m_commands;
-
-    CommandRegister::CommandRegister(std::string name, CommandCallback callback) {
+    void Console::register_command(const std::string& name, const CommandCallback& callback) {
         m_commands[name] = std::move(callback);
     }
 
-    bool CommandRegister::exec(std::string name, std::vector<std::string> args) {
-        if (!m_commands.contains(name))
-            return false;
-        m_commands[name](args);
-        return true;
+    void ConsoleCommands::register_console() {
+        Console::register_command("console.log", [](std::vector<std::string> args) {
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }));
+        });
     }
-
-    BIRDY3D_REGISTER_COMMAND(console.log, [](std::vector<std::string> args) {
-        Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }));
-    });
 
 }
