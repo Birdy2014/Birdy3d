@@ -120,13 +120,13 @@ namespace Birdy3d {
             name.erase(0, 1);
 
         std::string extension;
-        size_t dot_pos = name.find_last_of('.');
+        std::size_t dot_pos = name.find_last_of('.');
         if (dot_pos != std::string::npos) {
             extension = name.substr(dot_pos);
             name = name.substr(0, dot_pos);
         }
 
-        std::string default_dir = "";
+        std::string default_dir;
         std::string subdir;
         switch (type) {
         case RessourceType::SHADER:
@@ -160,17 +160,27 @@ namespace Birdy3d {
             return {};
         }
 
-        if (std::filesystem::exists(subdir + name + extension))
-            return subdir + name + extension;
         if (std::filesystem::exists(name + extension))
             return name + extension;
-        if (std::filesystem::exists(default_dir + name + extension))
-            return default_dir + name + extension;
         if (std::filesystem::exists("/" + name + extension))
             return "/" + name + extension;
+        if (std::filesystem::exists(subdir + name + extension))
+            return subdir + name + extension;
+
+        std::string path_fragment;
+        std::size_t last_slash = name.find_last_of('/');
+        if (last_slash != std::string::npos) {
+            path_fragment = name.substr(0, last_slash + 1);
+            name = name.substr(last_slash + 1);
+        }
+
+        std::string output_path;
+        output_path = search_for_file(default_dir + path_fragment, name + extension);
+        if (!output_path.empty())
+            return output_path;
 
         Logger::error("can't find ressource ", name, extension);
-        return "";
+        return {};
     }
 
     std::string RessourceManager::get_executable_dir() {
@@ -197,6 +207,21 @@ namespace Birdy3d {
             Logger::error("Failed to read file ", path);
         }
         return content;
+    }
+
+    std::string RessourceManager::search_for_file(std::string directory, std::string filename) {
+        if (!std::filesystem::is_directory(directory))
+            return {};
+        for (const auto& entry : std::filesystem::directory_iterator(directory)) {
+            if (entry.is_regular_file() && entry.path().filename() == filename)
+                return entry.path();
+            if (entry.is_directory()) {
+                std::string found = search_for_file(entry.path(), filename);
+                if (!found.empty())
+                    return found;
+            }
+        }
+        return {};
     }
 
 }
