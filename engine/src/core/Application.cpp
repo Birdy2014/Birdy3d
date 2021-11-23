@@ -9,6 +9,7 @@
 #include "render/Camera.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"
+#include "ui/console/Commands.hpp"
 
 namespace Birdy3d {
 
@@ -60,6 +61,7 @@ namespace Birdy3d {
         RessourceManager::init();
         event_bus = new EventBus();
         theme = RessourceManager::get_theme(theme_name);
+        ConsoleCommands::register_all();
 
         return true;
     }
