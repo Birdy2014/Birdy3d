@@ -96,7 +96,7 @@ int main() {
     signal(SIGSEGV, handler);
 #endif
 
-    if (!Application::init("Birdy3d", 1280, 720, "gruvbox.json")) {
+    if (!Application::init("Birdy3d", 1280, 720, "gruvbox-dark.json")) {
         return -1;
     }
     Input::init();
