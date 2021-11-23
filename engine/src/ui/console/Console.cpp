@@ -102,6 +102,17 @@ namespace Birdy3d {
         Console::register_command("console.log", [](std::vector<std::string> args) {
             Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }));
         });
+
+        Console::register_command("console.list_commands", [](std::vector<std::string>) {
+            Console::println("Commands:");
+            for (auto& [name, callback] : Console::m_commands) {
+                Console::println(name);
+            }
+        });
+
+        Console::register_command("help", [](std::vector<std::string>) {
+            Console::println("Use 'console.list_commands' to get a list of all available commands.");
+        });
     }
 
 }

@@ -20,6 +20,9 @@ namespace Birdy3d {
         static void register_command(const std::string& name, const CommandCallback&);
 
     private:
+        // This is required for console.list_commands
+        friend class ConsoleCommands;
+
         static std::map<std::string, CommandCallback> m_commands;
         static std::shared_ptr<Window> m_console_window;
         static std::shared_ptr<Textarea> m_console_output;
