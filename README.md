@@ -1,5 +1,8 @@
 # Birdy3d
-A 3D game engine written in C++20. Please watch the repo if you are interested in all further updates.
+A 3D game engine written in C++20.
+It's main purpose in for me to learn C++ and OpenGL.
+
+This documentation will be expanded in the future.
 
 ## Building
 [![Build](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml/badge.svg)](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml)
