@@ -31,6 +31,7 @@ namespace Birdy3d {
             BG_INPUT,
             BG_SELECTED,
             TEXT_HIGHLIGHT,
+            NONE,
         };
 
         static const Color NONE;

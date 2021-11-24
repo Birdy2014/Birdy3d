@@ -20,6 +20,7 @@ namespace Birdy3d {
             create_window();
         if (!canvas.get_widget("ConsoleWindow", true))
             canvas.add_child(m_console_window);
+        // TODO: Allow attaching console to multiple canvases
     }
 
     void Console::create_window() {
@@ -44,13 +45,21 @@ namespace Birdy3d {
         exec(input);
     }
 
-    void Console::print(const std::string& text) {
-        m_console_output->append(text);
+    void Console::print(const std::string& text, Color::Name color) {
+        std::string color_string;
+        if (color != Color::Name::NONE) {
+            color_string = '\e';
+            color_string += (char32_t)color;
+        }
+        m_console_output->append(color_string + text);
     }
 
-    void Console::println(const std::string& text) {
-        m_console_output->append(text);
-        m_console_output->append("\n");
+    void Console::println(const std::string& text, Color::Name color) {
+        print(text, color);
+        if (color != Color::Name::NONE)
+            print("\n", Color::Name::FG);
+        else
+            print("\n");
     }
 
     void Console::exec(std::string input) {
@@ -101,6 +110,14 @@ namespace Birdy3d {
     void ConsoleCommands::register_console() {
         Console::register_command("console.log", [](std::vector<std::string> args) {
             Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }));
+        });
+
+        Console::register_command("console.warn", [](std::vector<std::string> args) {
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), Color::Name::YELLOW);
+        });
+
+        Console::register_command("console.error", [](std::vector<std::string> args) {
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), Color::Name::RED);
         });
 
         Console::register_command("console.list_commands", [](std::vector<std::string>) {

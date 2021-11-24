@@ -27,8 +27,8 @@ namespace Birdy3d {
     public:
         TextRenderer(Theme&);
         ~TextRenderer();
-        void render_text(std::string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
-        void render_text(std::u32string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), int cursorpos = -1, bool highlight = false, int hlstart = -1, int hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
+        void render_text(std::string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), std::size_t cursorpos = -1, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
+        void render_text(std::u32string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), std::size_t cursorpos = -1, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
         UIVector text_size(std::string text, float font_size = 0);
         UIVector text_size(std::u32string text, float font_size = 0);
         float char_width(char32_t c, float font_size = 0);
@@ -48,6 +48,7 @@ namespace Birdy3d {
         glm::ivec2 m_texture_atlas_current_pos;
 
         bool add_char(char32_t c);
+        Color::Name parse_color_escape(char32_t);
     };
 
     class Text : public Shape {
