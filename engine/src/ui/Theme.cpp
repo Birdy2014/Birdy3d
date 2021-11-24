@@ -1,7 +1,7 @@
 #include "ui/Theme.hpp"
 
 #include "core/Logger.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "utils/serializer/Serializer.hpp"
 #include <fstream>
 

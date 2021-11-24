@@ -1,6 +1,6 @@
 #include "ecs/Entity.hpp"
 
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Birdy3d {

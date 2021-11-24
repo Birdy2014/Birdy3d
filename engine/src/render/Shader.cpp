@@ -1,15 +1,15 @@
 #include "render/Shader.hpp"
 
 #include "core/Logger.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include <cstring>
 
 namespace Birdy3d {
 
     Shader::Shader(const std::string& name)
         : m_name(name) {
-        std::string path = RessourceManager::get_ressource_path(name, RessourceManager::RessourceType::SHADER);
-        std::string source = RessourceManager::read_file(path);
+        std::string path = ResourceManager::get_resource_path(name, ResourceManager::ResourceType::SHADER);
+        std::string source = ResourceManager::read_file(path);
         std::unordered_map<GLenum, std::string> shader_sources = preprocess(source);
         compile(shader_sources);
     }
@@ -54,7 +54,7 @@ namespace Birdy3d {
             size_t eol = shaderSource.find_first_of('\n', pos);
             size_t path_start = pos + strlen(include_token) + 1;
             std::string include_path = shaderSource.substr(path_start, eol - path_start);
-            std::string file_content = RessourceManager::read_file(RessourceManager::get_ressource_path(include_path, RessourceManager::RessourceType::SHADER));
+            std::string file_content = ResourceManager::read_file(ResourceManager::get_resource_path(include_path, ResourceManager::ResourceType::SHADER));
             shaderSource.erase(pos, eol - pos + 1);
             shaderSource.insert(pos, file_content);
             pos = shaderSource.find(include_token, pos + 1);

@@ -2,7 +2,7 @@
 
 #include "core/Application.hpp"
 #include "core/Base.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "ui/Units.hpp"
 #include "utils/Color.hpp"
 
@@ -24,7 +24,7 @@ namespace Birdy3d {
 
         Shape(UIVector position, UIVector size, Color::Name color = Color::Name::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
             : name(name)
-            , m_shader(RessourceManager::get_shader("ui"))
+            , m_shader(ResourceManager::get_shader("ui"))
             , m_position(position)
             , m_rotation(0)
             , m_size(size)

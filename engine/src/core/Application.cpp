@@ -58,9 +58,9 @@ namespace Birdy3d {
         glfwSetCharCallback(m_window, character_callback);
 
         // Init variables
-        RessourceManager::init();
+        ResourceManager::init();
         event_bus = new EventBus();
-        theme = RessourceManager::get_theme(theme_name);
+        theme = ResourceManager::get_theme(theme_name);
         ConsoleCommands::register_all();
 
         return true;

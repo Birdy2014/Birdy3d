@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "render/Texture.hpp"
 #include "utils/serializer/Adapter.hpp"
 
@@ -31,13 +31,13 @@ namespace Birdy3d {
 
     private:
         std::string m_diffuse_map_name = "color::#ffffff";
-        std::shared_ptr<Texture> m_diffuse_map = RessourceManager::get_color_texture(Color::WHITE);
+        std::shared_ptr<Texture> m_diffuse_map = ResourceManager::get_color_texture(Color::WHITE);
         std::string m_specular_map_name = "color::#000000";
-        std::shared_ptr<Texture> m_specular_map = RessourceManager::get_color_texture(Color::BLACK);
+        std::shared_ptr<Texture> m_specular_map = ResourceManager::get_color_texture(Color::BLACK);
         std::string m_normal_map_name = "color::#ffffff";
-        std::shared_ptr<Texture> m_normal_map = RessourceManager::get_color_texture(Color::WHITE);
+        std::shared_ptr<Texture> m_normal_map = ResourceManager::get_color_texture(Color::WHITE);
         std::string m_emissive_map_name = "color::#000000";
-        std::shared_ptr<Texture> m_emissive_map = RessourceManager::get_color_texture(Color::BLACK);
+        std::shared_ptr<Texture> m_emissive_map = ResourceManager::get_color_texture(Color::BLACK);
 
         BIRDY3D_REGISTER_TYPE_DEC(Material);
     };

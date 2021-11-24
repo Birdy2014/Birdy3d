@@ -11,9 +11,9 @@ namespace Birdy3d {
     class Model;
     class Texture;
 
-    class RessourceManager {
+    class ResourceManager {
     public:
-        enum class RessourceType {
+        enum class ResourceType {
             SHADER,
             TEXTURE,
             THEME,
@@ -28,20 +28,20 @@ namespace Birdy3d {
         static std::shared_ptr<Texture> get_color_texture(const Color&);
 
         /**
-         * @brief Finds the path of a Ressource.
-         * @param name ressource name
-         * @param type ressource type
-         * @returns path or an empty string if the ressource couldn't be found
+         * @brief Finds the path of a Resource.
+         * @param name resource name
+         * @param type resource type
+         * @returns path or an empty string if the resource couldn't be found
          */
-        static std::string get_ressource_path(std::string name, RessourceType type);
+        static std::string get_resource_path(std::string name, ResourceType type);
 
         /**
          * @brief Reads the contents of a file.
          * @param path file path
-         * @param convertEOL convert Windows file endings (CRLF) to UNIX file endings (LF)
+         * @param convert_eol convert Windows file endings (CRLF) to UNIX file endings (LF)
          * @returns file content or an empty string if the file was not found
          */
-        static std::string read_file(const std::string& path, bool convertEOL = true);
+        static std::string read_file(const std::string& path, bool convert_eol = true);
 
         static void init();
 

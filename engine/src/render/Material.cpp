@@ -6,22 +6,22 @@ namespace Birdy3d {
 
     void Material::diffuse_map(const std::string& name) {
         m_diffuse_map_name = name;
-        m_diffuse_map = RessourceManager::get_texture(name);
+        m_diffuse_map = ResourceManager::get_texture(name);
     }
 
     void Material::specular_map(const std::string& name) {
         m_specular_map_name = name;
-        m_specular_map = RessourceManager::get_texture(name);
+        m_specular_map = ResourceManager::get_texture(name);
     }
 
     void Material::normal_map(const std::string& name) {
         m_normal_map_name = name;
-        m_normal_map = RessourceManager::get_texture(name);
+        m_normal_map = ResourceManager::get_texture(name);
     }
 
     void Material::emissive_map(const std::string& name) {
         m_emissive_map_name = name;
-        m_emissive_map = RessourceManager::get_texture(name);
+        m_emissive_map = ResourceManager::get_texture(name);
     }
 
     void Material::use(const Shader& shader) const {

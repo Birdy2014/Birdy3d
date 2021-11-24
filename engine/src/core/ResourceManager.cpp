@@ -1,4 +1,4 @@
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 
 #include "core/Logger.hpp"
 #include "render/Model.hpp"
@@ -20,17 +20,17 @@
 
 namespace Birdy3d {
 
-    std::unordered_map<std::string, std::shared_ptr<Shader>> RessourceManager::m_shaders;
-    std::unordered_map<std::string, std::shared_ptr<Theme>> RessourceManager::m_themes;
-    std::unordered_map<std::string, std::shared_ptr<Model>> RessourceManager::m_models;
-    std::unordered_map<std::string, std::shared_ptr<Texture>> RessourceManager::m_textures;
+    std::unordered_map<std::string, std::shared_ptr<Shader>> ResourceManager::m_shaders;
+    std::unordered_map<std::string, std::shared_ptr<Theme>> ResourceManager::m_themes;
+    std::unordered_map<std::string, std::shared_ptr<Model>> ResourceManager::m_models;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> ResourceManager::m_textures;
 
-    void RessourceManager::init() {
-        std::string base_path = get_executable_dir() + "../ressources/";
+    void ResourceManager::init() {
+        std::string base_path = get_executable_dir() + "../resources/";
         std::filesystem::current_path(base_path);
     }
 
-    std::shared_ptr<Shader> RessourceManager::get_shader(const std::string& name) {
+    std::shared_ptr<Shader> ResourceManager::get_shader(const std::string& name) {
         std::shared_ptr<Shader> shader = m_shaders[name];
         if (!shader) {
             shader = std::make_shared<Shader>(name);
@@ -39,13 +39,13 @@ namespace Birdy3d {
         return shader;
     }
 
-    std::shared_ptr<Theme> RessourceManager::get_theme(const std::string& name) {
+    std::shared_ptr<Theme> ResourceManager::get_theme(const std::string& name) {
         std::shared_ptr<Theme> theme = m_themes[name];
         if (!theme) {
-            std::string path = get_ressource_path(name, RessourceType::THEME);
+            std::string path = get_resource_path(name, ResourceType::THEME);
             if (path.empty())
                 return nullptr;
-            std::string file_content = RessourceManager::read_file(path);
+            std::string file_content = ResourceManager::read_file(path);
             if (file_content.empty())
                 return nullptr;
             theme = std::make_shared<Theme>(file_content);
@@ -54,10 +54,10 @@ namespace Birdy3d {
         return theme;
     }
 
-    std::shared_ptr<Model> RessourceManager::get_model(const std::string& name) {
+    std::shared_ptr<Model> ResourceManager::get_model(const std::string& name) {
         std::shared_ptr<Model> model = m_models[name];
         if (!model) {
-            // TODO: generalize for all ressources
+            // TODO: generalize for all resources
             std::string prefix_primitive = "primitive::";
             if (name.starts_with(prefix_primitive)) {
                 std::string primitive_type, arg;
@@ -80,7 +80,7 @@ namespace Birdy3d {
                 else
                     Logger::error("invalid primitive type");
             } else {
-                std::string path = get_ressource_path(name, RessourceType::MODEL);
+                std::string path = get_resource_path(name, ResourceType::MODEL);
                 model = std::make_shared<Model>(path);
             }
             m_models[name] = model;
@@ -88,7 +88,7 @@ namespace Birdy3d {
         return model;
     }
 
-    std::shared_ptr<Texture> RessourceManager::get_texture(const std::string& name) {
+    std::shared_ptr<Texture> ResourceManager::get_texture(const std::string& name) {
         std::shared_ptr<Texture> texture = m_textures[name];
         if (!texture) {
             std::string prefix_color = "color::";
@@ -96,7 +96,7 @@ namespace Birdy3d {
                 Color color = name.substr(prefix_color.length());
                 texture = std::make_shared<Texture>(color);
             } else {
-                std::string path = get_ressource_path(name, RessourceType::TEXTURE);
+                std::string path = get_resource_path(name, ResourceType::TEXTURE);
                 texture = std::make_shared<Texture>(path);
             }
             m_textures[name] = texture;
@@ -104,13 +104,13 @@ namespace Birdy3d {
         return texture;
     }
 
-    std::shared_ptr<Texture> RessourceManager::get_color_texture(const Color& color) {
+    std::shared_ptr<Texture> ResourceManager::get_color_texture(const Color& color) {
         return get_texture("color::" + color.to_string());
     }
 
-    std::string RessourceManager::get_ressource_path(std::string name, RessourceType type) {
+    std::string ResourceManager::get_resource_path(std::string name, ResourceType type) {
         if (name.size() == 0) {
-            Logger::error("invalid ressource name");
+            Logger::error("invalid resource name");
             return {};
         }
 
@@ -129,22 +129,22 @@ namespace Birdy3d {
         std::string default_dir;
         std::string subdir;
         switch (type) {
-        case RessourceType::SHADER:
+        case ResourceType::SHADER:
             default_dir = "../shaders/";
             subdir = "shaders/";
             if (extension.size() == 0)
                 extension = ".glsl";
             break;
-        case RessourceType::TEXTURE:
+        case ResourceType::TEXTURE:
             subdir = "textures/";
             break;
-        case RessourceType::THEME:
+        case ResourceType::THEME:
             subdir = "themes/";
             break;
-        case RessourceType::MODEL:
+        case ResourceType::MODEL:
             subdir = "models/";
             break;
-        case RessourceType::FONT:
+        case ResourceType::FONT:
             subdir = "fonts/";
 #if defined(BIRDY3D_PLATFORM_LINUX)
             default_dir = "/usr/share/fonts/";
@@ -179,11 +179,11 @@ namespace Birdy3d {
         if (!output_path.empty())
             return output_path;
 
-        Logger::error("can't find ressource ", name, extension);
+        Logger::error("can't find resource ", name, extension);
         return {};
     }
 
-    std::string RessourceManager::get_executable_dir() {
+    std::string ResourceManager::get_executable_dir() {
 #if defined(BIRDY3D_PLATFORM_LINUX)
         char result[PATH_MAX];
         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
@@ -195,13 +195,13 @@ namespace Birdy3d {
         return exec.substr(0, exec.find_last_of("/\\") + 1);
     }
 
-    std::string RessourceManager::read_file(const std::string& path, bool convertEOL) {
+    std::string ResourceManager::read_file(const std::string& path, bool convert_eol) {
         std::ifstream file_stream;
         std::string content;
         try {
             file_stream.open(path);
             content.assign(std::istreambuf_iterator<char>(file_stream), std::istreambuf_iterator<char>());
-            if (convertEOL)
+            if (convert_eol)
                 content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
         } catch (std::ifstream::failure& e) {
             Logger::error("Failed to read file ", path);
@@ -209,7 +209,7 @@ namespace Birdy3d {
         return content;
     }
 
-    std::string RessourceManager::search_for_file(std::string directory, std::string filename) {
+    std::string ResourceManager::search_for_file(std::string directory, std::string filename) {
         if (!std::filesystem::is_directory(directory))
             return {};
         for (const auto& entry : std::filesystem::directory_iterator(directory)) {

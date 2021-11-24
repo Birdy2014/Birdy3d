@@ -1,6 +1,6 @@
 # Birdy3d
 A 3D game engine written in C++20.
-It's main purpose in for me to learn C++ and OpenGL.
+It's main purpose is for me to learn C++ and OpenGL.
 
 This documentation will be expanded in the future.
 
