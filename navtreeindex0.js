@@ -116,7 +116,7 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1PointLight.html":[1,0,0,47],
 "classBirdy3d_1_1PrimitiveGenerator.html":[1,0,0,48],
 "classBirdy3d_1_1Rectangle.html":[1,0,0,49],
-"classBirdy3d_1_1RessourceManager.html":[1,0,0,50],
+"classBirdy3d_1_1ResourceManager.html":[1,0,0,50],
 "classBirdy3d_1_1Scene.html":[1,0,0,51],
 "classBirdy3d_1_1ScrollView.html":[1,0,0,52],
 "classBirdy3d_1_1Shader.html":[1,0,0,53],

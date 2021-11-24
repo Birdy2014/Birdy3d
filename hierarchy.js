@@ -62,7 +62,7 @@ var hierarchy =
     [ "Birdy3d::PhysicsWorld", "classBirdy3d_1_1PhysicsWorld.html", null ],
     [ "Birdy3d::serializer::PointerRegistry", "classBirdy3d_1_1serializer_1_1PointerRegistry.html", null ],
     [ "Birdy3d::PrimitiveGenerator", "classBirdy3d_1_1PrimitiveGenerator.html", null ],
-    [ "Birdy3d::RessourceManager", "classBirdy3d_1_1RessourceManager.html", null ],
+    [ "Birdy3d::ResourceManager", "classBirdy3d_1_1ResourceManager.html", null ],
     [ "Birdy3d::serializer::Serializer", "classBirdy3d_1_1serializer_1_1Serializer.html", null ],
     [ "Birdy3d::Shader", "classBirdy3d_1_1Shader.html", null ],
     [ "Birdy3d::Shape", "classBirdy3d_1_1Shape.html", [

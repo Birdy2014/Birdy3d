@@ -69,7 +69,7 @@ var annotated_dup =
       [ "PointLight", "classBirdy3d_1_1PointLight.html", null ],
       [ "PrimitiveGenerator", "classBirdy3d_1_1PrimitiveGenerator.html", null ],
       [ "Rectangle", "classBirdy3d_1_1Rectangle.html", null ],
-      [ "RessourceManager", "classBirdy3d_1_1RessourceManager.html", null ],
+      [ "ResourceManager", "classBirdy3d_1_1ResourceManager.html", null ],
       [ "Scene", "classBirdy3d_1_1Scene.html", null ],
       [ "ScrollView", "classBirdy3d_1_1ScrollView.html", null ],
       [ "Shader", "classBirdy3d_1_1Shader.html", null ],
