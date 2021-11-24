@@ -42,7 +42,7 @@ var NAVTREEINDEX0 =
 "PointerRegistry_8hpp_source.html":[2,0,0,0,6,0,2],
 "PrimitiveGenerator_8hpp_source.html":[2,0,0,0,6,3],
 "Rectangle_8hpp_source.html":[2,0,0,0,5,6],
-"RessourceManager_8hpp_source.html":[2,0,0,0,0,4],
+"ResourceManager_8hpp_source.html":[2,0,0,0,0,4],
 "Scene_8hpp_source.html":[2,0,0,0,1,2],
 "ScrollView_8hpp_source.html":[2,0,0,0,5,1,6],
 "Serializer_8hpp_source.html":[2,0,0,0,6,0,3],
