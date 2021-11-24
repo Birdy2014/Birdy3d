@@ -214,9 +214,9 @@ namespace Birdy3d {
             return {};
         for (const auto& entry : std::filesystem::directory_iterator(directory)) {
             if (entry.is_regular_file() && entry.path().filename() == filename)
-                return entry.path();
+                return entry.path().string();
             if (entry.is_directory()) {
-                std::string found = search_for_file(entry.path(), filename);
+                std::string found = search_for_file(entry.path().string(), filename);
                 if (!found.empty())
                     return found;
             }
