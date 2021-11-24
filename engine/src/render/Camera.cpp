@@ -2,7 +2,7 @@
 
 #include "core/Application.hpp"
 #include "core/Logger.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "ecs/Entity.hpp"
 #include "ecs/Scene.hpp"
 #include "physics/Collider.hpp"
@@ -32,13 +32,13 @@ namespace Birdy3d {
     void Camera::start() {
         m_projection = glm::perspective(glm::radians(80.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
         create_gbuffer();
-        m_deferred_geometry_shader = RessourceManager::get_shader("geometry_buffer");
-        m_deferred_light_shader = RessourceManager::get_shader("deferred_lighting");
-        m_forward_shader = RessourceManager::get_shader("forward_lighting");
-        m_normal_shader = RessourceManager::get_shader("normal_display");
-        m_simple_color_shader = RessourceManager::get_shader("simple_color");
-        m_ssao_shader = RessourceManager::get_shader("ssao");
-        m_ssao_blur_shader = RessourceManager::get_shader("ssao_blur");
+        m_deferred_geometry_shader = ResourceManager::get_shader("geometry_buffer");
+        m_deferred_light_shader = ResourceManager::get_shader("deferred_lighting");
+        m_forward_shader = ResourceManager::get_shader("forward_lighting");
+        m_normal_shader = ResourceManager::get_shader("normal_display");
+        m_simple_color_shader = ResourceManager::get_shader("simple_color");
+        m_ssao_shader = ResourceManager::get_shader("ssao");
+        m_ssao_blur_shader = ResourceManager::get_shader("ssao_blur");
         m_deferred_light_shader->use();
         m_deferred_light_shader->set_int("gPosition", 0);
         m_deferred_light_shader->set_int("gNormal", 1);

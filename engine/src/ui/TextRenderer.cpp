@@ -1,7 +1,7 @@
 #include "ui/TextRenderer.hpp"
 
 #include "core/Logger.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "render/Shader.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/Theme.hpp"
@@ -22,7 +22,7 @@ namespace Birdy3d {
 
     TextRenderer::TextRenderer(Theme& theme)
         : m_theme(theme) {
-        std::string path = RessourceManager::get_ressource_path(theme.font(), RessourceManager::RessourceType::FONT);
+        std::string path = ResourceManager::get_resource_path(theme.font(), ResourceManager::ResourceType::FONT);
         m_font_size = theme.font_size();
         m_ft = (FT_Library*)malloc(sizeof(FT_Library));
         m_face = (FT_Face*)malloc(sizeof(FT_Face));
@@ -220,7 +220,7 @@ namespace Birdy3d {
     Text::Text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size)
         : Shape(pos, 0_px, color, placement)
         , font_size(font_size)
-        , m_shader(RessourceManager::get_shader("ui")) {
+        , m_shader(ResourceManager::get_shader("ui")) {
         m_text = Unicode::utf8_to_utf32(text);
         create_buffers();
         m_dirty = true;

@@ -11,7 +11,7 @@ namespace Birdy3d {
         , m_model_name(name) { }
 
     void ModelComponent::start() {
-        m_model = RessourceManager::get_model(m_model_name);
+        m_model = ResourceManager::get_model(m_model_name);
     }
 
     void ModelComponent::serialize(serializer::Adapter& adapter) {
@@ -37,7 +37,7 @@ namespace Birdy3d {
 
     void ModelComponent::model(const std::string& name) {
         m_model_name = name;
-        m_model = RessourceManager::get_model(name);
+        m_model = ResourceManager::get_model(name);
     }
 
     BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, ModelComponent);

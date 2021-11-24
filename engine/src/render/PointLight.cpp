@@ -1,6 +1,6 @@
 #include "render/PointLight.hpp"
 
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "ecs/Entity.hpp"
 #include "ecs/Scene.hpp"
 #include "render/ModelComponent.hpp"
@@ -17,7 +17,7 @@ namespace Birdy3d {
         , quadratic(quadratic) { }
 
     void PointLight::setup_shadow_map() {
-        m_depthShader = RessourceManager::get_shader("point_light_depth");
+        m_depthShader = ResourceManager::get_shader("point_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map

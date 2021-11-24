@@ -1,6 +1,6 @@
 #include "ui/Triangle.hpp"
 
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "render/Shader.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"

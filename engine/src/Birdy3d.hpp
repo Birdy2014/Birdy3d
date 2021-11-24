@@ -4,7 +4,7 @@
 #include "core/Application.hpp"
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 
 // Entity Component System
 #include "ecs/Component.hpp"

@@ -27,7 +27,7 @@ namespace Birdy3d {
 
     void Collider::start() {
         if (m_generation_mode == GenerationMode::NONE) {
-            m_model = RessourceManager::get_model(m_model_name);
+            m_model = ResourceManager::get_model(m_model_name);
         } else {
             Model* model = entity->get_component<ModelComponent>()->model().get();
             if (!model) {

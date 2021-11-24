@@ -309,8 +309,8 @@ int main() {
     // Entities
     std::shared_ptr<Scene> scene;
     if (std::filesystem::exists("scene.json")) {
-        serializer::JsonParser parser(RessourceManager::read_file("scene.json"));
-        serializer::Serializer::deserialize(RessourceManager::read_file("scene.json"), "scene", scene);
+        serializer::JsonParser parser(ResourceManager::read_file("scene.json"));
+        serializer::Serializer::deserialize(ResourceManager::read_file("scene.json"), "scene", scene);
         Application::scene = scene;
     } else {
         scene = std::make_shared<Scene>("Scene");

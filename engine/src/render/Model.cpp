@@ -1,7 +1,7 @@
 #include "render/Model.hpp"
 
 #include "core/Logger.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "ecs/Entity.hpp"
 #include "render/Mesh.hpp"
 #include "render/Shader.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
-#include "core/RessourceManager.hpp"
+#include "core/ResourceManager.hpp"
 #include "ecs/Component.hpp"
 #include "render/Material.hpp"
 #include "render/Model.hpp"
