@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  BUILD_TYPE: RELEASE
-
 jobs:
   build-linux-x11:
     runs-on: ubuntu-latest
@@ -30,7 +27,6 @@ jobs:
       run: cmake -B ${{github.workspace}}/build -DBUILD_RELEASE=TRUE -G 'Unix Makefiles'
 
     - name: Build
-      # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --target Birdy3d_engine Birdy3d_sandbox -- -j4
 
     - name: Check Executable
@@ -46,8 +42,7 @@ jobs:
       run: cmake -B ${{github.workspace}}/build -G 'Visual Studio 16 2019'
 
     - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target Birdy3d_engine Birdy3d_sandbox
+      run: cmake --build ${{github.workspace}}/build --config Release --target Birdy3d_engine Birdy3d_sandbox
 
     - name: Check Executable
       shell: bash
