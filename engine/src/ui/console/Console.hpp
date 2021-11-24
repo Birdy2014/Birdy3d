@@ -12,11 +12,43 @@ namespace Birdy3d {
 
     class Console {
     public:
+        /**
+         * @brief Attaches the console to a canvas.
+         * @param canvas Canvas to be attached to.
+         */
         static void attach(Canvas&);
-        static void print(const std::string&);
-        static void println(const std::string&);
+
+        /**
+         * @brief Prints text to the console.
+         * @param text The text to print.
+         * @param color The color in which the text is printed. NONE won't change the color.
+         */
+        static void print(const std::string&, Color::Name = Color::Name::NONE);
+
+        /**
+         * @brief Prints line of text to the console.
+         * @param text The text to print.
+         * @param color The color in which the text is printed. NONE won't change the color. The color will be reset to FG after the line is printed.
+         */
+        static void println(const std::string&, Color::Name = Color::Name::NONE);
+
+        /**
+         * @brief Executes a command in the console and prints the command.
+         * @param input The command to be executed including space-separated arguments.
+         */
         static void exec(std::string);
+
+        /**
+         * @brief Executes a command in the console.
+         * @param name The name of the command.
+         * @param args A vector of arguments.
+         */
         static void exec(std::string name, std::vector<std::string> args);
+
+        /**
+         * @brief Register a new command to the console.
+         * @param name Name of the command. Any previously registered commands with the same name will be overwritten.
+         */
         static void register_command(const std::string& name, const CommandCallback&);
 
     private:

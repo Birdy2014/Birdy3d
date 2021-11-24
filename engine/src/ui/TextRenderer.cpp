@@ -80,21 +80,23 @@ namespace Birdy3d {
         return true;
     }
 
-    void TextRenderer::render_text(std::string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color::Name hlcolor) {
+    void TextRenderer::render_text(std::string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
         std::u32string converted = Unicode::utf8_to_utf32(text);
         render_text(converted, x, y, font_size, color, move, cursorpos, highlight, hlstart, hlend, hlcolor);
     }
 
-    void TextRenderer::render_text(std::u32string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, int cursorpos, bool highlight, int hlstart, int hlend, Color::Name hlcolor) {
+    void TextRenderer::render_text(std::u32string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
         if (hlstart > hlend) {
             std::swap(hlstart, hlend);
             hlend--;
         }
 
+        Color::Name current_color = color;
         float initial_x = x;
 
         m_rect->type = Rectangle::TEXT;
         m_rect->texture(m_texture_atlas);
+        m_rect->color(current_color);
 
         y += font_size / 5; // Offet between baseline and bottom
 
@@ -102,9 +104,11 @@ namespace Birdy3d {
         float hlend_x = x;
         float scale = (font_size / m_font_size);
         char16_t c;
-        for (int i = 0; i <= (int)text.length(); i++) {
-            if (i < (int)text.length())
-                c = text[i];
+        std::size_t index_unescaped = 0;
+        std::size_t index_escaped = 0;
+        for (; index_unescaped <= text.length(); index_unescaped++, index_escaped++) {
+            if (index_unescaped < text.length())
+                c = text[index_unescaped];
             else
                 c = ' ';
 
@@ -114,9 +118,22 @@ namespace Birdy3d {
                 continue;
             }
 
-            if (i == hlstart)
+            if (c == '\e') {
+                index_unescaped++; // Go to color
+                if (index_unescaped >= text.length())
+                    break;
+                Color::Name read_color = parse_color_escape(text[index_unescaped]);
+                if (read_color != Color::Name::NONE) {
+                    current_color = read_color;
+                    m_rect->color(current_color);
+                }
+                index_escaped--; // Decrement escaped, because it will be incremented by continue
+                continue;
+            }
+
+            if (index_escaped == hlstart)
                 hlstart_x = x;
-            if (i == hlend + 1)
+            if (index_escaped == hlend + 1)
                 hlend_x = x;
 
             if (m_chars.count(c) == 0) {
@@ -130,19 +147,20 @@ namespace Birdy3d {
             float h = ch.size.y * scale;
 
             m_rect->position(UIVector(xpos, ypos - bottom_to_origin));
-            m_rect->color(color);
 
             m_rect->size(UIVector(w, h));
             m_rect->texcoords(ch.texcoord1, ch.texcoord2);
 
             m_rect->draw(move);
 
-            if (i == cursorpos) {
+            if (index_escaped == cursorpos) {
                 m_rect->type = Rectangle::FILLED;
                 m_rect->position(UIVector(xpos - 2, ypos - font_size / 5));
                 m_rect->size(UIVector(2, font_size));
+                m_rect->color(color);
                 m_rect->draw(move);
 
+                m_rect->color(current_color);
                 m_rect->type = Rectangle::TEXT;
             }
 
@@ -206,6 +224,12 @@ namespace Birdy3d {
                 return i;
         }
         return text.size();
+    }
+
+    Color::Name TextRenderer::parse_color_escape(char32_t c) {
+        if (c >= 16)
+            return Color::Name::NONE;
+        return (Color::Name)c;
     }
 
     struct UIVertex {
@@ -323,6 +347,8 @@ namespace Birdy3d {
                 y -= renderer.m_theme.line_height();
                 continue;
             }
+
+            // TODO: Support colors
 
             if (renderer.m_chars.count(c) == 0)
                 renderer.add_char(c);
