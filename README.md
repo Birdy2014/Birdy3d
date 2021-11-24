@@ -1,5 +1,6 @@
 # Birdy3d
 A 3D game engine written in C++.
+Its main purpose in for me to learn C++ and OpenGL.
 
 ## Building
 [![Build](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml/badge.svg)](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml)
