@@ -164,7 +164,7 @@ namespace Birdy3d {
                 m_rect->type = Rectangle::TEXT;
             }
 
-            if (hlend > (int)text.length())
+            if (hlend > text.length())
                 hlend_x = x;
 
             x += (ch.advance >> 6) * scale;
@@ -197,6 +197,12 @@ namespace Birdy3d {
                 current_x = 0;
                 continue;
             }
+            if (*c == '\e') {
+                c++; // Go to color
+                if (c == text.end())
+                    break;
+                continue;
+            }
             if (m_chars.count(*c) == 0)
                 add_char(*c);
             Character ch = m_chars[*c];
@@ -219,6 +225,12 @@ namespace Birdy3d {
         float width = 0;
         float current_char_width;
         for (size_t i = 0; i < text.size(); i++) {
+            if (text[i] == '\e') {
+                i++; // Go to color
+                if (i >= text.length())
+                    break;
+                continue;
+            }
             width += current_char_width = char_width(text[i], font_size);
             if ((between_chars && x_pos < width - current_char_width / 2) || (!between_chars && x_pos < width))
                 return i;
