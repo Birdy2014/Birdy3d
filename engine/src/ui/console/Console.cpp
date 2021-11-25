@@ -63,6 +63,9 @@ namespace Birdy3d {
     }
 
     void Console::exec(std::string input) {
+        if (input.empty())
+            return;
+
         println("> " + input);
 
         // Split spaces
