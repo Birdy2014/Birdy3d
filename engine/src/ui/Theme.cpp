@@ -9,11 +9,10 @@ namespace Birdy3d {
 
     Theme::Theme(const std::string& file_content) {
         serializer::Serializer::deserialize(file_content, *this);
+        m_text_renderer = std::make_unique<TextRenderer>(*this);
     }
 
     TextRenderer& Theme::text_renderer() {
-        if (!m_text_renderer)
-            m_text_renderer = std::make_unique<TextRenderer>(*this);
         return *m_text_renderer.get();
     }
 

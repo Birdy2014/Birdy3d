@@ -8,9 +8,9 @@ namespace Birdy3d {
 
     Window::Window(UIVector pos, UIVector size, std::string name)
         : Widget(pos, size, Placement::BOTTOM_LEFT, name) {
-        m_padding = glm::vec4(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, Application::theme->line_height());
-        add_filled_rectangle(0_px, UIVector(100_p, 100_p - Application::theme->line_height()), Color::Name::BG, Placement::BOTTOM_LEFT);
-        add_filled_rectangle(0_px, UIVector(100_p, Application::theme->line_height()), Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);
+        m_padding = glm::vec4(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, Application::theme().line_height());
+        add_filled_rectangle(0_px, UIVector(100_p, 100_p - Application::theme().line_height()), Color::Name::BG, Placement::BOTTOM_LEFT);
+        add_filled_rectangle(0_px, UIVector(100_p, Application::theme().line_height()), Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);
         add_rectangle(0_px, 100_p, Color::Name::BORDER);
         m_close_button = add_filled_rectangle(-4_px, 14_px, Color::Name::RED, Placement::TOP_RIGHT);
         m_title = add_text(UIVector(10_px, 3_px), "", Color::Name::FG, Placement::TOP_LEFT);
@@ -56,7 +56,7 @@ namespace Birdy3d {
         if (local_cursor_pos.y < BORDER_SIZE)
             m_hover_resize_y_bottom = true;
 
-        if (local_cursor_pos.y >= m_actual_size.y - Application::theme->line_height() && local_cursor_pos.y <= m_actual_size.y - BORDER_SIZE && local_cursor_pos.x >= BORDER_SIZE && local_cursor_pos.x <= m_actual_size.x - BORDER_SIZE)
+        if (local_cursor_pos.y >= m_actual_size.y - Application::theme().line_height() && local_cursor_pos.y <= m_actual_size.y - BORDER_SIZE && local_cursor_pos.x >= BORDER_SIZE && local_cursor_pos.x <= m_actual_size.x - BORDER_SIZE)
             m_hover_drag = true;
 
         // Set cursor

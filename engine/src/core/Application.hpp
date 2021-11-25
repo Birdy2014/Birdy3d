@@ -18,7 +18,6 @@ namespace Birdy3d {
 
     class Application {
     public:
-        static std::shared_ptr<Theme> theme;
         static EventBus* event_bus;
         static float delta_time;
         static std::weak_ptr<Scene> scene;
@@ -33,10 +32,13 @@ namespace Birdy3d {
         static bool option_bool(Option);
         static void option_toggle(Option);
         static void option_bool(Option, bool);
+        static Theme& theme() { return *m_theme; }
+        static bool theme(const std::string&);
 
     private:
         static GLFWwindow* m_window;
         static std::unordered_map<Option, bool> m_options_bool;
+        static std::shared_ptr<Theme> m_theme;
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);

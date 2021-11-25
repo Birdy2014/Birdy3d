@@ -13,7 +13,7 @@
 
 namespace Birdy3d {
 
-    std::shared_ptr<Theme> Application::theme = nullptr;
+    std::shared_ptr<Theme> Application::m_theme = nullptr;
     EventBus* Application::event_bus = nullptr;
     float Application::delta_time = 0;
     std::weak_ptr<Scene> Application::scene;
@@ -60,7 +60,8 @@ namespace Birdy3d {
         // Init variables
         ResourceManager::init();
         event_bus = new EventBus();
-        theme = ResourceManager::get_theme(theme_name);
+        if (!theme(theme_name))
+            Logger::critical("Invalid Theme");
         ConsoleCommands::register_all();
 
         return true;
@@ -167,6 +168,14 @@ namespace Birdy3d {
         default:
             break;
         }
+    }
+
+    bool Application::theme(const std::string& name) {
+        std::shared_ptr<Theme> new_theme = ResourceManager::get_theme(name);
+        if (!new_theme)
+            return false;
+        m_theme = new_theme;
+        return true;
     }
 
 }

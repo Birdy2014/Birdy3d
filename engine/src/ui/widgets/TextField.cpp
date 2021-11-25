@@ -38,13 +38,13 @@ namespace Birdy3d {
 
     void TextField::draw() {
         Widget::draw();
-        Application::theme->text_renderer().render_text(m_text, 0, m_actual_size.y / 2 - Application::theme->font_size() / 2, Application::theme->font_size(), Color::Name::FG, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Color::Name::TEXT_HIGHLIGHT);
+        Application::theme().text_renderer().render_text(m_text, 0, m_actual_size.y / 2 - Application::theme().font_size() / 2, Application::theme().font_size(), Color::Name::FG, m_move, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Color::Name::TEXT_HIGHLIGHT);
     }
 
     void TextField::on_update() {
         if (m_selecting) {
             glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
-            int char_pos = Application::theme->text_renderer().char_index(m_text, Application::theme->font_size(), local_pos.x, true);
+            int char_pos = Application::theme().text_renderer().char_index(m_text, Application::theme().font_size(), local_pos.x, true);
             if (m_selection_start == char_pos)
                 m_selection_end = -1;
             else
@@ -59,7 +59,7 @@ namespace Birdy3d {
         if (event.action == GLFW_PRESS) {
             grab_cursor();
             glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
-            int char_pos = Application::theme->text_renderer().char_index(m_text, Application::theme->font_size(), local_pos.x, true);
+            int char_pos = Application::theme().text_renderer().char_index(m_text, Application::theme().font_size(), local_pos.x, true);
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;
