@@ -40,7 +40,7 @@ namespace Birdy3d {
         m_shader->set_mat4("projection", projection());
         m_shader->set_mat4("move", move);
         m_shader->set_mat4("move_self", m_move_self);
-        m_shader->set_vec4("color", Application::theme->color(m_color));
+        m_shader->set_vec4("color", Application::theme().color(m_color));
         m_shader->set_int("rectTexture", 0);
         glBindVertexArray(m_vao);
         if (type == Shape::OUTLINE)

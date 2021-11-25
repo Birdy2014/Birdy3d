@@ -9,12 +9,10 @@ namespace Birdy3d {
                 Console::println("Usage: ui.theme <theme>");
                 return;
             }
-            auto theme = ResourceManager::get_theme(args[0]);
-            if (!theme) {
-                Console::println("can't find theme " + args[0]);
+            if (!Application::theme(args[0])) {
+                Console::println("error loading theme " + args[0]);
                 return;
             }
-            Application::theme = theme;
             Console::println("applied theme " + args[0]);
         });
     }

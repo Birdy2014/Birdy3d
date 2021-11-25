@@ -123,7 +123,7 @@ namespace Birdy3d {
             case Mode::STACKING:
                 window->pos = m_actual_pos;
                 window->size = new_size;
-                new_size.y -= Application::theme->line_height();
+                new_size.y -= Application::theme().line_height();
                 break;
             case Mode::HORIZONTAL: {
                 if (focused_window && (focused_window->resizing_left() || focused_window->resizing_right())) {

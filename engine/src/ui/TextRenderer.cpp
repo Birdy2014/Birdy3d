@@ -29,7 +29,7 @@ namespace Birdy3d {
         if (FT_Init_FreeType(m_ft))
             Logger::critical("freetype: Could not init FreeType Library");
         if (FT_New_Face(*m_ft, path.c_str(), 0, m_face))
-            Logger::critical("freetype: Failed to load font");
+            throw std::runtime_error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, m_font_size);
         m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::Name::FG, Rectangle::Type::TEXT);
 
@@ -284,13 +284,13 @@ namespace Birdy3d {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Application::theme->text_renderer().m_texture_atlas);
+        glBindTexture(GL_TEXTURE_2D, Application::theme().text_renderer().m_texture_atlas);
         m_shader->use();
         m_shader->set_int("type", Shape::Type::TEXT);
         m_shader->set_mat4("projection", projection());
         m_shader->set_mat4("move", move);
         m_shader->set_mat4("move_self", m_move_self);
-        m_shader->set_vec4("color", Application::theme->color(m_color));
+        m_shader->set_vec4("color", Application::theme().color(m_color));
         m_shader->set_int("rectTexture", 0);
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, m_text.size() * 6, GL_UNSIGNED_INT, 0);
@@ -344,7 +344,7 @@ namespace Birdy3d {
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_text_length * 6, 0, GL_STATIC_DRAW);
         }
         // Create data
-        TextRenderer& renderer = Application::theme->text_renderer();
+        TextRenderer& renderer = Application::theme().text_renderer();
         std::vector<UIVertex> vertices;
         std::vector<GLuint> indices;
         vertices.reserve(4 * m_text.size());

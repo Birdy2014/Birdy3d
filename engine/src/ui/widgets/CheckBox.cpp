@@ -11,7 +11,7 @@ namespace Birdy3d {
         add_rectangle(0_px, 14_px, Color::Name::FG, Placement::CENTER_LEFT);
         m_text_shape = add_text(UIVector(16_px, 0), text, Color::Name::FG, Placement::CENTER_LEFT);
         m_check_shape = add_filled_rectangle(1_px, 10_px, Color::Name::FG, Placement::CENTER_LEFT);
-        size = UIVector(16_px, 0_px) + Application::theme->text_renderer().text_size(m_text_shape->text(), Application::theme->font_size());
+        size = UIVector(16_px, 0_px) + Application::theme().text_renderer().text_size(m_text_shape->text(), Application::theme().font_size());
     }
 
     void CheckBox::draw() {
@@ -35,7 +35,7 @@ namespace Birdy3d {
 
     void CheckBox::text(std::string text) {
         m_text_shape->text(text);
-        size = UIVector(16_px, 0_px) + Application::theme->text_renderer().text_size(m_text_shape->text(), Application::theme->font_size());
+        size = UIVector(16_px, 0_px) + Application::theme().text_renderer().text_size(m_text_shape->text(), Application::theme().font_size());
     }
 
 }

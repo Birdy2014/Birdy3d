@@ -117,7 +117,7 @@ int main() {
 
     Console::attach(*canvas);
 
-    auto menu_bar = canvas->add_child<MenuBar>(0_px, UIVector(100_p, Application::theme->line_height()), Placement::TOP_LEFT);
+    auto menu_bar = canvas->add_child<MenuBar>(0_px, UIVector(100_p, Application::theme().line_height()), Placement::TOP_LEFT);
     auto& bar_item1 = menu_bar->add_item("Item 1");
     bar_item1.add_child("Hallo");
     auto& bar_item2 = menu_bar->add_item("Item 2");
