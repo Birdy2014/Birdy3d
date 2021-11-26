@@ -40,6 +40,10 @@ namespace Birdy3d {
         }
     }
 
+    void Textarea::scroll_down() {
+        scrollpos = std::max(m_lines.size() - (m_actual_size.y / Application::theme().line_height()) + 1, 0.0f);
+    }
+
     void Textarea::update_lines() {
         m_lines.clear();
         std::u32string line;

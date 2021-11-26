@@ -60,6 +60,7 @@ namespace Birdy3d {
             print("\n", Color::Name::FG);
         else
             print("\n");
+        m_console_output->scroll_down();
     }
 
     void Console::exec(std::string input) {
