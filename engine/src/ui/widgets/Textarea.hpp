@@ -15,6 +15,7 @@ namespace Birdy3d {
 
         Textarea(UIVector pos, UIVector size, Placement placement);
         void draw() override;
+        void scroll_down();
 
     protected:
         void on_update() override;
