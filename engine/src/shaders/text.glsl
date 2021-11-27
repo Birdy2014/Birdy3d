@@ -2,8 +2,10 @@
 #version 330 core
 layout (location = 0) in vec2 pos;
 layout (location = 1) in vec2 tex;
+layout (location = 2) in vec4 color_in;
 
-out vec2 FragTex;
+out vec2 frag_tex;
+out vec4 color;
 
 uniform mat4 projection;
 uniform mat4 move;
@@ -11,22 +13,19 @@ uniform mat4 move_self;
 
 void main() {
     gl_Position = projection * (move * move_self * vec4(pos, 0, 1));
-    FragTex = tex;
+    frag_tex = tex;
+    color = color_in;
 }
 
 #type fragment
 #version 330 core
-out vec4 FragColor;
+out vec4 frag_color;
 
-in vec2 FragTex;
+in vec2 frag_tex;
+in vec4 color;
 
-uniform int type; // 0 - FILLED, 1 - OUTLINE, 2 - TEXTURE
-uniform sampler2D rectTexture;
-uniform vec4 color;
+uniform sampler2D font_atlas;
 
 void main() {
-    if (type == 2)
-        FragColor = texture(rectTexture, FragTex);
-    else
-        FragColor = color;
+    frag_color = vec4(color.rgb, texture(font_atlas, frag_tex).r * color.a);
 }

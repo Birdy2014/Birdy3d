@@ -15,8 +15,7 @@ namespace Birdy3d {
         enum Type {
             FILLED = 0,
             OUTLINE = 1,
-            TEXT = 2,
-            TEXTURE = 3
+            TEXTURE = 2
         };
 
         std::string name;
