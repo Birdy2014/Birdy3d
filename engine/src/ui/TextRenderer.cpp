@@ -32,6 +32,7 @@ namespace Birdy3d {
             throw std::runtime_error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, m_font_size);
         m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::Name::FG, Rectangle::Type::FILLED);
+        m_text = std::make_unique<Text>(0_px, "", Color::Name::FG, Placement::BOTTOM_LEFT, m_font_size);
 
         // Setup texture atlas
         m_texture_atlas_size = glm::vec2(m_font_size * 10, m_font_size * 10);
@@ -80,132 +81,83 @@ namespace Birdy3d {
         return true;
     }
 
-    void TextRenderer::render_text(std::string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
+    void TextRenderer::render_text(std::string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
         std::u32string converted = Unicode::utf8_to_utf32(text);
-        render_text(converted, x, y, font_size, color, move, cursorpos, highlight, hlstart, hlend, hlcolor);
+        render_text(converted, x, y, font_size, color, move, cursor, cursorpos, highlight, hlstart, hlend, hlcolor);
     }
 
-    void TextRenderer::render_text(std::u32string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
-        if (hlstart > hlend) {
-            std::swap(hlstart, hlend);
-            hlend--;
-        }
+    void TextRenderer::render_text(std::u32string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
+        // Render text
+        m_text->text_u32(text);
+        m_text->position(UIVector(x, y));
+        m_text->font_size = font_size;
+        m_text->color(color);
+        m_text->draw(move);
 
-        Color::Name current_color = color;
-        float initial_x = x;
+        // Render cursor
+        if (cursor && cursorpos <= text.length()) {
+            auto size = text_size(text, font_size, cursorpos);
+            float xpos = x + size.x - 1;
+            float ypos = y - size.y + m_theme.line_height();
 
-        m_rect->type = Rectangle::TEXT;
-        m_rect->texture(m_texture_atlas);
-        m_rect->color(current_color);
-
-        y += font_size / 5; // Offet between baseline and bottom
-
-        float hlstart_x = x;
-        float hlend_x = x;
-        float scale = (font_size / m_font_size);
-        char16_t c;
-        std::size_t index_unescaped = 0;
-        std::size_t index_escaped = 0;
-        for (; index_unescaped <= text.length(); index_unescaped++, index_escaped++) {
-            if (index_unescaped < text.length())
-                c = text[index_unescaped];
-            else
-                c = ' ';
-
-            if (c == '\n') {
-                x = initial_x;
-                y -= m_theme.line_height();
-                continue;
-            }
-
-            if (c == '\e') {
-                index_unescaped++; // Go to color
-                if (index_unescaped >= text.length())
-                    break;
-                Color::Name read_color = parse_color_escape(text[index_unescaped]);
-                if (read_color != Color::Name::NONE) {
-                    current_color = read_color;
-                    m_rect->color(current_color);
-                }
-                index_escaped--; // Decrement escaped, because it will be incremented by continue
-                continue;
-            }
-
-            if (index_escaped == hlstart)
-                hlstart_x = x;
-            if (index_escaped == hlend + 1)
-                hlend_x = x;
-
-            if (m_chars.count(c) == 0) {
-                add_char(c);
-            }
-            Character ch = m_chars[c];
-            float bottom_to_origin = (ch.size.y - ch.bearing.y) * scale;
-            float xpos = x + ch.bearing.x * scale;
-            float ypos = y;
-            float w = ch.size.x * scale;
-            float h = ch.size.y * scale;
-
-            m_rect->position(UIVector(xpos, ypos - bottom_to_origin));
-
-            m_rect->size(UIVector(w, h));
-            m_rect->texcoords(ch.texcoord1, ch.texcoord2);
-
-            m_rect->draw(move);
-
-            if (index_escaped == cursorpos) {
-                m_rect->type = Rectangle::FILLED;
-                m_rect->position(UIVector(xpos - 2, ypos - font_size / 5));
-                m_rect->size(UIVector(2, font_size));
-                m_rect->color(color);
-                m_rect->draw(move);
-
-                m_rect->color(current_color);
-                m_rect->type = Rectangle::TEXT;
-            }
-
-            if (hlend > text.length())
-                hlend_x = x;
-
-            x += (ch.advance >> 6) * scale;
-        }
-
-        if (highlight && hlstart_x != hlend_x) {
             m_rect->type = Rectangle::FILLED;
+            m_rect->position(UIVector(xpos, ypos));
+            m_rect->size(UIVector(2, font_size));
+            m_rect->color(color);
+            m_rect->draw(move);
+        }
+
+        // Render Hightlight
+        if (hlstart > text.length())
+            hlstart = text.length();
+        if (hlend > text.length())
+            hlend = text.length();
+        if (highlight && hlstart != hlend + 1) {
+            if (hlstart > hlend) {
+                std::swap(hlstart, hlend);
+                hlend--;
+            }
+
+            glm::vec2 pos = { x, y };
+            auto hlstart_pos = pos + (glm::vec2)text_size(text, font_size, hlstart) * glm::vec2(1, -1) + glm::vec2(0, m_theme.line_height());
+            auto hlend_pos = pos + (glm::vec2)text_size(text, font_size, hlend + 1) * glm::vec2(1, -1) + glm::vec2(0, m_theme.line_height());
+
+            m_rect->type = Rectangle::FILLED;
+            m_rect->position(UIVector(hlstart_pos.x, y));
+            m_rect->size(UIVector(hlend_pos.x - hlstart_pos.x, font_size));
             m_rect->color(hlcolor);
-            m_rect->position(UIVector(hlstart_x, y - font_size / 5));
-            m_rect->size(UIVector(hlend_x - hlstart_x, font_size));
             m_rect->draw(move);
         }
     }
 
-    UIVector TextRenderer::text_size(std::string text, float font_size) {
+    UIVector TextRenderer::text_size(std::string text, float font_size, std::size_t n) {
         std::u32string converted = Unicode::utf8_to_utf32(text);
-        return text_size(converted, font_size);
+        return text_size(converted, font_size, n);
     }
 
-    UIVector TextRenderer::text_size(std::u32string text, float font_size) {
+    UIVector TextRenderer::text_size(std::u32string text, float font_size, std::size_t n) {
         if (!font_size)
             font_size = m_font_size;
         float scale = (font_size / m_font_size);
         UIVector size(0_px, font_size);
         float current_x = 0;
-        for (std::u32string::const_iterator c = text.begin(); c != text.end(); c++) {
-            if (*c == '\n') {
+        for (std::size_t i = 0; i < text.length() && i < n; i++) {
+            char32_t c = text[i];
+            if (c == '\n') {
                 size.x = std::max(size.x.to_pixels(), current_x);
                 size.y += m_theme.line_height();
                 current_x = 0;
                 continue;
             }
-            if (*c == '\e') {
-                c++; // Go to color
-                if (c == text.end())
+            if (c == '\e') {
+                i++; // Go to color
+                if (i >= text.length() || i >= n)
                     break;
                 continue;
             }
-            if (m_chars.count(*c) == 0)
-                add_char(*c);
-            Character ch = m_chars[*c];
+            if (m_chars.count(c) == 0)
+                add_char(c);
+            Character ch = m_chars[c];
             current_x += (ch.advance >> 6) * scale;
         }
         size.x = std::max(size.x.to_pixels(), current_x);
@@ -322,6 +274,15 @@ namespace Birdy3d {
 
     void Text::text(std::string value) {
         m_text = Unicode::utf8_to_utf32(value);
+        m_dirty = true;
+    }
+
+    std::u32string Text::text_u32() {
+        return m_text;
+    }
+
+    void Text::text_u32(std::u32string value) {
+        m_text = value;
         m_dirty = true;
     }
 
