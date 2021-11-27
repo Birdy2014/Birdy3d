@@ -72,11 +72,11 @@ var hierarchy =
     ] ],
     [ "Birdy3d::TextRenderer", "classBirdy3d_1_1TextRenderer.html", null ],
     [ "Birdy3d::Texture", "classBirdy3d_1_1Texture.html", null ],
+    [ "Birdy3d::TextVertex", "structBirdy3d_1_1TextVertex.html", null ],
     [ "Birdy3d::Theme", "classBirdy3d_1_1Theme.html", null ],
     [ "Birdy3d::Transform3d", "classBirdy3d_1_1Transform3d.html", null ],
     [ "Birdy3d::TreeItem", "classBirdy3d_1_1TreeItem.html", null ],
     [ "Birdy3d::UIVector", "classBirdy3d_1_1UIVector.html", null ],
-    [ "Birdy3d::UIVertex", "structBirdy3d_1_1UIVertex.html", null ],
     [ "Birdy3d::Unicode", "classBirdy3d_1_1Unicode.html", null ],
     [ "Birdy3d::Unit", "classBirdy3d_1_1Unit.html", null ],
     [ "Birdy3d::serializer::Value", "structBirdy3d_1_1serializer_1_1Value.html", [
