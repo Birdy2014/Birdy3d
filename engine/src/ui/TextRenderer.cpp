@@ -31,7 +31,7 @@ namespace Birdy3d {
         if (FT_New_Face(*m_ft, path.c_str(), 0, m_face))
             throw std::runtime_error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, m_font_size);
-        m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::Name::FG, Rectangle::Type::TEXT);
+        m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::Name::FG, Rectangle::Type::FILLED);
 
         // Setup texture atlas
         m_texture_atlas_size = glm::vec2(m_font_size * 10, m_font_size * 10);
@@ -238,25 +238,43 @@ namespace Birdy3d {
         return text.size();
     }
 
+    std::size_t TextRenderer::text_length(std::u32string text) {
+        std::size_t index_escaped = 0;
+        for (auto it = text.cbegin(); it != text.cend(); it++) {
+            if (*it == '\e') {
+                it++;
+                if (it == text.cend())
+                    break;
+                continue;
+            }
+            if (*it == '\n')
+                continue;
+            index_escaped++;
+        }
+        return index_escaped;
+    }
+
     Color::Name TextRenderer::parse_color_escape(char32_t c) {
         if (c >= 16)
             return Color::Name::NONE;
         return (Color::Name)c;
     }
 
-    struct UIVertex {
+    struct TextVertex {
         glm::vec2 position;
         glm::vec2 texcoords;
+        glm::vec4 color;
 
-        UIVertex(glm::vec2 position, glm::vec2 texcoords)
+        TextVertex(glm::vec2 position, glm::vec2 texcoords, glm::vec4 color)
             : position(position)
-            , texcoords(texcoords) { }
+            , texcoords(texcoords)
+            , color(color) { }
     };
 
     Text::Text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size)
         : Shape(pos, 0_px, color, placement)
         , font_size(font_size)
-        , m_shader(ResourceManager::get_shader("ui")) {
+        , m_shader(ResourceManager::get_shader("text")) {
         m_text = Unicode::utf8_to_utf32(text);
         create_buffers();
         m_dirty = true;
@@ -286,14 +304,12 @@ namespace Birdy3d {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, Application::theme().text_renderer().m_texture_atlas);
         m_shader->use();
-        m_shader->set_int("type", Shape::Type::TEXT);
         m_shader->set_mat4("projection", projection());
         m_shader->set_mat4("move", move);
         m_shader->set_mat4("move_self", m_move_self);
-        m_shader->set_vec4("color", Application::theme().color(m_color));
-        m_shader->set_int("rectTexture", 0);
+        m_shader->set_int("font_atlas", 0);
         glBindVertexArray(m_vao);
-        glDrawElements(GL_TRIANGLES, m_text.size() * 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, m_escaped_text_length * 6, GL_UNSIGNED_INT, 0);
     }
 
     bool Text::contains(glm::vec2) {
@@ -317,15 +333,18 @@ namespace Birdy3d {
         // Allocate buffers
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(UIVertex) * m_text_length * 4, 0, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(TextVertex) * m_escaped_text_length * 4, 0, GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_text_length * 6, 0, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_escaped_text_length * 6, 0, GL_STATIC_DRAW);
         // vertex positions
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)0);
         // uv coordinates
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)(2 * sizeof(float)));
+        // color
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)(4 * sizeof(float)));
     }
 
     void Text::delete_buffers() {
@@ -337,15 +356,16 @@ namespace Birdy3d {
         // Resize buffers
         if (m_text.size() != m_text_length) {
             m_text_length = m_text.size();
+            m_escaped_text_length = TextRenderer::text_length(m_text);
             glBindVertexArray(m_vao);
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(UIVertex) * m_text_length * 4, 0, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(TextVertex) * m_escaped_text_length * 4, 0, GL_STATIC_DRAW);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_text_length * 6, 0, GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_escaped_text_length * 6, 0, GL_STATIC_DRAW);
         }
         // Create data
         TextRenderer& renderer = Application::theme().text_renderer();
-        std::vector<UIVertex> vertices;
+        std::vector<TextVertex> vertices;
         std::vector<GLuint> indices;
         vertices.reserve(4 * m_text.size());
         if (font_size == 0)
@@ -353,18 +373,29 @@ namespace Birdy3d {
         float scale = (font_size / renderer.m_font_size);
         float x = 0;
         float y = font_size / 5; // Offet between baseline and bottom
-        for (char32_t c : m_text) {
-            if (c == '\n') {
+        Color current_color = Application::theme().color(m_color);
+        std::size_t index_escaped = 0;
+        for (auto it = m_text.cbegin(); it != m_text.cend(); it++, index_escaped++) {
+            if (*it == '\n') {
                 x = 0;
                 y -= renderer.m_theme.line_height();
                 continue;
             }
 
-            // TODO: Support colors
+            if (*it == '\e') {
+                it++; // Go to color
+                if (it == m_text.cend())
+                    break;
+                Color::Name read_color = renderer.parse_color_escape(*it);
+                if (read_color != Color::Name::NONE)
+                    current_color = Application::theme().color(read_color);
+                index_escaped--; // Decrement escaped, because it will be incremented by continue
+                continue;
+            }
 
-            if (renderer.m_chars.count(c) == 0)
-                renderer.add_char(c);
-            Character ch = renderer.m_chars[c];
+            if (renderer.m_chars.count(*it) == 0)
+                renderer.add_char(*it);
+            Character ch = renderer.m_chars[*it];
             float bottom_to_origin = (ch.size.y - ch.bearing.y) * scale;
             float xpos = x + ch.bearing.x * scale;
             float ypos = y - bottom_to_origin;
@@ -372,10 +403,10 @@ namespace Birdy3d {
             float h = ch.size.y * scale;
 
             GLuint start_index = vertices.size();
-            vertices.emplace_back(glm::vec2(xpos, ypos), glm::vec2(ch.texcoord1.x, ch.texcoord2.y)); // Bottom Left
-            vertices.emplace_back(glm::vec2(xpos + w, ypos), glm::vec2(ch.texcoord2.x, ch.texcoord2.y)); // Bottom Right
-            vertices.emplace_back(glm::vec2(xpos, ypos + h), glm::vec2(ch.texcoord1.x, ch.texcoord1.y)); // Top Left
-            vertices.emplace_back(glm::vec2(xpos + w, ypos + h), glm::vec2(ch.texcoord2.x, ch.texcoord1.y)); // Top Right
+            vertices.emplace_back(glm::vec2(xpos, ypos), glm::vec2(ch.texcoord1.x, ch.texcoord2.y), current_color); // Bottom Left
+            vertices.emplace_back(glm::vec2(xpos + w, ypos), glm::vec2(ch.texcoord2.x, ch.texcoord2.y), current_color); // Bottom Right
+            vertices.emplace_back(glm::vec2(xpos, ypos + h), glm::vec2(ch.texcoord1.x, ch.texcoord1.y), current_color); // Top Left
+            vertices.emplace_back(glm::vec2(xpos + w, ypos + h), glm::vec2(ch.texcoord2.x, ch.texcoord1.y), current_color); // Top Right
 
             indices.push_back(start_index + 0);
             indices.push_back(start_index + 1);
@@ -391,7 +422,7 @@ namespace Birdy3d {
         // Write to buffers
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(UIVertex) * vertices.size(), vertices.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TextVertex) * vertices.size(), vertices.data());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * indices.size(), indices.data());
     }

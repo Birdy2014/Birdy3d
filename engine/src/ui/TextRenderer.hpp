@@ -33,6 +33,7 @@ namespace Birdy3d {
         UIVector text_size(std::u32string text, float font_size = 0);
         float char_width(char32_t c, float font_size = 0);
         int char_index(std::u32string text, float font_size, float x_pos, bool between_chars = false);
+        static std::size_t text_length(std::u32string);
 
     private:
         friend class Text;
@@ -66,7 +67,10 @@ namespace Birdy3d {
         std::u32string m_text;
         GLuint m_vao, m_vbo, m_ebo;
         std::shared_ptr<Shader> m_shader;
+
+        // Buffer size is smaller than text_length if the text contains escape characters.
         std::size_t m_text_length = 0;
+        std::size_t m_escaped_text_length = 0;
 
         void create_buffers();
         void delete_buffers();
