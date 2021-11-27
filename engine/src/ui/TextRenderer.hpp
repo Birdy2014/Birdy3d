@@ -3,6 +3,7 @@
 #include "ui/Shape.hpp"
 #include "ui/Units.hpp"
 #include <glm/glm.hpp>
+#include <limits>
 #include <map>
 #include <memory>
 #include <string>
@@ -13,6 +14,7 @@ typedef struct FT_FaceRec_* FT_Face;
 namespace Birdy3d {
 
     class Rectangle;
+    class Text;
     class Theme;
 
     struct Character {
@@ -27,10 +29,10 @@ namespace Birdy3d {
     public:
         TextRenderer(Theme&);
         ~TextRenderer();
-        void render_text(std::string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), std::size_t cursorpos = -1, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
-        void render_text(std::u32string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), std::size_t cursorpos = -1, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
-        UIVector text_size(std::string text, float font_size = 0);
-        UIVector text_size(std::u32string text, float font_size = 0);
+        void render_text(std::string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
+        void render_text(std::u32string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
+        UIVector text_size(std::string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
+        UIVector text_size(std::u32string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
         float char_width(char32_t c, float font_size = 0);
         int char_index(std::u32string text, float font_size, float x_pos, bool between_chars = false);
         static std::size_t text_length(std::u32string);
@@ -43,6 +45,7 @@ namespace Birdy3d {
         FT_Library* m_ft;
         FT_Face* m_face;
         std::unique_ptr<Rectangle> m_rect;
+        std::unique_ptr<Text> m_text;
         unsigned int m_font_size;
         GLuint m_texture_atlas;
         glm::vec2 m_texture_atlas_size;
@@ -62,6 +65,8 @@ namespace Birdy3d {
         bool contains(glm::vec2 point) override;
         std::string text();
         void text(std::string value);
+        std::u32string text_u32();
+        void text_u32(std::u32string value);
 
     private:
         std::u32string m_text;

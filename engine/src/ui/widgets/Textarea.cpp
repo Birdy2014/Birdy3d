@@ -35,7 +35,7 @@ namespace Birdy3d {
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                Application::theme().text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), 0, y, Application::theme().font_size(), Color::Name::FG, m_move, m_cursor_pos - line_start, m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, selection_start - line_start, selection_end - line_start, Color::Name::TEXT_HIGHLIGHT);
+                Application::theme().text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), m_side_padding, y, Application::theme().font_size(), Color::Name::FG, m_move, m_cursor_pos - (int)line_start >= 0, std::max(m_cursor_pos - (int)line_start, 0), m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, std::max(selection_start - (int)line_start, 0), std::max(selection_end - (int)line_start, 0), Color::Name::TEXT_HIGHLIGHT);
             }
         }
     }
@@ -177,7 +177,7 @@ namespace Birdy3d {
             y = m_lines.size() - 1;
 
         size_t line_start = y > 0 ? m_lines[y - 1] : 0;
-        int char_pos = Application::theme().text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), Application::theme().font_size(), local_pos.x, true);
+        int char_pos = Application::theme().text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), Application::theme().font_size(), local_pos.x - m_side_padding, true);
         return line_start + char_pos;
     }
 

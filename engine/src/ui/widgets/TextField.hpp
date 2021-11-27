@@ -17,6 +17,7 @@ namespace Birdy3d {
         virtual void draw() override;
 
     protected:
+        float m_side_padding = 2;
         std::u32string m_text;
         bool m_selecting = false;
         int m_cursor_pos = -1;
