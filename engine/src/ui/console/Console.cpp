@@ -124,6 +124,10 @@ namespace Birdy3d {
             Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), Color::Name::RED);
         });
 
+        Console::register_command("console.clear", [](std::vector<std::string>) {
+            Console::m_console_output->clear();
+        });
+
         Console::register_command("console.list_commands", [](std::vector<std::string>) {
             Console::println("Commands:");
             for (auto& [name, callback] : Console::m_commands) {

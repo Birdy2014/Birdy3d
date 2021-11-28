@@ -30,10 +30,11 @@ namespace Birdy3d {
 
     void TextField::clear() {
         m_text.clear();
-        m_cursor_pos = 0;
+        m_cursor_pos = m_cursor_pos < 0 ? -1 : 0;
         m_selecting = false;
         m_selection_start = -1;
         m_selection_end = -1;
+        m_changed = true;
     }
 
     void TextField::draw() {
