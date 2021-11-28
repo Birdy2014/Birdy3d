@@ -149,7 +149,7 @@ namespace Birdy3d {
                 current_x = 0;
                 continue;
             }
-            if (c == '\e') {
+            if (c == '\x1B') {
                 i++; // Go to color
                 if (i >= text.length() || i >= n)
                     break;
@@ -177,7 +177,7 @@ namespace Birdy3d {
         float width = 0;
         float current_char_width;
         for (size_t i = 0; i < text.size(); i++) {
-            if (text[i] == '\e') {
+            if (text[i] == '\x1B') {
                 i++; // Go to color
                 if (i >= text.length())
                     break;
@@ -193,7 +193,7 @@ namespace Birdy3d {
     std::size_t TextRenderer::text_length(std::u32string text) {
         std::size_t index_escaped = 0;
         for (auto it = text.cbegin(); it != text.cend(); it++) {
-            if (*it == '\e') {
+            if (*it == '\x1B') {
                 it++;
                 if (it == text.cend())
                     break;
@@ -343,7 +343,7 @@ namespace Birdy3d {
                 continue;
             }
 
-            if (*it == '\e') {
+            if (*it == '\x1B') {
                 it++; // Go to color
                 if (it == m_text.cend())
                     break;

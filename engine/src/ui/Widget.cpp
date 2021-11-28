@@ -208,6 +208,8 @@ namespace Birdy3d {
 
     void Widget::to_foreground(Widget* widget) {
         auto element = std::find_if(m_children.cbegin(), m_children.cend(), [&](const std::shared_ptr<Widget>& w) { return w.get() == widget; });
+        if (element == m_children.cend())
+            return;
         m_children.splice(m_children.end(), m_children, element);
     }
 
