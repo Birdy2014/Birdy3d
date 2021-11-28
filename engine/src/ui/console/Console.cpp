@@ -48,7 +48,7 @@ namespace Birdy3d {
     void Console::print(const std::string& text, Color::Name color) {
         std::string color_string;
         if (color != Color::Name::NONE) {
-            color_string = '\e';
+            color_string = '\x1B';
             color_string += (char32_t)color;
         }
         m_console_output->append(color_string + text);
