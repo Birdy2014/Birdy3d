@@ -14,6 +14,7 @@ namespace Birdy3d {
     std::shared_ptr<Window> Console::m_console_window;
     std::shared_ptr<Textarea> Console::m_console_output;
     std::shared_ptr<TextField> Console::m_console_input;
+    bool Console::m_created = false;
 
     void Console::attach(Canvas& canvas) {
         if (!m_console_window)
@@ -37,6 +38,8 @@ namespace Birdy3d {
         m_console_input = m_console_window->add_child<TextField>(0_px, UIVector(100_p, 20_px));
         m_console_input->weight = 0;
         m_console_input->add_callback("accept", input_callback);
+
+        m_created = true;
     }
 
     void Console::input_callback() {
@@ -46,6 +49,9 @@ namespace Birdy3d {
     }
 
     void Console::print(const std::string& text, Color::Name color) {
+        if (!m_created)
+            return;
+
         std::string color_string;
         if (color != Color::Name::NONE) {
             color_string = '\x1B';
@@ -55,6 +61,9 @@ namespace Birdy3d {
     }
 
     void Console::println(const std::string& text, Color::Name color) {
+        if (!m_created)
+            return;
+
         print(text, color);
         if (color != Color::Name::NONE)
             print("\n", Color::Name::FG);
