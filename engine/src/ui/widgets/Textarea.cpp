@@ -18,6 +18,11 @@ namespace Birdy3d {
 
     void Textarea::draw() {
         Widget::draw();
+
+        // The change callback is only called at the end, so this is necessary if clear is called.
+        if (m_changed)
+            update_lines();
+
         int linec = m_actual_size.y / Application::theme().line_height();
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
