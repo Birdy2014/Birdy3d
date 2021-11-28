@@ -59,6 +59,7 @@ namespace Birdy3d {
         static std::shared_ptr<Window> m_console_window;
         static std::shared_ptr<Textarea> m_console_output;
         static std::shared_ptr<TextField> m_console_input;
+        static bool m_created;
 
         static void create_window();
         static void input_callback();
