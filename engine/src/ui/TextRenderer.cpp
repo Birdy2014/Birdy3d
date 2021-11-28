@@ -240,6 +240,9 @@ namespace Birdy3d {
         if (m_hidden)
             return;
 
+        if (m_text.empty())
+            return;
+
         if (m_dirty) {
             update_buffers();
             glm::vec2 pos = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
@@ -328,7 +331,8 @@ namespace Birdy3d {
         TextRenderer& renderer = Application::theme().text_renderer();
         std::vector<TextVertex> vertices;
         std::vector<GLuint> indices;
-        vertices.reserve(4 * m_text.size());
+        vertices.reserve(4 * m_escaped_text_length);
+        indices.reserve(6 * m_escaped_text_length);
         if (font_size == 0)
             font_size = renderer.m_font_size;
         float scale = (font_size / renderer.m_font_size);
