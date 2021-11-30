@@ -4,7 +4,7 @@
 #include <list>
 #include <memory>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class Widget;
 

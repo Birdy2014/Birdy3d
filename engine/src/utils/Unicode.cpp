@@ -1,6 +1,6 @@
 #include "utils/Unicode.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::utils {
 
     const uint8_t UTF8_ONE_BYTE_MASK = 0b10000000;
     const uint8_t UTF8_ONE_BYTE_COUNT = 0;

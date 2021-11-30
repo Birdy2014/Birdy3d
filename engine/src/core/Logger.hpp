@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace Birdy3d {
+namespace Birdy3d::core {
 
     class Logger {
     public:
@@ -74,4 +74,4 @@ namespace Birdy3d {
 
 }
 
-#define BIRDY3D_TODO Logger::critical("Not implemented: ", __PRETTY_FUNCTION__);
+#define BIRDY3D_TODO ::Birdy3d::core::Logger::critical("Not implemented: ", __PRETTY_FUNCTION__);

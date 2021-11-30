@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <sstream>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     NumberInput::NumberInput(UIVector position, UIVector size, Placement placement, float val)
         : TextField(position, size, placement) {
@@ -26,28 +26,28 @@ namespace Birdy3d {
 
     void NumberInput::on_update() {
         if (m_dragging) {
-            glm::vec2 offsets = Input::cursor_pos_offset();
+            glm::vec2 offsets = core::Input::cursor_pos_offset();
             float change = offsets.x + offsets.y;
-            if (!Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
+            if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
                 change *= 0.1;
-            if (Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
+            if (core::Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
                 change *= 0.01;
             value(value() + change);
         }
         TextField::on_update();
     }
 
-    void NumberInput::on_scroll(const InputScrollEvent& event) {
+    void NumberInput::on_scroll(const events::InputScrollEvent& event) {
         float change = event.yoffset;
-        if (!Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
+        if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
             change *= 0.1;
-        if (Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
+        if (core::Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
             change *= 0.01;
 
         value(m_value + change);
     }
 
-    void NumberInput::on_click(const InputClickEvent& event) {
+    void NumberInput::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_RIGHT)
             return TextField::on_click(event);
 
@@ -60,12 +60,12 @@ namespace Birdy3d {
         }
     }
 
-    void NumberInput::on_key(const InputKeyEvent& event) {
+    void NumberInput::on_key(const events::InputKeyEvent& event) {
         TextField::on_key(event);
         value(std::stof(text()));
     }
 
-    void NumberInput::on_char(const InputCharEvent& event) {
+    void NumberInput::on_char(const events::InputCharEvent& event) {
         if (event.codepoint < '0' || event.codepoint > '9')
             return;
         TextField::on_char(event);

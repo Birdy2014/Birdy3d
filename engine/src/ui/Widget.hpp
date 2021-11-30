@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class Canvas;
     class Rectangle;
@@ -124,10 +124,10 @@ namespace Birdy3d {
         bool has_callbacks(const std::string& name);
 
         // Events
-        virtual void on_scroll(const InputScrollEvent& event);
-        virtual void on_click(const InputClickEvent& event);
-        virtual void on_key(const InputKeyEvent& event);
-        virtual void on_char(const InputCharEvent& event);
+        virtual void on_scroll(const events::InputScrollEvent& event);
+        virtual void on_click(const events::InputClickEvent& event);
+        virtual void on_key(const events::InputKeyEvent& event);
+        virtual void on_char(const events::InputCharEvent& event);
         virtual void on_mouse_enter() { }
         virtual void on_mouse_leave() { }
         virtual void on_focus() { }
@@ -135,11 +135,11 @@ namespace Birdy3d {
         virtual void on_resize() { }
 
         // Shapes
-        Rectangle* add_rectangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Triangle* add_triangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Triangle* add_filled_triangle(UIVector pos, UIVector size, Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Text* add_text(UIVector pos, std::string text, Color::Name, Placement = Placement::BOTTOM_LEFT, float font_size = 0);
+        Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Triangle* add_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Triangle* add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
+        Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::BOTTOM_LEFT, float font_size = 0);
 
     private:
         bool m_hovered_last_frame = false;

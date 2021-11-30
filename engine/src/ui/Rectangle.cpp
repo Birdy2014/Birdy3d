@@ -6,9 +6,9 @@
 #include "ui/Theme.hpp"
 #include <glad/glad.h>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
-    Rectangle::Rectangle(UIVector pos, UIVector size, Color::Name color, Type type, Placement placement)
+    Rectangle::Rectangle(UIVector pos, UIVector size, utils::Color::Name color, Type type, Placement placement)
         : Shape(pos, size, color, placement) {
         this->type = type;
     }
@@ -40,7 +40,7 @@ namespace Birdy3d {
         m_shader->set_mat4("projection", projection());
         m_shader->set_mat4("move", move);
         m_shader->set_mat4("move_self", m_move_self);
-        m_shader->set_vec4("color", Application::theme().color(m_color));
+        m_shader->set_vec4("color", core::Application::theme().color(m_color));
         m_shader->set_int("rectTexture", 0);
         glBindVertexArray(m_vao);
         if (type == Shape::OUTLINE)

@@ -4,12 +4,12 @@
 #include "core/ResourceManager.hpp"
 #include <cstring>
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     Shader::Shader(const std::string& name)
         : m_name(name) {
-        std::string path = ResourceManager::get_resource_path(name, ResourceManager::ResourceType::SHADER);
-        std::string source = ResourceManager::read_file(path);
+        std::string path = core::ResourceManager::get_resource_path(name, core::ResourceManager::ResourceType::SHADER);
+        std::string source = core::ResourceManager::read_file(path);
         std::unordered_map<GLenum, std::string> shader_sources = preprocess(source);
         compile(shader_sources);
     }
@@ -25,21 +25,21 @@ namespace Birdy3d {
         else if (type == 0)
             type_string = "program";
         else
-            Logger::warn("invalid shader type");
+            core::Logger::warn("invalid shader type");
         int success;
         char info_log[1024];
         if (type != 0) {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if (!success) {
                 glGetShaderInfoLog(shader, 1024, nullptr, info_log);
-                Logger::warn("shader compilation error: name: ", m_name + " type: ", type_string, "\n", info_log);
+                core::Logger::warn("shader compilation error: name: ", m_name + " type: ", type_string, "\n", info_log);
                 return true;
             }
         } else {
             glGetProgramiv(shader, GL_LINK_STATUS, &success);
             if (!success) {
                 glGetProgramInfoLog(shader, 1024, nullptr, info_log);
-                Logger::warn("program linking error: name: ", m_name, "\n", info_log);
+                core::Logger::warn("program linking error: name: ", m_name, "\n", info_log);
                 return true;
             }
         }
@@ -54,7 +54,7 @@ namespace Birdy3d {
             size_t eol = shaderSource.find_first_of('\n', pos);
             size_t path_start = pos + strlen(include_token) + 1;
             std::string include_path = shaderSource.substr(path_start, eol - path_start);
-            std::string file_content = ResourceManager::read_file(ResourceManager::get_resource_path(include_path, ResourceManager::ResourceType::SHADER));
+            std::string file_content = core::ResourceManager::read_file(core::ResourceManager::get_resource_path(include_path, core::ResourceManager::ResourceType::SHADER));
             shaderSource.erase(pos, eol - pos + 1);
             shaderSource.insert(pos, file_content);
             pos = shaderSource.find(include_token, pos + 1);
@@ -90,7 +90,7 @@ namespace Birdy3d {
             else if (type == "fragment")
                 type_enum = GL_FRAGMENT_SHADER;
             else
-                Logger::warn("Invalid shader type");
+                core::Logger::warn("Invalid shader type");
 
             pos = shaderSource.find(type_token, next_line);
             unsigned int line_nr = std::count(shaderSource.begin(), shaderSource.begin() + next_line, '\n');

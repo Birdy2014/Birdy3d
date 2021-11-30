@@ -1,6 +1,6 @@
 #include "ui/Units.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     Unit::Unit(float pixels, float percent)
         : pixels(pixels)

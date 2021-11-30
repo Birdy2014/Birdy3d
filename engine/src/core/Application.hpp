@@ -1,15 +1,11 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "ecs/Forward.hpp"
+#include "events/Forward.hpp"
+#include "ui/Forward.hpp"
 
-namespace Birdy3d {
-
-    class Canvas;
-    class EventBus;
-    class Entity;
-    class Scene;
-    class TextRenderer;
-    class Theme;
+namespace Birdy3d::core {
 
     enum class Option {
         VSYNC,
@@ -18,11 +14,11 @@ namespace Birdy3d {
 
     class Application {
     public:
-        static EventBus* event_bus;
+        static events::EventBus* event_bus;
         static float delta_time;
-        static std::weak_ptr<Scene> scene;
-        static std::weak_ptr<Canvas> canvas;
-        static Entity* selected_entity;
+        static std::weak_ptr<ecs::Scene> scene;
+        static std::weak_ptr<ui::Canvas> canvas;
+        static ecs::Entity* selected_entity;
 
         static bool init(const char* window_name, int width, int height, const std::string& theme_name);
         static void cleanup();
@@ -32,13 +28,13 @@ namespace Birdy3d {
         static bool option_bool(Option);
         static void option_toggle(Option);
         static void option_bool(Option, bool);
-        static Theme& theme() { return *m_theme; }
+        static ui::Theme& theme() { return *m_theme; }
         static bool theme(const std::string&);
 
     private:
         static GLFWwindow* m_window;
         static std::unordered_map<Option, bool> m_options_bool;
-        static std::shared_ptr<Theme> m_theme;
+        static std::shared_ptr<ui::Theme> m_theme;
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);

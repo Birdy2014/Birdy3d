@@ -4,9 +4,9 @@
 #include "render/Mesh.hpp"
 #include "render/Model.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::physics {
 
-    std::shared_ptr<Model> ConvexMeshGenerators::generate_model(GenerationMode mode, const Model& model) {
+    std::shared_ptr<render::Model> ConvexMeshGenerators::generate_model(GenerationMode mode, const render::Model& model) {
         switch (mode) {
         case GenerationMode::COPY:
             return copy(model);
@@ -19,24 +19,24 @@ namespace Birdy3d {
         }
     }
 
-    std::shared_ptr<Model> ConvexMeshGenerators::copy(const Model& model) {
-        std::vector<std::unique_ptr<Mesh>> meshes;
+    std::shared_ptr<render::Model> ConvexMeshGenerators::copy(const render::Model& model) {
+        std::vector<std::unique_ptr<render::Mesh>> meshes;
         for (const auto& m : model.get_meshes()) {
-            std::vector<Vertex> vertices = m->vertices;
+            std::vector<render::Vertex> vertices = m->vertices;
             std::vector<unsigned int> indices = m->indices;
-            meshes.push_back(std::make_unique<Mesh>(vertices, indices));
+            meshes.push_back(std::make_unique<render::Mesh>(vertices, indices));
         }
-        auto new_model = std::make_shared<Model>(meshes);
+        auto new_model = std::make_shared<render::Model>(meshes);
         return new_model;
     }
 
-    std::shared_ptr<Model> ConvexMeshGenerators::hull(const Model&) {
+    std::shared_ptr<render::Model> ConvexMeshGenerators::hull(const render::Model&) {
         // TODO: Quickhull
         BIRDY3D_TODO
         return nullptr;
     }
 
-    std::shared_ptr<Model> ConvexMeshGenerators::decomposition(const Model&) {
+    std::shared_ptr<render::Model> ConvexMeshGenerators::decomposition(const render::Model&) {
         // TODO: Convex decomposition
         BIRDY3D_TODO
         return nullptr;

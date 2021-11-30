@@ -11,7 +11,7 @@
 #include "render/ModelComponent.hpp"
 #include "render/Vertex.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::physics {
 
     Collider::Collider()
         : m_model(nullptr)
@@ -27,18 +27,18 @@ namespace Birdy3d {
 
     void Collider::start() {
         if (m_generation_mode == GenerationMode::NONE) {
-            m_model = ResourceManager::get_model(m_model_name);
+            m_model = core::ResourceManager::get_model(m_model_name);
         } else {
-            Model* model = entity->get_component<ModelComponent>()->model().get();
+            render::Model* model = entity->get_component<render::ModelComponent>()->model().get();
             if (!model) {
-                Logger::warn("Entity doesn't have any model");
+                core::Logger::warn("Entity doesn't have any model");
                 return;
             }
             m_model = ConvexMeshGenerators::generate_model(m_generation_mode, *model);
         }
     }
 
-    void Collider::render_wireframe(Shader& shader) {
+    void Collider::render_wireframe(render::Shader& shader) {
         m_model->render_wireframe(*entity, shader);
     }
 
@@ -69,7 +69,7 @@ namespace Birdy3d {
         return points;
     }
 
-    bool Collider::collides(const Mesh& mesh_a, const Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b) {
+    bool Collider::collides(const render::Mesh& mesh_a, const render::Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b) {
         // FIXME: stop if one of the matrices scales to 0
         m_point_count = 0;
         glm::vec3 s = support(mesh_a, mesh_b, transform_a, transform_b, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -78,14 +78,14 @@ namespace Birdy3d {
 
         while (true) {
             if (direction == glm::vec3(0))
-                Logger::critical("direction ist 0 in loop. point_count: ", m_point_count);
+                core::Logger::critical("direction ist 0 in loop. point_count: ", m_point_count);
             s = support(mesh_a, mesh_b, transform_a, transform_b, direction);
 
             if (glm::dot(s, direction) <= 0)
                 return false;
 
             if (m_points[0] == s)
-                Logger::critical("points are the same collides 1 nr:", m_point_count);
+                core::Logger::critical("points are the same collides 1 nr:", m_point_count);
             push_front(s);
 
             if (next_simplex(direction))
@@ -93,7 +93,7 @@ namespace Birdy3d {
         }
     }
 
-    glm::vec3 Collider::support(const Mesh& mesh_a, const Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction) {
+    glm::vec3 Collider::support(const render::Mesh& mesh_a, const render::Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction) {
         // Transform world direction to local direction
         glm::mat4 inverse_transform_a = glm::inverse(transform_a);
         glm::mat4 inverse_transform_b = glm::inverse(transform_b);
@@ -112,7 +112,7 @@ namespace Birdy3d {
 
     void Collider::push_front(glm::vec3 point) {
         if (m_point_count >= 4 || m_point_count < 0)
-            Logger::critical("Simplex has a maximum size of 4");
+            core::Logger::critical("Simplex has a maximum size of 4");
 
         for (int i = m_point_count; i > 0; i--) {
             m_points[i] = m_points[i - 1];
@@ -231,6 +231,6 @@ namespace Birdy3d {
         return glm::dot(a, b) > 0;
     }
 
-    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, Collider);
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, Collider);
 
 }

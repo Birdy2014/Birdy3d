@@ -1,13 +1,9 @@
 #pragma once
 
+#include "events/Forward.hpp"
 #include "ui/widgets/TextField.hpp"
 
-namespace Birdy3d {
-
-    class InputClickEvent;
-    class InputScrollEvent;
-    class InputCharEvent;
-    class InputKeyEvent;
+namespace Birdy3d::ui {
 
     class Textarea : public TextField {
     public:
@@ -19,10 +15,10 @@ namespace Birdy3d {
 
     protected:
         void on_update() override;
-        void on_click(const InputClickEvent& event) override;
-        void on_scroll(const InputScrollEvent& event) override;
-        void on_char(const InputCharEvent& event) override;
-        void on_key(const InputKeyEvent& event) override;
+        void on_click(const events::InputClickEvent& event) override;
+        void on_scroll(const events::InputScrollEvent& event) override;
+        void on_char(const events::InputCharEvent& event) override;
+        void on_key(const events::InputKeyEvent& event) override;
         void on_resize() override;
 
     private:

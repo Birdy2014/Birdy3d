@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     struct Vertex {
         glm::vec3 position;

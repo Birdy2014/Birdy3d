@@ -7,7 +7,7 @@
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     Textarea::Textarea(UIVector pos, UIVector size, Placement placement)
         : TextField(pos, size, placement) {
@@ -23,30 +23,30 @@ namespace Birdy3d {
         if (m_changed)
             update_lines();
 
-        int linec = m_actual_size.y / Application::theme().line_height();
+        int linec = m_actual_size.y / core::Application::theme().line_height();
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
             // smooth scrolling
-            float scrolldelta = (scrollpos - m_tmpscroll) * Application::delta_time;
+            float scrolldelta = (scrollpos - m_tmpscroll) * core::Application::delta_time;
             m_tmpscroll += scrolldelta;
             if (scrolldelta < 0.0002 && scrolldelta > -0.0002)
                 m_tmpscroll = scrollpos;
 
             // draw lines
             line = l + floor(m_tmpscroll);
-            int y = m_actual_size.y - (l + 1) * Application::theme().line_height() + (m_tmpscroll - floor(m_tmpscroll)) * Application::theme().line_height();
+            int y = m_actual_size.y - (l + 1) * core::Application::theme().line_height() + (m_tmpscroll - floor(m_tmpscroll)) * core::Application::theme().line_height();
             int selection_start = m_selection_start <= m_selection_end ? m_selection_start : m_selection_end;
             int selection_end = m_selection_start <= m_selection_end ? m_selection_end + 1 : m_selection_start;
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                Application::theme().text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), m_side_padding, y, Application::theme().font_size(), Color::Name::FG, m_move, m_cursor_pos - (int)line_start >= 0, std::max(m_cursor_pos - (int)line_start, 0), m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, std::max(selection_start - (int)line_start, 0), std::max(selection_end - (int)line_start, 0), Color::Name::TEXT_HIGHLIGHT);
+                core::Application::theme().text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), m_side_padding, y, core::Application::theme().font_size(), utils::Color::Name::FG, m_move, m_cursor_pos - (int)line_start >= 0, std::max(m_cursor_pos - (int)line_start, 0), m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, std::max(selection_start - (int)line_start, 0), std::max(selection_end - (int)line_start, 0), utils::Color::Name::TEXT_HIGHLIGHT);
             }
         }
     }
 
     void Textarea::scroll_down() {
-        scrollpos = std::max(m_lines.size() - (m_actual_size.y / Application::theme().line_height()) + 1, 0.0f);
+        scrollpos = std::max(m_lines.size() - (m_actual_size.y / core::Application::theme().line_height()) + 1, 0.0f);
     }
 
     void Textarea::update_lines() {
@@ -62,7 +62,7 @@ namespace Birdy3d {
             line = m_text.substr(pos, eol - pos);
             line_end = eol;
             // Line is too long
-            length = Application::theme().text_renderer().text_size(line, Application::theme().font_size()).x;
+            length = core::Application::theme().text_renderer().text_size(line, core::Application::theme().font_size()).x;
             if (length > m_actual_size.x) {
                 nextspace = pos;
                 while (nextspace < eol) {
@@ -72,7 +72,7 @@ namespace Birdy3d {
                     line_end = nextspace;
 
                     // reached the space too far right
-                    length = Application::theme().text_renderer().text_size(line, Application::theme().font_size()).x;
+                    length = core::Application::theme().text_renderer().text_size(line, core::Application::theme().font_size()).x;
                     if (length > m_actual_size.x) {
                         // the line can't be broken using a space
                         if (prevspace == pos)
@@ -99,7 +99,7 @@ namespace Birdy3d {
         }
     }
 
-    void Textarea::on_click(const InputClickEvent& event) {
+    void Textarea::on_click(const events::InputClickEvent& event) {
         if (readonly)
             return;
 
@@ -122,19 +122,19 @@ namespace Birdy3d {
         }
     }
 
-    void Textarea::on_scroll(const InputScrollEvent& event) {
+    void Textarea::on_scroll(const events::InputScrollEvent& event) {
         scrollpos -= event.yoffset;
         if (scrollpos < 0)
             scrollpos = 0;
     }
 
-    void Textarea::on_char(const InputCharEvent& event) {
+    void Textarea::on_char(const events::InputCharEvent& event) {
         TextField::on_char(event);
         update_lines();
     }
 
     // TODO: key repeat
-    void Textarea::on_key(const InputKeyEvent& event) {
+    void Textarea::on_key(const events::InputKeyEvent& event) {
         TextField::on_key(event);
         if (readonly || event.action != GLFW_PRESS || m_cursor_pos <= 0)
             return;
@@ -175,14 +175,14 @@ namespace Birdy3d {
     }
 
     size_t Textarea::cursor_char_pos() {
-        glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
+        glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
 
-        int y = m_tmpscroll + (m_actual_size.y - local_pos.y) / Application::theme().line_height();
+        int y = m_tmpscroll + (m_actual_size.y - local_pos.y) / core::Application::theme().line_height();
         if (y >= m_lines.size())
             y = m_lines.size() - 1;
 
         size_t line_start = y > 0 ? m_lines[y - 1] : 0;
-        int char_pos = Application::theme().text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), Application::theme().font_size(), local_pos.x - m_side_padding, true);
+        int char_pos = core::Application::theme().text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), core::Application::theme().font_size(), local_pos.x - m_side_padding, true);
         return line_start + char_pos;
     }
 

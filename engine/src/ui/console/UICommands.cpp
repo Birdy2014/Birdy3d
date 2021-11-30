@@ -1,7 +1,7 @@
 #include "ui/console/Commands.hpp"
 #include "ui/console/Console.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     void ConsoleCommands::register_ui() {
         Console::register_command("ui.theme", [](std::vector<std::string> args) {
@@ -9,7 +9,7 @@ namespace Birdy3d {
                 Console::println("Usage: ui.theme <theme>");
                 return;
             }
-            if (!Application::theme(args[0])) {
+            if (!core::Application::theme(args[0])) {
                 Console::println("error loading theme " + args[0]);
                 return;
             }

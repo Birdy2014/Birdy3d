@@ -1,9 +1,8 @@
 #include "ecs/Entity.hpp"
 
-#include "core/ResourceManager.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Birdy3d {
+namespace Birdy3d::ecs {
 
     Entity::Entity(std::string name, glm::vec3 position, glm::vec3 orientation, glm::vec3 scale)
         : name(name) {

@@ -3,12 +3,13 @@
 #include "core/Application.hpp"
 #include "ecs/Entity.hpp"
 #include "events/CollisionEvent.hpp"
+#include "events/EventBus.hpp"
 #include "physics/Collider.hpp"
 #include "physics/Collision.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::physics {
 
-    PhysicsWorld::PhysicsWorld(Entity* scene)
+    PhysicsWorld::PhysicsWorld(ecs::Entity* scene)
         : m_scene(scene) { }
 
     PhysicsWorld::~PhysicsWorld() { }
@@ -37,12 +38,12 @@ namespace Birdy3d {
                 collision->points = points;
                 if (points.hasCollision) {
                     if (collided_last_frame)
-                        Application::event_bus->emit<CollisionEvent>(c1, c2, CollisionEvent::COLLIDING);
+                        core::Application::event_bus->emit<events::CollisionEvent>(c1, c2, events::CollisionEvent::COLLIDING);
                     else
-                        Application::event_bus->emit<CollisionEvent>(c1, c2, CollisionEvent::ENTER);
+                        core::Application::event_bus->emit<events::CollisionEvent>(c1, c2, events::CollisionEvent::ENTER);
                 } else {
                     if (collided_last_frame) {
-                        Application::event_bus->emit<CollisionEvent>(c1, c2, CollisionEvent::EXIT);
+                        core::Application::event_bus->emit<events::CollisionEvent>(c1, c2, events::CollisionEvent::EXIT);
                     }
                 }
             }

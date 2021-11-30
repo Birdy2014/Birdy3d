@@ -2,7 +2,7 @@
 
 #include <any>
 
-namespace Birdy3d {
+namespace Birdy3d::events {
 
     class Event {
     public:

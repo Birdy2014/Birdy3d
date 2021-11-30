@@ -2,12 +2,11 @@
 
 #include "core/Base.hpp"
 #include "ecs/Component.hpp"
+#include "render/Forward.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
-    class Shader;
-
-    class Light : public Component {
+    class Light : public ecs::Component {
     public:
         bool shadow_enabled;
 

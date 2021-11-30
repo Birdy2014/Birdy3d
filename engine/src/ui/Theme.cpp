@@ -5,7 +5,7 @@
 #include "utils/serializer/Serializer.hpp"
 #include <fstream>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     Theme::Theme(const std::string& file_content) {
         serializer::Serializer::deserialize(file_content, *this);
@@ -16,26 +16,26 @@ namespace Birdy3d {
         return *m_text_renderer.get();
     }
 
-    Color Theme::color(Color::Name n) const {
+    utils::Color Theme::color(utils::Color::Name n) const {
         if ((int)n < 16)
             return m_termcolors[(int)n];
         switch (n) {
-        case Color::Name::FG:
+        case utils::Color::Name::FG:
             return m_color_fg;
-        case Color::Name::BG:
+        case utils::Color::Name::BG:
             return m_color_bg;
-        case Color::Name::BORDER:
+        case utils::Color::Name::BORDER:
             return m_color_border;
-        case Color::Name::BG_TITLE_BAR:
+        case utils::Color::Name::BG_TITLE_BAR:
             return m_color_bg_title_bar;
-        case Color::Name::BG_INPUT:
+        case utils::Color::Name::BG_INPUT:
             return m_color_bg_input;
-        case Color::Name::BG_SELECTED:
+        case utils::Color::Name::BG_SELECTED:
             return m_color_bg_selected;
-        case Color::Name::TEXT_HIGHLIGHT:
+        case utils::Color::Name::TEXT_HIGHLIGHT:
             return m_color_text_highlight;
         default:
-            return Color::NONE;
+            return utils::Color::NONE;
         }
     }
 

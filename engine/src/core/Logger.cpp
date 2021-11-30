@@ -2,20 +2,20 @@
 
 #include "ui/console/Console.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::core {
 
     void Logger::print_console(const std::string& text, Type type) {
-        Color::Name color = [&type] {
+        utils::Color::Name color = [&type] {
             switch (type) {
             case Type::DEBUG:
-                return Color::Name::NONE;
+                return utils::Color::Name::NONE;
             case Type::WARN:
-                return Color::Name::YELLOW;
+                return utils::Color::Name::YELLOW;
             case Type::ERROR:
-                return Color::Name::RED;
+                return utils::Color::Name::RED;
             }
         }();
-        Console::println(text, color);
+        ui::Console::println(text, color);
     }
 
 }

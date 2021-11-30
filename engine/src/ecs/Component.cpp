@@ -2,7 +2,7 @@
 
 #include "ecs/Entity.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ecs {
 
     void Component::external_start() {
         if (!m_loaded) {

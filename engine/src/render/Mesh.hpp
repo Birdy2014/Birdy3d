@@ -1,13 +1,12 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "render/Forward.hpp"
 #include "render/Material.hpp"
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
 
-namespace Birdy3d {
-
-    class Shader;
+namespace Birdy3d::render {
 
     class Mesh {
     public:

@@ -3,7 +3,7 @@
 #include "core/Base.hpp"
 #include "utils/Color.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     class Texture {
     public:
@@ -12,7 +12,7 @@ namespace Birdy3d {
 
         Texture(unsigned int width, unsigned int height, GLenum format, GLenum internalFormat, GLenum pixelType);
         Texture(const std::string& filePath);
-        Texture(const Color& color);
+        Texture(const utils::Color& color);
         ~Texture();
         bool transparent();
 

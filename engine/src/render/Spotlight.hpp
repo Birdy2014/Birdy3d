@@ -2,7 +2,7 @@
 
 #include "render/Light.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     class Spotlight : public Light {
     public:

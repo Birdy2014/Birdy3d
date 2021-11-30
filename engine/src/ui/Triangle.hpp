@@ -2,11 +2,11 @@
 
 #include "ui/Shape.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class Triangle : public Shape {
     public:
-        Triangle(UIVector position, UIVector size, Color::Name color = Color::Name::WHITE, Type type = FILLED, Placement placement = Placement::BOTTOM_LEFT);
+        Triangle(UIVector position, UIVector size, utils::Color::Name color = utils::Color::Name::WHITE, Type type = FILLED, Placement placement = Placement::BOTTOM_LEFT);
         ~Triangle();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;

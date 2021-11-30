@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class ConsoleCommands {
     public:

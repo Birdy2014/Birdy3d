@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     Texture::Texture(unsigned int width, unsigned int height, GLenum format, GLenum internalFormat, GLenum pixelType) {
         glGenTextures(1, &id);
@@ -29,7 +29,7 @@ namespace Birdy3d {
             else if (nrChannels == 4)
                 format = GL_RGBA;
             else
-                Logger::critical("Invalid number of texture channels: ", nrChannels);
+                core::Logger::critical("Invalid number of texture channels: ", nrChannels);
 
             m_transparent = format == GL_RGBA;
 
@@ -44,12 +44,12 @@ namespace Birdy3d {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         } else {
-            Logger::warn("Failed to load texture at: ", filePath);
+            core::Logger::warn("Failed to load texture at: ", filePath);
         }
         stbi_image_free(data);
     }
 
-    Texture::Texture(const Color& color) {
+    Texture::Texture(const utils::Color& color) {
         glm::vec4 vec = color.value;
         m_transparent = vec.a < 1;
         float data[4] = { vec.r, vec.g, vec.b, vec.a };

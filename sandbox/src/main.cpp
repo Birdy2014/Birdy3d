@@ -101,15 +101,15 @@ int main() {
     }
     Input::init();
 
-    std::shared_ptr<Birdy3d::NumberInput> input_position_x;
-    std::shared_ptr<Birdy3d::NumberInput> input_position_y;
-    std::shared_ptr<Birdy3d::NumberInput> input_position_z;
-    std::shared_ptr<Birdy3d::NumberInput> input_scale_x;
-    std::shared_ptr<Birdy3d::NumberInput> input_scale_y;
-    std::shared_ptr<Birdy3d::NumberInput> input_scale_z;
-    std::shared_ptr<Birdy3d::NumberInput> input_orientation_x;
-    std::shared_ptr<Birdy3d::NumberInput> input_orientation_y;
-    std::shared_ptr<Birdy3d::NumberInput> input_orientation_z;
+    std::shared_ptr<NumberInput> input_position_x;
+    std::shared_ptr<NumberInput> input_position_y;
+    std::shared_ptr<NumberInput> input_position_z;
+    std::shared_ptr<NumberInput> input_scale_x;
+    std::shared_ptr<NumberInput> input_scale_y;
+    std::shared_ptr<NumberInput> input_scale_z;
+    std::shared_ptr<NumberInput> input_orientation_x;
+    std::shared_ptr<NumberInput> input_orientation_y;
+    std::shared_ptr<NumberInput> input_orientation_z;
 
     // UI
     auto canvas = std::make_shared<Canvas>();
@@ -284,7 +284,7 @@ int main() {
     });
 
     Application::event_bus->subscribe<TransformChangedEvent>([&](const TransformChangedEvent& event) {
-        if (event.entity != Birdy3d::Application::selected_entity)
+        if (event.entity != Application::selected_entity)
             return;
         input_position_x->value(event.entity->transform.position.x);
         input_position_y->value(event.entity->transform.position.y);

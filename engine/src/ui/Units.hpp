@@ -2,7 +2,7 @@
 
 #include "core/Base.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     enum class Placement {
         TOP_LEFT,

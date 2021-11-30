@@ -8,15 +8,15 @@
 #include "ui/Theme.hpp"
 #include "ui/Triangle.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     ContextItem::ContextItem(std::string text, ClickFunc func)
-        : text(std::make_unique<Text>(0_px, text, Color::Name::FG, Placement::BOTTOM_LEFT))
+        : text(std::make_unique<Text>(0_px, text, utils::Color::Name::FG, Placement::BOTTOM_LEFT))
         , callback_click(func)
         , m_child_rect_size(glm::vec2(m_padding * 2)) { }
 
     ContextItem& ContextItem::add_child(std::string text, ClickFunc func) {
-        m_child_rect_size.y += Application::theme().line_height();
+        m_child_rect_size.y += core::Application::theme().line_height();
         return children.emplace_back(text, func);
     }
 
@@ -25,16 +25,16 @@ namespace Birdy3d {
             return text == item.text->text();
         });
         if (it != children.end())
-            m_child_rect_size.y -= Application::theme().line_height();
+            m_child_rect_size.y -= core::Application::theme().line_height();
     }
 
     ContextMenu::ContextMenu()
         : Widget()
         , root_item(ContextItem("Root", nullptr)) {
-        m_arrow_size = Application::theme().font_size() / 2;
-        m_background_rect = add_filled_rectangle(0_px, 0_px, Color::Name::BG, Placement::BOTTOM_LEFT);
-        m_border_rect = add_rectangle(0_px, 0_px, Color::Name::BORDER, Placement::BOTTOM_LEFT);
-        m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), Color::Name::FG);
+        m_arrow_size = core::Application::theme().font_size() / 2;
+        m_background_rect = add_filled_rectangle(0_px, 0_px, utils::Color::Name::BG, Placement::BOTTOM_LEFT);
+        m_border_rect = add_rectangle(0_px, 0_px, utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
+        m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), utils::Color::Name::FG);
         hidden = true;
     }
 
@@ -56,8 +56,8 @@ namespace Birdy3d {
     }
 
     void ContextMenu::open() {
-        glm::vec2 open_pos = Input::cursor_pos();
-        glm::vec2 viewport = Application::get_viewport_size();
+        glm::vec2 open_pos = core::Input::cursor_pos();
+        glm::vec2 viewport = core::Application::get_viewport_size();
         if (open_pos.x + root_item.m_child_rect_size.x > viewport.x)
             pos.x = open_pos.x - root_item.m_child_rect_size.x; // Left
         else
@@ -101,9 +101,9 @@ namespace Birdy3d {
 
         int offset_y = item.m_child_rect_size.y - item.m_padding;
         for (const auto& child_item : item.children) {
-            offset_y -= Application::theme().line_height();
+            offset_y -= core::Application::theme().line_height();
             if (!child_item.children.empty()) {
-                m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size - item.m_padding, offset_y + (Application::theme().line_height() - m_arrow_size) / 2));
+                m_submenu_triangle->position(item.m_child_rect_pos + glm::vec2(item.m_child_rect_size.x - m_arrow_size - item.m_padding, offset_y + (core::Application::theme().line_height() - m_arrow_size) / 2));
                 m_submenu_triangle->rotation(glm::radians(30.0f));
                 m_submenu_triangle->draw(glm::mat4(1));
             }
@@ -119,12 +119,12 @@ namespace Birdy3d {
     }
 
     bool ContextMenu::handle_context_item_children_click(ContextItem& item, bool click) {
-        glm::vec2 local_pos = Input::cursor_pos() - item.m_child_rect_pos;
+        glm::vec2 local_pos = core::Input::cursor_pos() - item.m_child_rect_pos;
         bool found = false;
         if (local_pos.x > 0 && local_pos.x < item.m_child_rect_size.x && local_pos.y > 0 && local_pos.y < item.m_child_rect_size.y) {
             int offset_y = item.m_child_rect_size.y - item.m_padding;
             for (auto& child_item : item.children) {
-                offset_y -= Application::theme().line_height();
+                offset_y -= core::Application::theme().line_height();
                 if (!found) {
                     if (offset_y < local_pos.y) {
                         if (click && child_item.children.empty()) {
@@ -136,15 +136,15 @@ namespace Birdy3d {
                         if (!child_item.children.empty()) {
                             child_item.opened = true;
                             // Set position of new menu
-                            glm::vec2 viewport = Application::get_viewport_size();
+                            glm::vec2 viewport = core::Application::get_viewport_size();
                             if (item.m_child_rect_pos.x + child_item.m_child_rect_size.x > viewport.x)
                                 child_item.m_child_rect_pos.x = item.m_child_rect_pos.x - child_item.m_child_rect_size.x; // Left
                             else
                                 child_item.m_child_rect_pos.x = item.m_child_rect_pos.x + item.m_child_rect_size.x; // Right
-                            if (item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme().line_height() + item.m_padding < 0)
+                            if (item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + core::Application::theme().line_height() + item.m_padding < 0)
                                 child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - item.m_padding; // Up
                             else
-                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + Application::theme().line_height() + item.m_padding; // Down
+                                child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y + core::Application::theme().line_height() + item.m_padding; // Down
 
                             // Close all children of newly opened item
                             for (auto& child_child_item : child_item.children)
@@ -183,7 +183,7 @@ namespace Birdy3d {
         return false;
     }
 
-    void ContextMenu::on_click(const InputClickEvent& event) {
+    void ContextMenu::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
             return;
 
@@ -191,7 +191,7 @@ namespace Birdy3d {
             hidden = true;
     }
 
-    void ContextMenu::on_key(const InputKeyEvent&) {
+    void ContextMenu::on_key(const events::InputKeyEvent&) {
         hidden = true;
     }
 
@@ -201,7 +201,7 @@ namespace Birdy3d {
 
     MenuBar::MenuBar(UIVector pos, UIVector size, Placement placement)
         : Widget(pos, size, placement) {
-        add_filled_rectangle(0_p, 100_p, Color::Name::BG);
+        add_filled_rectangle(0_p, 100_p, utils::Color::Name::BG);
     }
 
     ContextItem& MenuBar::add_item(std::string text) {
@@ -232,10 +232,10 @@ namespace Birdy3d {
         }
     }
 
-    void MenuBar::on_click(const InputClickEvent& event) {
+    void MenuBar::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
             return;
-        int curosr_x = Input::cursor_pos().x - m_actual_pos.x;
+        int curosr_x = core::Input::cursor_pos().x - m_actual_pos.x;
         int x = 0;
         for (auto& menu : m_menus) {
             x += menu->root_item.text->size().x;

@@ -1,6 +1,6 @@
 #include "core/Input.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::core {
 
     bool Input::cursor_hidden = false;
     glm::vec2 Input::current_cursor_pos = glm::vec2(0);

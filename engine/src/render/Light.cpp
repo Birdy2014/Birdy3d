@@ -1,6 +1,6 @@
 #include "render/Light.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     Light::Light(bool shadow_enabled)
         : Component()

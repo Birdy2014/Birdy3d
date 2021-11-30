@@ -3,7 +3,7 @@
 #include "ui/widgets/TextField.hpp"
 #include <limits>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class NumberInput : public TextField {
     public:
@@ -19,10 +19,10 @@ namespace Birdy3d {
         bool m_dragging = false;
 
         void on_update() override;
-        void on_scroll(const InputScrollEvent& event) override;
-        void on_click(const InputClickEvent& event) override;
-        void on_key(const InputKeyEvent& event) override;
-        void on_char(const InputCharEvent& event) override;
+        void on_scroll(const events::InputScrollEvent& event) override;
+        void on_click(const events::InputClickEvent& event) override;
+        void on_key(const events::InputKeyEvent& event) override;
+        void on_char(const events::InputCharEvent& event) override;
         void on_focus_lost() override;
     };
 

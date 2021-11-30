@@ -2,7 +2,7 @@
 
 #include "ui/Widget.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     void EmptyLayout::arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2, glm::vec2) const {
         for (auto it = children.rbegin(); it != children.rend(); it++) {

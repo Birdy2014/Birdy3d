@@ -11,14 +11,14 @@
 #include "ui/Theme.hpp"
 #include "ui/console/Commands.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::core {
 
-    std::shared_ptr<Theme> Application::m_theme = nullptr;
-    EventBus* Application::event_bus = nullptr;
+    std::shared_ptr<ui::Theme> Application::m_theme = nullptr;
+    events::EventBus* Application::event_bus = nullptr;
     float Application::delta_time = 0;
-    std::weak_ptr<Scene> Application::scene;
-    std::weak_ptr<Canvas> Application::canvas;
-    Entity* Application::selected_entity = nullptr;
+    std::weak_ptr<ecs::Scene> Application::scene;
+    std::weak_ptr<ui::Canvas> Application::canvas;
+    ecs::Entity* Application::selected_entity = nullptr;
     GLFWwindow* Application::m_window = nullptr;
     std::unordered_map<Option, bool> Application::m_options_bool;
 
@@ -59,10 +59,10 @@ namespace Birdy3d {
 
         // Init variables
         ResourceManager::init();
-        event_bus = new EventBus();
+        event_bus = new events::EventBus();
         if (!theme(theme_name))
             Logger::critical("Invalid Theme");
-        ConsoleCommands::register_all();
+        ui::ConsoleCommands::register_all();
 
         return true;
     }
@@ -115,7 +115,7 @@ namespace Birdy3d {
 
     void Application::framebuffer_size_callback(GLFWwindow*, int width, int height) {
         glViewport(0, 0, width, height);
-        event_bus->emit<WindowResizeEvent>(width, height);
+        event_bus->emit<events::WindowResizeEvent>(width, height);
     }
 
     void Application::window_focus_callback(GLFWwindow* window, int focused) {
@@ -126,19 +126,19 @@ namespace Birdy3d {
     }
 
     void Application::scroll_callback(GLFWwindow*, double xoffset, double yoffset) {
-        event_bus->emit<InputScrollEvent>(xoffset, yoffset);
+        event_bus->emit<events::InputScrollEvent>(xoffset, yoffset);
     }
 
     void Application::mouse_button_callback(GLFWwindow*, int button, int action, int mods) {
-        event_bus->emit<InputClickEvent>(button, action, mods);
+        event_bus->emit<events::InputClickEvent>(button, action, mods);
     }
 
     void Application::key_callback(GLFWwindow*, int key, int scancode, int action, int mods) {
-        event_bus->emit<InputKeyEvent>(key, scancode, action, mods);
+        event_bus->emit<events::InputKeyEvent>(key, scancode, action, mods);
     }
 
     void Application::character_callback(GLFWwindow*, unsigned int codepoint) {
-        event_bus->emit<InputCharEvent>(codepoint);
+        event_bus->emit<events::InputCharEvent>(codepoint);
     }
 
     GLFWwindow* Application::get_window() {
@@ -171,7 +171,7 @@ namespace Birdy3d {
     }
 
     bool Application::theme(const std::string& name) {
-        std::shared_ptr<Theme> new_theme = ResourceManager::get_theme(name);
+        std::shared_ptr<ui::Theme> new_theme = ResourceManager::get_theme(name);
         if (!new_theme)
             return false;
         m_theme = new_theme;

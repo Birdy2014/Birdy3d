@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "ecs/Forward.hpp"
 #include "render/Material.hpp"
 #include "render/Mesh.hpp"
 
@@ -8,18 +9,16 @@ struct aiMesh;
 struct aiNode;
 struct aiScene;
 
-namespace Birdy3d {
-
-    class Entity;
+namespace Birdy3d::render {
 
     class Model {
     public:
         Model(const std::string& path);
         Model(std::unique_ptr<Mesh>);
         Model(std::vector<std::unique_ptr<Mesh>>&);
-        void render(Entity& entity, const Material* material, const Shader& shader, bool transparent) const;
-        void render_depth(Entity&, const Shader&) const;
-        void render_wireframe(Entity&, const Shader&) const;
+        void render(ecs::Entity& entity, const Material* material, const Shader& shader, bool transparent) const;
+        void render_depth(ecs::Entity&, const Shader&) const;
+        void render_wireframe(ecs::Entity&, const Shader&) const;
         const std::vector<std::unique_ptr<Mesh>>& get_meshes() const;
         std::pair<glm::vec3, glm::vec3> bounding_box() const { return m_bounding_box; }
 

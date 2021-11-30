@@ -7,7 +7,7 @@
 #include "render/Shader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled)
         : Light(shadow_enabled)
@@ -17,7 +17,7 @@ namespace Birdy3d {
         , quadratic(quadratic) { }
 
     void PointLight::setup_shadow_map() {
-        m_depthShader = ResourceManager::get_shader("point_light_depth");
+        m_depthShader = core::ResourceManager::get_shader("point_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map
@@ -105,6 +105,6 @@ namespace Birdy3d {
         adapter("far", m_far);
     }
 
-    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, PointLight);
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, PointLight);
 
 }

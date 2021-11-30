@@ -5,19 +5,19 @@
 #include "ui/Theme.hpp"
 #include "utils/Unicode.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     TextField::TextField(UIVector position, UIVector size, Placement placement)
         : Widget(position, size, placement) {
-        add_filled_rectangle(0_px, 100_p, Color::Name::BG_INPUT);
+        add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG_INPUT);
     }
 
     std::string TextField::text() {
-        return Unicode::utf32_to_utf8(m_text);
+        return utils::Unicode::utf32_to_utf8(m_text);
     }
 
     void TextField::text(std::string text) {
-        std::u32string new_text = Unicode::utf8_to_utf32(text);
+        std::u32string new_text = utils::Unicode::utf8_to_utf32(text);
         if (new_text != m_text)
             m_changed = true;
         m_text = new_text;
@@ -25,7 +25,7 @@ namespace Birdy3d {
 
     void TextField::append(std::string text) {
         m_changed = true;
-        m_text += Unicode::utf8_to_utf32(text);
+        m_text += utils::Unicode::utf8_to_utf32(text);
     }
 
     void TextField::clear() {
@@ -39,13 +39,13 @@ namespace Birdy3d {
 
     void TextField::draw() {
         Widget::draw();
-        Application::theme().text_renderer().render_text(m_text, m_side_padding, m_actual_size.y / 2 - Application::theme().font_size() / 2, Application::theme().font_size(), Color::Name::FG, m_move, m_cursor_pos >= 0, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, Color::Name::TEXT_HIGHLIGHT);
+        core::Application::theme().text_renderer().render_text(m_text, m_side_padding, m_actual_size.y / 2 - core::Application::theme().font_size() / 2, core::Application::theme().font_size(), utils::Color::Name::FG, m_move, m_cursor_pos >= 0, m_cursor_pos, m_selection_start != -1 && m_selection_end != -1, m_selection_start, m_selection_end, utils::Color::Name::TEXT_HIGHLIGHT);
     }
 
     void TextField::on_update() {
         if (m_selecting) {
-            glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
-            int char_pos = Application::theme().text_renderer().char_index(m_text, Application::theme().font_size(), local_pos.x - m_side_padding, true);
+            glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
+            int char_pos = core::Application::theme().text_renderer().char_index(m_text, core::Application::theme().font_size(), local_pos.x - m_side_padding, true);
             if (m_selection_start == char_pos)
                 m_selection_end = -1;
             else
@@ -53,14 +53,14 @@ namespace Birdy3d {
         }
     }
 
-    void TextField::on_click(const InputClickEvent& event) {
+    void TextField::on_click(const events::InputClickEvent& event) {
         if (readonly || event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
-            glm::vec2 local_pos = Input::cursor_pos() - m_actual_pos;
-            int char_pos = Application::theme().text_renderer().char_index(m_text, Application::theme().font_size(), local_pos.x - m_side_padding, true);
+            glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
+            int char_pos = core::Application::theme().text_renderer().char_index(m_text, core::Application::theme().font_size(), local_pos.x - m_side_padding, true);
             m_selecting = true;
             m_selection_start = char_pos;
             m_cursor_pos = -1;
@@ -76,7 +76,7 @@ namespace Birdy3d {
         }
     }
 
-    void TextField::on_key(const InputKeyEvent& event) {
+    void TextField::on_key(const events::InputKeyEvent& event) {
         if (readonly || event.action != GLFW_PRESS)
             return;
 
@@ -116,7 +116,7 @@ namespace Birdy3d {
         }
     }
 
-    void TextField::on_char(const InputCharEvent& event) {
+    void TextField::on_char(const events::InputCharEvent& event) {
         if (readonly)
             return;
 
@@ -134,12 +134,12 @@ namespace Birdy3d {
 
     void TextField::on_mouse_enter() {
         if (!readonly)
-            Input::set_cursor(Input::CURSOR_TEXT);
+            core::Input::set_cursor(core::Input::CURSOR_TEXT);
     }
 
     void TextField::on_mouse_leave() {
         if (!readonly)
-            Input::set_cursor(Input::CURSOR_DEFAULT);
+            core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
     }
 
     void TextField::on_focus_lost() {

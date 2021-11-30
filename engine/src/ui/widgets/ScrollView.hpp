@@ -2,7 +2,7 @@
 
 #include "ui/Widget.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class ScrollView : public Widget {
     public:
@@ -18,8 +18,8 @@ namespace Birdy3d {
         Rectangle* m_scrollbar_bar;
         bool m_scrollbar_grabbed = false;
 
-        void on_scroll(const InputScrollEvent& event) override;
-        void on_click(const InputClickEvent& event) override;
+        void on_scroll(const events::InputScrollEvent& event) override;
+        void on_click(const events::InputClickEvent& event) override;
         void on_update() override;
         void check_scroll_bounds();
     };

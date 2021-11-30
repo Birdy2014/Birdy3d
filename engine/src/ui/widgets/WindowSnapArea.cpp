@@ -7,14 +7,14 @@
 #include "ui/Theme.hpp"
 #include "ui/Window.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     WindowSnapArea::WindowSnapArea(UIVector pos, UIVector size, Placement placement, Mode mode)
         : Widget(pos, size, placement)
         , mode(mode) {
-        Application::event_bus->subscribe(this, &WindowSnapArea::on_click_raw);
-        Application::event_bus->subscribe(this, &WindowSnapArea::on_resize_raw);
-        m_background_rect = add_filled_rectangle(0_px, 100_p, Color::Name::BG);
+        core::Application::event_bus->subscribe(this, &WindowSnapArea::on_click_raw);
+        core::Application::event_bus->subscribe(this, &WindowSnapArea::on_resize_raw);
+        m_background_rect = add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG);
     }
 
     void WindowSnapArea::on_update() {
@@ -26,7 +26,7 @@ namespace Birdy3d {
             rearrange_windows();
     }
 
-    void WindowSnapArea::on_click_raw(const InputClickEvent& event) {
+    void WindowSnapArea::on_click_raw(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_RELEASE)
             return;
 
@@ -35,7 +35,7 @@ namespace Birdy3d {
         if (!focused_window || !focused_window->dragged())
             return;
 
-        if (m_background_rect->contains(Input::cursor_pos() - m_actual_pos) && !Input::key_pressed(GLFW_KEY_LEFT_SHIFT)) {
+        if (m_background_rect->contains(core::Input::cursor_pos() - m_actual_pos) && !core::Input::key_pressed(GLFW_KEY_LEFT_SHIFT)) {
             std::vector<Window*>::iterator it;
             switch (mode) {
             case Mode::STACKING:
@@ -45,7 +45,7 @@ namespace Birdy3d {
             case Mode::HORIZONTAL:
                 if (std::find(m_windows.begin(), m_windows.end(), focused_window) == m_windows.end()) {
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
+                        if (core::Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -59,7 +59,7 @@ namespace Birdy3d {
                 } else {
                     m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), focused_window), m_windows.end());
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
+                        if (core::Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -68,7 +68,7 @@ namespace Birdy3d {
             case Mode::VERTICAL:
                 if (std::find(m_windows.begin(), m_windows.end(), focused_window) == m_windows.end()) {
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
+                        if (core::Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -82,7 +82,7 @@ namespace Birdy3d {
                 } else {
                     m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), focused_window), m_windows.end());
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
+                        if (core::Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -97,7 +97,7 @@ namespace Birdy3d {
         rearrange_windows();
     }
 
-    void WindowSnapArea::on_resize_raw(const WindowResizeEvent&) {
+    void WindowSnapArea::on_resize_raw(const events::WindowResizeEvent&) {
         rearrange_windows();
     }
 
@@ -123,7 +123,7 @@ namespace Birdy3d {
             case Mode::STACKING:
                 window->pos = m_actual_pos;
                 window->size = new_size;
-                new_size.y -= Application::theme().line_height();
+                new_size.y -= core::Application::theme().line_height();
                 break;
             case Mode::HORIZONTAL: {
                 if (focused_window && (focused_window->resizing_left() || focused_window->resizing_right())) {

@@ -6,7 +6,7 @@
 #include "events/TransformChangedEvent.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Birdy3d {
+namespace Birdy3d::ecs {
 
     Transform3d::Transform3d(Entity* entity)
         : m_entity(entity) { }
@@ -25,7 +25,7 @@ namespace Birdy3d {
             m_old_orientation = orientation;
             m_old_scale = scale;
             // Send event
-            Application::event_bus->emit<TransformChangedEvent>(m_entity);
+            core::Application::event_bus->emit<events::TransformChangedEvent>(m_entity);
         }
         if (changed) {
             // Update matrix

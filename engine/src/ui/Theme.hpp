@@ -5,7 +5,7 @@
 #include "utils/Color.hpp"
 #include "utils/serializer/Adapter.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class TextRenderer;
 
@@ -13,21 +13,21 @@ namespace Birdy3d {
     public:
         Theme(const std::string& file_content);
         TextRenderer& text_renderer();
-        Color color(Color::Name) const;
+        utils::Color color(utils::Color::Name) const;
         std::string font() const;
         int font_size() const;
         int line_height() const;
         void serialize(serializer::Adapter&);
 
     private:
-        std::array<Color, 16> m_termcolors;
-        Color m_color_fg;
-        Color m_color_bg;
-        Color m_color_border;
-        Color m_color_bg_title_bar;
-        Color m_color_bg_input;
-        Color m_color_bg_selected;
-        Color m_color_text_highlight;
+        std::array<utils::Color, 16> m_termcolors;
+        utils::Color m_color_fg;
+        utils::Color m_color_bg;
+        utils::Color m_color_border;
+        utils::Color m_color_bg_title_bar;
+        utils::Color m_color_bg_input;
+        utils::Color m_color_bg_selected;
+        utils::Color m_color_text_highlight;
 
         std::string m_font;
         int m_font_size;

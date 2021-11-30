@@ -3,12 +3,12 @@
 #include "core/Input.hpp"
 #include "ui/Rectangle.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     ScrollView::ScrollView(UIVector pos, UIVector size, Placement placement, std::string name)
         : Widget(pos, size, placement, name) {
-        m_scrollbar_background = add_filled_rectangle(0_px, UIVector(10_px, 100_p), Color::Name::BG, Placement::TOP_RIGHT);
-        m_scrollbar_bar = add_filled_rectangle(0_px, UIVector(10_px, 100_p), Color::Name::FG, Placement::TOP_RIGHT);
+        m_scrollbar_background = add_filled_rectangle(0_px, UIVector(10_px, 100_p), utils::Color::Name::BG, Placement::TOP_RIGHT);
+        m_scrollbar_bar = add_filled_rectangle(0_px, UIVector(10_px, 100_p), utils::Color::Name::FG, Placement::TOP_RIGHT);
         m_padding = glm::vec4(0, 10, 0, 0);
     }
 
@@ -52,7 +52,7 @@ namespace Birdy3d {
             on_resize();
     }
 
-    void ScrollView::on_scroll(const InputScrollEvent& event) {
+    void ScrollView::on_scroll(const events::InputScrollEvent& event) {
         int acceleration = 10;
         m_scroll_offset.x -= event.xoffset * acceleration;
         m_scroll_offset.y -= event.yoffset * acceleration;
@@ -61,10 +61,10 @@ namespace Birdy3d {
     }
 
     // FIXME: on_click is not called if the ScrollView is also scrolled horizontally
-    void ScrollView::on_click(const InputClickEvent& event) {
+    void ScrollView::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
-        if (event.action == GLFW_PRESS && m_scrollbar_bar->contains(Input::cursor_pos() - m_actual_pos)) {
+        if (event.action == GLFW_PRESS && m_scrollbar_bar->contains(core::Input::cursor_pos() - m_actual_pos)) {
             m_scrollbar_grabbed = true;
             grab_cursor();
         } else if (m_scrollbar_grabbed) {
@@ -75,7 +75,7 @@ namespace Birdy3d {
 
     void ScrollView::on_update() {
         if (m_scrollbar_grabbed) {
-            m_scroll_offset.y -= Input::cursor_pos_offset().y * (m_content_size.y / m_actual_size.y);
+            m_scroll_offset.y -= core::Input::cursor_pos_offset().y * (m_content_size.y / m_actual_size.y);
             check_scroll_bounds();
         }
         Widget::on_update();

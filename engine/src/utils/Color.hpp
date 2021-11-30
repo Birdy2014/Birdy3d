@@ -3,7 +3,7 @@
 #include "core/Base.hpp"
 #include "utils/serializer/Adapter.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::utils {
 
     class Color {
     public:
@@ -57,14 +57,14 @@ namespace Birdy3d {
         void b(float v) { value.b = v; }
     };
 
-    namespace serializer {
+}
 
-        template <>
-        std::unique_ptr<Value> adapter_save(Color&);
+namespace Birdy3d::serializer {
 
-        template <>
-        void adapter_load(Value*, Color&);
+    template <>
+    std::unique_ptr<Value> adapter_save(utils::Color&);
 
-    }
+    template <>
+    void adapter_load(Value*, utils::Color&);
 
 }
