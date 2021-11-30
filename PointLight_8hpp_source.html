@@ -92,32 +92,31 @@ $(document).ready(function(){initNavTree('PointLight_8hpp_source.html',''); init
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;render/Light.hpp&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span>Birdy3d {</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span>Birdy3d::render {</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1PointLight.html">    7</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1PointLight.html">PointLight</a> : <span class="keyword">public</span> <a class="code hl_class" href="classBirdy3d_1_1Light.html">Light</a> {</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1render_1_1PointLight.html">    7</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1render_1_1PointLight.html">PointLight</a> : <span class="keyword">public</span> <a class="code hl_class" href="classBirdy3d_1_1render_1_1Light.html">Light</a> {</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        glm::vec3 ambient;</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        glm::vec3 diffuse;</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <span class="keywordtype">float</span> linear;</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordtype">float</span> quadratic;</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <a class="code hl_class" href="classBirdy3d_1_1PointLight.html">PointLight</a>(glm::vec3 ambient = glm::vec3(0), glm::vec3 diffuse = glm::vec3(0), <span class="keywordtype">float</span> linear = 0, <span class="keywordtype">float</span> quadratic = 0, <span class="keywordtype">bool</span> shadow_enabled = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1PointLight.html">PointLight</a>(glm::vec3 ambient = glm::vec3(0), glm::vec3 diffuse = glm::vec3(0), <span class="keywordtype">float</span> linear = 0, <span class="keywordtype">float</span> quadratic = 0, <span class="keywordtype">bool</span> shadow_enabled = <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keywordtype">void</span> setup_shadow_map() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordtype">void</span> gen_shadow_map() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordtype">void</span> use(<span class="keyword">const</span> <a class="code hl_class" href="classBirdy3d_1_1Shader.html">Shader</a>&amp; lightShader, <span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> textureid) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordtype">void</span> use(<span class="keyword">const</span> <a class="code hl_class" href="classBirdy3d_1_1render_1_1Shader.html">Shader</a>&amp; lightShader, <span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> textureid) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keywordtype">void</span> serialize(<a class="code hl_class" href="classBirdy3d_1_1serializer_1_1Adapter.html">serializer::Adapter</a>&amp;) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordtype">float</span> m_far = 25.0f;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(<a class="code hl_class" href="classBirdy3d_1_1Component.html">Component</a>, <a class="code hl_class" href="classBirdy3d_1_1PointLight.html">PointLight</a>);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, <a class="code hl_class" href="classBirdy3d_1_1render_1_1PointLight.html">PointLight</a>);</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    };</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}</div>
-<div class="ttc" id="aclassBirdy3d_1_1Component_html"><div class="ttname"><a href="classBirdy3d_1_1Component.html">Birdy3d::Component</a></div><div class="ttdef"><b>Definition:</b> Component.hpp:10</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1Light_html"><div class="ttname"><a href="classBirdy3d_1_1Light.html">Birdy3d::Light</a></div><div class="ttdef"><b>Definition:</b> Light.hpp:10</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1PointLight_html"><div class="ttname"><a href="classBirdy3d_1_1PointLight.html">Birdy3d::PointLight</a></div><div class="ttdef"><b>Definition:</b> PointLight.hpp:7</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1Shader_html"><div class="ttname"><a href="classBirdy3d_1_1Shader.html">Birdy3d::Shader</a></div><div class="ttdef"><b>Definition:</b> Shader.hpp:7</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1render_1_1Light_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Light.html">Birdy3d::render::Light</a></div><div class="ttdef"><b>Definition:</b> Light.hpp:9</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1render_1_1PointLight_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1PointLight.html">Birdy3d::render::PointLight</a></div><div class="ttdef"><b>Definition:</b> PointLight.hpp:7</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1render_1_1Shader_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Shader.html">Birdy3d::render::Shader</a></div><div class="ttdef"><b>Definition:</b> Shader.hpp:7</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Adapter_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Adapter.html">Birdy3d::serializer::Adapter</a></div><div class="ttdef"><b>Definition:</b> Adapter.hpp:70</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -94,12 +94,12 @@ $(document).ready(function(){initNavTree('Rectangle_8hpp_source.html',''); initR
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;glad/glad.h&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span>Birdy3d {</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span>Birdy3d::ui {</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1Rectangle.html">    9</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1Rectangle.html">Rectangle</a> : <span class="keyword">public</span> <a class="code hl_class" href="classBirdy3d_1_1Shape.html">Shape</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1ui_1_1Rectangle.html">    9</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a> : <span class="keyword">public</span> <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Shape.html">Shape</a> {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <a class="code hl_class" href="classBirdy3d_1_1Rectangle.html">Rectangle</a>(<a class="code hl_class" href="classBirdy3d_1_1UIVector.html">UIVector</a> pos, <a class="code hl_class" href="classBirdy3d_1_1UIVector.html">UIVector</a> size, Color::Name color = Color::Name::WHITE, Type type = FILLED, Placement placement = Placement::BOTTOM_LEFT);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <a class="code hl_class" href="classBirdy3d_1_1Rectangle.html">~Rectangle</a>();</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a>(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> pos, <a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> size, utils::Color::Name color = utils::Color::Name::WHITE, Type type = FILLED, Placement placement = Placement::BOTTOM_LEFT);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Rectangle.html">~Rectangle</a>();</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="keywordtype">void</span> draw(glm::mat4 move) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keywordtype">bool</span> contains(glm::vec2 point) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
@@ -109,9 +109,9 @@ $(document).ready(function(){initNavTree('Rectangle_8hpp_source.html',''); initR
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    };</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
-<div class="ttc" id="aclassBirdy3d_1_1Rectangle_html"><div class="ttname"><a href="classBirdy3d_1_1Rectangle.html">Birdy3d::Rectangle</a></div><div class="ttdef"><b>Definition:</b> Rectangle.hpp:9</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1Shape_html"><div class="ttname"><a href="classBirdy3d_1_1Shape.html">Birdy3d::Shape</a></div><div class="ttdef"><b>Definition:</b> Shape.hpp:13</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1UIVector_html"><div class="ttname"><a href="classBirdy3d_1_1UIVector.html">Birdy3d::UIVector</a></div><div class="ttdef"><b>Definition:</b> Units.hpp:63</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Rectangle_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Rectangle.html">Birdy3d::ui::Rectangle</a></div><div class="ttdef"><b>Definition:</b> Rectangle.hpp:9</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Shape_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Shape.html">Birdy3d::ui::Shape</a></div><div class="ttdef"><b>Definition:</b> Shape.hpp:12</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1UIVector_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1UIVector.html">Birdy3d::ui::UIVector</a></div><div class="ttdef"><b>Definition:</b> Units.hpp:63</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

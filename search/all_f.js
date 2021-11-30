@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['read_5ffile_0',['read_file',['../classBirdy3d_1_1ResourceManager.html#aa9121a93f021b785809561a1d96f5350',1,'Birdy3d::ResourceManager']]],
-  ['rectangle_1',['Rectangle',['../classBirdy3d_1_1Rectangle.html',1,'Birdy3d']]],
-  ['register_5fcommand_2',['register_command',['../classBirdy3d_1_1Console.html#a05fd6763138036e3d98b1ddb833c0922',1,'Birdy3d::Console']]],
-  ['resourcemanager_3',['ResourceManager',['../classBirdy3d_1_1ResourceManager.html',1,'Birdy3d']]]
+  ['read_5ffile_0',['read_file',['../classBirdy3d_1_1core_1_1ResourceManager.html#a40d43c76ca3d4f679ba11477832777d3',1,'Birdy3d::core::ResourceManager']]],
+  ['rectangle_1',['Rectangle',['../classBirdy3d_1_1ui_1_1Rectangle.html',1,'Birdy3d::ui']]],
+  ['register_5fcommand_2',['register_command',['../classBirdy3d_1_1ui_1_1Console.html#aa5ecc4e042fb0ec5f383b16c2d644ea4',1,'Birdy3d::ui::Console']]],
+  ['resourcemanager_3',['ResourceManager',['../classBirdy3d_1_1core_1_1ResourceManager.html',1,'Birdy3d::core']]]
 ];
