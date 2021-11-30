@@ -12,7 +12,7 @@
 #include <string>
 #include <typeindex>
 
-namespace Birdy3d {
+namespace Birdy3d::events {
 
     class EventBus;
 

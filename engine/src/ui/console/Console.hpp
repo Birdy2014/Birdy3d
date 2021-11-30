@@ -2,7 +2,7 @@
 
 #include "ui/Widget.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class Window;
     class Textarea;
@@ -23,14 +23,14 @@ namespace Birdy3d {
          * @param text The text to print.
          * @param color The color in which the text is printed. NONE won't change the color.
          */
-        static void print(const std::string&, Color::Name = Color::Name::NONE);
+        static void print(const std::string&, utils::Color::Name = utils::Color::Name::NONE);
 
         /**
          * @brief Prints line of text to the console.
          * @param text The text to print.
          * @param color The color in which the text is printed. NONE won't change the color. The color will be reset to FG after the line is printed.
          */
-        static void println(const std::string&, Color::Name = Color::Name::NONE);
+        static void println(const std::string&, utils::Color::Name = utils::Color::Name::NONE);
 
         /**
          * @brief Executes a command in the console and prints the command.

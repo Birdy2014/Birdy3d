@@ -6,9 +6,9 @@
 #include "render/Material.hpp"
 #include "render/Model.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
-    class ModelComponent : public Component {
+    class ModelComponent : public ecs::Component {
     public:
         std::shared_ptr<Material> material;
 
@@ -25,7 +25,7 @@ namespace Birdy3d {
         std::string m_model_name;
         std::shared_ptr<Model> m_model;
 
-        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, ModelComponent);
+        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(ecs::Component, ModelComponent);
     };
 
 }

@@ -8,7 +8,7 @@
 #include "ui/widgets/Textarea.hpp"
 #include <numeric>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     std::map<std::string, CommandCallback> Console::m_commands;
     std::shared_ptr<Window> Console::m_console_window;
@@ -48,25 +48,25 @@ namespace Birdy3d {
         exec(input);
     }
 
-    void Console::print(const std::string& text, Color::Name color) {
+    void Console::print(const std::string& text, utils::Color::Name color) {
         if (!m_created)
             return;
 
         std::string color_string;
-        if (color != Color::Name::NONE) {
+        if (color != utils::Color::Name::NONE) {
             color_string = '\x1B';
             color_string += (char32_t)color;
         }
         m_console_output->append(color_string + text);
     }
 
-    void Console::println(const std::string& text, Color::Name color) {
+    void Console::println(const std::string& text, utils::Color::Name color) {
         if (!m_created)
             return;
 
         print(text, color);
-        if (color != Color::Name::NONE)
-            print("\n", Color::Name::FG);
+        if (color != utils::Color::Name::NONE)
+            print("\n", utils::Color::Name::FG);
         else
             print("\n");
         m_console_output->scroll_down();
@@ -126,11 +126,11 @@ namespace Birdy3d {
         });
 
         Console::register_command("console.warn", [](std::vector<std::string> args) {
-            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), Color::Name::YELLOW);
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), utils::Color::Name::YELLOW);
         });
 
         Console::register_command("console.error", [](std::vector<std::string> args) {
-            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), Color::Name::RED);
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), utils::Color::Name::RED);
         });
 
         Console::register_command("console.clear", [](std::vector<std::string>) {

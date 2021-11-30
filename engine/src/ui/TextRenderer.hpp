@@ -11,7 +11,7 @@
 typedef struct FT_LibraryRec_* FT_Library;
 typedef struct FT_FaceRec_* FT_Face;
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class Rectangle;
     class Text;
@@ -29,8 +29,8 @@ namespace Birdy3d {
     public:
         TextRenderer(Theme&);
         ~TextRenderer();
-        void render_text(std::string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
-        void render_text(std::u32string text, float x, float y, float font_size, Color::Name color = Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, Color::Name hlcolor = Color::Name::TEXT_HIGHLIGHT);
+        void render_text(std::string text, float x, float y, float font_size, utils::Color::Name color = utils::Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, utils::Color::Name hlcolor = utils::Color::Name::TEXT_HIGHLIGHT);
+        void render_text(std::u32string text, float x, float y, float font_size, utils::Color::Name color = utils::Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, utils::Color::Name hlcolor = utils::Color::Name::TEXT_HIGHLIGHT);
         UIVector text_size(std::string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
         UIVector text_size(std::u32string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
         float char_width(char32_t c, float font_size = 0);
@@ -52,14 +52,14 @@ namespace Birdy3d {
         glm::ivec2 m_texture_atlas_current_pos;
 
         bool add_char(char32_t c);
-        Color::Name parse_color_escape(char32_t);
+        utils::Color::Name parse_color_escape(char32_t);
     };
 
     class Text : public Shape {
     public:
         float font_size;
 
-        Text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size = 0);
+        Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size = 0);
         ~Text();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
@@ -71,7 +71,7 @@ namespace Birdy3d {
     private:
         std::u32string m_text;
         GLuint m_vao, m_vbo, m_ebo;
-        std::shared_ptr<Shader> m_shader;
+        std::shared_ptr<render::Shader> m_shader;
 
         // Buffer size is smaller than text_length if the text contains escape characters.
         std::size_t m_text_length = 0;

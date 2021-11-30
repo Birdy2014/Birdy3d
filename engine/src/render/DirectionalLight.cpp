@@ -8,7 +8,7 @@
 #include "render/Shader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, bool shadow_enabled)
         : Light(shadow_enabled)
@@ -18,7 +18,7 @@ namespace Birdy3d {
     }
 
     void DirectionalLight::setup_shadow_map() {
-        m_depthShader = ResourceManager::get_shader("directional_light_depth");
+        m_depthShader = core::ResourceManager::get_shader("directional_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map
@@ -83,7 +83,7 @@ namespace Birdy3d {
         // reset framebuffer and viewport
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, viewport[2], viewport[3]);
-        //glClear(GL_DEPTH_BUFFER_BIT);
+        // glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_BACK);
     }
 
@@ -94,6 +94,6 @@ namespace Birdy3d {
         adapter("cam_offset", m_cam_offset);
     }
 
-    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, DirectionalLight);
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, DirectionalLight);
 
 }

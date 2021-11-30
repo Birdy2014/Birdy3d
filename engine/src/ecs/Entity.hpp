@@ -5,10 +5,7 @@
 #include "ecs/Transform.hpp"
 #include "utils/serializer/Adapter.hpp"
 
-namespace Birdy3d {
-
-    class Scene;
-    class Shader;
+namespace Birdy3d::ecs {
 
     class Entity {
     public:

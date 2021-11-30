@@ -18,29 +18,29 @@
     #include <windows.h>
 #endif
 
-namespace Birdy3d {
+namespace Birdy3d::core {
 
-    std::unordered_map<std::string, std::shared_ptr<Shader>> ResourceManager::m_shaders;
-    std::unordered_map<std::string, std::shared_ptr<Theme>> ResourceManager::m_themes;
-    std::unordered_map<std::string, std::shared_ptr<Model>> ResourceManager::m_models;
-    std::unordered_map<std::string, std::shared_ptr<Texture>> ResourceManager::m_textures;
+    std::unordered_map<std::string, std::shared_ptr<render::Shader>> ResourceManager::m_shaders;
+    std::unordered_map<std::string, std::shared_ptr<ui::Theme>> ResourceManager::m_themes;
+    std::unordered_map<std::string, std::shared_ptr<render::Model>> ResourceManager::m_models;
+    std::unordered_map<std::string, std::shared_ptr<render::Texture>> ResourceManager::m_textures;
 
     void ResourceManager::init() {
         std::string base_path = get_executable_dir() + "../resources/";
         std::filesystem::current_path(base_path);
     }
 
-    std::shared_ptr<Shader> ResourceManager::get_shader(const std::string& name) {
-        std::shared_ptr<Shader> shader = m_shaders[name];
+    std::shared_ptr<render::Shader> ResourceManager::get_shader(const std::string& name) {
+        std::shared_ptr<render::Shader> shader = m_shaders[name];
         if (!shader) {
-            shader = std::make_shared<Shader>(name);
+            shader = std::make_shared<render::Shader>(name);
             m_shaders[name] = shader;
         }
         return shader;
     }
 
-    std::shared_ptr<Theme> ResourceManager::get_theme(const std::string& name) {
-        std::shared_ptr<Theme> theme = m_themes[name];
+    std::shared_ptr<ui::Theme> ResourceManager::get_theme(const std::string& name) {
+        std::shared_ptr<ui::Theme> theme = m_themes[name];
         if (!theme) {
             std::string path = get_resource_path(name, ResourceType::THEME);
             if (path.empty())
@@ -49,7 +49,7 @@ namespace Birdy3d {
             if (file_content.empty())
                 return nullptr;
             try {
-                theme = std::make_shared<Theme>(file_content);
+                theme = std::make_shared<ui::Theme>(file_content);
             } catch (std::exception e) {
                 return nullptr;
             }
@@ -58,8 +58,8 @@ namespace Birdy3d {
         return theme;
     }
 
-    std::shared_ptr<Model> ResourceManager::get_model(const std::string& name) {
-        std::shared_ptr<Model> model = m_models[name];
+    std::shared_ptr<render::Model> ResourceManager::get_model(const std::string& name) {
+        std::shared_ptr<render::Model> model = m_models[name];
         if (!model) {
             // TODO: generalize for all resources
             std::string prefix_primitive = "primitive::";
@@ -74,41 +74,41 @@ namespace Birdy3d {
                     arg = rest.substr(arg_separator_pos + 1);
                 }
                 if (primitive_type == "plane")
-                    model = PrimitiveGenerator::generate_plane();
+                    model = utils::PrimitiveGenerator::generate_plane();
                 else if (primitive_type == "cube")
-                    model = PrimitiveGenerator::generate_cube();
+                    model = utils::PrimitiveGenerator::generate_cube();
                 else if (primitive_type == "uv_sphere")
-                    model = PrimitiveGenerator::generate_uv_sphere(std::stoi(arg));
+                    model = utils::PrimitiveGenerator::generate_uv_sphere(std::stoi(arg));
                 else if (primitive_type == "ico_sphere")
-                    model = PrimitiveGenerator::generate_ico_sphere(std::stoi(arg));
+                    model = utils::PrimitiveGenerator::generate_ico_sphere(std::stoi(arg));
                 else
                     Logger::error("invalid primitive type");
             } else {
                 std::string path = get_resource_path(name, ResourceType::MODEL);
-                model = std::make_shared<Model>(path);
+                model = std::make_shared<render::Model>(path);
             }
             m_models[name] = model;
         }
         return model;
     }
 
-    std::shared_ptr<Texture> ResourceManager::get_texture(const std::string& name) {
-        std::shared_ptr<Texture> texture = m_textures[name];
+    std::shared_ptr<render::Texture> ResourceManager::get_texture(const std::string& name) {
+        std::shared_ptr<render::Texture> texture = m_textures[name];
         if (!texture) {
             std::string prefix_color = "color::";
             if (name.starts_with(prefix_color)) {
-                Color color = name.substr(prefix_color.length());
-                texture = std::make_shared<Texture>(color);
+                utils::Color color = name.substr(prefix_color.length());
+                texture = std::make_shared<render::Texture>(color);
             } else {
                 std::string path = get_resource_path(name, ResourceType::TEXTURE);
-                texture = std::make_shared<Texture>(path);
+                texture = std::make_shared<render::Texture>(path);
             }
             m_textures[name] = texture;
         }
         return texture;
     }
 
-    std::shared_ptr<Texture> ResourceManager::get_color_texture(const Color& color) {
+    std::shared_ptr<render::Texture> ResourceManager::get_color_texture(const utils::Color& color) {
         return get_texture("color::" + color.to_string());
     }
 

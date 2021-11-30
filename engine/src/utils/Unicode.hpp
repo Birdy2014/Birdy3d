@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Birdy3d {
+namespace Birdy3d::utils {
 
     class Unicode {
     public:

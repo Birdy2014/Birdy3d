@@ -8,7 +8,7 @@
 #include "ui/Theme.hpp"
 #include "ui/Triangle.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     Widget::Widget(UIVector pos, UIVector size, Placement placement, std::string name)
         : name(name)
@@ -16,35 +16,35 @@ namespace Birdy3d {
         , size(size)
         , placement(placement) { }
 
-    Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
+    Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::OUTLINE, placement);
         Rectangle* ptr = rectangle.get();
         m_shapes.push_back(std::move(rectangle));
         return ptr;
     }
 
-    Rectangle* Widget::add_filled_rectangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
+    Rectangle* Widget::add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::FILLED, placement);
         Rectangle* ptr = rectangle.get();
         m_shapes.push_back(std::move(rectangle));
         return ptr;
     }
 
-    Triangle* Widget::add_triangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
+    Triangle* Widget::add_triangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::OUTLINE, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
     }
 
-    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, Color::Name color, Placement placement) {
+    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::FILLED, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
     }
 
-    Text* Widget::add_text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size) {
+    Text* Widget::add_text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size) {
         std::unique_ptr<Text> shape = std::make_unique<Text>(pos, text, color, placement, font_size);
         Text* ptr = shape.get();
         m_shapes.push_back(std::move(shape));
@@ -161,7 +161,7 @@ namespace Birdy3d {
         if (hidden)
             hover = false;
         if (hover) {
-            if (contains(Input::cursor_pos())) {
+            if (contains(core::Input::cursor_pos())) {
                 canvas->m_hovering_widget = this;
                 return true;
             }
@@ -213,22 +213,22 @@ namespace Birdy3d {
         m_children.splice(m_children.end(), m_children, element);
     }
 
-    void Widget::on_scroll(const InputScrollEvent& event) {
+    void Widget::on_scroll(const events::InputScrollEvent& event) {
         if (parent)
             parent->on_scroll(event);
     }
 
-    void Widget::on_click(const InputClickEvent& event) {
+    void Widget::on_click(const events::InputClickEvent& event) {
         if (parent)
             parent->on_click(event);
     }
 
-    void Widget::on_key(const InputKeyEvent& event) {
+    void Widget::on_key(const events::InputKeyEvent& event) {
         if (parent)
             parent->on_key(event);
     }
 
-    void Widget::on_char(const InputCharEvent& event) {
+    void Widget::on_char(const events::InputCharEvent& event) {
         if (parent)
             parent->on_char(event);
     }

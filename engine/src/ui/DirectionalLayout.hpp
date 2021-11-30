@@ -2,7 +2,7 @@
 
 #include "ui/Layout.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class DirectionalLayout : public Layout {
     public:

@@ -1,10 +1,9 @@
 #pragma once
 
+#include "physics/Forward.hpp"
 #include <glm/glm.hpp>
 
-namespace Birdy3d {
-
-    class Collider;
+namespace Birdy3d::physics {
 
     class CollisionPoints {
     public:

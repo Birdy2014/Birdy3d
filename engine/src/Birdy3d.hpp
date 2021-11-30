@@ -64,3 +64,12 @@
 #include "utils/FPPlayerController.hpp"
 #include "utils/PrimitiveGenerator.hpp"
 #include "utils/serializer/Serializer.hpp"
+
+// Namespaces
+using namespace Birdy3d::core;
+using namespace Birdy3d::ecs;
+using namespace Birdy3d::events;
+using namespace Birdy3d::physics;
+using namespace Birdy3d::render;
+using namespace Birdy3d::ui;
+using namespace Birdy3d::utils;

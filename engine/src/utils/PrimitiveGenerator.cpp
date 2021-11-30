@@ -5,15 +5,15 @@
 #include "render/Model.hpp"
 #include <numbers>
 
-namespace Birdy3d {
+namespace Birdy3d::utils {
 
-    std::shared_ptr<Model> PrimitiveGenerator::generate_plane() {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_plane() {
         // clang-format off
-        std::vector<Vertex> vertices = {
-            Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+        std::vector<render::Vertex> vertices = {
+            render::Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
         };
         std::vector<unsigned int> indices = {
             0, 1, 2,
@@ -21,42 +21,42 @@ namespace Birdy3d {
         };
         // clang-format on
 
-        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(vertices, indices);
-        return std::make_shared<Model>(std::move(mesh));
+        std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
+        return std::make_shared<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<Model> PrimitiveGenerator::generate_cube() {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_cube() {
         // clang-format off
-        std::vector<Vertex> vertices = {
-            Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+        std::vector<render::Vertex> vertices = {
+            render::Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
 
-            Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.625f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.375f, 0.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.375f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.625f, 0.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.625f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.375f, 0.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.375f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec2(0.625f, 0.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
 
-            Vertex { glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.375f, 0.50f), glm::vec3( 1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.125f, 0.25f), glm::vec3( 1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.125f, 0.50f), glm::vec3( 1.0f, 0.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.375f, 0.25f), glm::vec3( 1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.375f, 0.50f), glm::vec3( 1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.125f, 0.25f), glm::vec3( 1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.125f, 0.50f), glm::vec3( 1.0f, 0.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec2(0.375f, 0.25f), glm::vec3( 1.0f, 0.0f, 0.0f) },
 
-            Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 0.25f), glm::vec3( 0.0f, 1.0f, 0.0f) },
 
-            Vertex { glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.375f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.625f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.625f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.375f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.375f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.625f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.625f, 0.50f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec2(0.375f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
 
-            Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 1.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 1.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
-            Vertex { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 1.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.625f, 1.00f), glm::vec3( 0.0f, 1.0f, 0.0f) },
+            render::Vertex { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0.375f, 0.75f), glm::vec3( 0.0f, 1.0f, 0.0f) },
         };
         std::vector<unsigned int> indices = {
              0,  1,  2,
@@ -79,20 +79,20 @@ namespace Birdy3d {
         };
         // clang-format on
 
-        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(vertices, indices);
-        return std::make_shared<Model>(std::move(mesh));
+        std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
+        return std::make_shared<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<Model> PrimitiveGenerator::generate_uv_sphere(unsigned int resolution) {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_uv_sphere(unsigned int resolution) {
         int longitude_count = resolution;
         int latitude_count = resolution;
 
         if (longitude_count < 2 || latitude_count < 2) {
-            Logger::warn("Invalid uv_sphere resolution: longitude_count: ", longitude_count, " latitude_count: ", latitude_count);
+            core::Logger::warn("Invalid uv_sphere resolution: longitude_count: ", longitude_count, " latitude_count: ", latitude_count);
             return nullptr;
         }
 
-        std::vector<Vertex> vertices;
+        std::vector<render::Vertex> vertices;
         std::vector<unsigned int> indices;
 
         // Vertices
@@ -101,7 +101,7 @@ namespace Birdy3d {
 
         for (int lat = 0; lat <= latitude_count; lat++) {
             for (int lon = 0; lon <= longitude_count; lon++) {
-                Vertex v;
+                render::Vertex v;
                 v.position = glm::vec3(
                     cos(lon * longitude_step) * sin(lat * latitude_step),
                     cos(lat * latitude_step - std::numbers::pi),
@@ -149,11 +149,11 @@ namespace Birdy3d {
             indices.push_back(v + 1);
         }
 
-        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(vertices, indices);
-        return std::make_shared<Model>(std::move(mesh));
+        std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
+        return std::make_shared<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution [[maybe_unused]]) {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution [[maybe_unused]]) {
         // TODO: ico sphere primitive
         BIRDY3D_TODO
         return nullptr;

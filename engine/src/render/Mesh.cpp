@@ -5,7 +5,7 @@
 #include "render/Texture.hpp"
 #include "render/Vertex.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
         : vertices(vertices)

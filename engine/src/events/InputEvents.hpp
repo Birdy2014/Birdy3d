@@ -2,7 +2,7 @@
 
 #include "events/Event.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::events {
 
     class InputScrollEvent : public Event {
     public:

@@ -1,6 +1,6 @@
 #include "render/ModelComponent.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     ModelComponent::ModelComponent()
         : material(nullptr)
@@ -11,7 +11,7 @@ namespace Birdy3d {
         , m_model_name(name) { }
 
     void ModelComponent::start() {
-        m_model = ResourceManager::get_model(m_model_name);
+        m_model = core::ResourceManager::get_model(m_model_name);
     }
 
     void ModelComponent::serialize(serializer::Adapter& adapter) {
@@ -23,7 +23,7 @@ namespace Birdy3d {
         if (m_model)
             m_model->render(*entity, material.get(), shader, transparent);
         else
-            Logger::error("No model specified");
+            core::Logger::error("No model specified");
     }
 
     void ModelComponent::render_depth(const Shader& shader) const {
@@ -37,9 +37,9 @@ namespace Birdy3d {
 
     void ModelComponent::model(const std::string& name) {
         m_model_name = name;
-        m_model = ResourceManager::get_model(name);
+        m_model = core::ResourceManager::get_model(name);
     }
 
-    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, ModelComponent);
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, ModelComponent);
 
 }

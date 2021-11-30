@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <sstream>
 
-namespace Birdy3d {
+namespace Birdy3d::utils {
 
     Color::Color() {
         value = glm::vec4(0, 0, 0, 1);
@@ -57,7 +57,7 @@ namespace Birdy3d {
         } else if ((int)colorString.length() == 3 + has_hash) {
             color_length = 1;
         } else {
-            Logger::warn("Invalid color: ", colorString);
+            core::Logger::warn("Invalid color: ", colorString);
             return glm::vec4(1);
         }
 
@@ -74,20 +74,20 @@ namespace Birdy3d {
     Color const Color::WHITE = Color("#FFFFFFFF");
     Color const Color::BLACK = Color("#000000FF");
 
-    namespace serializer {
+}
 
-        template <>
-        std::unique_ptr<Value> adapter_save(Color& value) {
-            return std::make_unique<String>(value.to_string());
+namespace Birdy3d::serializer {
+
+    template <>
+    std::unique_ptr<Value> adapter_save(utils::Color& value) {
+        return std::make_unique<String>(value.to_string());
+    }
+
+    template <>
+    void adapter_load(Value* from, utils::Color& to) {
+        if (auto* string_ptr = from->as_string()) {
+            to = utils::Color::parse(string_ptr->value);
         }
-
-        template <>
-        void adapter_load(Value* from, Color& to) {
-            if (auto* string_ptr = from->as_string()) {
-                to = Color::parse(string_ptr->value);
-            }
-        }
-
     }
 
 }

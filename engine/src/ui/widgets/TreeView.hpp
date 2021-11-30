@@ -3,10 +3,9 @@
 #include "ui/Triangle.hpp"
 #include "ui/Widget.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class ContextMenu;
-    class Scene;
     class TreeView;
 
     class TreeItem {
@@ -38,7 +37,7 @@ namespace Birdy3d {
         virtual void draw() override;
         virtual glm::vec2 minimal_size() override;
         TreeItem& root_item() { return m_root_item; }
-        void sync_scene_tree(Scene*);
+        void sync_scene_tree(ecs::Scene*);
         void selected_item(TreeItem* item) { m_selected_item = item; }
 
     protected:
@@ -54,7 +53,7 @@ namespace Birdy3d {
         TreeItem* m_selected_item = nullptr;
 
         virtual void on_update() override;
-        virtual void on_click(const InputClickEvent& event) override;
+        virtual void on_click(const events::InputClickEvent& event) override;
 
         void update_flat_tree_list();
         void update_flat_tree_list(TreeItem& item, int indent);

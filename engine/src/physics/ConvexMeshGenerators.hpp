@@ -1,10 +1,9 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "render/Forward.hpp"
 
-namespace Birdy3d {
-
-    class Model;
+namespace Birdy3d::physics {
 
     enum class GenerationMode {
         NONE,
@@ -15,12 +14,12 @@ namespace Birdy3d {
 
     class ConvexMeshGenerators {
     public:
-        static std::shared_ptr<Model> generate_model(GenerationMode, const Model&);
+        static std::shared_ptr<render::Model> generate_model(GenerationMode, const render::Model&);
 
     private:
-        static std::shared_ptr<Model> copy(const Model&);
-        static std::shared_ptr<Model> hull(const Model&);
-        static std::shared_ptr<Model> decomposition(const Model&);
+        static std::shared_ptr<render::Model> copy(const render::Model&);
+        static std::shared_ptr<render::Model> hull(const render::Model&);
+        static std::shared_ptr<render::Model> decomposition(const render::Model&);
     };
 
 }

@@ -1,11 +1,10 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "ecs/Forward.hpp"
 #include "utils/serializer/Adapter.hpp"
 
-namespace Birdy3d {
-
-    class Entity;
+namespace Birdy3d::ecs {
 
     class Component {
     public:

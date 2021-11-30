@@ -11,10 +11,10 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     Model::Model(const std::string& path) {
-        Logger::debug("Loading model: ", path);
+        core::Logger::debug("Loading model: ", path);
         load(path);
         compute_bounding_box();
     }
@@ -29,7 +29,7 @@ namespace Birdy3d {
             m_meshes.push_back(std::move(mesh));
     }
 
-    void Model::render(Entity& entity, const Material* material, const Shader& shader, bool transparent) const {
+    void Model::render(ecs::Entity& entity, const Material* material, const Shader& shader, bool transparent) const {
         if (material == nullptr)
             material = &m_embedded_material;
         glm::mat4 model = entity.transform.matrix();
@@ -40,7 +40,7 @@ namespace Birdy3d {
         }
     }
 
-    void Model::render_depth(Entity& entity, const Shader& shader) const {
+    void Model::render_depth(ecs::Entity& entity, const Shader& shader) const {
         glm::mat4 model = entity.transform.matrix();
         shader.use();
         shader.set_mat4("model", model);
@@ -49,7 +49,7 @@ namespace Birdy3d {
         }
     }
 
-    void Model::render_wireframe(Entity& entity, const Shader& shader) const {
+    void Model::render_wireframe(ecs::Entity& entity, const Shader& shader) const {
         glm::mat4 model = entity.transform.matrix();
         shader.use();
         shader.set_mat4("model", model);
@@ -67,7 +67,7 @@ namespace Birdy3d {
         const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            Logger::critical("ASSIMP: ", importer.GetErrorString());
+            core::Logger::critical("ASSIMP: ", importer.GetErrorString());
             return;
         }
         m_directory = path.substr(0, path.find_last_of('/'));

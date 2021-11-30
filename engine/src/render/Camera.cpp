@@ -17,7 +17,7 @@
 #include <map>
 #include <random>
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     Camera::Camera()
         : m_width(1)
@@ -32,13 +32,13 @@ namespace Birdy3d {
     void Camera::start() {
         m_projection = glm::perspective(glm::radians(80.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
         create_gbuffer();
-        m_deferred_geometry_shader = ResourceManager::get_shader("geometry_buffer");
-        m_deferred_light_shader = ResourceManager::get_shader("deferred_lighting");
-        m_forward_shader = ResourceManager::get_shader("forward_lighting");
-        m_normal_shader = ResourceManager::get_shader("normal_display");
-        m_simple_color_shader = ResourceManager::get_shader("simple_color");
-        m_ssao_shader = ResourceManager::get_shader("ssao");
-        m_ssao_blur_shader = ResourceManager::get_shader("ssao_blur");
+        m_deferred_geometry_shader = core::ResourceManager::get_shader("geometry_buffer");
+        m_deferred_light_shader = core::ResourceManager::get_shader("deferred_lighting");
+        m_forward_shader = core::ResourceManager::get_shader("forward_lighting");
+        m_normal_shader = core::ResourceManager::get_shader("normal_display");
+        m_simple_color_shader = core::ResourceManager::get_shader("simple_color");
+        m_ssao_shader = core::ResourceManager::get_shader("ssao");
+        m_ssao_blur_shader = core::ResourceManager::get_shader("ssao_blur");
         m_deferred_light_shader->use();
         m_deferred_light_shader->set_int("gPosition", 0);
         m_deferred_light_shader->set_int("gNormal", 1);
@@ -165,7 +165,7 @@ namespace Birdy3d {
 
         // finally check if framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            Logger::critical("Framebuffer not complete!");
+            core::Logger::critical("Framebuffer not complete!");
 
         // SSAO
         glGenFramebuffers(1, &m_ssao_fbo);
@@ -393,7 +393,7 @@ namespace Birdy3d {
         }
     }
 
-    void Camera::render_outline(const Entity* selected_entity) {
+    void Camera::render_outline(const ecs::Entity* selected_entity) {
         if (selected_entity == nullptr)
             return;
 
@@ -489,7 +489,7 @@ namespace Birdy3d {
         m_simple_color_shader->use();
         m_simple_color_shader->set_mat4("projection", m_projection);
         m_simple_color_shader->set_mat4("view", view);
-        m_simple_color_shader->set_vec4("color", Color("#e0902180"));
+        m_simple_color_shader->set_vec4("color", utils::Color("#e0902180"));
         m_simple_color_shader->set_mat4("model", glm::mat4(1));
         glBindVertexArray(m_outline_vao);
         glDrawArrays(GL_LINES, 0, 24);
@@ -509,8 +509,8 @@ namespace Birdy3d {
         m_simple_color_shader->use();
         m_simple_color_shader->set_mat4("projection", m_projection);
         m_simple_color_shader->set_mat4("view", view);
-        m_simple_color_shader->set_vec4("color", Color("#00ff0080"));
-        for (auto c : entity->scene->get_components<Collider>(false, true)) {
+        m_simple_color_shader->set_vec4("color", utils::Color("#00ff0080"));
+        for (auto c : entity->scene->get_components<physics::Collider>(false, true)) {
             c->render_wireframe(*m_simple_color_shader);
         }
         glEnable(GL_CULL_FACE);
@@ -520,6 +520,6 @@ namespace Birdy3d {
         adapter("deferred", m_deferred_enabled);
     }
 
-    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, Camera);
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, Camera);
 
 }

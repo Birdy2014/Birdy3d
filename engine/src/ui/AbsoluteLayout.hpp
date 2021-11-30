@@ -3,7 +3,7 @@
 #include "ui/Layout.hpp"
 #include "ui/Widget.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class AbsoluteLayout : public Layout {
     public:

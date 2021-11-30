@@ -5,12 +5,12 @@
 #include "render/Texture.hpp"
 #include "utils/serializer/Adapter.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     class Material {
     public:
         bool diffuse_map_enabled = false;
-        Color diffuse_color = Color::WHITE;
+        utils::Color diffuse_color = utils::Color::WHITE;
         void diffuse_map(const std::string&);
 
         bool specular_map_enabled = false;
@@ -21,7 +21,7 @@ namespace Birdy3d {
         void normal_map(const std::string&);
 
         bool emissive_map_enabled = false;
-        Color emissive_color = Color::BLACK;
+        utils::Color emissive_color = utils::Color::BLACK;
         void emissive_map(const std::string&);
 
         void use(const Shader& shader) const;
@@ -31,13 +31,13 @@ namespace Birdy3d {
 
     private:
         std::string m_diffuse_map_name = "color::#ffffff";
-        std::shared_ptr<Texture> m_diffuse_map = ResourceManager::get_color_texture(Color::WHITE);
+        std::shared_ptr<Texture> m_diffuse_map = core::ResourceManager::get_color_texture(utils::Color::WHITE);
         std::string m_specular_map_name = "color::#000000";
-        std::shared_ptr<Texture> m_specular_map = ResourceManager::get_color_texture(Color::BLACK);
+        std::shared_ptr<Texture> m_specular_map = core::ResourceManager::get_color_texture(utils::Color::BLACK);
         std::string m_normal_map_name = "color::#ffffff";
-        std::shared_ptr<Texture> m_normal_map = ResourceManager::get_color_texture(Color::WHITE);
+        std::shared_ptr<Texture> m_normal_map = core::ResourceManager::get_color_texture(utils::Color::WHITE);
         std::string m_emissive_map_name = "color::#000000";
-        std::shared_ptr<Texture> m_emissive_map = ResourceManager::get_color_texture(Color::BLACK);
+        std::shared_ptr<Texture> m_emissive_map = core::ResourceManager::get_color_texture(utils::Color::BLACK);
 
         BIRDY3D_REGISTER_TYPE_DEC(Material);
     };

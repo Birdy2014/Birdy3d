@@ -1,21 +1,20 @@
 #pragma once
 
+#include "ecs/Forward.hpp"
+#include "physics/Forward.hpp"
 #include <memory>
 #include <vector>
 
-namespace Birdy3d {
-
-    class Entity;
-    class Collision;
+namespace Birdy3d::physics {
 
     class PhysicsWorld {
     public:
-        PhysicsWorld(Entity* scene);
+        PhysicsWorld(ecs::Entity* scene);
         ~PhysicsWorld();
         void update();
 
     private:
-        Entity* m_scene;
+        ecs::Entity* m_scene;
         std::vector<std::unique_ptr<Collision>> m_collisions;
     };
 

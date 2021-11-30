@@ -5,7 +5,7 @@
 #include "ui/AbsoluteLayout.hpp"
 #include "ui/Widget.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class Canvas : public Widget {
     public:
@@ -14,17 +14,17 @@ namespace Birdy3d {
         Canvas()
             : Widget(0_px, 100_p) {
             canvas = this;
-            Application::event_bus->subscribe(this, &Canvas::on_scroll_raw);
-            Application::event_bus->subscribe(this, &Canvas::on_click_raw);
-            Application::event_bus->subscribe(this, &Canvas::on_key_raw);
-            Application::event_bus->subscribe(this, &Canvas::on_char_raw);
+            core::Application::event_bus->subscribe(this, &Canvas::on_scroll_raw);
+            core::Application::event_bus->subscribe(this, &Canvas::on_click_raw);
+            core::Application::event_bus->subscribe(this, &Canvas::on_key_raw);
+            core::Application::event_bus->subscribe(this, &Canvas::on_char_raw);
             set_layout<AbsoluteLayout>();
         };
 
         void update() {
             if (!hidden) {
                 updated = true;
-                glm::vec2 viewport = Application::get_viewport_size();
+                glm::vec2 viewport = core::Application::get_viewport_size();
                 Widget::arrange(glm::vec2(0), viewport);
                 Widget::update_visible_area(glm::vec2(0), viewport);
                 if (!m_cursor_grabbed)
@@ -56,7 +56,7 @@ namespace Birdy3d {
         Widget* m_last_focused_widget = nullptr;
         bool m_cursor_grabbed = false;
 
-        void on_scroll_raw(const InputScrollEvent& event) {
+        void on_scroll_raw(const events::InputScrollEvent& event) {
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_scroll(event);
@@ -65,7 +65,7 @@ namespace Birdy3d {
             }
         }
 
-        void on_click_raw(const InputClickEvent& event) {
+        void on_click_raw(const events::InputClickEvent& event) {
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_click(event);
@@ -76,12 +76,12 @@ namespace Birdy3d {
             }
         }
 
-        void on_key_raw(const InputKeyEvent& event) {
+        void on_key_raw(const events::InputKeyEvent& event) {
             if (m_focused_widget && m_focused_widget != this)
                 m_focused_widget->on_key(event);
         }
 
-        void on_char_raw(const InputCharEvent& event) {
+        void on_char_raw(const events::InputCharEvent& event) {
             if (m_focused_widget && m_focused_widget != this)
                 m_focused_widget->on_char(event);
         }

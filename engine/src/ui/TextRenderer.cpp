@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include FT_FREETYPE_H
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     TextRenderer::~TextRenderer() {
         FT_Done_Face(*m_face);
@@ -22,17 +22,17 @@ namespace Birdy3d {
 
     TextRenderer::TextRenderer(Theme& theme)
         : m_theme(theme) {
-        std::string path = ResourceManager::get_resource_path(theme.font(), ResourceManager::ResourceType::FONT);
+        std::string path = core::ResourceManager::get_resource_path(theme.font(), core::ResourceManager::ResourceType::FONT);
         m_font_size = theme.font_size();
         m_ft = (FT_Library*)malloc(sizeof(FT_Library));
         m_face = (FT_Face*)malloc(sizeof(FT_Face));
         if (FT_Init_FreeType(m_ft))
-            Logger::critical("freetype: Could not init FreeType Library");
+            core::Logger::critical("freetype: Could not init FreeType Library");
         if (FT_New_Face(*m_ft, path.c_str(), 0, m_face))
             throw std::runtime_error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, m_font_size);
-        m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), Color::Name::FG, Rectangle::Type::FILLED);
-        m_text = std::make_unique<Text>(0_px, "", Color::Name::FG, Placement::BOTTOM_LEFT, m_font_size);
+        m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), utils::Color::Name::FG, Rectangle::Type::FILLED);
+        m_text = std::make_unique<Text>(0_px, "", utils::Color::Name::FG, Placement::BOTTOM_LEFT, m_font_size);
 
         // Setup texture atlas
         m_texture_atlas_size = glm::vec2(m_font_size * 10, m_font_size * 10);
@@ -54,12 +54,12 @@ namespace Birdy3d {
 
     bool TextRenderer::add_char(char32_t c) {
         if (FT_Load_Char(*m_face, c, FT_LOAD_RENDER)) {
-            Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
+            core::Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
             return false;
         }
         if (m_texture_atlas_current_pos.x + (*m_face)->glyph->bitmap.width > m_texture_atlas_size.x) {
             if (m_texture_atlas_current_pos.y + m_font_size > m_texture_atlas_size.y) {
-                Logger::warn("Failed to load glyph '", (unsigned)c, "': font texture atlas full");
+                core::Logger::warn("Failed to load glyph '", (unsigned)c, "': font texture atlas full");
                 return false;
             }
             m_texture_atlas_current_pos.x = 0;
@@ -81,12 +81,12 @@ namespace Birdy3d {
         return true;
     }
 
-    void TextRenderer::render_text(std::string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
-        std::u32string converted = Unicode::utf8_to_utf32(text);
+    void TextRenderer::render_text(std::string text, float x, float y, float font_size, utils::Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, utils::Color::Name hlcolor) {
+        std::u32string converted = utils::Unicode::utf8_to_utf32(text);
         render_text(converted, x, y, font_size, color, move, cursor, cursorpos, highlight, hlstart, hlend, hlcolor);
     }
 
-    void TextRenderer::render_text(std::u32string text, float x, float y, float font_size, Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, Color::Name hlcolor) {
+    void TextRenderer::render_text(std::u32string text, float x, float y, float font_size, utils::Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, utils::Color::Name hlcolor) {
         // Render text
         m_text->text_u32(text);
         m_text->position(UIVector(x, y));
@@ -131,7 +131,7 @@ namespace Birdy3d {
     }
 
     UIVector TextRenderer::text_size(std::string text, float font_size, std::size_t n) {
-        std::u32string converted = Unicode::utf8_to_utf32(text);
+        std::u32string converted = utils::Unicode::utf8_to_utf32(text);
         return text_size(converted, font_size, n);
     }
 
@@ -206,10 +206,10 @@ namespace Birdy3d {
         return index_escaped;
     }
 
-    Color::Name TextRenderer::parse_color_escape(char32_t c) {
+    utils::Color::Name TextRenderer::parse_color_escape(char32_t c) {
         if (c >= 16)
-            return Color::Name::NONE;
-        return (Color::Name)c;
+            return utils::Color::Name::NONE;
+        return (utils::Color::Name)c;
     }
 
     struct TextVertex {
@@ -223,11 +223,11 @@ namespace Birdy3d {
             , color(color) { }
     };
 
-    Text::Text(UIVector pos, std::string text, Color::Name color, Placement placement, float font_size)
+    Text::Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size)
         : Shape(pos, 0_px, color, placement)
         , font_size(font_size)
-        , m_shader(ResourceManager::get_shader("text")) {
-        m_text = Unicode::utf8_to_utf32(text);
+        , m_shader(core::ResourceManager::get_shader("text")) {
+        m_text = utils::Unicode::utf8_to_utf32(text);
         create_buffers();
         m_dirty = true;
     }
@@ -257,7 +257,7 @@ namespace Birdy3d {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Application::theme().text_renderer().m_texture_atlas);
+        glBindTexture(GL_TEXTURE_2D, core::Application::theme().text_renderer().m_texture_atlas);
         m_shader->use();
         m_shader->set_mat4("projection", projection());
         m_shader->set_mat4("move", move);
@@ -272,11 +272,11 @@ namespace Birdy3d {
     }
 
     std::string Text::text() {
-        return Unicode::utf32_to_utf8(m_text);
+        return utils::Unicode::utf32_to_utf8(m_text);
     }
 
     void Text::text(std::string value) {
-        m_text = Unicode::utf8_to_utf32(value);
+        m_text = utils::Unicode::utf8_to_utf32(value);
         m_dirty = true;
     }
 
@@ -328,7 +328,7 @@ namespace Birdy3d {
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_escaped_text_length * 6, 0, GL_STATIC_DRAW);
         }
         // Create data
-        TextRenderer& renderer = Application::theme().text_renderer();
+        TextRenderer& renderer = core::Application::theme().text_renderer();
         std::vector<TextVertex> vertices;
         std::vector<GLuint> indices;
         vertices.reserve(4 * m_escaped_text_length);
@@ -338,7 +338,7 @@ namespace Birdy3d {
         float scale = (font_size / renderer.m_font_size);
         float x = 0;
         float y = font_size / 5; // Offet between baseline and bottom
-        Color current_color = Application::theme().color(m_color);
+        utils::Color current_color = core::Application::theme().color(m_color);
         std::size_t index_escaped = 0;
         for (auto it = m_text.cbegin(); it != m_text.cend(); it++, index_escaped++) {
             if (*it == '\n') {
@@ -351,9 +351,9 @@ namespace Birdy3d {
                 it++; // Go to color
                 if (it == m_text.cend())
                     break;
-                Color::Name read_color = renderer.parse_color_escape(*it);
-                if (read_color != Color::Name::NONE)
-                    current_color = Application::theme().color(read_color);
+                utils::Color::Name read_color = renderer.parse_color_escape(*it);
+                if (read_color != utils::Color::Name::NONE)
+                    current_color = core::Application::theme().color(read_color);
                 index_escaped--; // Decrement escaped, because it will be incremented by continue
                 continue;
             }

@@ -3,7 +3,7 @@
 #include "core/Application.hpp"
 #include <glm/glm.hpp>
 
-namespace Birdy3d {
+namespace Birdy3d::core {
 
     class Input {
     public:

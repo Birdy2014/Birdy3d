@@ -1,15 +1,16 @@
 #include "ecs/Scene.hpp"
 
+#include "physics/PhysicsWorld.hpp"
 #include "render/Camera.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ecs {
 
     Scene::Scene(std::string name)
         : Entity(name) { }
 
     void Scene::start() {
         set_scene(this);
-        m_physics_world = std::make_unique<PhysicsWorld>(this);
+        m_physics_world = std::make_unique<physics::PhysicsWorld>(this);
         Entity::start();
     }
 

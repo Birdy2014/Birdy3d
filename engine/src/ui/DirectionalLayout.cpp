@@ -2,7 +2,7 @@
 
 #include "ui/Widget.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     DirectionalLayout::DirectionalLayout(Direction dir, float gap, bool preserve_child_size)
         : dir(dir)

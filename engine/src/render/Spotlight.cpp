@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
     Spotlight::Spotlight(glm::vec3 ambient, glm::vec3 diffuse, float innerCutOff, float outerCutOff, float linear, float quadratic, bool shadow_enabled)
         : Light(shadow_enabled)
@@ -20,7 +20,7 @@ namespace Birdy3d {
         , m_outerCutOff(outerCutOff) { }
 
     void Spotlight::setup_shadow_map() {
-        m_depthShader = ResourceManager::get_shader("directional_light_depth");
+        m_depthShader = core::ResourceManager::get_shader("directional_light_depth");
         // framebuffer
         glGenFramebuffers(1, &m_depthMapFBO);
         // shadow map
@@ -67,7 +67,7 @@ namespace Birdy3d {
         // reset framebuffer and viewport
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, viewport[2], viewport[3]);
-        //glClear(GL_DEPTH_BUFFER_BIT);
+        // glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_BACK);
     }
 
@@ -104,6 +104,6 @@ namespace Birdy3d {
         adapter("far", m_far);
     }
 
-    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(Component, Spotlight);
+    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, Spotlight);
 
 }

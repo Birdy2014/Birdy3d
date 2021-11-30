@@ -3,7 +3,7 @@
 #include "ui/Widget.hpp"
 #include <string>
 
-namespace Birdy3d {
+namespace Birdy3d::ui {
 
     class TextField : public Widget {
     public:
@@ -27,9 +27,9 @@ namespace Birdy3d {
 
         // Events
         virtual void on_update() override;
-        virtual void on_click(const InputClickEvent& event) override;
-        virtual void on_key(const InputKeyEvent& event) override;
-        virtual void on_char(const InputCharEvent& event) override;
+        virtual void on_click(const events::InputClickEvent& event) override;
+        virtual void on_key(const events::InputKeyEvent& event) override;
+        virtual void on_char(const events::InputCharEvent& event) override;
         virtual void on_mouse_enter() override;
         virtual void on_mouse_leave() override;
         virtual void on_focus_lost() override;

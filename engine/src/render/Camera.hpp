@@ -2,13 +2,11 @@
 
 #include "core/Base.hpp"
 #include "ecs/Component.hpp"
+#include "render/Forward.hpp"
 
-namespace Birdy3d {
+namespace Birdy3d::render {
 
-    class ModelComponent;
-    class Shader;
-
-    class Camera : public Component {
+    class Camera : public ecs::Component {
     public:
         bool display_normals = false;
 
@@ -17,7 +15,7 @@ namespace Birdy3d {
         void start() override;
         void cleanup() override;
         void render();
-        void render_outline(const Entity*);
+        void render_outline(const ecs::Entity*);
         void render_collider_wireframe();
         void resize(int width, int height);
         void serialize(serializer::Adapter&) override;
