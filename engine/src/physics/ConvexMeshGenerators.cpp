@@ -90,7 +90,6 @@ namespace Birdy3d {
     std::shared_ptr<Model> ConvexMeshGenerators::hull(const Model& model) {
         std::vector<glm::vec3> visited;
         std::vector<std::unique_ptr<Triangle>> triangles;
-        triangles.reserve(200); // FIXME: When reallocating the vector, the unique pointers are deleted.
         auto add_triangle = [&triangles](glm::vec3 a, glm::vec3 b, glm::vec3 c) -> Triangle* {
             auto tri = std::make_unique<Triangle>(a, b, c);
             auto ptr = tri.get();
@@ -157,12 +156,12 @@ namespace Birdy3d {
             bool done = false;
             while (!done) {
                 done = true;
-                for (std::size_t i = 0; i < triangles.size(); ++i) {
+                for (auto it = triangles.begin(); it != triangles.end(); it++) {
                     // For debugging
                     if (visited.size() > limit)
                         break;
 
-                    glm::vec3 normal = triangles[i]->normal();
+                    glm::vec3 normal = (*it)->normal();
                     glm::vec3 furthest = mesh->find_furthest_point(normal);
                     if (std::find(visited.cbegin(), visited.cend(), furthest) != visited.cend()) {
                         /*
@@ -183,7 +182,7 @@ namespace Birdy3d {
                     done = false;
                     visited.push_back(furthest);
                     // Remove current triangle
-                    erase_triangle(triangles.begin() + i);
+                    erase_triangle(it);
                     // Remove triangles that are facing in the wrong direction
                     for (auto it = triangles.begin(); it != triangles.end();) {
                         if (!(*it)->outside(furthest)) {
@@ -193,36 +192,37 @@ namespace Birdy3d {
                         erase_triangle(it);
                     }
                     // Create new triangles
-                    auto current_end = triangles.end();
-                    for (auto it = triangles.begin(); it != current_end; ++it) {
+                    std::size_t current_size = triangles.size();
+                    for (std::size_t i = 0; i < current_size; ++i) {
+                        auto current_triangle = triangles[i].get();
                         Triangle* tri;
-                        if (!(*it)->tab) {
-                            if (glm::dot(Triangle(furthest, (*it)->a, (*it)->b).normal(), (*it)->normal()) > 0)
-                                tri = add_triangle(furthest, (*it)->a, (*it)->b);
+                        if (!current_triangle->tab) {
+                            if (glm::dot(Triangle(furthest, current_triangle->a, current_triangle->b).normal(), current_triangle->normal()) > 0)
+                                tri = add_triangle(furthest, current_triangle->a, current_triangle->b);
                             else
-                                tri = add_triangle(furthest, (*it)->b, (*it)->a);
-                            (*it)->tab = tri;
-                            tri->tbc = it->get();
+                                tri = add_triangle(furthest, current_triangle->b, current_triangle->a);
+                            current_triangle->tab = tri;
+                            tri->tbc = current_triangle;
                         }
-                        if (!(*it)->tbc) {
-                            if (glm::dot(Triangle(furthest, (*it)->b, (*it)->c).normal(), (*it)->normal()) > 0)
-                                tri = add_triangle(furthest, (*it)->b, (*it)->c);
+                        if (!current_triangle->tbc) {
+                            if (glm::dot(Triangle(furthest, current_triangle->b, current_triangle->c).normal(), current_triangle->normal()) > 0)
+                                tri = add_triangle(furthest, current_triangle->b, current_triangle->c);
                             else
-                                tri = add_triangle(furthest, (*it)->c, (*it)->b);
-                            (*it)->tbc = tri;
-                            tri->tbc = it->get();
+                                tri = add_triangle(furthest, current_triangle->c, current_triangle->b);
+                            current_triangle->tbc = tri;
+                            tri->tbc = current_triangle;
                         }
-                        if (!(*it)->tca) {
-                            if (glm::dot(Triangle(furthest, (*it)->c, (*it)->a).normal(), (*it)->normal()) > 0)
-                                tri = add_triangle(furthest, (*it)->c, (*it)->a);
+                        if (!current_triangle->tca) {
+                            if (glm::dot(Triangle(furthest, current_triangle->c, current_triangle->a).normal(), current_triangle->normal()) > 0)
+                                tri = add_triangle(furthest, current_triangle->c, current_triangle->a);
                             else
-                                tri = add_triangle(furthest, (*it)->a, (*it)->c);
-                            (*it)->tca = tri;
-                            tri->tbc = it->get();
+                                tri = add_triangle(furthest, current_triangle->a, current_triangle->c);
+                            current_triangle->tca = tri;
+                            tri->tbc = current_triangle;
                         }
                     }
                     // Add missing neighbors
-                    for (auto it = current_end; it != triangles.end(); ++it) {
+                    for (auto it = triangles.begin() + current_size; it != triangles.end(); ++it) {
                         if (!(*it)->tab) {
                             for (auto& triangle : triangles) {
                                 if (auto edge = triangle->get_edge((*it)->a, (*it)->b); edge != Triangle::Edge::NONE) {
