@@ -349,21 +349,9 @@ int main() {
         // Spheres
         auto sphere1 = scene->add_child("Sphere1", glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
         sphere1->add_component<ModelComponent>("primitive::uv_sphere:20", nullptr);
-        //auto sphere_collider = sphere1->add_component<Collider>(GenerationMode::HULL);
+        auto sphere_collider = sphere1->add_component<Collider>(GenerationMode::HULL);
         sphere1->add_component<TestComponent>();
-        //sphere1->add_component<MoveUpDown>(0.4, 1, 5);
-
-        Application::event_bus->subscribe<InputKeyEvent>([sphere1](const InputKeyEvent& event) {
-            static auto sphere_collider = sphere1->add_component<Collider>(GenerationMode::HULL);
-            if (event.action != GLFW_PRESS)
-                return;
-            if (event.key == GLFW_KEY_UP)
-                ConvexMeshGenerators::limit++;
-            if (event.key == GLFW_KEY_DOWN)
-                ConvexMeshGenerators::limit--;
-            sphere_collider->remove();
-            sphere_collider = sphere1->add_component<Collider>(GenerationMode::HULL);
-        });
+        // sphere1->add_component<MoveUpDown>(0.4, 1, 5);
 
         // Light
         auto dir_light = scene->add_child("DirLight", glm::vec3(0.2f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));

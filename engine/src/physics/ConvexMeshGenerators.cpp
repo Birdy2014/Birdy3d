@@ -6,8 +6,6 @@
 
 namespace Birdy3d {
 
-    int ConvexMeshGenerators::limit = 4;
-
     struct Triangle {
         enum class Edge {
             NONE,
@@ -26,24 +24,16 @@ namespace Birdy3d {
             , b(b)
             , c(c) { }
 
-        Triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, Triangle* tab, Triangle* tbc, Triangle* tca)
-            : a(a)
-            , b(b)
-            , c(c)
-            , tab(tab)
-            , tbc(tbc)
-            , tca(tca) { }
-
         glm::vec3 normal() const {
             glm::vec3 side1 = b - a;
-            glm::vec3 side2 = a - c;
+            glm::vec3 side2 = c - a;
             return glm::cross(side1, side2);
         }
 
         bool outside(const glm::vec3& point) const {
             glm::vec3 n = normal();
             float d = glm::dot(n, a);
-            return glm::dot(glm::vec4(n, d), glm::vec4(point, -1.0f)) > 0;
+            return glm::dot(glm::vec4(n, d), glm::vec4(point, -1.0f)) >= 0;
         }
 
         Edge get_edge(const glm::vec3& other_a, const glm::vec3& other_b) const {
@@ -56,10 +46,6 @@ namespace Birdy3d {
                 return Edge::CA;
             return Edge::NONE;
             // clang-format on
-        }
-
-        bool operator==(const Triangle& other) const {
-            return (a == other.a && b == other.b && c == other.c) || (a == other.b && b == other.c && c == other.a) || (a == other.c && b == other.a && c == other.b);
         }
     };
 
@@ -90,13 +76,16 @@ namespace Birdy3d {
     std::shared_ptr<Model> ConvexMeshGenerators::hull(const Model& model) {
         std::vector<glm::vec3> visited;
         std::vector<std::unique_ptr<Triangle>> triangles;
+
+        // Helper functions
         auto add_triangle = [&triangles](glm::vec3 a, glm::vec3 b, glm::vec3 c) -> Triangle* {
             auto tri = std::make_unique<Triangle>(a, b, c);
             auto ptr = tri.get();
             triangles.push_back(std::move(tri));
             return ptr;
         };
-        auto erase_triangle = [&triangles](std::vector<std::unique_ptr<Triangle>>::iterator it) {
+
+        auto erase_triangle = [&triangles](std::vector<std::unique_ptr<Triangle>>::iterator it) -> void {
             auto ptr = it->get();
             // clang-format off
             if (ptr->tab) {
@@ -119,155 +108,127 @@ namespace Birdy3d {
             // clang-format on
             triangles.erase(it);
         };
+
+        auto add_neighbours = [&triangles](std::size_t begin_offset) -> void {
+            for (auto it = triangles.begin() + begin_offset; it != triangles.end(); ++it) {
+                if (!(*it)->tab) {
+                    for (const auto& triangle : triangles) {
+                        auto edge = triangle->get_edge((*it)->a, (*it)->b);
+                        if (edge == Triangle::Edge::NONE)
+                            continue;
+                        (*it)->tab = triangle.get();
+                        if (edge == Triangle::Edge::AB)
+                            triangle->tab = it->get();
+                        else if (edge == Triangle::Edge::BC)
+                            triangle->tbc = it->get();
+                        else if (edge == Triangle::Edge::CA)
+                            triangle->tca = it->get();
+                        break;
+                    }
+                }
+                if (!(*it)->tbc) {
+                    for (const auto& triangle : triangles) {
+                        auto edge = triangle->get_edge((*it)->b, (*it)->c);
+                        if (edge == Triangle::Edge::NONE)
+                            continue;
+                        (*it)->tbc = triangle.get();
+                        if (edge == Triangle::Edge::AB)
+                            triangle->tab = it->get();
+                        else if (edge == Triangle::Edge::BC)
+                            triangle->tbc = it->get();
+                        else if (edge == Triangle::Edge::CA)
+                            triangle->tca = it->get();
+                        break;
+                    }
+                }
+                if (!(*it)->tca) {
+                    for (const auto& triangle : triangles) {
+                        auto edge = triangle->get_edge((*it)->c, (*it)->a);
+                        if (edge == Triangle::Edge::NONE)
+                            continue;
+                        (*it)->tca = triangle.get();
+                        if (edge == Triangle::Edge::AB)
+                            triangle->tab = it->get();
+                        else if (edge == Triangle::Edge::BC)
+                            triangle->tbc = it->get();
+                        else if (edge == Triangle::Edge::CA)
+                            triangle->tca = it->get();
+                        break;
+                    }
+                }
+            }
+        };
+
         std::vector<std::unique_ptr<Mesh>> meshes;
         for (const auto& mesh : model.get_meshes()) {
             triangles.clear();
             visited.clear();
             // Get first tetrahedron
             {
-                // TODO: Improve creation of first tetrahedron
-                glm::vec3 a = mesh->find_furthest_point(glm::vec3(1, 0, 0));
-                glm::vec3 b = mesh->find_furthest_point(glm::vec3(-1, 0, 0));
+                // TODO: Improve creation of first tetrahedron.
+                // TODO: Fail if tetrahedron is flat.
+                glm::vec3 a = mesh->find_furthest_point(glm::vec3(1, -1, 0));
+                glm::vec3 b = mesh->find_furthest_point(glm::vec3(-1, -1, 0));
                 glm::vec3 c = mesh->find_furthest_point(glm::vec3(0, 1, 0));
-                glm::vec3 d = mesh->find_furthest_point(glm::vec3(0, 0, 1));
+                glm::vec3 d = mesh->find_furthest_point(glm::vec3(0, -1, 1));
                 visited.push_back(a);
                 visited.push_back(b);
                 visited.push_back(c);
                 visited.push_back(d);
-                auto triangle_acb = add_triangle(a, c, b);
-                auto triangle_bda = add_triangle(b, d, a);
-                auto triangle_bcd = add_triangle(b, c, d);
-                auto triangle_adc = add_triangle(a, d, c);
-                triangle_acb->tab = triangle_adc;
-                triangle_acb->tbc = triangle_bcd;
-                triangle_acb->tca = triangle_bda;
-                triangle_bda->tab = triangle_bcd;
-                triangle_bda->tbc = triangle_adc;
-                triangle_bda->tca = triangle_acb;
-                triangle_bcd->tab = triangle_acb;
-                triangle_bcd->tbc = triangle_adc;
-                triangle_bcd->tca = triangle_bda;
-                triangle_adc->tab = triangle_bda;
-                triangle_adc->tbc = triangle_bcd;
-                triangle_adc->tca = triangle_acb;
+                add_triangle(a, b, c);
+                add_triangle(b, a, d);
+                add_triangle(b, d, c);
+                add_triangle(a, c, d);
+                add_neighbours(0);
             }
 
             // Get other triangles
             bool done = false;
             while (!done) {
                 done = true;
+                glm::vec3 furthest;
+                // Find Triangle for furthest point
                 for (auto it = triangles.begin(); it != triangles.end(); it++) {
-                    // For debugging
-                    if (visited.size() > limit)
-                        break;
-
                     glm::vec3 normal = (*it)->normal();
-                    glm::vec3 furthest = mesh->find_furthest_point(normal);
-                    if (std::find(visited.cbegin(), visited.cend(), furthest) != visited.cend()) {
-                        /*
-                        // Some Triangles already exist
-                        Triangle t1(furthest, triangle.a, triangle.b);
-                        if (std::find(triangles.cbegin(), triangles.cend(), t1) == triangles.cend())
-                            triangles.push_back(t1);
-                        Triangle t2(furthest, triangle.b, triangle.c);
-                        if (std::find(triangles.cbegin(), triangles.cend(), t1) == triangles.cend())
-                            triangles.push_back(t2);
-                        Triangle t3(furthest, triangle.c, triangle.a);
-                        if (std::find(triangles.cbegin(), triangles.cend(), t1) == triangles.cend())
-                            triangles.push_back(t3);
-                        triangles.erase(triangles.begin() + i);
-                        */
-                        continue;
+                    furthest = mesh->find_furthest_point(normal);
+                    if (std::find(visited.cbegin(), visited.cend(), furthest) == visited.cend()) {
+                        done = false;
+                        break;
                     }
-                    done = false;
-                    visited.push_back(furthest);
-                    // Remove current triangle
-                    erase_triangle(it);
-                    // Remove triangles that are facing in the wrong direction
-                    for (auto it = triangles.begin(); it != triangles.end();) {
-                        if (!(*it)->outside(furthest)) {
-                            ++it;
-                            continue;
-                        }
-                        erase_triangle(it);
-                    }
-                    // Create new triangles
-                    std::size_t current_size = triangles.size();
-                    for (std::size_t i = 0; i < current_size; ++i) {
-                        auto current_triangle = triangles[i].get();
-                        Triangle* tri;
-                        if (!current_triangle->tab) {
-                            if (glm::dot(Triangle(furthest, current_triangle->a, current_triangle->b).normal(), current_triangle->normal()) > 0)
-                                tri = add_triangle(furthest, current_triangle->a, current_triangle->b);
-                            else
-                                tri = add_triangle(furthest, current_triangle->b, current_triangle->a);
-                            current_triangle->tab = tri;
-                            tri->tbc = current_triangle;
-                        }
-                        if (!current_triangle->tbc) {
-                            if (glm::dot(Triangle(furthest, current_triangle->b, current_triangle->c).normal(), current_triangle->normal()) > 0)
-                                tri = add_triangle(furthest, current_triangle->b, current_triangle->c);
-                            else
-                                tri = add_triangle(furthest, current_triangle->c, current_triangle->b);
-                            current_triangle->tbc = tri;
-                            tri->tbc = current_triangle;
-                        }
-                        if (!current_triangle->tca) {
-                            if (glm::dot(Triangle(furthest, current_triangle->c, current_triangle->a).normal(), current_triangle->normal()) > 0)
-                                tri = add_triangle(furthest, current_triangle->c, current_triangle->a);
-                            else
-                                tri = add_triangle(furthest, current_triangle->a, current_triangle->c);
-                            current_triangle->tca = tri;
-                            tri->tbc = current_triangle;
-                        }
-                    }
-                    // Add missing neighbors
-                    for (auto it = triangles.begin() + current_size; it != triangles.end(); ++it) {
-                        if (!(*it)->tab) {
-                            for (auto& triangle : triangles) {
-                                if (auto edge = triangle->get_edge((*it)->a, (*it)->b); edge != Triangle::Edge::NONE) {
-                                    (*it)->tab = triangle.get();
-                                    if (edge == Triangle::Edge::AB)
-                                        triangle->tab = it->get();
-                                    else if (edge == Triangle::Edge::BC)
-                                        triangle->tbc = it->get();
-                                    else if (edge == Triangle::Edge::CA)
-                                        triangle->tca = it->get();
-                                    break;
-                                }
-                            }
-                        }
-                        if (!(*it)->tbc) {
-                            for (auto& triangle : triangles) {
-                                if (auto edge = triangle->get_edge((*it)->b, (*it)->c); edge != Triangle::Edge::NONE) {
-                                    (*it)->tbc = triangle.get();
-                                    if (edge == Triangle::Edge::AB)
-                                        triangle->tab = it->get();
-                                    else if (edge == Triangle::Edge::BC)
-                                        triangle->tbc = it->get();
-                                    else if (edge == Triangle::Edge::CA)
-                                        triangle->tca = it->get();
-                                    break;
-                                }
-                            }
-                        }
-                        if (!(*it)->tca) {
-                            for (auto& triangle : triangles) {
-                                if (auto edge = triangle->get_edge((*it)->c, (*it)->a); edge != Triangle::Edge::NONE) {
-                                    (*it)->tca = triangle.get();
-                                    if (edge == Triangle::Edge::AB)
-                                        triangle->tab = it->get();
-                                    else if (edge == Triangle::Edge::BC)
-                                        triangle->tbc = it->get();
-                                    else if (edge == Triangle::Edge::CA)
-                                        triangle->tca = it->get();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    break;
                 }
+                if (done)
+                    break;
+                visited.push_back(furthest);
+                // Remove triangles that are facing in the wrong direction
+                for (auto it = triangles.begin(); it != triangles.end();) {
+                    if ((*it)->outside(furthest))
+                        erase_triangle(it);
+                    else
+                        ++it;
+                }
+                // Create new triangles
+                std::size_t current_size = triangles.size();
+                for (std::size_t i = 0; i < current_size; ++i) {
+                    auto current_triangle = triangles[i].get();
+                    Triangle* new_triangle;
+                    if (!current_triangle->tab) {
+                        new_triangle = add_triangle(furthest, current_triangle->b, current_triangle->a);
+                        current_triangle->tab = new_triangle;
+                        new_triangle->tbc = current_triangle;
+                    }
+                    if (!current_triangle->tbc) {
+                        new_triangle = add_triangle(furthest, current_triangle->c, current_triangle->b);
+                        current_triangle->tbc = new_triangle;
+                        new_triangle->tbc = current_triangle;
+                    }
+                    if (!current_triangle->tca) {
+                        new_triangle = add_triangle(furthest, current_triangle->a, current_triangle->c);
+                        current_triangle->tca = new_triangle;
+                        new_triangle->tbc = current_triangle;
+                    }
+                }
+                // Add missing neighbors
+                add_neighbours(current_size);
             }
 
             // Convert triangles to mesh

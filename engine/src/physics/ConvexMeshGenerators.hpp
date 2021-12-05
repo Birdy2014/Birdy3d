@@ -15,8 +15,6 @@ namespace Birdy3d {
 
     class ConvexMeshGenerators {
     public:
-        static int limit; // Just for debugging, remove if convex hull is working
-
         static std::shared_ptr<Model> generate_model(GenerationMode, const Model&);
 
     private:
