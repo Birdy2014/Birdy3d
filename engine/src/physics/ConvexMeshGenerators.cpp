@@ -163,10 +163,10 @@ namespace Birdy3d {
         for (const auto& mesh : model.get_meshes()) {
             triangles.clear();
             visited.clear();
+            bool done = false;
             // Get first tetrahedron
             {
                 // TODO: Improve creation of first tetrahedron.
-                // TODO: Fail if tetrahedron is flat.
                 glm::vec3 a = mesh->find_furthest_point(glm::vec3(1, -1, 0));
                 glm::vec3 b = mesh->find_furthest_point(glm::vec3(-1, -1, 0));
                 glm::vec3 c = mesh->find_furthest_point(glm::vec3(0, 1, 0));
@@ -180,10 +180,21 @@ namespace Birdy3d {
                 add_triangle(b, d, c);
                 add_triangle(a, c, d);
                 add_neighbours(0);
+
+                // Check tetrahedron
+                for (const auto& triangle1 : triangles) {
+                    auto triangle1_normal = triangle1->normal();
+                    for (const auto& triangle2 : triangles) {
+                        if (triangle1 == triangle2)
+                            continue;
+                        auto triangle2_normal = triangle2->normal();
+                        if (triangle1_normal == triangle2_normal || triangle1_normal == -triangle2_normal)
+                            done = true;
+                    }
+                }
             }
 
             // Get other triangles
-            bool done = false;
             while (!done) {
                 done = true;
                 glm::vec3 furthest;
