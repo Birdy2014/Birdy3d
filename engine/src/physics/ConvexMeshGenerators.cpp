@@ -33,7 +33,7 @@ namespace Birdy3d {
         bool outside(const glm::vec3& point) const {
             glm::vec3 n = normal();
             float d = glm::dot(n, a);
-            return glm::dot(glm::vec4(n, d), glm::vec4(point, -1.0f)) >= 0;
+            return glm::dot(glm::vec4(n, d), glm::vec4(point, -1.0f)) > 0;
         }
 
         Edge get_edge(const glm::vec3& other_a, const glm::vec3& other_b) const {
@@ -109,54 +109,67 @@ namespace Birdy3d {
             triangles.erase(it);
         };
 
-        auto add_neighbours = [&triangles](std::size_t begin_offset) -> void {
+        auto add_neighbours = [&triangles](std::size_t begin_offset) -> bool {
             for (auto it = triangles.begin() + begin_offset; it != triangles.end(); ++it) {
                 if (!(*it)->tab) {
                     for (const auto& triangle : triangles) {
+                        if (it->get() == triangle.get())
+                            continue;
                         auto edge = triangle->get_edge((*it)->a, (*it)->b);
                         if (edge == Triangle::Edge::NONE)
                             continue;
-                        (*it)->tab = triangle.get();
-                        if (edge == Triangle::Edge::AB)
+                        if (edge == Triangle::Edge::AB && !triangle->tab)
                             triangle->tab = it->get();
-                        else if (edge == Triangle::Edge::BC)
+                        else if (edge == Triangle::Edge::BC && !triangle->tbc)
                             triangle->tbc = it->get();
-                        else if (edge == Triangle::Edge::CA)
+                        else if (edge == Triangle::Edge::CA && !triangle->tca)
                             triangle->tca = it->get();
+                        else
+                            return false;
+                        (*it)->tab = triangle.get();
                         break;
                     }
                 }
                 if (!(*it)->tbc) {
                     for (const auto& triangle : triangles) {
+                        if (it->get() == triangle.get())
+                            continue;
                         auto edge = triangle->get_edge((*it)->b, (*it)->c);
                         if (edge == Triangle::Edge::NONE)
                             continue;
-                        (*it)->tbc = triangle.get();
-                        if (edge == Triangle::Edge::AB)
+                        if (edge == Triangle::Edge::AB && !triangle->tab)
                             triangle->tab = it->get();
-                        else if (edge == Triangle::Edge::BC)
+                        else if (edge == Triangle::Edge::BC && !triangle->tbc)
                             triangle->tbc = it->get();
-                        else if (edge == Triangle::Edge::CA)
+                        else if (edge == Triangle::Edge::CA && !triangle->tca)
                             triangle->tca = it->get();
+                        else
+                            return false;
+                        (*it)->tbc = triangle.get();
                         break;
                     }
                 }
                 if (!(*it)->tca) {
                     for (const auto& triangle : triangles) {
+                        if (it->get() == triangle.get())
+                            continue;
                         auto edge = triangle->get_edge((*it)->c, (*it)->a);
                         if (edge == Triangle::Edge::NONE)
                             continue;
-                        (*it)->tca = triangle.get();
-                        if (edge == Triangle::Edge::AB)
+                        if (edge == Triangle::Edge::AB && !triangle->tab)
                             triangle->tab = it->get();
-                        else if (edge == Triangle::Edge::BC)
+                        else if (edge == Triangle::Edge::BC && !triangle->tbc)
                             triangle->tbc = it->get();
-                        else if (edge == Triangle::Edge::CA)
+                        else if (edge == Triangle::Edge::CA && !triangle->tca)
                             triangle->tca = it->get();
+                        else
+                            return false;
+                        (*it)->tca = triangle.get();
                         break;
                     }
                 }
             }
+            return true;
         };
 
         std::vector<std::unique_ptr<Mesh>> meshes;
@@ -166,32 +179,70 @@ namespace Birdy3d {
             bool done = false;
             // Get first tetrahedron
             {
-                // TODO: Improve creation of first tetrahedron.
-                glm::vec3 a = mesh->find_furthest_point(glm::vec3(1, -1, 0));
-                glm::vec3 b = mesh->find_furthest_point(glm::vec3(-1, -1, 0));
-                glm::vec3 c = mesh->find_furthest_point(glm::vec3(0, 1, 0));
-                glm::vec3 d = mesh->find_furthest_point(glm::vec3(0, -1, 1));
-                visited.push_back(a);
-                visited.push_back(b);
-                visited.push_back(c);
-                visited.push_back(d);
-                add_triangle(a, b, c);
-                add_triangle(b, a, d);
-                add_triangle(b, d, c);
-                add_triangle(a, c, d);
-                add_neighbours(0);
-
-                // Check tetrahedron
-                for (const auto& triangle1 : triangles) {
-                    auto triangle1_normal = triangle1->normal();
-                    for (const auto& triangle2 : triangles) {
-                        if (triangle1 == triangle2)
-                            continue;
-                        auto triangle2_normal = triangle2->normal();
-                        if (triangle1_normal == triangle2_normal || triangle1_normal == -triangle2_normal)
-                            done = true;
+                // Get line along one dimension
+                glm::vec3 point_min, point_max;
+                for (auto direction : { glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1) }) {
+                    point_max = mesh->find_furthest_point(direction);
+                    point_min = mesh->find_furthest_point(-direction);
+                    if (point_max != point_min)
+                        break;
+                }
+                if (point_max == point_min) {
+                    Logger::warn("ConvexMeshGenerators::hull failed, because the Mesh is not 3D.");
+                    continue;
+                }
+                // Get furthest point from line
+                glm::vec3 furthest_point_line = point_max;
+                float furthest_distance = 0;
+                for (const auto& point : mesh->vertices) {
+                    // Calculate distance between furthest_point and line
+                    float distance = std::abs(glm::length(glm::cross(point_max - point_min, point.position - point_min)) / glm::length(point_max - point_min));
+                    if (distance > furthest_distance) {
+                        furthest_point_line = point.position;
+                        furthest_distance = distance;
                     }
                 }
+                if (furthest_distance == 0) {
+                    Logger::warn("ConvexMeshGenerators::hull failed, because the Mesh is 1D.");
+                    continue;
+                }
+                // Get furthest point from plane
+                glm::vec3 furthest_point_plane = point_max;
+                furthest_distance = 0;
+                Triangle plane_triangle(point_min, point_max, furthest_point_line);
+                glm::vec3 n = plane_triangle.normal();
+                float d = glm::dot(n, point_min);
+                for (const auto& point : mesh->vertices) {
+                    float distance = glm::dot(glm::vec4(n, d), glm::vec4(point.position, -1.0f));
+                    if (std::abs(distance) > std::abs(furthest_distance)) {
+                        furthest_point_plane = point.position;
+                        furthest_distance = distance;
+                    }
+                }
+                if (furthest_distance == 0) {
+                    Logger::warn("ConvexMeshGenerators::hull failed, because the Mesh is 2D.");
+                    continue;
+                }
+                // Create tetrahedron
+                if (furthest_distance < 0) {
+                    add_triangle(point_min, point_max, furthest_point_line);
+                    add_triangle(point_min, furthest_point_plane, point_max);
+                    add_triangle(point_min, furthest_point_line, furthest_point_plane);
+                    add_triangle(furthest_point_line, point_max, furthest_point_plane);
+                } else {
+                    add_triangle(point_min, furthest_point_line, point_max);
+                    add_triangle(point_min, point_max, furthest_point_plane);
+                    add_triangle(point_min, furthest_point_plane, furthest_point_line);
+                    add_triangle(furthest_point_line, furthest_point_plane, point_max);
+                }
+
+                visited.push_back(point_min);
+                visited.push_back(point_max);
+                visited.push_back(furthest_point_line);
+                visited.push_back(furthest_point_plane);
+
+                // Create neighbors
+                add_neighbours(0);
             }
 
             // Get other triangles
@@ -239,7 +290,10 @@ namespace Birdy3d {
                     }
                 }
                 // Add missing neighbors
-                add_neighbours(current_size);
+                if (!add_neighbours(current_size)) {
+                    Logger::warn("ConvexMeshGenerators::hull: generated an invalid triangle (This is probably a bug)");
+                    break;
+                }
             }
 
             // Convert triangles to mesh
