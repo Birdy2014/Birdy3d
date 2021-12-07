@@ -4,13 +4,16 @@
 
 namespace Birdy3d {
 
+    class Mesh;
     class Model;
 
     enum class GenerationMode {
         NONE,
         COPY,
-        HULL,
-        DECOMPOSITION
+        HULL_MODEL,
+        HULL_MESHES,
+        DECOMPOSITION_MODEL,
+        DECOMPOSITION_MESHES
     };
 
     class ConvexMeshGenerators {
@@ -18,9 +21,9 @@ namespace Birdy3d {
         static std::shared_ptr<Model> generate_model(GenerationMode, const Model&);
 
     private:
-        static std::shared_ptr<Model> copy(const Model&);
-        static std::shared_ptr<Model> hull(const Model&);
-        static std::shared_ptr<Model> decomposition(const Model&);
+        static std::unique_ptr<Mesh> copy(const Mesh&);
+        static std::unique_ptr<Mesh> hull(const Mesh&);
+        static std::unique_ptr<Mesh> decomposition(const Mesh&);
     };
 
 }

@@ -334,7 +334,7 @@ int main() {
 
         auto obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
         obj->add_component<ModelComponent>("primitive::cube", red_transparent_material);
-        obj->add_component<Collider>(GenerationMode::HULL);
+        obj->add_component<Collider>(GenerationMode::HULL_MODEL);
 
         auto obj2 = scene->add_child("obj2", glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
         obj2->add_component<ModelComponent>("primitive::cube", white_material);
@@ -344,12 +344,12 @@ int main() {
 
         auto obj3 = scene->add_child("obj3", glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
         obj3->add_component<ModelComponent>("primitive::cube", blue_transparent_material);
-        obj3->add_component<Collider>(GenerationMode::HULL);
+        obj3->add_component<Collider>(GenerationMode::HULL_MODEL);
 
         // Spheres
         auto sphere1 = scene->add_child("Sphere1", glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
         sphere1->add_component<ModelComponent>("primitive::uv_sphere:20", nullptr);
-        auto sphere_collider = sphere1->add_component<Collider>(GenerationMode::HULL);
+        auto sphere_collider = sphere1->add_component<Collider>(GenerationMode::HULL_MODEL);
         sphere1->add_component<TestComponent>();
         // sphere1->add_component<MoveUpDown>(0.4, 1, 5);
 
