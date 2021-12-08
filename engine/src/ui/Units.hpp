@@ -55,11 +55,6 @@ namespace Birdy3d::ui {
         }
     };
 
-    Unit operator"" _px(long double value);
-    Unit operator"" _px(unsigned long long value);
-    Unit operator"" _p(long double value);
-    Unit operator"" _p(unsigned long long value);
-
     class UIVector {
     public:
         Unit x;
@@ -83,5 +78,14 @@ namespace Birdy3d::ui {
         operator glm::vec2();
         static glm::vec2 get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement);
     };
+
+    inline namespace literals {
+
+        Unit operator"" _px(long double value);
+        Unit operator"" _px(unsigned long long value);
+        Unit operator"" _p(long double value);
+        Unit operator"" _p(unsigned long long value);
+
+    }
 
 }

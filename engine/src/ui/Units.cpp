@@ -46,22 +46,6 @@ namespace Birdy3d::ui {
         return *this;
     }
 
-    Unit operator"" _px(long double value) {
-        return Unit(value, 0);
-    }
-
-    Unit operator"" _px(unsigned long long value) {
-        return Unit(value, 0);
-    }
-
-    Unit operator"" _p(long double value) {
-        return Unit(0, value);
-    }
-
-    Unit operator"" _p(unsigned long long value) {
-        return Unit(0, value);
-    }
-
     UIVector::UIVector()
         : x(0, 0)
         , y(0, 0) { }
@@ -154,6 +138,26 @@ namespace Birdy3d::ui {
             out.y = parentSize.y / 2 - s.y / 2 + p.y;
         }
         return out;
+    }
+
+    inline namespace literals {
+
+        Unit operator"" _px(long double value) {
+            return Unit(value, 0);
+        }
+
+        Unit operator"" _px(unsigned long long value) {
+            return Unit(value, 0);
+        }
+
+        Unit operator"" _p(long double value) {
+            return Unit(0, value);
+        }
+
+        Unit operator"" _p(unsigned long long value) {
+            return Unit(0, value);
+        }
+
     }
 
 }
