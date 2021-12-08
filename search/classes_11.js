@@ -11,5 +11,5 @@ var searchData=
   ['transformchangedevent_8',['TransformChangedEvent',['../classBirdy3d_1_1events_1_1TransformChangedEvent.html',1,'Birdy3d::events']]],
   ['treeitem_9',['TreeItem',['../classBirdy3d_1_1ui_1_1TreeItem.html',1,'Birdy3d::ui']]],
   ['treeview_10',['TreeView',['../classBirdy3d_1_1ui_1_1TreeView.html',1,'Birdy3d::ui']]],
-  ['triangle_11',['Triangle',['../classBirdy3d_1_1ui_1_1Triangle.html',1,'Birdy3d::ui']]]
+  ['triangle_11',['Triangle',['../structBirdy3d_1_1physics_1_1Triangle.html',1,'Birdy3d::physics::Triangle'],['../classBirdy3d_1_1ui_1_1Triangle.html',1,'Birdy3d::ui::Triangle']]]
 ];
