@@ -66,4 +66,8 @@
 #include "utils/serializer/Serializer.hpp"
 
 // Namespaces
-using namespace Birdy3d::ui::literals;
+namespace Birdy3d {
+
+    using namespace ui::literals;
+
+}
