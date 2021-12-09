@@ -242,7 +242,7 @@ namespace Birdy3d::render {
         // Create SSAO sample kernel and noise
         std::uniform_real_distribution<float> random_floats(0.0, 1.0);
         std::default_random_engine generator;
-        std::array<glm::vec3, 64> ssao_kernel;
+        std::array<glm::vec3, 16> ssao_kernel;
         for (unsigned int i = 0; i < ssao_kernel.size(); ++i) {
             glm::vec3 sample(
                 random_floats(generator) * 2.0 - 1.0,
