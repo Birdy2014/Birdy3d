@@ -20,13 +20,13 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D texNoise;
 
-#define KERNEL_SIZE 64
+#define KERNEL_SIZE 16
 
 uniform vec3 samples[KERNEL_SIZE];
 
 // parameters
-float radius = 0.4;
-float bias = 0.025;
+float radius = 0.07;
+float bias = 0.01;
 
 uniform mat4 projection;
 uniform mat4 view;
