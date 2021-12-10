@@ -40,7 +40,9 @@ namespace Birdy3d::ecs {
     }
 
     void Entity::start() {
-        transform.update();
+        std::sort(m_components.begin(), m_components.end(), [](const std::shared_ptr<Component>& a, const std::shared_ptr<Component>& b) {
+            return a->priority() < b->priority();
+        });
         for (const auto& c : m_components) {
             c->entity = this;
             c->external_start();

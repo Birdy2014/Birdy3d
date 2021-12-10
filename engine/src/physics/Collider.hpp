@@ -18,6 +18,7 @@ namespace Birdy3d::physics {
         CollisionPoints collides(Collider&);
         void render_wireframe(render::Shader&);
         void serialize(serializer::Adapter&) override;
+        int priority() override { return 10; }
 
     private:
         std::string m_model_name;

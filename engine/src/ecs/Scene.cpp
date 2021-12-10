@@ -11,6 +11,7 @@ namespace Birdy3d::ecs {
     void Scene::start() {
         set_scene(this);
         m_physics_world = std::make_unique<physics::PhysicsWorld>(this);
+        transform.update(true);
         Entity::start();
     }
 
