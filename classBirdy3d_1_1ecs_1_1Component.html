@@ -131,6 +131,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> ()</td></t
 <tr class="memitem:a983bd68505c4bf03f7c94545ad046ba7"><td class="memItemLeft" align="right" valign="top"><a id="a983bd68505c4bf03f7c94545ad046ba7" name="a983bd68505c4bf03f7c94545ad046ba7"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>serialize</b> (<a class="el" href="classBirdy3d_1_1serializer_1_1Adapter.html">serializer::Adapter</a> &amp;)</td></tr>
 <tr class="separator:a983bd68505c4bf03f7c94545ad046ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd2d3418e99c259107ee481f3e1a8bdd"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ecs_1_1Component.html#afd2d3418e99c259107ee481f3e1a8bdd">priority</a> ()</td></tr>
+<tr class="memdesc:afd2d3418e99c259107ee481f3e1a8bdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the loading priority of the component.  <a href="classBirdy3d_1_1ecs_1_1Component.html#afd2d3418e99c259107ee481f3e1a8bdd">More...</a><br /></td></tr>
+<tr class="separator:afd2d3418e99c259107ee481f3e1a8bdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -159,6 +162,38 @@ Protected Attributes</h2></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_loaded</b> = false</td></tr>
 <tr class="separator:acd3b2a028bdab78c178e1bd286ea08fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="afd2d3418e99c259107ee481f3e1a8bdd" name="afd2d3418e99c259107ee481f3e1a8bdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd2d3418e99c259107ee481f3e1a8bdd">&#9670;&nbsp;</a></span>priority()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int Birdy3d::ecs::Component::priority </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the loading priority of the component. </p>
+<p >A lower value results in an earlier placement in the entity, which affects the timing of start, update and cleanup. The default for components which don't override this function is 0. Only override this function, if the component reqires an other component to be loaded.</p>
+<dl class="section return"><dt>Returns</dt><dd>The priority. </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classBirdy3d_1_1physics_1_1Collider.html#a22174909aeb146bfd829fc8679541f10">Birdy3d::physics::Collider</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>engine/src/ecs/<a class="el" href="Component_8hpp_source.html">Component.hpp</a></li>
 <li>engine/src/ecs/Component.cpp</li>

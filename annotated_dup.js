@@ -8,7 +8,7 @@ var annotated_dup =
         [ "ResourceManager", "classBirdy3d_1_1core_1_1ResourceManager.html", null ]
       ] ],
       [ "ecs", null, [
-        [ "Component", "classBirdy3d_1_1ecs_1_1Component.html", null ],
+        [ "Component", "classBirdy3d_1_1ecs_1_1Component.html", "classBirdy3d_1_1ecs_1_1Component" ],
         [ "Entity", "classBirdy3d_1_1ecs_1_1Entity.html", null ],
         [ "Scene", "classBirdy3d_1_1ecs_1_1Scene.html", null ],
         [ "Transform3d", "classBirdy3d_1_1ecs_1_1Transform3d.html", null ]
@@ -28,7 +28,7 @@ var annotated_dup =
         [ "WindowResizeEvent", "classBirdy3d_1_1events_1_1WindowResizeEvent.html", null ]
       ] ],
       [ "physics", null, [
-        [ "Collider", "classBirdy3d_1_1physics_1_1Collider.html", null ],
+        [ "Collider", "classBirdy3d_1_1physics_1_1Collider.html", "classBirdy3d_1_1physics_1_1Collider" ],
         [ "Collision", "classBirdy3d_1_1physics_1_1Collision.html", null ],
         [ "CollisionPoints", "classBirdy3d_1_1physics_1_1CollisionPoints.html", null ],
         [ "ConvexMeshGenerators", "classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html", null ],
