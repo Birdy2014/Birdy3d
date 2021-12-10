@@ -18,6 +18,18 @@ namespace Birdy3d::ecs {
         void remove();
         virtual void serialize(serializer::Adapter&) { }
 
+        /**
+         * @brief Get the loading priority of the component.
+         *
+         * A lower value results in an earlier placement in the entity,
+         * which affects the timing of start, update and cleanup.
+         * The default for components which don't override this function is 0.
+         * Only override this function, if the component reqires an other component to be loaded.
+         *
+         * @returns The priority.
+         */
+        virtual int priority() { return 0; }
+
     protected:
         bool m_loaded = false;
 

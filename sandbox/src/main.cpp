@@ -335,8 +335,8 @@ int main() {
         blue_transparent_material->diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
 
         auto obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
-        obj->add_component<render::ModelComponent>("primitive::cube", red_transparent_material);
         obj->add_component<physics::Collider>(physics::GenerationMode::HULL_MODEL);
+        obj->add_component<render::ModelComponent>("primitive::cube", red_transparent_material);
 
         auto obj2 = scene->add_child("obj2", glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
         obj2->add_component<render::ModelComponent>("primitive::cube", white_material);
