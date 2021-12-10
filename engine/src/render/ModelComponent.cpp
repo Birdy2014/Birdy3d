@@ -12,6 +12,8 @@ namespace Birdy3d::render {
 
     void ModelComponent::start() {
         m_model = core::ResourceManager::get_model(m_model_name);
+        if (!m_model)
+            core::Logger::error("No model specified");
     }
 
     void ModelComponent::serialize(serializer::Adapter& adapter) {
@@ -22,8 +24,6 @@ namespace Birdy3d::render {
     void ModelComponent::render(const Shader& shader, bool transparent) const {
         if (m_model)
             m_model->render(*entity, material.get(), shader, transparent);
-        else
-            core::Logger::error("No model specified");
     }
 
     void ModelComponent::render_depth(const Shader& shader) const {
