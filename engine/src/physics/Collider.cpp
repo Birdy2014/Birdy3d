@@ -29,12 +29,20 @@ namespace Birdy3d::physics {
         if (m_generation_mode == GenerationMode::NONE) {
             m_model = core::ResourceManager::get_model(m_model_name);
         } else {
-            render::Model* model = entity->get_component<render::ModelComponent>()->model().get();
-            if (!model) {
-                core::Logger::warn("Entity doesn't have any model");
+            auto model_component = entity->get_component<render::ModelComponent>();
+            if (!model_component) {
+                core::Logger::warn("Entity '", entity->name, "' doesn't have any ModelComponent");
                 return;
             }
-            m_model = ConvexMeshGenerators::generate_model(m_generation_mode, *model);
+            auto model = model_component->model();
+            if (!model) {
+                core::Logger::warn("Entity '", entity->name, "' doesn't have any model");
+                return;
+            }
+            if (m_generation_mode == GenerationMode::COPY)
+                m_model = model;
+            else
+                m_model = ConvexMeshGenerators::generate_model(m_generation_mode, *model);
         }
     }
 
