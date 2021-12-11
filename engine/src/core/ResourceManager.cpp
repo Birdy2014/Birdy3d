@@ -50,7 +50,7 @@ namespace Birdy3d::core {
                 return nullptr;
             try {
                 theme = std::make_shared<ui::Theme>(file_content);
-            } catch (std::exception e) {
+            } catch (const std::exception& e) {
                 return nullptr;
             }
             m_themes[name] = theme;
@@ -85,6 +85,8 @@ namespace Birdy3d::core {
                     Logger::error("invalid primitive type");
             } else {
                 std::string path = get_resource_path(name, ResourceType::MODEL);
+                if (path.empty())
+                    return nullptr;
                 model = std::make_shared<render::Model>(path);
             }
             m_models[name] = model;
@@ -101,6 +103,8 @@ namespace Birdy3d::core {
                 texture = std::make_shared<render::Texture>(color);
             } else {
                 std::string path = get_resource_path(name, ResourceType::TEXTURE);
+                if (path.empty())
+                    return nullptr;
                 texture = std::make_shared<render::Texture>(path);
             }
             m_textures[name] = texture;
