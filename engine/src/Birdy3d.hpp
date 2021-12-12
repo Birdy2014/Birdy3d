@@ -63,6 +63,7 @@
 #include "utils/Color.hpp"
 #include "utils/FPPlayerController.hpp"
 #include "utils/PrimitiveGenerator.hpp"
+#include "utils/serializer/Reflector.hpp"
 #include "utils/serializer/Serializer.hpp"
 
 // Namespaces

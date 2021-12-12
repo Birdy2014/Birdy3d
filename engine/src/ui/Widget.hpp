@@ -41,6 +41,7 @@ namespace Birdy3d::ui {
         void unset_layout() { m_layout = nullptr; }
 
         void add_child(std::shared_ptr<Widget>);
+        void clear_children();
 
         template <class T, typename... Args>
         std::shared_ptr<T> add_child(Args... args) {

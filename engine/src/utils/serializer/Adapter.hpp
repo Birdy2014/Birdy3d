@@ -39,7 +39,6 @@ namespace Birdy3d::serializer {
     std::unique_ptr<Value> adapter_save(std::weak_ptr<T>& value);
 
     // Load
-    class LoadAdapter;
     template <typename T>
     void adapter_load(Value* from, T& to);
     template <ArithmeticType T>
@@ -67,27 +66,49 @@ namespace Birdy3d::serializer {
     template <typename T>
     void adapter_load(Value* from, std::weak_ptr<T>& to);
 
+    // Reflection
+    class ReflectClass;
+    void adapter_reflect(ReflectClass* reflect_class, const std::string& member_name, std::type_index member_type, void* member_ptr);
+
     class Adapter {
     public:
-        Adapter(Object* object, bool load)
+        enum class Mode {
+            SAVE,
+            LOAD,
+            REFLECT
+        };
+
+        Adapter(Object* object, Mode mode)
             : m_object(object)
-            , m_load(load) { }
+            , m_mode(mode) { }
+
+        Adapter(ReflectClass* reflect_class)
+            : m_class(reflect_class)
+            , m_mode(Mode::REFLECT) { }
 
         template <typename T>
         void operator()(const std::string& key, T& value) {
-            if (m_load)
-                adapter_load(m_object->value[key].get(), value);
-            else
+            switch (m_mode) {
+            case Mode::SAVE:
                 m_object->value[key] = adapter_save(value);
+                break;
+            case Mode::LOAD:
+                adapter_load(m_object->value[key].get(), value);
+                break;
+            case Mode::REFLECT:
+                adapter_reflect(m_class, key, typeid(value), &value);
+                break;
+            }
         }
 
-        bool load() {
-            return m_load;
+        Mode mode() {
+            return m_mode;
         }
 
     private:
-        Object* m_object;
-        bool m_load;
+        Object* m_object = nullptr;
+        ReflectClass* m_class = nullptr;
+        Mode m_mode;
     };
 
     /* --- Save --- */
@@ -101,7 +122,7 @@ namespace Birdy3d::serializer {
     template <class T>
     std::unique_ptr<Value> adapter_save(T& value) {
         auto object = std::make_unique<Object>();
-        Adapter adapter(object.get(), false);
+        Adapter adapter(object.get(), Adapter::Mode::SAVE);
         value.serialize(adapter);
         return object;
     }
@@ -165,7 +186,7 @@ namespace Birdy3d::serializer {
     template <class T>
     void adapter_load(Value* from, T& to) {
         if (auto* object_ptr = dynamic_cast<Object*>(from)) {
-            Adapter adapter(object_ptr, true);
+            Adapter adapter(object_ptr, Adapter::Mode::LOAD);
             to.serialize(adapter);
         }
     }
