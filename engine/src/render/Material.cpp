@@ -27,25 +27,21 @@ namespace Birdy3d::render {
     void Material::use(const Shader& shader) const {
         shader.set_bool("material.diffuse_map_enabled", diffuse_map_enabled);
         shader.set_vec4("material.diffuse_color", diffuse_color);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, m_diffuse_map->id);
+        m_diffuse_map->bind(0);
         shader.set_int("material.diffuse_map", 0);
 
         shader.set_bool("material.specular_map_enabled", specular_map_enabled);
         shader.set_float("material.specular_value", specular_value);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, m_specular_map->id);
+        m_specular_map->bind(1);
         shader.set_int("material.specular_map", 1);
 
         shader.set_bool("material.normal_map_enabled", normal_map_enabled);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, m_normal_map->id);
+        m_normal_map->bind(2);
         shader.set_int("material.normal_map", 2);
 
         shader.set_bool("material.emissive_map_enabled", emissive_map_enabled);
         shader.set_vec4("material.emissive_color", emissive_color);
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, m_emissive_map->id);
+        m_emissive_map->bind(3);
         shader.set_int("material.emissive_map", 3);
     }
 
