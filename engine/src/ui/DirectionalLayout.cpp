@@ -17,6 +17,8 @@ namespace Birdy3d::ui {
     }
 
     glm::vec2 DirectionalLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children) const {
+        if (children.empty())
+            return glm::vec2(0);
         glm::vec2 minsize(0);
         switch (dir) {
         case Direction::RIGHT:
