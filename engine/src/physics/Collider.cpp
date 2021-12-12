@@ -52,7 +52,7 @@ namespace Birdy3d::physics {
 
     void Collider::serialize(serializer::Adapter& adapter) {
         adapter("model_name", m_model_name);
-        if (adapter.load()) {
+        if (adapter.mode() == serializer::Adapter::Mode::LOAD) {
             int mode;
             adapter("generaton_mode", mode);
             m_generation_mode = (GenerationMode)mode;

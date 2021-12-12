@@ -1,4 +1,5 @@
 #include "utils/serializer/Adapter.hpp"
+#include "utils/serializer/Reflector.hpp"
 
 namespace Birdy3d::serializer {
 
@@ -80,6 +81,14 @@ namespace Birdy3d::serializer {
             to.z = (*object_ptr)["z"]->as_number()->value;
             to.w = (*object_ptr)["w"]->as_number()->value;
         }
+    }
+
+    /* --- Reflection --- */
+
+    std::map<void*, ReflectClass> Reflector::m_classes;
+
+    void adapter_reflect(ReflectClass* reflect_class, const std::string& member_name, std::type_index member_type, void* member_ptr) {
+        reflect_class->m_members.emplace_back(member_name, member_type, member_ptr);
     }
 
 }

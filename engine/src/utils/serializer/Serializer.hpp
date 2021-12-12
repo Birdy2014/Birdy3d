@@ -16,7 +16,7 @@ namespace Birdy3d::serializer {
     public:
         static void serialize(GeneratorType type, std::string name, auto& value, std::ostream& stream) {
             serializer::Object object;
-            serializer::Adapter adapter(&object, false);
+            serializer::Adapter adapter(&object, Adapter::Mode::SAVE);
             adapter(name, value);
             std::unique_ptr<Generator> generator;
             switch (type) {
@@ -68,7 +68,7 @@ namespace Birdy3d::serializer {
                 core::Logger::critical("Invalid Object");
                 exit(1);
             }
-            serializer::Adapter adapter(object, true);
+            serializer::Adapter adapter(object, Adapter::Mode::LOAD);
             adapter(name, value);
             serializer::PointerRegistry::clear();
         }

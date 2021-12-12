@@ -110,6 +110,7 @@ int main() {
     std::shared_ptr<ui::NumberInput> input_orientation_x;
     std::shared_ptr<ui::NumberInput> input_orientation_y;
     std::shared_ptr<ui::NumberInput> input_orientation_z;
+    std::shared_ptr<ui::Widget> inspector_component_container;
 
     // UI
     auto canvas = std::make_shared<ui::Canvas>();
@@ -154,17 +155,56 @@ int main() {
 
     auto tree = tree_scroll_view->add_child<ui::TreeView>(0_px, 100_p, ui::Placement::TOP_LEFT);
     tree->callback_select = [&](ui::TreeItem& item) {
-        if (item.data.type() == typeid(ecs::Entity*)) {
-            core::Application::selected_entity = std::any_cast<ecs::Entity*>(item.data);
-            input_position_x->value(core::Application::selected_entity->transform.position.x);
-            input_position_y->value(core::Application::selected_entity->transform.position.y);
-            input_position_z->value(core::Application::selected_entity->transform.position.z);
-            input_scale_x->value(core::Application::selected_entity->transform.scale.x);
-            input_scale_y->value(core::Application::selected_entity->transform.scale.y);
-            input_scale_z->value(core::Application::selected_entity->transform.scale.z);
-            input_orientation_x->value(core::Application::selected_entity->transform.orientation.x);
-            input_orientation_y->value(core::Application::selected_entity->transform.orientation.y);
-            input_orientation_z->value(core::Application::selected_entity->transform.orientation.z);
+        if (item.data.type() != typeid(ecs::Entity*))
+            return;
+
+        core::Application::selected_entity = std::any_cast<ecs::Entity*>(item.data);
+        input_position_x->value(core::Application::selected_entity->transform.position.x);
+        input_position_y->value(core::Application::selected_entity->transform.position.y);
+        input_position_z->value(core::Application::selected_entity->transform.position.z);
+        input_scale_x->value(core::Application::selected_entity->transform.scale.x);
+        input_scale_y->value(core::Application::selected_entity->transform.scale.y);
+        input_scale_z->value(core::Application::selected_entity->transform.scale.z);
+        input_orientation_x->value(core::Application::selected_entity->transform.orientation.x);
+        input_orientation_y->value(core::Application::selected_entity->transform.orientation.y);
+        input_orientation_z->value(core::Application::selected_entity->transform.orientation.z);
+
+        // Components
+        inspector_component_container->clear_children();
+        for (const auto& component : core::Application::selected_entity->components()) {
+            const auto& c = serializer::Reflector::get_class(component.get());
+            auto box = inspector_component_container->add_child<ui::CollapsibleBox>(ui::UIVector(0_px, 5_px), 100_p);
+            box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::DOWN, 10, true);
+            box->title(c.name);
+            for (const auto& member : c.m_members) {
+                if (member.type == typeid(std::string)) {
+                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->text(*(std::string*)member.value);
+                    text_field.lock()->add_callback("change", [text_field, member]() {
+                        *(std::string*)member.value = text_field.lock()->text();
+                    });
+                } else if (member.type == typeid(bool)) {
+                    std::weak_ptr<ui::CheckBox> checkbox = box->add_child<ui::CheckBox>(0_px, ui::Placement::TOP_LEFT, member.name);
+                    checkbox.lock()->checked = *(bool*)member.value;
+                    checkbox.lock()->add_callback("change", [checkbox, member]() {
+                        *(bool*)member.value = checkbox.lock()->checked;
+                    });
+                } else if (member.type == typeid(int)) {
+                    std::weak_ptr<ui::NumberInput> number_input = box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    number_input.lock()->value(*(int*)member.value);
+                    number_input.lock()->add_callback("change", [number_input, member]() {
+                        *(int*)member.value = number_input.lock()->value();
+                    });
+                } else if (member.type == typeid(float)) {
+                    std::weak_ptr<ui::NumberInput> number_input = box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    number_input.lock()->value(*(float*)member.value);
+                    number_input.lock()->add_callback("change", [number_input, member]() {
+                        *(float*)member.value = number_input.lock()->value();
+                    });
+                } else {
+                    std::cout << member.name << '\n';
+                }
+            }
         }
     };
     tree->context_menu = scene_context_menu;
@@ -212,6 +252,10 @@ int main() {
     inspector_window->title("Inspector");
 
     inspector_window->callback_close = [&inspector_window]() {
+        inspector_window->hidden = !inspector_window->hidden;
+    };
+
+    test_button->callback_click = [&inspector_window](const events::InputClickEvent&) {
         inspector_window->hidden = !inspector_window->hidden;
     };
 
@@ -297,14 +341,9 @@ int main() {
         input_orientation_z->value(event.entity->transform.orientation.z);
     });
 
-    auto test_checkbox = inspector_scroll_view->add_child<ui::CheckBox>(ui::UIVector(0_px, -50_px), ui::Placement::TOP_LEFT, "Textures");
-
-    test_button->callback_click = [&inspector_window](const events::InputClickEvent&) {
-        inspector_window->hidden = !inspector_window->hidden;
-    };
-
-    // auto test_window = canvas->add_child<Window>(UIVector(0_px, 50_px), 200_px);
-    // test_window->title("Test");
+    inspector_component_container = inspector_scroll_view->add_child<ui::Widget>();
+    inspector_component_container->size = ui::UIVector(100_p, 0_px);
+    inspector_component_container->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::DOWN, 10, true);
 
     // Entities
     std::shared_ptr<ecs::Scene> scene;

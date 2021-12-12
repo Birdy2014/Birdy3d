@@ -206,6 +206,10 @@ namespace Birdy3d::ui {
         m_children.push_back(std::move(w));
     }
 
+    void Widget::clear_children() {
+        m_children.clear();
+    }
+
     void Widget::to_foreground(Widget* widget) {
         auto element = std::find_if(m_children.cbegin(), m_children.cend(), [&](const std::shared_ptr<Widget>& w) { return w.get() == widget; });
         if (element == m_children.cend())

@@ -7,7 +7,6 @@ namespace Birdy3d::ui {
     class CheckBox : public Widget {
     public:
         bool checked = false;
-        std::function<void(bool)> callback_change;
 
         CheckBox(UIVector pos, Placement placement, std::string text);
         void draw() override;

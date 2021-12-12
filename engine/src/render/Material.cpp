@@ -57,27 +57,29 @@ namespace Birdy3d::render {
     }
 
     void Material::serialize(serializer::Adapter& adapter) {
+        bool loading = adapter.mode() == serializer::Adapter::Mode::LOAD;
+
         adapter("diffuse_map_enabled", diffuse_map_enabled);
         adapter("diffuse_color", diffuse_color);
         adapter("diffuse_map", m_diffuse_map_name);
-        if (adapter.load())
+        if (loading)
             diffuse_map(m_diffuse_map_name);
 
         adapter("specular_map_enabled", specular_map_enabled);
         adapter("specular_value", specular_value);
         adapter("specular_map", m_specular_map_name);
-        if (adapter.load())
+        if (loading)
             specular_map(m_specular_map_name);
 
         adapter("normal_map_enabled", normal_map_enabled);
         adapter("normal_map", m_normal_map_name);
-        if (adapter.load())
+        if (loading)
             normal_map(m_normal_map_name);
 
         adapter("emissive_map_enabled", emissive_map_enabled);
         adapter("emissive_color", emissive_color);
         adapter("emissive_map", m_emissive_map_name);
-        if (adapter.load())
+        if (loading)
             emissive_map(m_emissive_map_name);
     }
 
