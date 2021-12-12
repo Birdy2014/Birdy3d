@@ -64,6 +64,9 @@ var annotated_dup =
         [ "Parser", "classBirdy3d_1_1serializer_1_1Parser.html", null ],
         [ "PointerRegistry", "classBirdy3d_1_1serializer_1_1PointerRegistry.html", null ],
         [ "PrettyJsonGenerator", "classBirdy3d_1_1serializer_1_1PrettyJsonGenerator.html", null ],
+        [ "ReflectClass", "classBirdy3d_1_1serializer_1_1ReflectClass.html", null ],
+        [ "ReflectMember", "structBirdy3d_1_1serializer_1_1ReflectMember.html", null ],
+        [ "Reflector", "classBirdy3d_1_1serializer_1_1Reflector.html", null ],
         [ "Serializer", "classBirdy3d_1_1serializer_1_1Serializer.html", null ],
         [ "String", "structBirdy3d_1_1serializer_1_1String.html", null ],
         [ "Value", "structBirdy3d_1_1serializer_1_1Value.html", null ]

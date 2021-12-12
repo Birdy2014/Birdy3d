@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Birdy3d: Birdy3d::serializer::Adapter Class Reference</title>
+<title>Birdy3d: Birdy3d::serializer::Reflector Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -66,7 +66,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('classBirdy3d_1_1serializer_1_1Adapter.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classBirdy3d_1_1serializer_1_1Reflector.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -86,46 +86,29 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1serializer_1_1Adapter.
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classBirdy3d_1_1serializer_1_1Adapter-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Birdy3d::serializer::Adapter Class Reference</div></div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="classBirdy3d_1_1serializer_1_1Reflector-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Birdy3d::serializer::Reflector Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:ac6c497eb4d34fdc8406457eba48e63b1"><td class="memItemLeft" align="right" valign="top"><a id="ac6c497eb4d34fdc8406457eba48e63b1" name="ac6c497eb4d34fdc8406457eba48e63b1"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Mode</b> { <b>SAVE</b>
-, <b>LOAD</b>
-, <b>REFLECT</b>
- }</td></tr>
-<tr class="separator:ac6c497eb4d34fdc8406457eba48e63b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a65357accea724005b6c459b1ca81f07c"><td class="memItemLeft" align="right" valign="top"><a id="a65357accea724005b6c459b1ca81f07c" name="a65357accea724005b6c459b1ca81f07c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Adapter</b> (<a class="el" href="structBirdy3d_1_1serializer_1_1Object.html">Object</a> *object, Mode mode)</td></tr>
-<tr class="separator:a65357accea724005b6c459b1ca81f07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7484463524fe6d0f0d313f78b2874058"><td class="memItemLeft" align="right" valign="top"><a id="a7484463524fe6d0f0d313f78b2874058" name="a7484463524fe6d0f0d313f78b2874058"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Adapter</b> (<a class="el" href="classBirdy3d_1_1serializer_1_1ReflectClass.html">ReflectClass</a> *reflect_class)</td></tr>
-<tr class="separator:a7484463524fe6d0f0d313f78b2874058"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12d5fe1adfc19d1a2917792cc53eb327"><td class="memTemplParams" colspan="2"><a id="a12d5fe1adfc19d1a2917792cc53eb327" name="a12d5fe1adfc19d1a2917792cc53eb327"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a12d5fe1adfc19d1a2917792cc53eb327"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (const std::string &amp;key, T &amp;value)</td></tr>
-<tr class="separator:a12d5fe1adfc19d1a2917792cc53eb327"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dc5a9df0564e8d7297d09421782b531"><td class="memItemLeft" align="right" valign="top"><a id="a6dc5a9df0564e8d7297d09421782b531" name="a6dc5a9df0564e8d7297d09421782b531"></a>
-Mode&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> ()</td></tr>
-<tr class="separator:a6dc5a9df0564e8d7297d09421782b531"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a313c43ee186eab815e7626e180105d6c"><td class="memTemplParams" colspan="2"><a id="a313c43ee186eab815e7626e180105d6c" name="a313c43ee186eab815e7626e180105d6c"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a313c43ee186eab815e7626e180105d6c"><td class="memTemplItemLeft" align="right" valign="top">static const <a class="el" href="classBirdy3d_1_1serializer_1_1ReflectClass.html">ReflectClass</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_class</b> (T *c)</td></tr>
+<tr class="separator:a313c43ee186eab815e7626e180105d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>engine/src/utils/serializer/<a class="el" href="Adapter_8hpp_source.html">Adapter.hpp</a></li>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>engine/src/utils/serializer/<a class="el" href="Reflector_8hpp_source.html">Reflector.hpp</a></li>
+<li>engine/src/utils/serializer/Adapter.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Birdy3d</b></li><li class="navelem"><b>serializer</b></li><li class="navelem"><a class="el" href="classBirdy3d_1_1serializer_1_1Adapter.html">Adapter</a></li>
+    <li class="navelem"><b>Birdy3d</b></li><li class="navelem"><b>serializer</b></li><li class="navelem"><a class="el" href="classBirdy3d_1_1serializer_1_1Reflector.html">Reflector</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
