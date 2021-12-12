@@ -6,46 +6,47 @@
 
 namespace Birdy3d::render {
 
-    Texture::Texture(unsigned int width, unsigned int height, GLenum format, GLenum internalFormat, GLenum pixelType) {
-        glGenTextures(1, &id);
-        glBindTexture(GL_TEXTURE_2D, id);
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, pixelType, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        m_transparent = format == GL_RGBA;
-    }
-
     Texture::Texture(const std::string& filePath) {
-        unsigned char* data = stbi_load(filePath.data(), &this->width, &this->height, &this->nrChannels, 0);
+        unsigned char* data = stbi_load(filePath.data(), &this->m_width, &this->m_height, &this->m_channels, 0);
 
-        if (data) {
-            GLenum format;
-            if (nrChannels == 1)
-                format = GL_RED;
-            else if (nrChannels == 2)
-                format = GL_RG;
-            else if (nrChannels == 3)
-                format = GL_RGB;
-            else if (nrChannels == 4)
-                format = GL_RGBA;
-            else
-                core::Logger::critical("Invalid number of texture channels: ", nrChannels);
-
-            m_transparent = format == GL_RGBA;
-
-            glGenTextures(1, &id);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, id);
-            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        } else {
+        if (!data) {
             core::Logger::warn("Failed to load texture at: ", filePath);
+            return;
         }
+
+        GLenum format = GL_RED;
+        switch (m_channels) {
+        case 1:
+            format = GL_RED;
+            break;
+        case 2:
+            format = GL_RG;
+            break;
+        case 3:
+            format = GL_RGB;
+            break;
+        case 4:
+            format = GL_RGBA;
+            break;
+        default:
+            core::Logger::critical("Invalid number of texture channels: ", m_channels);
+            stbi_image_free(data);
+            return;
+        }
+
+        m_transparent = format == GL_RGBA;
+
+        glGenTextures(1, &m_id);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_id);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
         stbi_image_free(data);
     }
 
@@ -53,9 +54,9 @@ namespace Birdy3d::render {
         glm::vec4 vec = color.value;
         m_transparent = vec.a < 1;
         float data[4] = { vec.r, vec.g, vec.b, vec.a };
-        glGenTextures(1, &id);
+        glGenTextures(1, &m_id);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, id);
+        glBindTexture(GL_TEXTURE_2D, m_id);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -65,11 +66,16 @@ namespace Birdy3d::render {
     }
 
     Texture::~Texture() {
-        glDeleteTextures(1, &id);
+        glDeleteTextures(1, &m_id);
     }
 
-    bool Texture::transparent() {
+    bool Texture::transparent() const {
         return m_transparent;
+    }
+
+    void Texture::bind(int texture_unit) {
+        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glBindTexture(GL_TEXTURE_2D, m_id);
     }
 
 }

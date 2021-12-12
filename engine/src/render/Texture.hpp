@@ -7,16 +7,16 @@ namespace Birdy3d::render {
 
     class Texture {
     public:
-        unsigned int id;
-        int width, height, nrChannels;
+        GLuint m_id;
 
-        Texture(unsigned int width, unsigned int height, GLenum format, GLenum internalFormat, GLenum pixelType);
         Texture(const std::string& filePath);
         Texture(const utils::Color& color);
         ~Texture();
-        bool transparent();
+        bool transparent() const;
+        void bind(int texture_unit);
 
     private:
+        int m_width, m_height, m_channels;
         bool m_transparent;
     };
 
