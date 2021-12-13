@@ -4,7 +4,6 @@ namespace Birdy3d::render {
 
     class Camera;
     class DirectionalLight;
-    class Light;
     class Material;
     class Mesh;
     class Model;
