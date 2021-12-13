@@ -12,12 +12,10 @@ var hierarchy =
     [ "Birdy3d::ecs::Component", "classBirdy3d_1_1ecs_1_1Component.html", [
       [ "Birdy3d::physics::Collider", "classBirdy3d_1_1physics_1_1Collider.html", null ],
       [ "Birdy3d::render::Camera", "classBirdy3d_1_1render_1_1Camera.html", null ],
-      [ "Birdy3d::render::Light", "classBirdy3d_1_1render_1_1Light.html", [
-        [ "Birdy3d::render::DirectionalLight", "classBirdy3d_1_1render_1_1DirectionalLight.html", null ],
-        [ "Birdy3d::render::PointLight", "classBirdy3d_1_1render_1_1PointLight.html", null ],
-        [ "Birdy3d::render::Spotlight", "classBirdy3d_1_1render_1_1Spotlight.html", null ]
-      ] ],
+      [ "Birdy3d::render::DirectionalLight", "classBirdy3d_1_1render_1_1DirectionalLight.html", null ],
       [ "Birdy3d::render::ModelComponent", "classBirdy3d_1_1render_1_1ModelComponent.html", null ],
+      [ "Birdy3d::render::PointLight", "classBirdy3d_1_1render_1_1PointLight.html", null ],
+      [ "Birdy3d::render::Spotlight", "classBirdy3d_1_1render_1_1Spotlight.html", null ],
       [ "Birdy3d::utils::FPPlayerController", "classBirdy3d_1_1utils_1_1FPPlayerController.html", null ]
     ] ],
     [ "Birdy3d::ui::Console", "classBirdy3d_1_1ui_1_1Console.html", null ],
