@@ -88,6 +88,7 @@ namespace Birdy3d::ui {
         std::u32string::iterator end() { return m_text.end(); }
         std::size_t length() const { return m_text.length(); }
         void insert(std::size_t index, char32_t* value) { m_text.insert(index, value); }
+        void insert(std::size_t index, std::u32string value) { m_text.insert(index, value); }
         void erase(std::size_t index) { m_text.erase(m_text.begin() + index, m_text.begin() + index + 1); }
         void erase(std::size_t start_index, std::size_t end_index) { m_text.erase(m_text.begin() + start_index, m_text.begin() + end_index); }
 

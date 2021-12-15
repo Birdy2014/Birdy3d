@@ -17,7 +17,7 @@ namespace Birdy3d::ui {
     }
 
     void Textarea::draw() {
-        Widget::draw();
+        m_shapes[0]->draw(m_move);
 
         // The change callback is only called at the end, so this is necessary if clear is called.
         if (m_changed)
@@ -40,7 +40,7 @@ namespace Birdy3d::ui {
             selection_end--;
             if (line >= 0 && line < m_lines.size()) {
                 size_t line_start = line > 0 ? m_lines[line - 1] : 0;
-                core::Application::theme().text_renderer().render_text(m_text.substr(line_start, m_lines[line] - line_start - 1), m_side_padding, y, core::Application::theme().font_size(), utils::Color::Name::FG, m_move, m_cursor_pos - (int)line_start >= 0, std::max(m_cursor_pos - (int)line_start, 0), m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, std::max(selection_start - (int)line_start, 0), std::max(selection_end - (int)line_start, 0), utils::Color::Name::TEXT_HIGHLIGHT);
+                core::Application::theme().text_renderer().render_text(((std::u32string)*m_text).substr(line_start, m_lines[line] - line_start - 1), m_side_padding, y, core::Application::theme().font_size(), utils::Color::Name::FG, m_move, m_cursor_pos - (int)line_start >= 0, std::max(m_cursor_pos - (int)line_start, 0), m_lines[line] > selection_start && line_start <= selection_end && m_selection_end != -1, std::max(selection_start - (int)line_start, 0), std::max(selection_end - (int)line_start, 0), utils::Color::Name::TEXT_HIGHLIGHT);
             }
         }
     }
@@ -54,12 +54,12 @@ namespace Birdy3d::ui {
         std::u32string line;
         size_t line_end;
         size_t pos = 0, eol = 0, nextspace = 0, prevspace = 0, length = 0;
-        while (pos != std::u32string::npos && pos < m_text.length()) {
-            eol = m_text.find_first_of('\n', pos);
+        while (pos != std::u32string::npos && pos < m_text->length()) {
+            eol = ((std::u32string)*m_text).find_first_of('\n', pos);
             if (eol == std::u32string::npos)
-                eol = m_text.length();
+                eol = m_text->length();
 
-            line = m_text.substr(pos, eol - pos);
+            line = ((std::u32string)*m_text).substr(pos, eol - pos);
             line_end = eol;
             // Line is too long
             length = core::Application::theme().text_renderer().text_size(line, core::Application::theme().font_size()).x;
@@ -67,8 +67,8 @@ namespace Birdy3d::ui {
                 nextspace = pos;
                 while (nextspace < eol) {
                     prevspace = nextspace;
-                    nextspace = m_text.find_first_of(' ', prevspace + 1);
-                    line = m_text.substr(pos, nextspace - pos);
+                    nextspace = ((std::u32string)*m_text).find_first_of(' ', prevspace + 1);
+                    line = ((std::u32string)*m_text).substr(pos, nextspace - pos);
                     line_end = nextspace;
 
                     // reached the space too far right
@@ -77,7 +77,7 @@ namespace Birdy3d::ui {
                         // the line can't be broken using a space
                         if (prevspace == pos)
                             prevspace = eol;
-                        line = m_text.substr(pos, prevspace - pos);
+                        line = ((std::u32string)*m_text).substr(pos, prevspace - pos);
                         line_end = prevspace;
                         break;
                     }
@@ -162,7 +162,7 @@ namespace Birdy3d::ui {
             break;
         }
         case GLFW_KEY_ENTER: {
-            m_text.insert(m_cursor_pos, U"\n");
+            m_text->insert(m_cursor_pos, U"\n");
             m_cursor_pos++;
             break;
         }
@@ -182,7 +182,7 @@ namespace Birdy3d::ui {
             y = m_lines.size() - 1;
 
         size_t line_start = y > 0 ? m_lines[y - 1] : 0;
-        int char_pos = core::Application::theme().text_renderer().char_index(m_text.substr(line_start, m_lines[y] - line_start - 1), core::Application::theme().font_size(), local_pos.x - m_side_padding, true);
+        int char_pos = core::Application::theme().text_renderer().char_index(((std::u32string)*m_text).substr(line_start, m_lines[y] - line_start - 1), core::Application::theme().font_size(), local_pos.x - m_side_padding, true);
         return line_start + char_pos;
     }
 
