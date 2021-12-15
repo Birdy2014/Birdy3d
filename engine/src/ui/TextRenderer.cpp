@@ -223,10 +223,14 @@ namespace Birdy3d::ui {
             , color(color) { }
     };
 
+    std::unique_ptr<Rectangle> Text::m_cursor_rect;
+
     Text::Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size)
         : Shape(pos, 0_px, color, placement)
         , font_size(font_size)
         , m_shader(core::ResourceManager::get_shader("text")) {
+        if (!m_cursor_rect)
+            m_cursor_rect = std::make_unique<Rectangle>(0_px, 0_px, utils::Color::Name::FG);
         m_text = utils::Unicode::utf8_to_utf32(text);
         create_buffers();
         m_dirty = true;
@@ -240,8 +244,11 @@ namespace Birdy3d::ui {
         if (m_hidden)
             return;
 
-        if (m_text.empty())
+        if (m_text.empty()) {
+            if (cursor_visible)
+                draw_cursor(move);
             return;
+        }
 
         if (m_dirty) {
             update_buffers();
@@ -265,6 +272,9 @@ namespace Birdy3d::ui {
         m_shader->set_int("font_atlas", 0);
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, m_escaped_text_length * 6, GL_UNSIGNED_INT, 0);
+
+        if (cursor_visible)
+            draw_cursor(move);
     }
 
     bool Text::contains(glm::vec2) {
@@ -390,6 +400,19 @@ namespace Birdy3d::ui {
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TextVertex) * vertices.size(), vertices.data());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * indices.size(), indices.data());
+    }
+
+    void Text::draw_cursor(glm::mat4 move) {
+        Theme& theme = core::Application::theme();
+        auto size = theme.text_renderer().text_size(m_text, font_size, cursor_pos);
+        float xpos = m_position.x + size.x - 1;
+        float ypos = m_position.y - size.y + theme.line_height();
+
+        m_cursor_rect->type = Rectangle::FILLED;
+        m_cursor_rect->position(UIVector(xpos, ypos));
+        m_cursor_rect->size(UIVector(2, font_size));
+        m_cursor_rect->color(m_color);
+        m_cursor_rect->draw(move);
     }
 
 }
