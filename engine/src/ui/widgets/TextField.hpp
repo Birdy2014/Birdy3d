@@ -14,15 +14,11 @@ namespace Birdy3d::ui {
         void text(std::string);
         void append(std::string);
         void clear();
-        virtual void draw() override;
 
     protected:
         float m_side_padding = 2;
-        std::u32string m_text;
+        Text* m_text;
         bool m_selecting = false;
-        int m_cursor_pos = -1;
-        int m_selection_start = -1;
-        int m_selection_end = -1;
         bool m_changed = false;
 
         // Events
