@@ -281,7 +281,7 @@ namespace Birdy3d::ui {
         return false;
     }
 
-    std::string Text::text() {
+    std::string Text::text() const {
         return utils::Unicode::utf32_to_utf8(m_text);
     }
 
@@ -290,12 +290,29 @@ namespace Birdy3d::ui {
         m_dirty = true;
     }
 
-    std::u32string Text::text_u32() {
+    std::u32string Text::text_u32() const {
         return m_text;
     }
 
     void Text::text_u32(std::u32string value) {
         m_text = value;
+        m_dirty = true;
+    }
+
+    void Text::append(std::string value) {
+        if (value.empty())
+            return;
+        append(utils::Unicode::utf8_to_utf32(value));
+    }
+
+    void Text::append(std::u32string value) {
+        if (value.empty())
+            return;
+        m_text += value;
+    }
+
+    void Text::clear() {
+        m_text.clear();
         m_dirty = true;
     }
 
