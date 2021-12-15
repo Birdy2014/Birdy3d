@@ -275,6 +275,9 @@ namespace Birdy3d::ui {
 
         if (cursor_visible)
             draw_cursor(move);
+
+        if (highlight_visible)
+            draw_highlight(move);
     }
 
     bool Text::contains(glm::vec2) {
@@ -430,6 +433,65 @@ namespace Birdy3d::ui {
         m_cursor_rect->size(UIVector(2, font_size));
         m_cursor_rect->color(m_color);
         m_cursor_rect->draw(move);
+    }
+
+    void Text::draw_highlight(glm::mat4 move) {
+        std::size_t hl_start = highlight_start;
+        std::size_t hl_end = highlight_end;
+        if (hl_start > hl_end) {
+            std::swap(hl_start, hl_end);
+            --hl_end;
+        }
+
+        Theme& theme = core::Application::theme();
+        float scale = font_size > 0 ? font_size / theme.text_renderer().m_font_size : 1;
+        glm::vec2 current_pos = m_position;
+        glm::vec2 start_pos;
+        bool started_highlight = false;
+        std::size_t index_escaped = 0;
+        for (auto it = m_text.cbegin(); it != m_text.cend(); it++, index_escaped++) {
+            if (*it == '\x1B') {
+                it++;
+                if (it == m_text.cend())
+                    break;
+                index_escaped--;
+                continue;
+            }
+
+            if (index_escaped == hl_start) {
+                start_pos = current_pos;
+                started_highlight = true;
+            }
+
+            if (*it == '\n' || index_escaped == hl_end + 1) {
+                if (started_highlight) {
+                    m_cursor_rect->type = Rectangle::FILLED;
+                    m_cursor_rect->position(start_pos);
+                    m_cursor_rect->size(UIVector(current_pos.x - start_pos.x, font_size));
+                    m_cursor_rect->color(utils::Color::Name::TEXT_HIGHLIGHT);
+                    m_cursor_rect->draw(move);
+                }
+                if (index_escaped == hl_end)
+                    return;
+                current_pos.x = 0;
+                current_pos.y -= theme.line_height();
+                start_pos = current_pos;
+                continue;
+            }
+
+            if (theme.text_renderer().m_chars.count(*it) == 0)
+                theme.text_renderer().add_char(*it);
+            Character ch = theme.text_renderer().m_chars[*it];
+            current_pos.x += (ch.advance >> 6) * scale;
+        }
+
+        if (started_highlight) {
+            m_cursor_rect->type = Rectangle::FILLED;
+            m_cursor_rect->position(start_pos);
+            m_cursor_rect->size(UIVector(current_pos.x - start_pos.x, font_size));
+            m_cursor_rect->color(utils::Color::Name::TEXT_HIGHLIGHT);
+            m_cursor_rect->draw(move);
+        }
     }
 
 }

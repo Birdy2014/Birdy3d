@@ -60,6 +60,9 @@ namespace Birdy3d::ui {
         float font_size;
         bool cursor_visible = false;
         std::size_t cursor_pos = 0;
+        bool highlight_visible = false;
+        std::size_t highlight_start = 0;
+        std::size_t highlight_end = 0;
 
         Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size = 0);
         ~Text();
@@ -102,6 +105,7 @@ namespace Birdy3d::ui {
         void delete_buffers();
         void update_buffers();
         void draw_cursor(glm::mat4 move);
+        void draw_highlight(glm::mat4 move);
     };
 
 }
