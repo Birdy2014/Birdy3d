@@ -22,6 +22,12 @@ namespace Birdy3d::ui {
         void on_resize() override;
 
     private:
+        // TODO: Remove this and fix Textarea
+        std::u32string m_text;
+        int m_cursor_pos = -1;
+        int m_selection_start = -1;
+        int m_selection_end = -1;
+
         float m_tmpscroll;
         std::vector<size_t> m_lines;
         bool m_selecting = false;
