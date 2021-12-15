@@ -65,10 +65,28 @@ namespace Birdy3d::ui {
         ~Text();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
-        std::string text();
+        std::string text() const;
         void text(std::string value);
-        std::u32string text_u32();
+        std::u32string text_u32() const;
         void text_u32(std::u32string value);
+        void append(std::string);
+        void append(std::u32string);
+        void clear();
+
+        void operator=(std::string value) { text(value); }
+        void operator=(std::u32string value) { text_u32(value); }
+        operator std::string() const { return text(); }
+        operator std::u32string() const { return text_u32(); }
+        void operator+=(std::string value) { append(value); }
+        void operator+=(std::u32string value) { append(value); }
+        bool operator==(std::string value) const { return text() == value; }
+        bool operator==(std::u32string value) const { return text_u32() == value; }
+        std::u32string::iterator begin() { return m_text.begin(); }
+        std::u32string::iterator end() { return m_text.end(); }
+        std::size_t length() const { return m_text.length(); }
+        void insert(std::size_t index, char32_t* value) { m_text.insert(index, value); }
+        void erase(std::size_t index) { m_text.erase(m_text.begin() + index, m_text.begin() + index + 1); }
+        void erase(std::size_t start_index, std::size_t end_index) { m_text.erase(m_text.begin() + start_index, m_text.begin() + end_index); }
 
     private:
         std::u32string m_text;
