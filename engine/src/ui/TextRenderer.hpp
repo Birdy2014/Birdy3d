@@ -58,6 +58,8 @@ namespace Birdy3d::ui {
     class Text : public Shape {
     public:
         float font_size;
+        bool cursor_visible = false;
+        std::size_t cursor_pos = 0;
 
         Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size = 0);
         ~Text();
@@ -72,6 +74,7 @@ namespace Birdy3d::ui {
         std::u32string m_text;
         GLuint m_vao, m_vbo, m_ebo;
         std::shared_ptr<render::Shader> m_shader;
+        static std::unique_ptr<Rectangle> m_cursor_rect;
 
         // Buffer size is smaller than text_length if the text contains escape characters.
         std::size_t m_text_length = 0;
@@ -80,6 +83,7 @@ namespace Birdy3d::ui {
         void create_buffers();
         void delete_buffers();
         void update_buffers();
+        void draw_cursor(glm::mat4 move);
     };
 
 }
