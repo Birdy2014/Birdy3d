@@ -19,6 +19,16 @@ namespace Birdy3d::core {
             FONT
         };
 
+        class ResourceIdentifier {
+        public:
+            ResourceType type;
+            std::string source;
+            std::string name;
+            std::vector<std::string> args;
+
+            ResourceIdentifier(std::string);
+        };
+
         static ResourceHandle<render::Shader> get_shader(const std::string& name);
         static ResourceHandle<ui::Theme> get_theme(const std::string& name);
         static ResourceHandle<render::Model> get_model(const std::string& name);
