@@ -74,6 +74,7 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1core_1_1Logger.html":[1,0,0,0,2],
 "classBirdy3d_1_1core_1_1ResourceHandle.html":[1,0,0,0,3],
 "classBirdy3d_1_1core_1_1ResourceManager.html":[1,0,0,0,4],
+"classBirdy3d_1_1core_1_1ResourceManager_1_1ResourceIdentifier.html":[1,0,0,0,4,0],
 "classBirdy3d_1_1ecs_1_1Component.html":[1,0,0,1,0],
 "classBirdy3d_1_1ecs_1_1Component.html#afd2d3418e99c259107ee481f3e1a8bdd":[1,0,0,1,0,0],
 "classBirdy3d_1_1ecs_1_1Entity.html":[1,0,0,1,1],
