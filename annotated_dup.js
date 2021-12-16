@@ -5,6 +5,7 @@ var annotated_dup =
         [ "Application", "classBirdy3d_1_1core_1_1Application.html", null ],
         [ "Input", "classBirdy3d_1_1core_1_1Input.html", null ],
         [ "Logger", "classBirdy3d_1_1core_1_1Logger.html", null ],
+        [ "ResourceHandle", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
         [ "ResourceManager", "classBirdy3d_1_1core_1_1ResourceManager.html", null ]
       ] ],
       [ "ecs", null, [
