@@ -95,7 +95,7 @@ namespace Birdy3d::ui {
     private:
         std::u32string m_text;
         GLuint m_vao, m_vbo, m_ebo;
-        std::shared_ptr<render::Shader> m_shader;
+        core::ResourceHandle<render::Shader> m_shader;
         static std::unique_ptr<Rectangle> m_cursor_rect;
 
         // Buffer size is smaller than text_length if the text contains escape characters.

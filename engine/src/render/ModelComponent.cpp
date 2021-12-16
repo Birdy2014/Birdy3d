@@ -3,21 +3,19 @@
 namespace Birdy3d::render {
 
     ModelComponent::ModelComponent()
-        : material(nullptr)
-        , m_model_name("") { }
+        : material(nullptr) { }
 
     ModelComponent::ModelComponent(const std::string& name, std::shared_ptr<Material> material)
         : material(material)
-        , m_model_name(name) { }
+        , m_model(name) { }
 
     void ModelComponent::start() {
-        m_model = core::ResourceManager::get_model(m_model_name);
         if (!m_model)
-            core::Logger::error("No model specified");
+            core::Logger::warn("No model specified");
     }
 
     void ModelComponent::serialize(serializer::Adapter& adapter) {
-        adapter("model_name", m_model_name);
+        adapter("model", m_model);
         adapter("material", material);
     }
 
@@ -31,13 +29,12 @@ namespace Birdy3d::render {
             m_model->render_depth(*entity, shader);
     }
 
-    std::shared_ptr<Model> ModelComponent::model() {
+    core::ResourceHandle<Model> ModelComponent::model() {
         return m_model;
     }
 
     void ModelComponent::model(const std::string& name) {
-        m_model_name = name;
-        m_model = core::ResourceManager::get_model(name);
+        m_model.load(name);
     }
 
     BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, ModelComponent);

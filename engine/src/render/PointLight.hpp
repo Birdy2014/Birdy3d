@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/ResourceHandle.hpp"
 #include "ecs/Component.hpp"
 #include "render/Shader.hpp"
 
@@ -23,7 +24,7 @@ namespace Birdy3d::render {
 
     private:
         float m_far = 25.0f;
-        std::shared_ptr<Shader> m_depth_shader;
+        core::ResourceHandle<Shader> m_depth_shader;
         unsigned int m_shadow_map_fbo, m_shadow_map;
         const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
         bool m_shadow_map_updated = false;

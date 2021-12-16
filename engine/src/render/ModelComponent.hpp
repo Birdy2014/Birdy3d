@@ -18,12 +18,11 @@ namespace Birdy3d::render {
         void serialize(serializer::Adapter& adapter) override;
         void render(const Shader& shader, bool transparent) const;
         void render_depth(const Shader& shader) const;
-        std::shared_ptr<Model> model();
+        core::ResourceHandle<Model> model();
         void model(const std::string& name);
 
     private:
-        std::string m_model_name;
-        std::shared_ptr<Model> m_model;
+        core::ResourceHandle<Model> m_model;
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(ecs::Component, ModelComponent);
     };
