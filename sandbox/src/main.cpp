@@ -201,6 +201,30 @@ int main() {
                     number_input.lock()->add_callback("change", [number_input, member]() {
                         *(float*)member.value = number_input.lock()->value();
                     });
+                } else if (member.type == typeid(core::ResourceHandle<render::Shader>)) {
+                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->text(*(core::ResourceHandle<render::Shader>*)member.value);
+                    text_field.lock()->add_callback("change", [text_field, member]() {
+                        *(core::ResourceHandle<render::Shader>*)member.value = text_field.lock()->text();
+                    });
+                } else if (member.type == typeid(core::ResourceHandle<ui::Theme>)) {
+                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->text(*(core::ResourceHandle<ui::Theme>*)member.value);
+                    text_field.lock()->add_callback("change", [text_field, member]() {
+                        *(core::ResourceHandle<ui::Theme>*)member.value = text_field.lock()->text();
+                    });
+                } else if (member.type == typeid(core::ResourceHandle<render::Model>)) {
+                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->text(*(core::ResourceHandle<render::Model>*)member.value);
+                    text_field.lock()->add_callback("change", [text_field, member]() {
+                        *(core::ResourceHandle<render::Model>*)member.value = text_field.lock()->text();
+                    });
+                } else if (member.type == typeid(core::ResourceHandle<render::Model>)) {
+                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->text(*(core::ResourceHandle<render::Model>*)member.value);
+                    text_field.lock()->add_callback("change", [text_field, member]() {
+                        *(core::ResourceHandle<render::Model>*)member.value = text_field.lock()->text();
+                    });
                 } else {
                     std::cout << member.name << '\n';
                 }
