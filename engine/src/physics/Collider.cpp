@@ -27,7 +27,7 @@ namespace Birdy3d::physics {
 
     void Collider::start() {
         if (m_generation_mode == GenerationMode::NONE) {
-            m_model = core::ResourceManager::get_model(m_model_name);
+            m_model = core::ResourceManager::get_model(m_model_name).ptr();
         } else {
             auto model_component = entity->get_component<render::ModelComponent>();
             if (!model_component) {
@@ -40,7 +40,7 @@ namespace Birdy3d::physics {
                 return;
             }
             if (m_generation_mode == GenerationMode::COPY)
-                m_model = model;
+                m_model = model.ptr();
             else
                 m_model = ConvexMeshGenerators::generate_model(m_generation_mode, *model);
         }

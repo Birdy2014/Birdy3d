@@ -31,13 +31,13 @@ namespace Birdy3d::render {
 
     private:
         std::string m_diffuse_map_name = "color::#ffffff";
-        std::shared_ptr<Texture> m_diffuse_map = core::ResourceManager::get_color_texture(utils::Color::WHITE);
+        core::ResourceHandle<Texture> m_diffuse_map = core::ResourceManager::get_texture("color::" + utils::Color::WHITE.to_string());
         std::string m_specular_map_name = "color::#000000";
-        std::shared_ptr<Texture> m_specular_map = core::ResourceManager::get_color_texture(utils::Color::BLACK);
+        core::ResourceHandle<Texture> m_specular_map = core::ResourceManager::get_texture("color::" + utils::Color::BLACK.to_string());
         std::string m_normal_map_name = "color::#ffffff";
-        std::shared_ptr<Texture> m_normal_map = core::ResourceManager::get_color_texture(utils::Color::WHITE);
+        core::ResourceHandle<Texture> m_normal_map = core::ResourceManager::get_texture("color::" + utils::Color::WHITE.to_string());
         std::string m_emissive_map_name = "color::#000000";
-        std::shared_ptr<Texture> m_emissive_map = core::ResourceManager::get_color_texture(utils::Color::BLACK);
+        core::ResourceHandle<Texture> m_emissive_map = core::ResourceManager::get_texture("color::" + utils::Color::BLACK.to_string());
 
         BIRDY3D_REGISTER_TYPE_DEC(Material);
     };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Forward.hpp"
 #include "utils/serializer/PointerRegistry.hpp"
 #include "utils/serializer/Types.hpp"
 #include <glm/glm.hpp>
@@ -37,6 +38,8 @@ namespace Birdy3d::serializer {
     std::unique_ptr<Value> adapter_save(std::shared_ptr<T>& value);
     template <typename T>
     std::unique_ptr<Value> adapter_save(std::weak_ptr<T>& value);
+    template <class T>
+    std::unique_ptr<Value> adapter_save(core::ResourceHandle<T>& value);
 
     // Load
     template <typename T>
@@ -65,6 +68,8 @@ namespace Birdy3d::serializer {
     void adapter_load(Value* from, std::shared_ptr<T>& to);
     template <typename T>
     void adapter_load(Value* from, std::weak_ptr<T>& to);
+    template <class T>
+    void adapter_load(Value* from, core::ResourceHandle<T>& to);
 
     // Reflection
     class ReflectClass;

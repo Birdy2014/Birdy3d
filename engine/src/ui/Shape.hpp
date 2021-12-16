@@ -83,7 +83,7 @@ namespace Birdy3d::ui {
         }
 
     protected:
-        std::shared_ptr<render::Shader> m_shader;
+        core::ResourceHandle<render::Shader> m_shader;
         unsigned int m_vao = 0;
         unsigned int m_vbo = 0;
         bool m_dirty = true;

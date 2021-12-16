@@ -13,7 +13,7 @@
 
 namespace Birdy3d::core {
 
-    std::shared_ptr<ui::Theme> Application::m_theme = nullptr;
+    ResourceHandle<ui::Theme> Application::m_theme;
     events::EventBus* Application::event_bus = nullptr;
     float Application::delta_time = 0;
     std::weak_ptr<ecs::Scene> Application::scene;
@@ -170,8 +170,12 @@ namespace Birdy3d::core {
         }
     }
 
+    ui::Theme& Application::theme() {
+        return *m_theme;
+    }
+
     bool Application::theme(const std::string& name) {
-        std::shared_ptr<ui::Theme> new_theme = ResourceManager::get_theme(name);
+        auto new_theme = ResourceManager::get_theme(name);
         if (!new_theme)
             return false;
         m_theme = new_theme;

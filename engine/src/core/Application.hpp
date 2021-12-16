@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "core/Forward.hpp"
 #include "ecs/Forward.hpp"
 #include "events/Forward.hpp"
 #include "ui/Forward.hpp"
@@ -28,13 +29,13 @@ namespace Birdy3d::core {
         static bool option_bool(Option);
         static void option_toggle(Option);
         static void option_bool(Option, bool);
-        static ui::Theme& theme() { return *m_theme; }
+        static ui::Theme& theme();
         static bool theme(const std::string&);
 
     private:
         static GLFWwindow* m_window;
         static std::unordered_map<Option, bool> m_options_bool;
-        static std::shared_ptr<ui::Theme> m_theme;
+        static ResourceHandle<ui::Theme> m_theme;
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);

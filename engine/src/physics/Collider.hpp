@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/ResourceHandle.hpp"
 #include "ecs/Component.hpp"
 #include "physics/ConvexMeshGenerators.hpp"
 #include "physics/Forward.hpp"

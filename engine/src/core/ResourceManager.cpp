@@ -20,6 +20,42 @@
 
 namespace Birdy3d::core {
 
+    template <>
+    bool ResourceHandle<render::Shader>::load(std::string new_name) {
+        auto val = ResourceManager::get_shader_ptr(new_name);
+        if (!val)
+            return false;
+        m_ptr = val;
+        return true;
+    }
+
+    template <>
+    bool ResourceHandle<ui::Theme>::load(std::string new_name) {
+        auto val = ResourceManager::get_theme_ptr(new_name);
+        if (!val)
+            return false;
+        m_ptr = val;
+        return true;
+    }
+
+    template <>
+    bool ResourceHandle<render::Model>::load(std::string new_name) {
+        auto val = ResourceManager::get_model_ptr(new_name);
+        if (!val)
+            return false;
+        m_ptr = val;
+        return true;
+    }
+
+    template <>
+    bool ResourceHandle<render::Texture>::load(std::string new_name) {
+        auto val = ResourceManager::get_texture_ptr(new_name);
+        if (!val)
+            return false;
+        m_ptr = val;
+        return true;
+    }
+
     std::unordered_map<std::string, std::shared_ptr<render::Shader>> ResourceManager::m_shaders;
     std::unordered_map<std::string, std::shared_ptr<ui::Theme>> ResourceManager::m_themes;
     std::unordered_map<std::string, std::shared_ptr<render::Model>> ResourceManager::m_models;
@@ -30,7 +66,23 @@ namespace Birdy3d::core {
         std::filesystem::current_path(base_path);
     }
 
-    std::shared_ptr<render::Shader> ResourceManager::get_shader(const std::string& name) {
+    ResourceHandle<render::Shader> ResourceManager::get_shader(const std::string& name) {
+        return ResourceHandle<render::Shader>(name);
+    }
+
+    ResourceHandle<ui::Theme> ResourceManager::get_theme(const std::string& name) {
+        return ResourceHandle<ui::Theme>(name);
+    }
+
+    ResourceHandle<render::Model> ResourceManager::get_model(const std::string& name) {
+        return ResourceHandle<render::Model>(name);
+    }
+
+    ResourceHandle<render::Texture> ResourceManager::get_texture(const std::string& name) {
+        return ResourceHandle<render::Texture>(name);
+    }
+
+    std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(const std::string& name) {
         std::shared_ptr<render::Shader> shader = m_shaders[name];
         if (!shader) {
             shader = std::make_shared<render::Shader>(name);
@@ -39,7 +91,7 @@ namespace Birdy3d::core {
         return shader;
     }
 
-    std::shared_ptr<ui::Theme> ResourceManager::get_theme(const std::string& name) {
+    std::shared_ptr<ui::Theme> ResourceManager::get_theme_ptr(const std::string& name) {
         std::shared_ptr<ui::Theme> theme = m_themes[name];
         if (!theme) {
             std::string path = get_resource_path(name, ResourceType::THEME);
@@ -58,7 +110,7 @@ namespace Birdy3d::core {
         return theme;
     }
 
-    std::shared_ptr<render::Model> ResourceManager::get_model(const std::string& name) {
+    std::shared_ptr<render::Model> ResourceManager::get_model_ptr(const std::string& name) {
         std::shared_ptr<render::Model> model = m_models[name];
         if (!model) {
             // TODO: generalize for all resources
@@ -94,7 +146,7 @@ namespace Birdy3d::core {
         return model;
     }
 
-    std::shared_ptr<render::Texture> ResourceManager::get_texture(const std::string& name) {
+    std::shared_ptr<render::Texture> ResourceManager::get_texture_ptr(const std::string& name) {
         std::shared_ptr<render::Texture> texture = m_textures[name];
         if (!texture) {
             std::string prefix_color = "color::";
@@ -110,10 +162,6 @@ namespace Birdy3d::core {
             m_textures[name] = texture;
         }
         return texture;
-    }
-
-    std::shared_ptr<render::Texture> ResourceManager::get_color_texture(const utils::Color& color) {
-        return get_texture("color::" + color.to_string());
     }
 
     std::string ResourceManager::get_resource_path(std::string name, ResourceType type) {
