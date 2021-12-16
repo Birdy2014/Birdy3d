@@ -48,6 +48,11 @@ namespace Birdy3d::ui {
         Widget* last_focused_widget() { return m_last_focused_widget; }
         bool cursor_grabbed() { return m_cursor_grabbed; }
 
+        void unfocus() {
+            m_focused_widget = nullptr;
+            m_cursor_grabbed = false;
+        }
+
     private:
         friend class Widget;
 
