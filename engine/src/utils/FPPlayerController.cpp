@@ -88,8 +88,11 @@ namespace Birdy3d::utils {
         case GLFW_KEY_CAPS_LOCK:
         case GLFW_KEY_ESCAPE: {
             core::Input::toggle_cursor_hidden();
-            if (auto menu_ptr = m_menu.lock())
+            if (auto menu_ptr = m_menu.lock()) {
                 menu_ptr->hidden = !menu_ptr->hidden;
+                if (menu_ptr->hidden)
+                    menu_ptr->canvas->unfocus();
+            }
             break;
         }
         case GLFW_KEY_F: {
