@@ -113,6 +113,8 @@ namespace Birdy3d::ui {
                 break;
             }
         }
+
+        m_changed = true;
     }
 
     void TextField::on_char(const events::InputCharEvent& event) {
@@ -129,6 +131,7 @@ namespace Birdy3d::ui {
         c[1] = 0;
         m_text->insert(m_text->cursor_pos, c);
         m_text->cursor_pos++;
+        m_changed = true;
     }
 
     void TextField::on_mouse_enter() {
