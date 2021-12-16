@@ -251,11 +251,11 @@ namespace Birdy3d::core {
             return {};
         }
 
-        if (std::filesystem::exists(name + extension))
+        if (std::filesystem::is_regular_file(name + extension))
             return name + extension;
-        if (std::filesystem::exists("/" + name + extension))
+        if (std::filesystem::is_regular_file("/" + name + extension))
             return "/" + name + extension;
-        if (std::filesystem::exists(subdir + name + extension))
+        if (std::filesystem::is_regular_file(subdir + name + extension))
             return subdir + name + extension;
 
         std::string path_fragment;
