@@ -27,6 +27,15 @@ namespace Birdy3d::core {
         std::shared_ptr<T> m_ptr;
     };
 
+    template <>
+    bool ResourceHandle<render::Shader>::load(std::string new_name);
+    template <>
+    bool ResourceHandle<ui::Theme>::load(std::string new_name);
+    template <>
+    bool ResourceHandle<render::Model>::load(std::string new_name);
+    template <>
+    bool ResourceHandle<render::Texture>::load(std::string new_name);
+
 }
 
 namespace Birdy3d::serializer {
