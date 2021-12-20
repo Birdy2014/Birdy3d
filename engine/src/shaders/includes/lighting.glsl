@@ -113,7 +113,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
 
     // SHADOW
     vec3 fragToLight = fragPos - light.position;
-    float currentDepth = length(fragToLight);
+    float currentDepth = length(fragToLight) / light.far;
     float bias = 0.0f;
     float shadow = texture(light.shadowMap, vec4(fragToLight, currentDepth), bias);
 
