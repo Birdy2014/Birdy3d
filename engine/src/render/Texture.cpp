@@ -6,11 +6,11 @@
 
 namespace Birdy3d::render {
 
-    Texture::Texture(const std::string& filePath) {
-        unsigned char* data = stbi_load(filePath.data(), &this->m_width, &this->m_height, &this->m_channels, 0);
+    Texture::Texture(const std::string& file_path) {
+        unsigned char* data = stbi_load(file_path.data(), &m_width, &m_height, &m_channels, 0);
 
         if (!data) {
-            core::Logger::warn("Failed to load texture at: ", filePath);
+            core::Logger::warn("Failed to load texture at: ", file_path);
             return;
         }
 
@@ -65,6 +65,60 @@ namespace Birdy3d::render {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
+    Texture::Texture(int width, int height, Preset preset)
+        : m_width(width)
+        , m_height(height)
+        , m_resizable(true) {
+        glGenTextures(1, &m_id);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_id);
+        switch (preset) {
+        case Preset::COLOR_RGB:
+            m_channels = 3;
+            m_internalformat = GL_RGB;
+            m_format = GL_RGB;
+            m_type = GL_UNSIGNED_BYTE;
+            break;
+        case Preset::COLOR_RGBA:
+            m_channels = 4;
+            m_internalformat = GL_RGBA;
+            m_format = GL_RGBA;
+            m_type = GL_UNSIGNED_BYTE;
+            break;
+        case Preset::COLOR_R_FLOAT:
+            m_channels = 1;
+            m_internalformat = GL_RED;
+            m_format = GL_RED;
+            m_type = GL_FLOAT;
+            break;
+        case Preset::COLOR_RGB_FLOAT:
+            m_channels = 3;
+            m_internalformat = GL_RGB16F;
+            m_format = GL_RGB;
+            m_type = GL_FLOAT;
+            break;
+        case Preset::COLOR_RGBA_FLOAT:
+            m_channels = 4;
+            m_internalformat = GL_RGBA16F;
+            m_format = GL_RGBA;
+            m_type = GL_FLOAT;
+            break;
+        case Preset::DEPTH:
+            m_channels = 1;
+            m_internalformat = GL_DEPTH_COMPONENT;
+            m_format = GL_DEPTH_COMPONENT;
+            m_type = GL_FLOAT;
+            m_depth = true;
+            break;
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, m_internalformat, m_width, m_height, 0, m_format, m_type, nullptr);
+        if (m_depth)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+        // TODO: Parameters: FILTER, WRAP, COMPARE_MODE
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+
     Texture::~Texture() {
         glDeleteTextures(1, &m_id);
     }
@@ -76,6 +130,24 @@ namespace Birdy3d::render {
     void Texture::bind(int texture_unit) {
         glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, m_id);
+    }
+
+    void Texture::resize(int width, int height) {
+        if (!m_resizable)
+            return;
+        m_width = width;
+        m_height = height;
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_id);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_internalformat, m_width, m_height, 0, m_format, m_type, nullptr);
+    }
+
+    GLuint Texture::id() const {
+        return m_id;
+    }
+
+    bool Texture::is_depth() const {
+        return m_depth;
     }
 
 }

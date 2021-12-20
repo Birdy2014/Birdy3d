@@ -13,28 +13,16 @@ namespace Birdy3d::render {
     DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, bool shadow_enabled)
         : ambient(ambient)
         , diffuse(diffuse)
-        , shadow_enabled(shadow_enabled) {
+        , shadow_enabled(shadow_enabled)
+        , m_shadow_rendertarget(SHADOW_WIDTH, SHADOW_HEIGHT) {
         m_cam_offset = 1000;
     }
 
     void DirectionalLight::setup_shadow_map() {
         m_depth_shader = core::ResourceManager::get_shader("directional_light_depth");
-        // framebuffer
-        glGenFramebuffers(1, &m_shadow_map_fbo);
-        // shadow map
-        glGenTextures(1, &m_shadow_map);
-        glBindTexture(GL_TEXTURE_2D, m_shadow_map);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        float border_color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        // bind framebuffer
-        glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_map_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_shadow_map, 0);
+        m_shadow_map = m_shadow_rendertarget.add_texture(Texture::Preset::DEPTH);
+        m_shadow_rendertarget.finish();
+
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -52,8 +40,7 @@ namespace Birdy3d::render {
         lightShader.set_vec3(name + "direction", entity->world_forward());
         lightShader.set_vec3(name + "ambient", ambient);
         lightShader.set_vec3(name + "diffuse", diffuse);
-        glActiveTexture(GL_TEXTURE0 + textureid);
-        glBindTexture(GL_TEXTURE_2D, m_shadow_map);
+        m_shadow_map->bind(textureid);
         lightShader.set_mat4(name + "lightSpaceMatrix", m_light_space_transform);
         lightShader.set_int(name + "shadowMap", textureid);
         // TODO: cascaded shadow map
@@ -64,8 +51,7 @@ namespace Birdy3d::render {
 
         GLint viewport[4];
         glGetIntegerv(GL_VIEWPORT, viewport);
-        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_map_fbo);
+        m_shadow_rendertarget.bind();
         glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_FRONT);
         glEnable(GL_DEPTH_TEST);
