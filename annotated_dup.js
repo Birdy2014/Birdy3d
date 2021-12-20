@@ -44,6 +44,7 @@ var annotated_dup =
         [ "Model", "classBirdy3d_1_1render_1_1Model.html", null ],
         [ "ModelComponent", "classBirdy3d_1_1render_1_1ModelComponent.html", null ],
         [ "PointLight", "classBirdy3d_1_1render_1_1PointLight.html", null ],
+        [ "Rendertarget", "classBirdy3d_1_1render_1_1Rendertarget.html", null ],
         [ "Shader", "classBirdy3d_1_1render_1_1Shader.html", null ],
         [ "Spotlight", "classBirdy3d_1_1render_1_1Spotlight.html", null ],
         [ "Texture", "classBirdy3d_1_1render_1_1Texture.html", null ],
