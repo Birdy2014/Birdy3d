@@ -74,15 +74,12 @@ namespace Birdy3d::render {
         float near = 1.0f;
         glm::mat4 shadow_proj = glm::perspective(glm::radians(90.0f), aspect, near, m_far);
 
-        std::vector<glm::mat4> shadow_transforms;
-        shadow_transforms.push_back(shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-        shadow_transforms.push_back(shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-        shadow_transforms.push_back(shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
-        shadow_transforms.push_back(shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
-        shadow_transforms.push_back(shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
-        shadow_transforms.push_back(shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
-        for (unsigned int i = 0; i < 6; i++)
-            m_depth_shader->set_mat4("shadowMatrices[" + std::to_string(i) + "]", shadow_transforms[i]);
+        m_depth_shader->set_mat4("shadowMatrices[0]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+        m_depth_shader->set_mat4("shadowMatrices[1]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+        m_depth_shader->set_mat4("shadowMatrices[2]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+        m_depth_shader->set_mat4("shadowMatrices[3]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+        m_depth_shader->set_mat4("shadowMatrices[4]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+        m_depth_shader->set_mat4("shadowMatrices[5]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
         m_depth_shader->set_float("far_plane", m_far);
         m_depth_shader->set_vec3("lightPos", world_pos);
         for (auto m : entity->scene->get_components<ModelComponent>(false, true)) {
