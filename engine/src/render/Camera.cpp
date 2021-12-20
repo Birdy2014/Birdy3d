@@ -22,16 +22,37 @@ namespace Birdy3d::render {
     Camera::Camera()
         : m_width(1)
         , m_height(1)
-        , m_deferred_enabled(false) { }
+        , m_deferred_enabled(false)
+        , m_gbuffer(m_width, m_height)
+        , m_ssao_target(m_width, m_height)
+        , m_ssao_blur_target(m_width, m_height) { }
 
     Camera::Camera(int width, int height, bool deferred)
         : m_width(width)
         , m_height(height)
-        , m_deferred_enabled(deferred) { }
+        , m_deferred_enabled(deferred)
+        , m_gbuffer(m_width, m_height)
+        , m_ssao_target(m_width, m_height)
+        , m_ssao_blur_target(m_width, m_height) { }
 
     void Camera::start() {
         m_projection = glm::perspective(glm::radians(80.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
-        create_gbuffer();
+
+        m_gbuffer_position = m_gbuffer.add_texture(Texture::Preset::COLOR_RGBA_FLOAT);
+        m_gbuffer_normal = m_gbuffer.add_texture(Texture::Preset::COLOR_RGBA_FLOAT);
+        m_gbuffer_albedo_spec = m_gbuffer.add_texture(Texture::Preset::COLOR_RGBA);
+        m_gbuffer.add_depth_rbo();
+        if (!m_gbuffer.finish())
+            core::Logger::critical("Gbuffer not complete!");
+
+        m_ssao_texture = m_ssao_target.add_texture(Texture::Preset::COLOR_R_FLOAT);
+        if (!m_ssao_target.finish())
+            core::Logger::critical("SSAO FBO not complete!");
+
+        m_ssao_blur_texture = m_ssao_blur_target.add_texture(Texture::Preset::COLOR_R_FLOAT);
+        if (!m_ssao_blur_target.finish())
+            core::Logger::critical("SSAO blur FBO not complete!");
+
         m_deferred_geometry_shader = core::ResourceManager::get_shader("geometry_buffer");
         m_deferred_light_shader = core::ResourceManager::get_shader("deferred_lighting");
         m_forward_shader = core::ResourceManager::get_shader("forward_lighting");
@@ -88,7 +109,6 @@ namespace Birdy3d::render {
     }
 
     void Camera::cleanup() {
-        delete_gbuffer();
         if (m_outline_vao != 0) {
             glDeleteVertexArrays(1, &m_outline_vao);
             glDeleteBuffers(1, &m_outline_vbo);
@@ -102,8 +122,9 @@ namespace Birdy3d::render {
             m_width = width;
             m_height = height;
             m_projection = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
-            delete_gbuffer(); // TODO: resize GBuffer instead of recreating it
-            create_gbuffer();
+            m_gbuffer.resize(width, height);
+            m_ssao_target.resize(width, height);
+            m_ssao_blur_target.resize(width, height);
         }
     }
 
@@ -123,83 +144,6 @@ namespace Birdy3d::render {
 
         if (display_normals)
             render_normals();
-    }
-
-    void Camera::create_gbuffer() {
-        glGenFramebuffers(1, &m_gbuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
-
-        // - position color buffer
-        glGenTextures(1, &m_gbuffer_position);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_position);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_gbuffer_position, 0);
-
-        // - normal color buffer
-        glGenTextures(1, &m_gbuffer_normal);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_gbuffer_normal, 0);
-
-        // - color + specular color buffer
-        glGenTextures(1, &m_gbuffer_albedo_spec);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_albedo_spec);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, m_gbuffer_albedo_spec, 0);
-
-        // - tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
-        unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-        glDrawBuffers(3, attachments);
-
-        // create and attach depth buffer (renderbuffer)
-        glGenRenderbuffers(1, &m_rbo_depth);
-        glBindRenderbuffer(GL_RENDERBUFFER, m_rbo_depth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo_depth);
-
-        // finally check if framebuffer is complete
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            core::Logger::critical("Framebuffer not complete!");
-
-        // SSAO
-        glGenFramebuffers(1, &m_ssao_fbo);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_fbo);
-
-        glGenTextures(1, &m_ssao_buffer);
-        glBindTexture(GL_TEXTURE_2D, m_ssao_buffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ssao_buffer, 0);
-
-        glGenFramebuffers(1, &m_ssao_blur_fbo);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_blur_fbo);
-
-        glGenTextures(1, &m_ssao_blur_buffer);
-        glBindTexture(GL_TEXTURE_2D, m_ssao_blur_buffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ssao_blur_buffer, 0);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-
-    void Camera::delete_gbuffer() {
-        unsigned int textures[3] = { m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo_spec };
-        glDeleteTextures(3, textures);
-        glDeleteRenderbuffers(1, &m_rbo_depth);
-        glDeleteFramebuffers(1, &m_gbuffer);
-
-        // SSAO
-        glDeleteTextures(1, &m_ssao_buffer);
-        glDeleteFramebuffers(1, &m_ssao_fbo);
     }
 
     void Camera::render_quad() {
@@ -259,7 +203,7 @@ namespace Birdy3d::render {
         // 1. geometry pass: render all geometric/color data to g-buffer
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer);
+        m_gbuffer.bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         m_deferred_geometry_shader->use();
         m_deferred_geometry_shader->set_mat4("projection", m_projection);
@@ -269,12 +213,10 @@ namespace Birdy3d::render {
         }
 
         // 2. SSAO
-        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_fbo);
+        m_ssao_target.bind();
         glClear(GL_COLOR_BUFFER_BIT);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_position);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
+        m_gbuffer_position->bind(0);
+        m_gbuffer_normal->bind(1);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, m_ssao_noise);
         m_ssao_shader->use();
@@ -285,24 +227,19 @@ namespace Birdy3d::render {
         render_quad();
 
         // 3. blur SSAO
-        glBindFramebuffer(GL_FRAMEBUFFER, m_ssao_blur_fbo);
+        m_ssao_blur_target.bind();
         glClear(GL_COLOR_BUFFER_BIT);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, m_ssao_buffer);
+        m_ssao_texture->bind(0);
         m_ssao_blur_shader->use();
         render_quad();
 
         // 4. lighting pass
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_position);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_normal);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, m_gbuffer_albedo_spec);
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, m_ssao_blur_buffer);
+        m_gbuffer_position->bind(0);
+        m_gbuffer_normal->bind(1);
+        m_gbuffer_albedo_spec->bind(2);
+        m_ssao_blur_texture->bind(3);
         auto dirlights = entity->scene->get_components<DirectionalLight>(false, true);
         auto pointlights = entity->scene->get_components<PointLight>(false, true);
         auto spotlights = entity->scene->get_components<Spotlight>(false, true);
@@ -348,7 +285,7 @@ namespace Birdy3d::render {
         if (renderOpaque) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } else {
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_gbuffer);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_gbuffer.id());
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
             glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width, m_height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         }

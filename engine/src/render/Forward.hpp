@@ -9,6 +9,7 @@ namespace Birdy3d::render {
     class Model;
     class ModelComponent;
     class PointLight;
+    class Rendertarget;
     class Shader;
     class Spotlight;
     class Texture;

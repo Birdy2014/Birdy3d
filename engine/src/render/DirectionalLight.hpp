@@ -2,6 +2,7 @@
 
 #include "core/ResourceHandle.hpp"
 #include "ecs/Component.hpp"
+#include "render/Rendertarget.hpp"
 #include "render/Shader.hpp"
 
 namespace Birdy3d::render {
@@ -21,11 +22,12 @@ namespace Birdy3d::render {
         void serialize(serializer::Adapter&) override;
 
     private:
+        const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
         float m_cam_offset;
         glm::mat4 m_light_space_transform;
         core::ResourceHandle<Shader> m_depth_shader;
-        unsigned int m_shadow_map_fbo, m_shadow_map;
-        const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+        Rendertarget m_shadow_rendertarget;
+        Texture* m_shadow_map;
         bool m_shadow_map_updated = false;
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(ecs::Component, DirectionalLight);
