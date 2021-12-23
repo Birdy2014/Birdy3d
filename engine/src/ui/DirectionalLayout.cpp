@@ -71,7 +71,7 @@ namespace Birdy3d::ui {
                 Widget* w = *it;
                 float current_widget_size = (horizontal ? w->minimal_size().x : w->minimal_size().y);
                 if (widget_size * w->weight < current_widget_size) {
-                    smaller_widgets.erase(it++);
+                    it = smaller_widgets.erase(it);
                     i--;
                     weights -= w->weight;
                     widget_size -= ((current_widget_size - widget_size * w->weight) / weights);
