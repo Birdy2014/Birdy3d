@@ -86,6 +86,8 @@ var annotated_dup =
         [ "DirectionalLayout", "classBirdy3d_1_1ui_1_1DirectionalLayout.html", null ],
         [ "EmptyLayout", "classBirdy3d_1_1ui_1_1EmptyLayout.html", null ],
         [ "FPSCounter", "classBirdy3d_1_1ui_1_1FPSCounter.html", null ],
+        [ "GridLayout", "classBirdy3d_1_1ui_1_1GridLayout.html", null ],
+        [ "Label", "classBirdy3d_1_1ui_1_1Label.html", null ],
         [ "Layout", "classBirdy3d_1_1ui_1_1Layout.html", null ],
         [ "MaxLayout", "classBirdy3d_1_1ui_1_1MaxLayout.html", null ],
         [ "MenuBar", "classBirdy3d_1_1ui_1_1MenuBar.html", null ],
@@ -104,7 +106,7 @@ var annotated_dup =
         [ "Triangle", "classBirdy3d_1_1ui_1_1Triangle.html", null ],
         [ "UIVector", "classBirdy3d_1_1ui_1_1UIVector.html", null ],
         [ "Unit", "classBirdy3d_1_1ui_1_1Unit.html", null ],
-        [ "Widget", "classBirdy3d_1_1ui_1_1Widget.html", null ],
+        [ "Widget", "classBirdy3d_1_1ui_1_1Widget.html", "classBirdy3d_1_1ui_1_1Widget" ],
         [ "Window", "classBirdy3d_1_1ui_1_1Window.html", null ],
         [ "WindowSnapArea", "classBirdy3d_1_1ui_1_1WindowSnapArea.html", null ]
       ] ],

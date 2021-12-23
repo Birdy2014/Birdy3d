@@ -48,6 +48,7 @@ var hierarchy =
       [ "Birdy3d::ui::AbsoluteLayout", "classBirdy3d_1_1ui_1_1AbsoluteLayout.html", null ],
       [ "Birdy3d::ui::DirectionalLayout", "classBirdy3d_1_1ui_1_1DirectionalLayout.html", null ],
       [ "Birdy3d::ui::EmptyLayout", "classBirdy3d_1_1ui_1_1EmptyLayout.html", null ],
+      [ "Birdy3d::ui::GridLayout", "classBirdy3d_1_1ui_1_1GridLayout.html", null ],
       [ "Birdy3d::ui::MaxLayout", "classBirdy3d_1_1ui_1_1MaxLayout.html", null ]
     ] ],
     [ "Birdy3d::core::Logger", "classBirdy3d_1_1core_1_1Logger.html", null ],
@@ -100,6 +101,7 @@ var hierarchy =
       [ "Birdy3d::ui::CollapsibleBox", "classBirdy3d_1_1ui_1_1CollapsibleBox.html", null ],
       [ "Birdy3d::ui::ContextMenu", "classBirdy3d_1_1ui_1_1ContextMenu.html", null ],
       [ "Birdy3d::ui::FPSCounter", "classBirdy3d_1_1ui_1_1FPSCounter.html", null ],
+      [ "Birdy3d::ui::Label", "classBirdy3d_1_1ui_1_1Label.html", null ],
       [ "Birdy3d::ui::MenuBar", "classBirdy3d_1_1ui_1_1MenuBar.html", null ],
       [ "Birdy3d::ui::ScrollView", "classBirdy3d_1_1ui_1_1ScrollView.html", null ],
       [ "Birdy3d::ui::TextField", "classBirdy3d_1_1ui_1_1TextField.html", [

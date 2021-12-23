@@ -5,6 +5,7 @@ var dir_ba035d603da85925e3cfbb533a2a2c7a =
     [ "CollapsibleBox.hpp", "CollapsibleBox_8hpp_source.html", null ],
     [ "ContextMenu.hpp", "ContextMenu_8hpp_source.html", null ],
     [ "FPSCounter.hpp", "FPSCounter_8hpp_source.html", null ],
+    [ "Label.hpp", "Label_8hpp_source.html", null ],
     [ "NumberInput.hpp", "NumberInput_8hpp_source.html", null ],
     [ "ScrollView.hpp", "ScrollView_8hpp_source.html", null ],
     [ "Textarea.hpp", "Textarea_8hpp_source.html", null ],
