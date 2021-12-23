@@ -174,53 +174,73 @@ int main() {
         for (const auto& component : core::Application::selected_entity->components()) {
             const auto& c = serializer::Reflector::get_class(component.get());
             auto box = inspector_component_container->add_child<ui::CollapsibleBox>(ui::UIVector(0_px, 5_px), 100_p);
-            box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::DOWN, 10, true);
+            box->set_layout<ui::GridLayout>(5);
             box->title(c.name);
+            int current_row = 0;
             for (const auto& member : c.m_members) {
+                auto label = box->add_child<ui::Label>(0_px, ui::Placement::BOTTOM_LEFT, member.name);
+                label->row = current_row;
+                label->column = 0;
                 if (member.type == typeid(std::string)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->row = current_row;
+                    text_field.lock()->column = 1;
                     text_field.lock()->text(*(std::string*)member.value);
                     text_field.lock()->add_callback("change", [text_field, member]() {
                         *(std::string*)member.value = text_field.lock()->text();
                     });
                 } else if (member.type == typeid(bool)) {
                     std::weak_ptr<ui::CheckBox> checkbox = box->add_child<ui::CheckBox>(0_px, ui::Placement::TOP_LEFT, member.name);
+                    checkbox.lock()->row = current_row;
+                    checkbox.lock()->column = 1;
                     checkbox.lock()->checked = *(bool*)member.value;
                     checkbox.lock()->add_callback("change", [checkbox, member]() {
                         *(bool*)member.value = checkbox.lock()->checked;
                     });
                 } else if (member.type == typeid(int)) {
                     std::weak_ptr<ui::NumberInput> number_input = box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    number_input.lock()->row = current_row;
+                    number_input.lock()->column = 1;
                     number_input.lock()->value(*(int*)member.value);
                     number_input.lock()->add_callback("change", [number_input, member]() {
                         *(int*)member.value = number_input.lock()->value();
                     });
                 } else if (member.type == typeid(float)) {
                     std::weak_ptr<ui::NumberInput> number_input = box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    number_input.lock()->row = current_row;
+                    number_input.lock()->column = 1;
                     number_input.lock()->value(*(float*)member.value);
                     number_input.lock()->add_callback("change", [number_input, member]() {
                         *(float*)member.value = number_input.lock()->value();
                     });
                 } else if (member.type == typeid(core::ResourceHandle<render::Shader>)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->row = current_row;
+                    text_field.lock()->column = 1;
                     text_field.lock()->text(*(core::ResourceHandle<render::Shader>*)member.value);
                     text_field.lock()->add_callback("change", [text_field, member]() {
                         *(core::ResourceHandle<render::Shader>*)member.value = text_field.lock()->text();
                     });
                 } else if (member.type == typeid(core::ResourceHandle<ui::Theme>)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->row = current_row;
+                    text_field.lock()->column = 1;
                     text_field.lock()->text(*(core::ResourceHandle<ui::Theme>*)member.value);
                     text_field.lock()->add_callback("change", [text_field, member]() {
                         *(core::ResourceHandle<ui::Theme>*)member.value = text_field.lock()->text();
                     });
                 } else if (member.type == typeid(core::ResourceHandle<render::Model>)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->row = current_row;
+                    text_field.lock()->column = 1;
                     text_field.lock()->text(*(core::ResourceHandle<render::Model>*)member.value);
                     text_field.lock()->add_callback("change", [text_field, member]() {
                         *(core::ResourceHandle<render::Model>*)member.value = text_field.lock()->text();
                     });
                 } else if (member.type == typeid(core::ResourceHandle<render::Model>)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(0_px, ui::UIVector(100_p, 20_px), ui::Placement::BOTTOM_LEFT);
+                    text_field.lock()->row = current_row;
+                    text_field.lock()->column = 1;
                     text_field.lock()->text(*(core::ResourceHandle<render::Model>*)member.value);
                     text_field.lock()->add_callback("change", [text_field, member]() {
                         *(core::ResourceHandle<render::Model>*)member.value = text_field.lock()->text();
@@ -228,6 +248,7 @@ int main() {
                 } else {
                     std::cout << member.name << '\n';
                 }
+                ++current_row;
             }
         }
     };
@@ -288,11 +309,19 @@ int main() {
 
     auto transform_box = inspector_scroll_view->add_child<ui::CollapsibleBox>(ui::UIVector(0_px, 5_px));
     transform_box->title("Transform");
-    transform_box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::DOWN, 10, true);
+    transform_box->set_layout<ui::GridLayout>(5);
 
-    input_position_x = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
-    input_position_y = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
-    input_position_z = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    auto position_label = transform_box->add_child<ui::Label>(0_px, ui::Placement::CENTER_LEFT, "position");
+    position_label->column = 0;
+    position_label->row = 0;
+
+    auto position_box = transform_box->add_child<ui::Widget>(0_px, ui::UIVector(100_p, 0_px));
+    position_box->column = 1;
+    position_box->row = 0;
+    position_box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 5, false);
+    input_position_x = position_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    input_position_y = position_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    input_position_z = position_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
 
     input_position_x->add_callback("change", [&] {
         if (core::Application::selected_entity)
@@ -309,9 +338,17 @@ int main() {
             core::Application::selected_entity->transform.position.z = input_position_z->value();
     });
 
-    input_scale_x = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
-    input_scale_y = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
-    input_scale_z = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    auto scale_label = transform_box->add_child<ui::Label>(0_px, ui::Placement::CENTER_LEFT, "scale");
+    scale_label->column = 0;
+    scale_label->row = 1;
+
+    auto scale_box = transform_box->add_child<ui::Widget>(0_px, ui::UIVector(100_p, 0_px));
+    scale_box->column = 1;
+    scale_box->row = 1;
+    scale_box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 5, false);
+    input_scale_x = scale_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    input_scale_y = scale_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    input_scale_z = scale_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
 
     input_scale_x->min_value = 0;
     input_scale_y->min_value = 0;
@@ -332,9 +369,17 @@ int main() {
             core::Application::selected_entity->transform.scale.z = input_scale_z->value();
     });
 
-    input_orientation_x = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
-    input_orientation_y = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
-    input_orientation_z = transform_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    auto orientation_label = transform_box->add_child<ui::Label>(0_px, ui::Placement::CENTER_LEFT, "orientation");
+    orientation_label->column = 0;
+    orientation_label->row = 2;
+
+    auto orientation_box = transform_box->add_child<ui::Widget>(0_px, ui::UIVector(100_p, 0_px));
+    orientation_box->column = 1;
+    orientation_box->row = 2;
+    orientation_box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 5, false);
+    input_orientation_x = orientation_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    input_orientation_y = orientation_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
+    input_orientation_z = orientation_box->add_child<ui::NumberInput>(0_px, ui::UIVector(100_p, 25_px), ui::Placement::BOTTOM_LEFT, 0);
 
     input_orientation_x->add_callback("change", [&] {
         if (core::Application::selected_entity)
