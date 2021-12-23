@@ -24,9 +24,13 @@ namespace Birdy3d::ui {
         UIVector pos;
         UIVector size;
         Placement placement;
-        float weight = 1; // Size ratio in DirectionalLayout. 0 means stay on minimum size
         Widget* parent = nullptr;
         Canvas* canvas = nullptr;
+
+        // Layout-specific options
+        float weight = 1; ///< Size ratio in DirectionalLayout. 0 means stay on minimum size
+        int column = 0; ///< Column in GridLayout
+        int row = 0; ///< Row in GridLayout
 
         Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, std::string name = "");
         virtual ~Widget() = default;

@@ -2,6 +2,7 @@ target_sources(Birdy3d_engine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/console/Console.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/console/UICommands.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DirectionalLayout.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/GridLayout.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Layout.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Rectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TextRenderer.cpp

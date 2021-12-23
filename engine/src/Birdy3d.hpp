@@ -40,6 +40,7 @@
 #include "ui/AbsoluteLayout.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/DirectionalLayout.hpp"
+#include "ui/GridLayout.hpp"
 #include "ui/Layout.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
