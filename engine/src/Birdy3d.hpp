@@ -53,6 +53,7 @@
 #include "ui/widgets/CollapsibleBox.hpp"
 #include "ui/widgets/ContextMenu.hpp"
 #include "ui/widgets/FPSCounter.hpp"
+#include "ui/widgets/Label.hpp"
 #include "ui/widgets/NumberInput.hpp"
 #include "ui/widgets/ScrollView.hpp"
 #include "ui/widgets/TextField.hpp"
