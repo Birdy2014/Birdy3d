@@ -33,7 +33,7 @@ namespace Birdy3d::ui {
         std::function<void(TreeItem&)> callback_select;
         std::weak_ptr<ContextMenu> context_menu;
 
-        TreeView(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT);
+        TreeView(Options);
         virtual void draw() override;
         virtual glm::vec2 minimal_size() override;
         TreeItem& root_item() { return m_root_item; }

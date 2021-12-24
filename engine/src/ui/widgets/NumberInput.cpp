@@ -8,8 +8,8 @@
 
 namespace Birdy3d::ui {
 
-    NumberInput::NumberInput(UIVector position, UIVector size, Placement placement, float val)
-        : TextField(position, size, placement) {
+    NumberInput::NumberInput(Options options, float val)
+        : TextField(options) {
         value(val);
     }
 

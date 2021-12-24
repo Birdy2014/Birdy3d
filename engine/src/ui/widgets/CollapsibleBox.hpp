@@ -10,13 +10,13 @@ namespace Birdy3d::ui {
 
     class CollapsibleBox : public Widget {
     public:
-        CollapsibleBox(UIVector pos = UIVector(0_px), Unit width = 100_p, Placement placement = Placement::BOTTOM_LEFT, std::string name = "")
-            : Widget(pos, UIVector(width, 0_px), placement, name) {
+        CollapsibleBox(Options options, std::string title)
+            : Widget(options) {
             m_padding = glm::vec4(4, 4, 0, core::Application::theme().line_height());
             add_filled_rectangle(0_px, UIVector(100_p, 100_p - core::Application::theme().line_height()), utils::Color::Name::BG, Placement::BOTTOM_LEFT);
             add_filled_rectangle(0_px, UIVector(100_p, core::Application::theme().line_height()), utils::Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);
             m_arrow = add_filled_triangle(-4_px, 14_px, utils::Color::Name::FG, Placement::TOP_RIGHT);
-            m_title = add_text(UIVector(10_px, 0_px), "", utils::Color::Name::FG, Placement::TOP_LEFT);
+            m_title = add_text(UIVector(10_px, 0_px), title, utils::Color::Name::FG, Placement::TOP_LEFT);
         }
 
         void title(std::string text) {

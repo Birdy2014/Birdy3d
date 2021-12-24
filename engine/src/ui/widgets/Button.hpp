@@ -13,8 +13,8 @@ namespace Birdy3d::ui {
     public:
         Text* button_text;
 
-        Button(UIVector pos, Placement placement, std::string text, UIVector size = UIVector(0))
-            : Widget(pos, size, placement) {
+        Button(Options options, std::string text)
+            : Widget(options) {
             add_filled_rectangle(UIVector(0_px), UIVector(100_p), utils::Color::Name::BG, Placement::BOTTOM_LEFT);
             add_rectangle(UIVector(0_px), UIVector(100_p), utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
             button_text = add_text(UIVector(0_px), text, utils::Color::Name::FG, Placement::CENTER);

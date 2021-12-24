@@ -18,16 +18,16 @@ namespace Birdy3d::ui {
         std::map<int, int> max_heights; // Height of rows
         for (const auto& child : children) {
             auto minimal = child->minimal_size();
-            if (minimal.x > min_widths[child->column])
-                min_widths[child->column] = minimal.x;
-            if (minimal.y > min_heights[child->row])
-                min_heights[child->row] = minimal.y;
+            if (minimal.x > min_widths[child->options.column])
+                min_widths[child->options.column] = minimal.x;
+            if (minimal.y > min_heights[child->options.row])
+                min_heights[child->options.row] = minimal.y;
 
             auto preferred = child->preferred_size(size);
-            if (preferred.x > max_widths[child->column])
-                max_widths[child->column] = preferred.x;
-            if (preferred.y > max_heights[child->row])
-                max_heights[child->row] = preferred.y;
+            if (preferred.x > max_widths[child->options.column])
+                max_widths[child->options.column] = preferred.x;
+            if (preferred.y > max_heights[child->options.row])
+                max_heights[child->options.row] = preferred.y;
         }
 
         // expand widths/heights to fit the size argument
@@ -79,21 +79,21 @@ namespace Birdy3d::ui {
         for (const auto& child : children) {
             glm::vec2 widget_position = pos;
             for (const auto [column, width] : result_widths) {
-                if (column >= child->column)
+                if (column >= child->options.column)
                     break;
                 widget_position.x += width + m_gap;
             }
             for (const auto [row, height] : result_heights) {
                 // The loop counts from the top down, but the coordinates go from bottom up.
                 // Change this to "if (row > child->row) break;" when reversing the y-axis.
-                if (row <= child->row)
+                if (row <= child->options.row)
                     continue;
                 widget_position.y += height + m_gap;
             }
 
             glm::vec2 size;
-            size.x = result_widths[child->column];
-            size.y = result_heights[child->row];
+            size.x = result_widths[child->options.column];
+            size.y = result_heights[child->options.row];
 
             child->arrange(widget_position, size);
         }
@@ -103,10 +103,10 @@ namespace Birdy3d::ui {
         std::map<int, int> widths;
         std::map<int, int> heights;
         for (const auto& child : children) {
-            if (child->minimal_size().x > widths[child->column])
-                widths[child->column] = child->minimal_size().x;
-            if (child->minimal_size().y > heights[child->row])
-                heights[child->row] = child->minimal_size().y;
+            if (child->minimal_size().x > widths[child->options.column])
+                widths[child->options.column] = child->minimal_size().x;
+            if (child->minimal_size().y > heights[child->options.row])
+                heights[child->options.row] = child->minimal_size().y;
         }
 
         glm::vec2 size { 0 };

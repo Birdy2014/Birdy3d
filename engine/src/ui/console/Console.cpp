@@ -25,18 +25,17 @@ namespace Birdy3d::ui {
     }
 
     void Console::create_window() {
-        m_console_window = std::make_shared<Window>(0_px, 400_px, "ConsoleWindow");
+        m_console_window = std::make_shared<Window>(Widget::Options { .size = 400_px, .name = "ConsoleWindow" });
         m_console_window->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 5, false);
         m_console_window->title("Console");
         m_console_window->callback_close = []() {
-            m_console_window->hidden = true;
+            m_console_window->options.hidden = true;
         };
 
-        m_console_output = m_console_window->add_child<Textarea>(0_px, UIVector(100_p, 0_px), Placement::TOP_LEFT);
+        m_console_output = m_console_window->add_child<Textarea>({ .size = UIVector(100_p, 0_px), .placement = Placement::TOP_LEFT });
         m_console_output->readonly = true;
 
-        m_console_input = m_console_window->add_child<TextField>(0_px, UIVector(100_p, 20_px));
-        m_console_input->weight = 0;
+        m_console_input = m_console_window->add_child<TextField>({ .size = UIVector(100_p, 20_px), .weight = 0 });
         m_console_input->add_callback("accept", input_callback);
 
         m_created = true;

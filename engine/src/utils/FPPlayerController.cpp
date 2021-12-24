@@ -26,7 +26,7 @@ namespace Birdy3d::utils {
         core::Input::set_cursor_hidden(true);
 
         if (auto menu_ptr = m_menu.lock())
-            menu_ptr->hidden = true;
+            menu_ptr->options.hidden = true;
 
         core::Application::event_bus->subscribe(this, &FPPlayerController::on_key);
     }
@@ -89,8 +89,8 @@ namespace Birdy3d::utils {
         case GLFW_KEY_ESCAPE: {
             core::Input::toggle_cursor_hidden();
             if (auto menu_ptr = m_menu.lock()) {
-                menu_ptr->hidden = !menu_ptr->hidden;
-                if (menu_ptr->hidden)
+                menu_ptr->options.hidden = !menu_ptr->options.hidden;
+                if (menu_ptr->options.hidden)
                     menu_ptr->canvas->unfocus();
             }
             break;

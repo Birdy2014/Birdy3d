@@ -6,7 +6,7 @@ namespace Birdy3d::ui {
 
     class ScrollView : public Widget {
     public:
-        ScrollView(UIVector pos, UIVector size, Placement placement = Placement::BOTTOM_LEFT, std::string name = "");
+        ScrollView(Options);
         glm::vec2 minimal_size() override;
         void arrange(glm::vec2 pos, glm::vec2 size) override;
 

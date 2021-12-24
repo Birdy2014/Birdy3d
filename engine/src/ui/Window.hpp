@@ -12,7 +12,7 @@ namespace Birdy3d::ui {
         const int BORDER_SIZE = 4;
         std::function<void()> callback_close;
 
-        Window(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), std::string name = "");
+        Window(Options);
         void to_foreground();
         glm::vec2 minimal_size() override;
 

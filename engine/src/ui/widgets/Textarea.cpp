@@ -9,8 +9,8 @@
 
 namespace Birdy3d::ui {
 
-    Textarea::Textarea(UIVector pos, UIVector size, Placement placement)
-        : TextField(pos, size, placement) {
+    Textarea::Textarea(Options options)
+        : TextField(options) {
         scrollpos = 0;
         m_tmpscroll = 0;
         add_callback("change", [this]() { update_lines(); });

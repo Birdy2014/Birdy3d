@@ -31,8 +31,8 @@ namespace Birdy3d::ui {
         children.remove_if([&](TreeItem& item) { return &item == child; });
     }
 
-    TreeView::TreeView(UIVector pos, UIVector size, Placement placement)
-        : Widget(pos, size, placement)
+    TreeView::TreeView(Options options)
+        : Widget(options)
         , m_root_item(TreeItem("Root", this)) {
         m_item_highlight_rect = add_filled_rectangle(0_px, UIVector(100_p, core::Application::theme().line_height()), utils::Color::Name::BG_SELECTED, Placement::TOP_LEFT);
         m_item_highlight_rect->hidden(true);

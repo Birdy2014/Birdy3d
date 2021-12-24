@@ -55,7 +55,7 @@ namespace Birdy3d::ui {
         bool horizontal = dir == Direction::LEFT || dir == Direction::RIGHT;
 
         for (const auto& c : children)
-            weights += c->weight;
+            weights += c->options.weight;
 
         if (dir == Direction::LEFT || dir == Direction::RIGHT)
             widget_size = (size.x - gapps) / weights;
@@ -70,11 +70,11 @@ namespace Birdy3d::ui {
             for (std::list<Widget*>::iterator it = smaller_widgets.begin(); it != smaller_widgets.end();) {
                 Widget* w = *it;
                 float current_widget_size = (horizontal ? w->minimal_size().x : w->minimal_size().y);
-                if (widget_size * w->weight < current_widget_size) {
+                if (widget_size * w->options.weight < current_widget_size) {
                     it = smaller_widgets.erase(it);
                     i--;
-                    weights -= w->weight;
-                    widget_size -= ((current_widget_size - widget_size * w->weight) / weights);
+                    weights -= w->options.weight;
+                    widget_size -= ((current_widget_size - widget_size * w->options.weight) / weights);
                     done = false;
                 } else {
                     it++;
@@ -85,7 +85,7 @@ namespace Birdy3d::ui {
 
         float offset = 0;
         for (const auto& w : children) {
-            float current_widget_size = std::max(widget_size * w->weight, horizontal ? w->minimal_size().x : w->minimal_size().y);
+            float current_widget_size = std::max(widget_size * w->options.weight, horizontal ? w->minimal_size().x : w->minimal_size().y);
             switch (dir) {
             case Direction::RIGHT:
                 w->arrange(pos + glm::vec2(offset, 0), glm::vec2(current_widget_size, size.y));
