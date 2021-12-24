@@ -8,7 +8,7 @@ namespace Birdy3d::ui {
     public:
         bool checked = false;
 
-        CheckBox(UIVector pos, Placement placement, std::string text);
+        CheckBox(Options, std::string text);
         void draw() override;
         std::string text();
         void text(std::string text);

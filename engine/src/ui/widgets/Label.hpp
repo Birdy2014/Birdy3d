@@ -7,8 +7,8 @@ namespace Birdy3d::ui {
 
     class Label : public Widget {
     public:
-        Label(UIVector pos, Placement placement, std::string text, UIVector size = UIVector(0))
-            : Widget(pos, size, placement) {
+        Label(Options options, std::string text)
+            : Widget(options) {
             m_text = add_text(UIVector(0_px), text, utils::Color::Name::FG, Placement::CENTER_LEFT);
         };
 

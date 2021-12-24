@@ -28,14 +28,14 @@ namespace Birdy3d::ui {
             m_child_rect_size.y -= core::Application::theme().line_height();
     }
 
-    ContextMenu::ContextMenu()
-        : Widget()
+    ContextMenu::ContextMenu(Options options)
+        : Widget(options)
         , root_item(ContextItem("Root", nullptr)) {
         m_arrow_size = core::Application::theme().font_size() / 2;
         m_background_rect = add_filled_rectangle(0_px, 0_px, utils::Color::Name::BG, Placement::BOTTOM_LEFT);
         m_border_rect = add_rectangle(0_px, 0_px, utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
         m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), utils::Color::Name::FG);
-        hidden = true;
+        options.hidden = true;
     }
 
     void ContextMenu::draw() {
@@ -46,9 +46,9 @@ namespace Birdy3d::ui {
     }
 
     void ContextMenu::open(glm::vec2 open_pos) {
-        pos = open_pos;
-        m_actual_pos = pos;
-        hidden = false;
+        options.pos = open_pos;
+        m_actual_pos = options.pos;
+        options.hidden = false;
         focus();
         canvas->to_foreground(this);
         for (auto& child_item : root_item.children)
@@ -59,18 +59,18 @@ namespace Birdy3d::ui {
         glm::vec2 open_pos = core::Input::cursor_pos();
         glm::vec2 viewport = core::Application::get_viewport_size();
         if (open_pos.x + root_item.m_child_rect_size.x > viewport.x)
-            pos.x = open_pos.x - root_item.m_child_rect_size.x; // Left
+            options.pos.x = open_pos.x - root_item.m_child_rect_size.x; // Left
         else
-            pos.x = open_pos.x; // Right
+            options.pos.x = open_pos.x; // Right
         if (open_pos.y - root_item.m_child_rect_size.y < 0)
-            pos.y = open_pos.y; // Up
+            options.pos.y = open_pos.y; // Up
         else
-            pos.y = open_pos.y - root_item.m_child_rect_size.y; // Down
-        open(pos);
+            options.pos.y = open_pos.y - root_item.m_child_rect_size.y; // Down
+        open(options.pos);
     }
 
     void ContextMenu::on_update() {
-        if (hidden)
+        if (options.hidden)
             return;
 
         handle_context_item_children_click(root_item, false);
@@ -130,7 +130,7 @@ namespace Birdy3d::ui {
                         if (click && child_item.children.empty()) {
                             if (child_item.callback_click)
                                 child_item.callback_click();
-                            hidden = true;
+                            options.hidden = true;
                             return true;
                         }
                         if (!child_item.children.empty()) {
@@ -188,24 +188,24 @@ namespace Birdy3d::ui {
             return;
 
         if (!handle_context_item_children_click(root_item, true))
-            hidden = true;
+            options.hidden = true;
     }
 
     void ContextMenu::on_key(const events::InputKeyEvent&) {
-        hidden = true;
+        options.hidden = true;
     }
 
     void ContextMenu::on_focus_lost() {
-        hidden = true;
+        options.hidden = true;
     }
 
-    MenuBar::MenuBar(UIVector pos, UIVector size, Placement placement)
-        : Widget(pos, size, placement) {
+    MenuBar::MenuBar(Options options)
+        : Widget(options) {
         add_filled_rectangle(0_p, 100_p, utils::Color::Name::BG);
     }
 
     ContextItem& MenuBar::add_item(std::string text) {
-        auto menu = std::make_unique<ContextMenu>();
+        auto menu = std::make_unique<ContextMenu>(Options {});
         menu->canvas = canvas;
         menu->root_item.text->text(text);
         ContextItem& item = menu->root_item;
@@ -226,7 +226,7 @@ namespace Birdy3d::ui {
             menu->root_item.text->position(UIVector(x, 0));
             menu->root_item.text->draw(m_move);
             // menu->external_draw() would reset glScissor, but menu->draw() doesn't check for hidden.
-            if (!menu->hidden)
+            if (!menu->options.hidden)
                 menu->draw();
             x += menu->root_item.text->size().x + m_menu_gap;
         }

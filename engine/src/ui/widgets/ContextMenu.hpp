@@ -30,7 +30,7 @@ namespace Birdy3d::ui {
     public:
         ContextItem root_item;
 
-        ContextMenu();
+        ContextMenu(Options);
         void draw() override;
         void open(glm::vec2);
         void open();
@@ -55,7 +55,7 @@ namespace Birdy3d::ui {
 
     class MenuBar : public Widget {
     public:
-        MenuBar(UIVector pos, UIVector size, Placement);
+        MenuBar(Options);
         ContextItem& add_item(std::string);
         void remove_item(std::string);
         void draw() override;

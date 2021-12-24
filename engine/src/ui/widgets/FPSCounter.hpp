@@ -10,8 +10,8 @@ namespace Birdy3d::ui {
     public:
         Text* text;
 
-        FPSCounter(UIVector position, Placement placement)
-            : Widget(position, 0_px, placement) {
+        FPSCounter(Options options)
+            : Widget(options) {
             text = add_text(0_px, "FPS: ", utils::Color::Name::FG, Placement::CENTER_LEFT);
         }
 

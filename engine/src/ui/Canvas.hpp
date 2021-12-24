@@ -12,7 +12,7 @@ namespace Birdy3d::ui {
         bool updated = false;
 
         Canvas()
-            : Widget(0_px, 100_p) {
+            : Widget({ .size = 100_p }) {
             canvas = this;
             core::Application::event_bus->subscribe(this, &Canvas::on_scroll_raw);
             core::Application::event_bus->subscribe(this, &Canvas::on_click_raw);
@@ -22,7 +22,7 @@ namespace Birdy3d::ui {
         };
 
         void update() {
-            if (!hidden) {
+            if (!options.hidden) {
                 updated = true;
                 glm::vec2 viewport = core::Application::get_viewport_size();
                 Widget::arrange(glm::vec2(0), viewport);

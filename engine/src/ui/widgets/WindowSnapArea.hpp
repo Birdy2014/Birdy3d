@@ -18,7 +18,7 @@ namespace Birdy3d::ui {
 
         Mode mode;
 
-        WindowSnapArea(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, Mode mode = Mode::STACKING);
+        WindowSnapArea(Options, Mode);
         void on_update() override;
 
     private:

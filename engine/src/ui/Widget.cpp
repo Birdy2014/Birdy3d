@@ -10,11 +10,8 @@
 
 namespace Birdy3d::ui {
 
-    Widget::Widget(UIVector pos, UIVector size, Placement placement, std::string name)
-        : name(name)
-        , pos(pos)
-        , size(size)
-        , placement(placement) { }
+    Widget::Widget(Options options)
+        : options(options) { }
 
     Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::OUTLINE, placement);
@@ -52,7 +49,7 @@ namespace Birdy3d::ui {
     }
 
     void Widget::external_draw() {
-        if (hidden)
+        if (options.hidden)
             return;
 
         glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
@@ -71,18 +68,18 @@ namespace Birdy3d::ui {
     }
 
     glm::vec2 Widget::preferred_position(glm::vec2 parentSize, glm::vec2 size) {
-        return UIVector::get_relative_position(this->pos, size, parentSize, this->placement);
+        return UIVector::get_relative_position(options.pos, size, parentSize, options.placement);
     }
 
     glm::vec2 Widget::minimal_size() {
         glm::vec2 children_minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
         if (m_layout && m_children_visible)
             children_minsize += m_layout->minimal_size(m_children);
-        return glm::vec2(std::max(children_minsize.x, size.x.to_pixels()), std::max(children_minsize.y, size.y.to_pixels()));
+        return glm::vec2(std::max(children_minsize.x, options.size.x.to_pixels()), std::max(children_minsize.y, options.size.y.to_pixels()));
     }
 
     glm::vec2 Widget::preferred_size(glm::vec2 parentSize) {
-        return glm::max(size.to_pixels(parentSize), minimal_size());
+        return glm::max(options.size.to_pixels(parentSize), minimal_size());
     }
 
     void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
@@ -149,7 +146,7 @@ namespace Birdy3d::ui {
 
     bool Widget::update_hover(bool hover) {
         bool success = false;
-        if (hidden)
+        if (options.hidden)
             hover = false;
         for (auto it = m_children.rbegin(); it != m_children.rend(); it++) {
             if ((*it)->update_hover(hover && m_children_visible) && m_children_visible) {
@@ -158,7 +155,7 @@ namespace Birdy3d::ui {
             }
         }
 
-        if (hidden)
+        if (options.hidden)
             hover = false;
         if (hover) {
             if (contains(core::Input::cursor_pos())) {
@@ -174,7 +171,7 @@ namespace Birdy3d::ui {
     }
 
     void Widget::update_visible_area(glm::vec2 parent_visible_bottom_left, glm::vec2 parent_visible_top_right) {
-        if (hidden)
+        if (options.hidden)
             return;
         m_visible_pos = glm::vec2(std::max(parent_visible_bottom_left.x, m_actual_pos.x), std::max(parent_visible_bottom_left.y, m_actual_pos.y));
         glm::vec2 actual_pos2 = m_actual_pos + m_actual_size;

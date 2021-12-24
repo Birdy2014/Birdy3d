@@ -9,7 +9,7 @@ namespace Birdy3d::ui {
     public:
         bool readonly = false;
 
-        TextField(UIVector position, UIVector size, Placement placement = Placement::BOTTOM_LEFT);
+        TextField(Options);
         std::string text();
         void text(std::string);
         void append(std::string);

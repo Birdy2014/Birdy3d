@@ -19,20 +19,24 @@ namespace Birdy3d::ui {
 
     class Widget {
     public:
-        std::string name;
-        bool hidden = false;
-        UIVector pos;
-        UIVector size;
-        Placement placement;
+        struct Options {
+            UIVector pos = { 0 };
+            UIVector size = { 0 };
+            Placement placement = Placement::BOTTOM_LEFT;
+            bool hidden = false;
+            std::string name = {};
+
+            // Layout specific options
+            float weight = 1; ///< Size ratio in DirectionalLayout. 0 means stay on minimum size
+            int column = 0; ///< Column in GridLayout
+            int row = 0; ///< Row in GridLayout
+        };
+
         Widget* parent = nullptr;
         Canvas* canvas = nullptr;
+        Options options;
 
-        // Layout-specific options
-        float weight = 1; ///< Size ratio in DirectionalLayout. 0 means stay on minimum size
-        int column = 0; ///< Column in GridLayout
-        int row = 0; ///< Row in GridLayout
-
-        Widget(UIVector pos = UIVector(0_px), UIVector size = UIVector(0_px), Placement placement = Placement::BOTTOM_LEFT, std::string name = "");
+        Widget(Options);
         virtual ~Widget() = default;
 
         // Layout
@@ -48,9 +52,9 @@ namespace Birdy3d::ui {
         void clear_children();
 
         template <class T, typename... Args>
-        std::shared_ptr<T> add_child(Args... args) {
+        std::shared_ptr<T> add_child(Options options, Args... args) {
             static_assert(std::is_base_of<Widget, T>::value);
-            auto widget = std::make_shared<T>(args...);
+            auto widget = std::make_shared<T>(options, args...);
             add_child(widget);
             return std::static_pointer_cast<T>(widget);
         }
@@ -60,11 +64,11 @@ namespace Birdy3d::ui {
         template <class T = Widget>
         std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
             static_assert(std::is_base_of<Widget, T>::value);
-            if (this->hidden && !hidden)
+            if (this->options.hidden && !hidden)
                 return nullptr;
             for (const auto& child : m_children) {
                 std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(child);
-                if (casted && child->name == name) {
+                if (casted && child->options.name == name) {
                     return casted;
                 }
                 std::shared_ptr<T> result = child->get_widget<T>(name, hidden);

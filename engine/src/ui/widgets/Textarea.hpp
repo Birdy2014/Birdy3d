@@ -9,7 +9,7 @@ namespace Birdy3d::ui {
     public:
         float scrollpos;
 
-        Textarea(UIVector pos, UIVector size, Placement placement);
+        Textarea(Options);
         void draw() override;
         void scroll_down();
 
