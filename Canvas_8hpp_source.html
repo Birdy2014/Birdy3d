@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('Canvas_8hpp_source.html',''); initResi
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordtype">bool</span> updated = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Canvas.html">Canvas</a>()</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            : <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a>(0_px, 100_p) {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            : <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a>({ .size = 100_p }) {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>            canvas = <span class="keyword">this</span>;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>            core::Application::event_bus-&gt;subscribe(<span class="keyword">this</span>, &amp;Canvas::on_scroll_raw);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            core::Application::event_bus-&gt;subscribe(<span class="keyword">this</span>, &amp;Canvas::on_click_raw);</div>
@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('Canvas_8hpp_source.html',''); initResi
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        };</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordtype">void</span> update() {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keywordflow">if</span> (!hidden) {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keywordflow">if</span> (!options.hidden) {</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                updated = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                glm::vec2 viewport = core::Application::get_viewport_size();</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                Widget::arrange(glm::vec2(0), viewport);</div>

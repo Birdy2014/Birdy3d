@@ -103,8 +103,8 @@ $(document).ready(function(){initNavTree('Button_8hpp_source.html',''); initResi
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Text.html">Text</a>* button_text;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Button.html">Button</a>(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> pos, Placement placement, std::string text, <a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> size = <a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a>(0))</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>            : <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a>(pos, size, placement) {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Button.html">Button</a>(<a class="code hl_struct" href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Options</a> options, std::string text)</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>            : <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a>(options) {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            add_filled_rectangle(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a>(0_px), <a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a>(100_p), utils::Color::Name::BG, Placement::BOTTOM_LEFT);</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            add_rectangle(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a>(0_px), <a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a>(100_p), utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            button_text = add_text(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a>(0_px), text, utils::Color::Name::FG, Placement::CENTER);</div>
@@ -139,6 +139,7 @@ $(document).ready(function(){initNavTree('Button_8hpp_source.html',''); initResi
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Text_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Text.html">Birdy3d::ui::Text</a></div><div class="ttdef"><b>Definition:</b> TextRenderer.hpp:58</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1UIVector_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1UIVector.html">Birdy3d::ui::UIVector</a></div><div class="ttdef"><b>Definition:</b> Units.hpp:58</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Widget_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:20</div></div>
+<div class="ttc" id="astructBirdy3d_1_1ui_1_1Widget_1_1Options_html"><div class="ttname"><a href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Birdy3d::ui::Widget::Options</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

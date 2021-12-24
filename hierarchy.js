@@ -55,6 +55,7 @@ var hierarchy =
     [ "Birdy3d::render::Material", "classBirdy3d_1_1render_1_1Material.html", null ],
     [ "Birdy3d::render::Mesh", "classBirdy3d_1_1render_1_1Mesh.html", null ],
     [ "Birdy3d::render::Model", "classBirdy3d_1_1render_1_1Model.html", null ],
+    [ "Birdy3d::ui::Widget::Options", "structBirdy3d_1_1ui_1_1Widget_1_1Options.html", null ],
     [ "Birdy3d::serializer::Parser", "classBirdy3d_1_1serializer_1_1Parser.html", [
       [ "Birdy3d::serializer::JsonParser", "classBirdy3d_1_1serializer_1_1JsonParser.html", null ]
     ] ],

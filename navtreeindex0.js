@@ -154,9 +154,6 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1ui_1_1UIVector.html":[1,0,0,6,31],
 "classBirdy3d_1_1ui_1_1Unit.html":[1,0,0,6,32],
 "classBirdy3d_1_1ui_1_1Widget.html":[1,0,0,6,33],
-"classBirdy3d_1_1ui_1_1Widget.html#a85e26a936fc6f583d77ebce52a72b009":[1,0,0,6,33,2],
-"classBirdy3d_1_1ui_1_1Widget.html#aaac396132b3a26ac35d685076de44299":[1,0,0,6,33,0],
-"classBirdy3d_1_1ui_1_1Widget.html#abe5c72204afcdbf3abbfc0e87fd90153":[1,0,0,6,33,1],
 "classBirdy3d_1_1ui_1_1Window.html":[1,0,0,6,34],
 "classBirdy3d_1_1ui_1_1WindowSnapArea.html":[1,0,0,6,35],
 "classBirdy3d_1_1utils_1_1Color.html":[1,0,0,7,0],
@@ -203,5 +200,9 @@ var NAVTREEINDEX0 =
 "structBirdy3d_1_1serializer_1_1Value.html":[1,0,0,5,19],
 "structBirdy3d_1_1ui_1_1Character.html":[1,0,0,6,3],
 "structBirdy3d_1_1ui_1_1TextVertex.html":[1,0,0,6,26],
+"structBirdy3d_1_1ui_1_1Widget_1_1Options.html":[1,0,0,6,33,0],
+"structBirdy3d_1_1ui_1_1Widget_1_1Options.html#a33a7842432766b56a39e92478380d55e":[1,0,0,6,33,0,1],
+"structBirdy3d_1_1ui_1_1Widget_1_1Options.html#a83684503f8dbb888e0b4a5ee13a076b8":[1,0,0,6,33,0,2],
+"structBirdy3d_1_1ui_1_1Widget_1_1Options.html#aa667727b33485783fd31555a75ead80e":[1,0,0,6,33,0,0],
 "ui_2Forward_8hpp_source.html":[2,0,0,0,5,5]
 };
