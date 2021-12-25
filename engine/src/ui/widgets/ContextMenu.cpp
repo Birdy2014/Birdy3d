@@ -35,7 +35,7 @@ namespace Birdy3d::ui {
         m_background_rect = add_filled_rectangle(0_px, 0_px, utils::Color::Name::BG, Placement::BOTTOM_LEFT);
         m_border_rect = add_rectangle(0_px, 0_px, utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
         m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), utils::Color::Name::FG);
-        options.hidden = true;
+        this->options.hidden = true;
     }
 
     void ContextMenu::draw() {
