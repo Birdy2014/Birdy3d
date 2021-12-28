@@ -21,8 +21,7 @@ namespace Birdy3d::ui {
         }
 
         glm::vec2 minimal_size() override {
-            glm::vec2 min_size = core::Application::theme().text_renderer().text_size("FPS: 000") + 2.0f;
-            return glm::max(min_size, Widget::minimal_size());
+            return text->size();
         }
     };
 
