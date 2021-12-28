@@ -125,7 +125,13 @@ namespace Birdy3d::ui {
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
         bool m_children_visible = true;
 
+        /**
+         * @brief Custom drawing.
+         *
+         * Override this function for any drawing additional to shapes and child widgets.
+         */
         virtual void draw();
+
         virtual bool contains(glm::vec2) const;
 
         // Callbacks
@@ -151,7 +157,6 @@ namespace Birdy3d::ui {
         Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::BOTTOM_LEFT, float font_size = 0);
 
     private:
-        bool m_hovered_last_frame = false;
         std::map<std::string, std::vector<CallbackType>> m_callbacks;
     };
 

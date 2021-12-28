@@ -52,20 +52,32 @@ namespace Birdy3d::ui {
         if (options.hidden)
             return;
 
+        // Background
+        glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
+
+        for (const auto& s : m_shapes) {
+            if (!s->in_foreground)
+                s->draw(m_move);
+        }
+
+        // Children
+        if (m_children_visible) {
+            for (const auto& child : m_children)
+                child->external_draw();
+        }
+
+        // Foreground
         glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
 
         draw();
 
-        if (!m_children_visible)
-            return;
-        for (const auto& child : m_children)
-            child->external_draw();
+        for (const auto& s : m_shapes) {
+            if (s->in_foreground)
+                s->draw(m_move);
+        }
     }
 
-    void Widget::draw() {
-        for (const auto& s : m_shapes)
-            s->draw(m_move);
-    }
+    void Widget::draw() { }
 
     glm::vec2 Widget::preferred_position(glm::vec2 parentSize, glm::vec2 size) {
         return UIVector::get_relative_position(options.pos, size, parentSize, options.placement);
@@ -108,36 +120,27 @@ namespace Birdy3d::ui {
     }
 
     bool Widget::is_hovering() {
-        return canvas->m_hovering_widget == this;
+        return canvas->hovering_widget() == this;
     }
 
     bool Widget::is_focused() {
-        return canvas->m_focused_widget == this;
+        return canvas->focused_widget() == this;
     }
 
     bool Widget::was_last_focused() {
-        return canvas->m_last_focused_widget == this;
+        return canvas->last_focused_widget() == this;
     }
 
     void Widget::focus() {
-        if (canvas->m_focused_widget == this) {
-            canvas->m_last_focused_widget = canvas->m_focused_widget;
-            return;
-        }
-        if (canvas->m_focused_widget)
-            canvas->m_focused_widget->on_focus_lost();
-        canvas->m_last_focused_widget = canvas->m_focused_widget;
-        canvas->m_focused_widget = this;
-        canvas->m_cursor_grabbed = false;
-        canvas->m_focused_widget->on_focus();
+        canvas->set_focused(this);
     }
 
     void Widget::grab_cursor() {
-        canvas->m_cursor_grabbed = true;
+        canvas->set_cursor_grabbed(this, true);
     }
 
     void Widget::ungrab_cursor() {
-        canvas->m_cursor_grabbed = false;
+        canvas->set_cursor_grabbed(this, false);
     }
 
     bool Widget::contains(glm::vec2 point) const {
@@ -148,6 +151,17 @@ namespace Birdy3d::ui {
         bool success = false;
         if (options.hidden)
             hover = false;
+
+        // foreground shapes
+        if (hover) {
+            for (const auto& shape : m_shapes) {
+                if (shape->in_foreground && shape->contains(core::Input::cursor_pos() - m_actual_pos)) {
+                    canvas->set_hovering(this);
+                    return true;
+                }
+            }
+        }
+
         for (auto it = m_children.rbegin(); it != m_children.rend(); it++) {
             if ((*it)->update_hover(hover && m_children_visible) && m_children_visible) {
                 hover = false;
@@ -155,18 +169,13 @@ namespace Birdy3d::ui {
             }
         }
 
-        if (options.hidden)
-            hover = false;
         if (hover) {
             if (contains(core::Input::cursor_pos())) {
-                canvas->m_hovering_widget = this;
+                canvas->set_hovering(this);
                 return true;
             }
         }
-        if (m_hovered_last_frame) {
-            on_mouse_leave();
-            m_hovered_last_frame = false;
-        }
+
         return success;
     }
 
@@ -188,13 +197,10 @@ namespace Birdy3d::ui {
         }
     }
 
+    // TODO: Remove?
     void Widget::late_update() {
         for (auto it = m_children.rbegin(); it != m_children.rend(); it++)
             (*it)->late_update();
-        if (is_hovering() && !m_hovered_last_frame) {
-            on_mouse_enter();
-            m_hovered_last_frame = true;
-        }
     }
 
     void Widget::add_child(std::shared_ptr<Widget> w) {
