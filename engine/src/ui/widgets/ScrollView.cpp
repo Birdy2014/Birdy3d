@@ -9,6 +9,7 @@ namespace Birdy3d::ui {
         : Widget(options) {
         m_scrollbar_background = add_filled_rectangle(0_px, UIVector(10_px, 100_p), utils::Color::Name::BG, Placement::TOP_RIGHT);
         m_scrollbar_bar = add_filled_rectangle(0_px, UIVector(10_px, 100_p), utils::Color::Name::FG, Placement::TOP_RIGHT);
+        m_scrollbar_bar->in_foreground = true;
         m_padding = glm::vec4(0, 10, 0, 0);
     }
 

@@ -48,14 +48,41 @@ namespace Birdy3d::ui {
         Widget* last_focused_widget() { return m_last_focused_widget; }
         bool cursor_grabbed() { return m_cursor_grabbed; }
 
+        void set_focused(Widget* widget) {
+            if (m_focused_widget == widget) {
+                m_last_focused_widget = m_focused_widget;
+                return;
+            }
+
+            if (m_focused_widget)
+                m_focused_widget->on_focus_lost();
+            m_last_focused_widget = m_focused_widget;
+            m_focused_widget = widget;
+            m_cursor_grabbed = false;
+            if (widget)
+                widget->on_focus();
+        }
+
+        void set_hovering(Widget* widget) {
+            if (m_hovering_widget)
+                m_hovering_widget->on_mouse_leave();
+            m_hovering_widget = widget;
+            if (widget)
+                widget->on_mouse_enter();
+        }
+
+        void set_cursor_grabbed(Widget* widget, bool grabbed) {
+            if (m_focused_widget != widget)
+                set_focused(widget);
+            m_cursor_grabbed = grabbed;
+        }
+
         void unfocus() {
             m_focused_widget = nullptr;
             m_cursor_grabbed = false;
         }
 
     private:
-        friend class Widget;
-
         Widget* m_hovering_widget = nullptr;
         Widget* m_focused_widget = nullptr;
         Widget* m_last_focused_widget = nullptr;
