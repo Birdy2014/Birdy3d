@@ -88,7 +88,6 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1ui_1_1Canvas.html','')
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#friends">Friends</a> &#124;
 <a href="classBirdy3d_1_1ui_1_1Canvas-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Birdy3d::ui::Canvas Class Reference</div></div>
 </div><!--header-->
@@ -123,6 +122,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>draw_canvas</b> ()</t
 <tr class="memitem:a901c865a6b8ad285a6162f19b54ba442"><td class="memItemLeft" align="right" valign="top"><a id="a901c865a6b8ad285a6162f19b54ba442" name="a901c865a6b8ad285a6162f19b54ba442"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>cursor_grabbed</b> ()</td></tr>
 <tr class="separator:a901c865a6b8ad285a6162f19b54ba442"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50b3eb591a921c0fc14ed1cee7b2c575"><td class="memItemLeft" align="right" valign="top"><a id="a50b3eb591a921c0fc14ed1cee7b2c575" name="a50b3eb591a921c0fc14ed1cee7b2c575"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_focused</b> (<a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> *widget)</td></tr>
+<tr class="separator:a50b3eb591a921c0fc14ed1cee7b2c575"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84fd5e21167e2ce50b07305f5c8d5e61"><td class="memItemLeft" align="right" valign="top"><a id="a84fd5e21167e2ce50b07305f5c8d5e61" name="a84fd5e21167e2ce50b07305f5c8d5e61"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_hovering</b> (<a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> *widget)</td></tr>
+<tr class="separator:a84fd5e21167e2ce50b07305f5c8d5e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a216e7d8ca84b66fba3df1d7810940d6e"><td class="memItemLeft" align="right" valign="top"><a id="a216e7d8ca84b66fba3df1d7810940d6e" name="a216e7d8ca84b66fba3df1d7810940d6e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_cursor_grabbed</b> (<a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> *widget, bool grabbed)</td></tr>
+<tr class="separator:a216e7d8ca84b66fba3df1d7810940d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace14ec3e5baf222abca01abb66b48a71"><td class="memItemLeft" align="right" valign="top"><a id="ace14ec3e5baf222abca01abb66b48a71" name="ace14ec3e5baf222abca01abb66b48a71"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>unfocus</b> ()</td></tr>
 <tr class="separator:ace14ec3e5baf222abca01abb66b48a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,12 +236,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>updated</b> = false</
 <a class="el" href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Options</a>&#160;</td><td class="memItemRight" valign="bottom"><b>options</b></td></tr>
 <tr class="separator:a16ef1dd8971d58b18ed08741f8a39b65 inherit pub_attribs_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
-Friends</h2></td></tr>
-<tr class="memitem:a29fa75ce3911bef8c5f4414f6f0242b8"><td class="memItemLeft" align="right" valign="top"><a id="a29fa75ce3911bef8c5f4414f6f0242b8" name="a29fa75ce3911bef8c5f4414f6f0242b8"></a>
-class&#160;</td><td class="memItemRight" valign="bottom"><b>Widget</b></td></tr>
-<tr class="separator:a29fa75ce3911bef8c5f4414f6f0242b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
@@ -241,8 +243,8 @@ Additional Inherited Members</h2></td></tr>
 typedef std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
 <tr class="separator:a53624325084042ec6ee1edefb5241e69 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
-<tr class="memitem:a78aea295dee05e6a0130836ba7321878 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a78aea295dee05e6a0130836ba7321878" name="a78aea295dee05e6a0130836ba7321878"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> ()</td></tr>
+<tr class="memitem:a78aea295dee05e6a0130836ba7321878 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Widget.html#a78aea295dee05e6a0130836ba7321878">draw</a> ()</td></tr>
+<tr class="memdesc:a78aea295dee05e6a0130836ba7321878 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom drawing.  <a href="classBirdy3d_1_1ui_1_1Widget.html#a78aea295dee05e6a0130836ba7321878">More...</a><br /></td></tr>
 <tr class="separator:a78aea295dee05e6a0130836ba7321878 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e6f1a5013e02e9cf8c20b4753122688 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a3e6f1a5013e02e9cf8c20b4753122688" name="a3e6f1a5013e02e9cf8c20b4753122688"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (glm::vec2) const</td></tr>
