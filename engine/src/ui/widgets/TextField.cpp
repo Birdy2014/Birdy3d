@@ -76,7 +76,7 @@ namespace Birdy3d::ui {
     }
 
     void TextField::on_key(const events::InputKeyEvent& event) {
-        if (readonly || event.action != GLFW_PRESS)
+        if (readonly || (event.action != GLFW_PRESS && event.action != GLFW_REPEAT))
             return;
 
         if (event.key == GLFW_KEY_ENTER && has_callbacks("accept"))
