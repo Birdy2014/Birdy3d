@@ -14,9 +14,10 @@ namespace Birdy3d::ui {
         glm::vec2 m_content_size;
         glm::vec2 m_max_scroll_offset;
         glm::vec2 m_scroll_offset = glm::vec2(0);
-        Rectangle* m_scrollbar_background;
-        Rectangle* m_scrollbar_bar;
-        bool m_scrollbar_grabbed = false;
+        Rectangle* m_scrollbar_bar_vertical;
+        Rectangle* m_scrollbar_bar_horizontal;
+        bool m_scrollbar_vertical_grabbed = false;
+        bool m_scrollbar_horizontal_grabbed = false;
 
         void on_scroll(const events::InputScrollEvent& event) override;
         void on_click(const events::InputClickEvent& event) override;
