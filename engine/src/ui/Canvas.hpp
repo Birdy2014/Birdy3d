@@ -64,6 +64,9 @@ namespace Birdy3d::ui {
         }
 
         void set_hovering(Widget* widget) {
+            if (m_hovering_widget == widget)
+                return;
+
             if (m_hovering_widget)
                 m_hovering_widget->on_mouse_leave();
             m_hovering_widget = widget;
