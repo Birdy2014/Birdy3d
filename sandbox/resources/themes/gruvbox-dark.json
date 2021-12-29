@@ -25,7 +25,7 @@
     "color_bg_input": "#1d2021",
     "color_bg_selected": "#ffffff11",
     "color_text_highlight": "#0000a050",
-    "font": "DejaVuSans.ttf",
+    "font": "Noto_Sans/NotoSans-Regular.ttf",
     "font_size": 16,
     "line_height": 18,
 }
