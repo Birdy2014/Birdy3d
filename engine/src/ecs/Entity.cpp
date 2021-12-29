@@ -11,6 +11,19 @@ namespace Birdy3d::ecs {
         transform.scale = scale;
     }
 
+    std::shared_ptr<Entity> Entity::clone() {
+        serializer::Object object;
+        serializer::Adapter save_adapter(&object, serializer::Adapter::Mode::SAVE);
+        save_adapter(name, *this);
+        serializer::PointerRegistry::clear();
+
+        auto target = std::make_shared<Entity>();
+        serializer::Adapter load_adapter(&object, serializer::Adapter::Mode::LOAD);
+        load_adapter(name, *target.get());
+        serializer::PointerRegistry::clear();
+        return target;
+    }
+
     void Entity::add_child(std::shared_ptr<Entity> c) {
         c->parent = this;
         c->set_scene(scene);

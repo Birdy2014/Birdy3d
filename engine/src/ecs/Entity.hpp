@@ -18,6 +18,8 @@ namespace Birdy3d::ecs {
         Entity(std::string name = "New Entity", glm::vec3 pos = glm::vec3(0.0f), glm::vec3 rot = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f));
         virtual ~Entity() = default;
 
+        std::shared_ptr<Entity> clone();
+
         const std::vector<std::shared_ptr<Entity>>& children() const { return m_children; }
         void add_child(std::shared_ptr<Entity>);
         template <class T = Entity, typename... Args>
