@@ -218,11 +218,11 @@ int main() {
                     text_field.lock()->add_callback("change", [text_field, member]() {
                         *(core::ResourceHandle<render::Model>*)member.value = text_field.lock()->text();
                     });
-                } else if (member.type == typeid(core::ResourceHandle<render::Model>)) {
+                } else if (member.type == typeid(core::ResourceHandle<render::Texture>)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
-                    text_field.lock()->text(*(core::ResourceHandle<render::Model>*)member.value);
+                    text_field.lock()->text(*(core::ResourceHandle<render::Texture>*)member.value);
                     text_field.lock()->add_callback("change", [text_field, member]() {
-                        *(core::ResourceHandle<render::Model>*)member.value = text_field.lock()->text();
+                        *(core::ResourceHandle<render::Texture>*)member.value = text_field.lock()->text();
                     });
                 } else {
                     std::cout << member.name << '\n';
