@@ -258,11 +258,23 @@ int main() {
         }
     });
 
+    scene_context_menu->root_item.add_child("Copy", [&]() {
+        if (!core::Application::selected_entity || !core::Application::selected_entity->parent)
+            return;
+        if (auto scene_ptr = core::Application::scene.lock()) {
+            auto cloned_entity = core::Application::selected_entity->clone();
+            core::Application::selected_entity->parent->add_child(cloned_entity);
+            core::Application::selected_entity = cloned_entity.get();
+            cloned_entity->start();
+            tree->selected_item(nullptr);
+            tree->sync_scene_tree(scene_ptr.get());
+        }
+    });
+
     scene_context_menu->root_item.add_child("Remove", [&]() {
         if (!core::Application::selected_entity || !core::Application::selected_entity->parent)
             return;
-        std::shared_ptr<ecs::Scene> scene_ptr;
-        if (core::Application::selected_entity && (scene_ptr = core::Application::scene.lock())) {
+        if (auto scene_ptr = core::Application::scene.lock()) {
             core::Application::selected_entity->remove();
             core::Application::selected_entity = nullptr;
             tree->selected_item(nullptr);
