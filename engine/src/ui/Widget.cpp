@@ -55,25 +55,29 @@ namespace Birdy3d::ui {
         // Background
         glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
 
-        for (const auto& s : m_shapes) {
-            if (!s->in_foreground)
-                s->draw(m_move);
+        if (m_shapes_visible) {
+            for (const auto& s : m_shapes) {
+                if (!s->in_foreground)
+                    s->draw(m_move);
+            }
         }
 
         // Children
         if (m_children_visible) {
             for (const auto& child : m_children)
                 child->external_draw();
-        }
 
-        // Foreground
-        glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
+            // Foreground
+            glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
+        }
 
         draw();
 
-        for (const auto& s : m_shapes) {
-            if (s->in_foreground)
-                s->draw(m_move);
+        if (m_shapes_visible) {
+            for (const auto& s : m_shapes) {
+                if (s->in_foreground)
+                    s->draw(m_move);
+            }
         }
     }
 
