@@ -124,6 +124,7 @@ namespace Birdy3d::ui {
         glm::mat4 m_move = glm::mat4(1);
         glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
         bool m_children_visible = true;
+        bool m_shapes_visible = true;
 
         /**
          * @brief Custom drawing.
