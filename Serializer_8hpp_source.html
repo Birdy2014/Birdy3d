@@ -153,7 +153,7 @@ $(document).ready(function(){initNavTree('Serializer_8hpp_source.html',''); init
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                core::Logger::critical(<span class="stringliteral">&quot;Invalid JSON&quot;</span>);</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                exit(1);</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keyword">auto</span> <span class="keywordtype">object</span> = parsed-&gt;as_object();</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keyword">auto</span> <span class="keywordtype">object</span> = std::get_if&lt;Object&gt;(&amp;*parsed);</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="keywordflow">if</span> (!<span class="keywordtype">object</span>) {</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                core::Logger::critical(<span class="stringliteral">&quot;Invalid Object&quot;</span>);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                exit(1);</div>
@@ -170,7 +170,7 @@ $(document).ready(function(){initNavTree('Serializer_8hpp_source.html',''); init
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                core::Logger::critical(<span class="stringliteral">&quot;Invalid JSON&quot;</span>);</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                exit(1);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            }</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            adapter_load(parsed.get(), value);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            adapter_load(&amp;*parsed, value);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            serializer::PointerRegistry::clear();</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        }</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    };</div>
@@ -179,7 +179,7 @@ $(document).ready(function(){initNavTree('Serializer_8hpp_source.html',''); init
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Adapter_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Adapter.html">Birdy3d::serializer::Adapter</a></div><div class="ttdef"><b>Definition:</b> Adapter.hpp:78</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1JsonParser_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1JsonParser.html">Birdy3d::serializer::JsonParser</a></div><div class="ttdef"><b>Definition:</b> Json.hpp:7</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Serializer_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Serializer.html">Birdy3d::serializer::Serializer</a></div><div class="ttdef"><b>Definition:</b> Serializer.hpp:15</div></div>
-<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Object_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Object.html">Birdy3d::serializer::Object</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:58</div></div>
+<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Object_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Object.html">Birdy3d::serializer::Object</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:51</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

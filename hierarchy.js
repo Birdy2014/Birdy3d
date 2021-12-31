@@ -2,9 +2,11 @@ var hierarchy =
 [
     [ "Birdy3d::serializer::Adapter", "classBirdy3d_1_1serializer_1_1Adapter.html", null ],
     [ "Birdy3d::core::Application", "classBirdy3d_1_1core_1_1Application.html", null ],
+    [ "Birdy3d::serializer::Array", "structBirdy3d_1_1serializer_1_1Array.html", null ],
     [ "Birdy3d::serializer::BaseRegister< Base >", "structBirdy3d_1_1serializer_1_1BaseRegister.html", [
       [ "Birdy3d::serializer::DerivedRegister< Base, Derived >", "structBirdy3d_1_1serializer_1_1DerivedRegister.html", null ]
     ] ],
+    [ "Birdy3d::serializer::Bool", "structBirdy3d_1_1serializer_1_1Bool.html", null ],
     [ "Birdy3d::ui::Character", "structBirdy3d_1_1ui_1_1Character.html", null ],
     [ "Birdy3d::physics::Collision", "classBirdy3d_1_1physics_1_1Collision.html", null ],
     [ "Birdy3d::physics::CollisionPoints", "classBirdy3d_1_1physics_1_1CollisionPoints.html", null ],
@@ -55,6 +57,9 @@ var hierarchy =
     [ "Birdy3d::render::Material", "classBirdy3d_1_1render_1_1Material.html", null ],
     [ "Birdy3d::render::Mesh", "classBirdy3d_1_1render_1_1Mesh.html", null ],
     [ "Birdy3d::render::Model", "classBirdy3d_1_1render_1_1Model.html", null ],
+    [ "Birdy3d::serializer::Null", "structBirdy3d_1_1serializer_1_1Null.html", null ],
+    [ "Birdy3d::serializer::Number", "structBirdy3d_1_1serializer_1_1Number.html", null ],
+    [ "Birdy3d::serializer::Object", "structBirdy3d_1_1serializer_1_1Object.html", null ],
     [ "Birdy3d::ui::Widget::Options", "structBirdy3d_1_1ui_1_1Widget_1_1Options.html", null ],
     [ "Birdy3d::serializer::Parser", "classBirdy3d_1_1serializer_1_1Parser.html", [
       [ "Birdy3d::serializer::JsonParser", "classBirdy3d_1_1serializer_1_1JsonParser.html", null ]
@@ -76,6 +81,7 @@ var hierarchy =
       [ "Birdy3d::ui::Text", "classBirdy3d_1_1ui_1_1Text.html", null ],
       [ "Birdy3d::ui::Triangle", "classBirdy3d_1_1ui_1_1Triangle.html", null ]
     ] ],
+    [ "Birdy3d::serializer::String", "structBirdy3d_1_1serializer_1_1String.html", null ],
     [ "Birdy3d::ui::TextRenderer", "classBirdy3d_1_1ui_1_1TextRenderer.html", null ],
     [ "Birdy3d::render::Texture", "classBirdy3d_1_1render_1_1Texture.html", null ],
     [ "Birdy3d::ui::TextVertex", "structBirdy3d_1_1ui_1_1TextVertex.html", null ],
@@ -86,14 +92,6 @@ var hierarchy =
     [ "Birdy3d::ui::UIVector", "classBirdy3d_1_1ui_1_1UIVector.html", null ],
     [ "Birdy3d::utils::Unicode", "classBirdy3d_1_1utils_1_1Unicode.html", null ],
     [ "Birdy3d::ui::Unit", "classBirdy3d_1_1ui_1_1Unit.html", null ],
-    [ "Birdy3d::serializer::Value", "structBirdy3d_1_1serializer_1_1Value.html", [
-      [ "Birdy3d::serializer::Array", "structBirdy3d_1_1serializer_1_1Array.html", null ],
-      [ "Birdy3d::serializer::Bool", "structBirdy3d_1_1serializer_1_1Bool.html", null ],
-      [ "Birdy3d::serializer::Null", "structBirdy3d_1_1serializer_1_1Null.html", null ],
-      [ "Birdy3d::serializer::Number", "structBirdy3d_1_1serializer_1_1Number.html", null ],
-      [ "Birdy3d::serializer::Object", "structBirdy3d_1_1serializer_1_1Object.html", null ],
-      [ "Birdy3d::serializer::String", "structBirdy3d_1_1serializer_1_1String.html", null ]
-    ] ],
     [ "Birdy3d::render::Vertex", "structBirdy3d_1_1render_1_1Vertex.html", null ],
     [ "Birdy3d::ui::Widget", "classBirdy3d_1_1ui_1_1Widget.html", [
       [ "Birdy3d::ui::Button", "classBirdy3d_1_1ui_1_1Button.html", null ],

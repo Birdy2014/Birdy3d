@@ -69,8 +69,7 @@ var annotated_dup =
         [ "ReflectMember", "structBirdy3d_1_1serializer_1_1ReflectMember.html", null ],
         [ "Reflector", "classBirdy3d_1_1serializer_1_1Reflector.html", null ],
         [ "Serializer", "classBirdy3d_1_1serializer_1_1Serializer.html", null ],
-        [ "String", "structBirdy3d_1_1serializer_1_1String.html", null ],
-        [ "Value", "structBirdy3d_1_1serializer_1_1Value.html", null ]
+        [ "String", "structBirdy3d_1_1serializer_1_1String.html", null ]
       ] ],
       [ "ui", null, [
         [ "AbsoluteLayout", "classBirdy3d_1_1ui_1_1AbsoluteLayout.html", null ],

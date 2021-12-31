@@ -204,7 +204,6 @@ var NAVTREEINDEX0 =
 "structBirdy3d_1_1serializer_1_1Object.html":[1,0,0,5,10],
 "structBirdy3d_1_1serializer_1_1ReflectMember.html":[1,0,0,5,15],
 "structBirdy3d_1_1serializer_1_1String.html":[1,0,0,5,18],
-"structBirdy3d_1_1serializer_1_1Value.html":[1,0,0,5,19],
 "structBirdy3d_1_1ui_1_1Character.html":[1,0,0,6,3],
 "structBirdy3d_1_1ui_1_1TextVertex.html":[1,0,0,6,26],
 "structBirdy3d_1_1ui_1_1Widget_1_1Options.html":[1,0,0,6,33,0],
