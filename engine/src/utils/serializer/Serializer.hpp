@@ -63,7 +63,7 @@ namespace Birdy3d::serializer {
                 core::Logger::critical("Invalid JSON");
                 exit(1);
             }
-            auto object = parsed->as_object();
+            auto object = std::get_if<Object>(&*parsed);
             if (!object) {
                 core::Logger::critical("Invalid Object");
                 exit(1);
@@ -80,7 +80,7 @@ namespace Birdy3d::serializer {
                 core::Logger::critical("Invalid JSON");
                 exit(1);
             }
-            adapter_load(parsed.get(), value);
+            adapter_load(&*parsed, value);
             serializer::PointerRegistry::clear();
         }
     };
