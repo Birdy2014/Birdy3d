@@ -39,44 +39,7 @@ namespace Birdy3d::ui {
         Widget(Options);
         virtual ~Widget() = default;
 
-        // Layout
-        template <class T, typename... Args>
-        void set_layout(Args... args) {
-            static_assert(std::is_base_of<Layout, T>::value);
-            m_layout = std::make_unique<T>(args...);
-        }
-
-        void unset_layout() { m_layout = nullptr; }
-
-        void add_child(std::shared_ptr<Widget>);
-        void clear_children();
-
-        template <class T, typename... Args>
-        std::shared_ptr<T> add_child(Options options, Args... args) {
-            static_assert(std::is_base_of<Widget, T>::value);
-            auto widget = std::make_shared<T>(options, args...);
-            add_child(widget);
-            return std::static_pointer_cast<T>(widget);
-        }
-
         void to_foreground(Widget* w);
-
-        template <class T = Widget>
-        std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
-            static_assert(std::is_base_of<Widget, T>::value);
-            if (this->options.hidden && !hidden)
-                return nullptr;
-            for (const auto& child : m_children) {
-                std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(child);
-                if (casted && child->options.name == name) {
-                    return casted;
-                }
-                std::shared_ptr<T> result = child->get_widget<T>(name, hidden);
-                if (result)
-                    return result;
-            }
-            return nullptr;
-        }
 
         // Returns the position relative to the parent's origin in pixels
         glm::vec2 preferred_position(glm::vec2 parentSize, glm::vec2 size);
@@ -156,6 +119,43 @@ namespace Birdy3d::ui {
         Triangle* add_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
         Triangle* add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
         Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::BOTTOM_LEFT, float font_size = 0);
+
+        // Layout
+        template <class T, typename... Args>
+        void set_layout(Args... args) {
+            static_assert(std::is_base_of<Layout, T>::value);
+            m_layout = std::make_unique<T>(args...);
+        }
+
+        void unset_layout() { m_layout = nullptr; }
+
+        void add_child(std::shared_ptr<Widget>);
+        void clear_children();
+
+        template <class T, typename... Args>
+        std::shared_ptr<T> add_child(Options options, Args... args) {
+            static_assert(std::is_base_of<Widget, T>::value);
+            auto widget = std::make_shared<T>(options, args...);
+            add_child(widget);
+            return std::static_pointer_cast<T>(widget);
+        }
+
+        template <class T = Widget>
+        std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
+            static_assert(std::is_base_of<Widget, T>::value);
+            if (this->options.hidden && !hidden)
+                return nullptr;
+            for (const auto& child : m_children) {
+                std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(child);
+                if (casted && child->options.name == name) {
+                    return casted;
+                }
+                std::shared_ptr<T> result = child->get_widget<T>(name, hidden);
+                if (result)
+                    return result;
+            }
+            return nullptr;
+        }
 
     private:
         std::map<std::string, std::vector<CallbackType>> m_callbacks;

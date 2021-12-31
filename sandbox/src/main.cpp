@@ -110,7 +110,7 @@ int main() {
     std::shared_ptr<ui::NumberInput> input_orientation_x;
     std::shared_ptr<ui::NumberInput> input_orientation_y;
     std::shared_ptr<ui::NumberInput> input_orientation_z;
-    std::shared_ptr<ui::Widget> inspector_component_container;
+    std::shared_ptr<ui::Container> inspector_component_container;
 
     // UI
     auto canvas = std::make_shared<ui::Canvas>();
@@ -130,7 +130,7 @@ int main() {
 
     canvas->add_child<ui::FPSCounter>({ .placement = ui::Placement::TOP_RIGHT });
 
-    auto menu = canvas->add_child<ui::Widget>({ .size = 30_p, .placement = ui::Placement::CENTER, .name = "menu" });
+    auto menu = canvas->add_child<ui::Container>({ .size = 30_p, .placement = ui::Placement::CENTER, .name = "menu" });
     menu->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 10);
 
     auto close_button = menu->add_child<ui::Button>({ .placement = ui::Placement::BOTTOM_LEFT }, "Close");
@@ -147,7 +147,7 @@ int main() {
     tree_window->set_layout<ui::MaxLayout>();
     tree_window->title("Scene");
 
-    auto tree_scroll_view = tree_window->add_child<ui::ScrollView>({ .pos = 0_px, .size = 100_p });
+    auto tree_scroll_view = tree_window->add_child<ui::ScrollContainer>({ .pos = 0_px, .size = 100_p });
     tree_scroll_view->set_layout<ui::MaxLayout>();
 
     auto tree = tree_scroll_view->add_child<ui::TreeView>({ .size = 100_p, .placement = ui::Placement::TOP_LEFT });
@@ -170,7 +170,7 @@ int main() {
         inspector_component_container->clear_children();
         for (const auto& component : core::Application::selected_entity->components()) {
             const auto& c = serializer::Reflector::get_class(component.get());
-            auto box = inspector_component_container->add_child<ui::CollapsibleBox>({ .pos = ui::UIVector(0_px, 5_px), .size = ui::UIVector(100_p, 0_px) }, c.name);
+            auto box = inspector_component_container->add_child<ui::CollapsibleContainer>({ .pos = ui::UIVector(0_px, 5_px), .size = ui::UIVector(100_p, 0_px) }, c.name);
             box->set_layout<ui::GridLayout>(5);
             int current_row = 0;
             for (const auto& member : c.m_members) {
@@ -294,15 +294,15 @@ int main() {
         inspector_window->options.hidden = !inspector_window->options.hidden;
     };
 
-    auto inspector_scroll_view = inspector_window->add_child<ui::ScrollView>({ .size = 100_p, .placement = ui::Placement::BOTTOM_LEFT });
+    auto inspector_scroll_view = inspector_window->add_child<ui::ScrollContainer>({ .size = 100_p, .placement = ui::Placement::BOTTOM_LEFT });
     inspector_scroll_view->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::DOWN, 10, true);
 
-    auto transform_box = inspector_scroll_view->add_child<ui::CollapsibleBox>({ .pos = ui::UIVector(0_px, 5_px), .size = ui::UIVector(100_p, 0_px) }, "Transform");
+    auto transform_box = inspector_scroll_view->add_child<ui::CollapsibleContainer>({ .pos = ui::UIVector(0_px, 5_px), .size = ui::UIVector(100_p, 0_px) }, "Transform");
     transform_box->set_layout<ui::GridLayout>(5);
 
     auto position_label = transform_box->add_child<ui::Label>({ .placement = ui::Placement::CENTER_LEFT, .column = 0, .row = 0 }, "position");
 
-    auto position_box = transform_box->add_child<ui::Widget>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 0 });
+    auto position_box = transform_box->add_child<ui::Container>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 0 });
     position_box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 5, false);
     input_position_x = position_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
     input_position_y = position_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
@@ -325,7 +325,7 @@ int main() {
 
     auto scale_label = transform_box->add_child<ui::Label>({ .placement = ui::Placement::CENTER_LEFT, .column = 0, .row = 1 }, "scale");
 
-    auto scale_box = transform_box->add_child<ui::Widget>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 1 });
+    auto scale_box = transform_box->add_child<ui::Container>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 1 });
     scale_box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 5, false);
     input_scale_x = scale_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px) }, 0);
     input_scale_y = scale_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px) }, 0);
@@ -352,7 +352,7 @@ int main() {
 
     auto orientation_label = transform_box->add_child<ui::Label>({ .placement = ui::Placement::CENTER_LEFT, .column = 0, .row = 2 }, "orientation");
 
-    auto orientation_box = transform_box->add_child<ui::Widget>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 2 });
+    auto orientation_box = transform_box->add_child<ui::Container>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 2 });
     orientation_box->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 5, false);
     input_orientation_x = orientation_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
     input_orientation_y = orientation_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
@@ -387,7 +387,7 @@ int main() {
         input_orientation_z->value(event.entity->transform.orientation.z);
     });
 
-    inspector_component_container = inspector_scroll_view->add_child<ui::Widget>({ .size = ui::UIVector(100_p, 0_px) });
+    inspector_component_container = inspector_scroll_view->add_child<ui::Container>({ .size = ui::UIVector(100_p, 0_px) });
     inspector_component_container->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::DOWN, 10, true);
 
     // Entities

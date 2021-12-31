@@ -3,16 +3,16 @@
 #include "core/Application.hpp"
 #include "events/EventBus.hpp"
 #include "ui/AbsoluteLayout.hpp"
-#include "ui/Widget.hpp"
+#include "ui/Container.hpp"
 
 namespace Birdy3d::ui {
 
-    class Canvas : public Widget {
+    class Canvas : public Container {
     public:
         bool updated = false;
 
         Canvas()
-            : Widget({ .size = 100_p }) {
+            : Container({ .size = 100_p }) {
             canvas = this;
             core::Application::event_bus->subscribe(this, &Canvas::on_scroll_raw);
             core::Application::event_bus->subscribe(this, &Canvas::on_click_raw);

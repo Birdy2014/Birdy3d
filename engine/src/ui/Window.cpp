@@ -7,7 +7,7 @@
 namespace Birdy3d::ui {
 
     Window::Window(Options options)
-        : Widget(options) {
+        : Container(options) {
         m_padding = glm::vec4(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, core::Application::theme().line_height());
         add_filled_rectangle(0_px, UIVector(100_p, 100_p - core::Application::theme().line_height()), utils::Color::Name::BG, Placement::BOTTOM_LEFT);
         add_filled_rectangle(0_px, UIVector(100_p, core::Application::theme().line_height()), utils::Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);

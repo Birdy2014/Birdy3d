@@ -4,6 +4,7 @@ namespace Birdy3d::ui {
 
     class AbsoluteLayout;
     class Canvas;
+    class Container;
     class DirectionalLayout;
     class Layout;
     class Rectangle;
@@ -19,12 +20,12 @@ namespace Birdy3d::ui {
     class Console;
     class Button;
     class CheckBox;
-    class CollapsibleBox;
+    class CollapsibleContainer;
     class ContextMenu;
     class MenuBar;
     class FPSCounter;
     class NumberInput;
-    class ScrollView;
+    class ScrollContainer;
     class Textarea;
     class TextField;
     class TreeView;

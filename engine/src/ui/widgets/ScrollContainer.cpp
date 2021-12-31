@@ -1,24 +1,24 @@
-#include "ui/widgets/ScrollView.hpp"
+#include "ui/widgets/ScrollContainer.hpp"
 
 #include "core/Input.hpp"
 #include "ui/Rectangle.hpp"
 
 namespace Birdy3d::ui {
 
-    ScrollView::ScrollView(Options options)
-        : Widget(options) {
-        m_scrollbar_bar_vertical = add_filled_rectangle(0_px, UIVector(10_px, 100_p), utils::Color::Name::FG, Placement::TOP_RIGHT);
-        m_scrollbar_bar_vertical->in_foreground = true;
-        m_scrollbar_bar_horizontal = add_filled_rectangle(0_px, UIVector(100_p, 10_px), utils::Color::Name::FG, Placement::BOTTOM_LEFT);
-        m_scrollbar_bar_horizontal->in_foreground = true;
+    ScrollContainer::ScrollContainer(Options options)
+        : Container(options) {
+        m_scrollbar_vertical = add_filled_rectangle(0_px, UIVector(10_px, 100_p), utils::Color::Name::FG, Placement::TOP_RIGHT);
+        m_scrollbar_vertical->in_foreground = true;
+        m_scrollbar_horizontal = add_filled_rectangle(0_px, UIVector(100_p, 10_px), utils::Color::Name::FG, Placement::BOTTOM_LEFT);
+        m_scrollbar_horizontal->in_foreground = true;
         m_padding = glm::vec4(0, 10, 10, 0);
     }
 
-    glm::vec2 ScrollView::minimal_size() {
+    glm::vec2 ScrollContainer::minimal_size() {
         return glm::vec2(1);
     }
 
-    void ScrollView::arrange(glm::vec2 pos, glm::vec2 size) {
+    void ScrollContainer::arrange(glm::vec2 pos, glm::vec2 size) {
         bool resized = false;
         if (size != m_actual_size)
             resized = true;
@@ -37,15 +37,15 @@ namespace Birdy3d::ui {
         float scrollbar_height_percentage = (m_actual_size.y / m_content_size.y) * 100;
         float scrollbar_y_offset_percentage = (m_scroll_offset.y / m_max_scroll_offset.y) * 100;
         scrollbar_y_offset_percentage = (scrollbar_y_offset_percentage / 100) * (100 - scrollbar_height_percentage);
-        m_scrollbar_bar_vertical->size(UIVector(m_scrollbar_bar_vertical->size().x, Unit(0, scrollbar_height_percentage)));
-        m_scrollbar_bar_vertical->position(UIVector(m_scrollbar_bar_vertical->position().x, Unit(0, -scrollbar_y_offset_percentage)));
+        m_scrollbar_vertical->size(UIVector(m_scrollbar_vertical->size().x, Unit(0, scrollbar_height_percentage)));
+        m_scrollbar_vertical->position(UIVector(m_scrollbar_vertical->position().x, Unit(0, -scrollbar_y_offset_percentage)));
 
         // Horizontal scollbar
         float scrollbar_width_percentage = (m_actual_size.x / m_content_size.x) * 100;
         float scrollbar_x_offset_percentage = (m_scroll_offset.x / m_max_scroll_offset.x) * 100;
         scrollbar_x_offset_percentage = (scrollbar_x_offset_percentage / 100) * (100 - scrollbar_width_percentage);
-        m_scrollbar_bar_horizontal->size(UIVector(Unit(0, scrollbar_width_percentage), m_scrollbar_bar_horizontal->size().y));
-        m_scrollbar_bar_horizontal->position(UIVector(Unit(0, scrollbar_x_offset_percentage), m_scrollbar_bar_horizontal->position().y));
+        m_scrollbar_horizontal->size(UIVector(Unit(0, scrollbar_width_percentage), m_scrollbar_horizontal->size().y));
+        m_scrollbar_horizontal->position(UIVector(Unit(0, scrollbar_x_offset_percentage), m_scrollbar_horizontal->position().y));
 
         // NOTE: This can probably be removed once the y coordinate is flipped
         glm::vec2 pos_offset = glm::vec2(0, std::min(size.y - minsize.y, 0.0f));
@@ -61,7 +61,7 @@ namespace Birdy3d::ui {
             on_resize();
     }
 
-    void ScrollView::on_scroll(const events::InputScrollEvent& event) {
+    void ScrollContainer::on_scroll(const events::InputScrollEvent& event) {
         int acceleration = 10;
         m_scroll_offset.x += event.xoffset * acceleration;
         m_scroll_offset.y -= event.yoffset * acceleration;
@@ -69,17 +69,17 @@ namespace Birdy3d::ui {
         check_scroll_bounds();
     }
 
-    void ScrollView::on_click(const events::InputClickEvent& event) {
+    void ScrollContainer::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
         if (event.action == GLFW_PRESS) {
-            if (m_scrollbar_bar_vertical->contains(core::Input::cursor_pos() - m_actual_pos)) {
+            if (m_scrollbar_vertical->contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_vertical_grabbed = true;
                 grab_cursor();
                 return;
             }
-            if (m_scrollbar_bar_horizontal->contains(core::Input::cursor_pos() - m_actual_pos)) {
+            if (m_scrollbar_horizontal->contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_horizontal_grabbed = true;
                 grab_cursor();
                 return;
@@ -91,7 +91,7 @@ namespace Birdy3d::ui {
         ungrab_cursor();
     }
 
-    void ScrollView::on_update() {
+    void ScrollContainer::on_update() {
         if (m_scrollbar_vertical_grabbed) {
             m_scroll_offset.y -= core::Input::cursor_pos_offset().y * (m_content_size.y / m_actual_size.y);
             check_scroll_bounds();
@@ -103,7 +103,7 @@ namespace Birdy3d::ui {
         Widget::on_update();
     }
 
-    void ScrollView::check_scroll_bounds() {
+    void ScrollContainer::check_scroll_bounds() {
         if (m_scroll_offset.x > 0)
             m_scroll_offset.x = 0;
         if (m_scroll_offset.x < m_max_scroll_offset.x)
