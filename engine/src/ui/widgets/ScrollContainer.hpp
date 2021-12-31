@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ui/Widget.hpp"
+#include "ui/Container.hpp"
 
 namespace Birdy3d::ui {
 
-    class ScrollView : public Widget {
+    class ScrollContainer : public Container {
     public:
-        ScrollView(Options);
+        ScrollContainer(Options);
         glm::vec2 minimal_size() override;
         void arrange(glm::vec2 pos, glm::vec2 size) override;
 
@@ -14,8 +14,8 @@ namespace Birdy3d::ui {
         glm::vec2 m_content_size;
         glm::vec2 m_max_scroll_offset;
         glm::vec2 m_scroll_offset = glm::vec2(0);
-        Rectangle* m_scrollbar_bar_vertical;
-        Rectangle* m_scrollbar_bar_horizontal;
+        Rectangle* m_scrollbar_vertical;
+        Rectangle* m_scrollbar_horizontal;
         bool m_scrollbar_vertical_grabbed = false;
         bool m_scrollbar_horizontal_grabbed = false;
 

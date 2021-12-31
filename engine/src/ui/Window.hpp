@@ -1,13 +1,13 @@
 #pragma once
 
 #include "events/InputEvents.hpp"
+#include "ui/Container.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
-#include "ui/Widget.hpp"
 
 namespace Birdy3d::ui {
 
-    class Window : public Widget {
+    class Window : public Container {
     public:
         const int BORDER_SIZE = 4;
         std::function<void()> callback_close;
