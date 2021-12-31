@@ -37,15 +37,21 @@ namespace Birdy3d::serializer {
 
     std::optional<Number> JsonParser::parse_number() {
         bool dot = false;
+        bool e = false;
         std::string num;
         char c = consume_char();
         if (!((c >= '0' && c <= '9') || c == '.' || c == '-'))
             return {};
-        while ((c >= '0' && c <= '9') || c == '.' || c == '-') {
+        while ((c >= '0' && c <= '9') || c == '.' || c == '-' || c == 'e') {
             if (c == '.') {
                 if (dot)
                     return {};
                 dot = true;
+            }
+            if (c == 'e') {
+                if (e)
+                    return {};
+                e = true;
             }
             num += c;
             c = consume_char();
