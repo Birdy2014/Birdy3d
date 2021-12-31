@@ -53,13 +53,13 @@ namespace Birdy3d::render {
         if (!m_ssao_blur_target.finish())
             core::Logger::critical("SSAO blur FBO not complete!");
 
-        m_deferred_geometry_shader = core::ResourceManager::get_shader("geometry_buffer");
-        m_deferred_light_shader = core::ResourceManager::get_shader("deferred_lighting");
-        m_forward_shader = core::ResourceManager::get_shader("forward_lighting");
-        m_normal_shader = core::ResourceManager::get_shader("normal_display");
-        m_simple_color_shader = core::ResourceManager::get_shader("simple_color");
-        m_ssao_shader = core::ResourceManager::get_shader("ssao");
-        m_ssao_blur_shader = core::ResourceManager::get_shader("ssao_blur");
+        m_deferred_geometry_shader = core::ResourceManager::get_shader("geometry_buffer.glsl");
+        m_deferred_light_shader = core::ResourceManager::get_shader("deferred_lighting.glsl");
+        m_forward_shader = core::ResourceManager::get_shader("forward_lighting.glsl");
+        m_normal_shader = core::ResourceManager::get_shader("normal_display.glsl");
+        m_simple_color_shader = core::ResourceManager::get_shader("simple_color.glsl");
+        m_ssao_shader = core::ResourceManager::get_shader("ssao.glsl");
+        m_ssao_blur_shader = core::ResourceManager::get_shader("ssao_blur.glsl");
         m_deferred_light_shader->use();
         m_deferred_light_shader->set_int("gPosition", 0);
         m_deferred_light_shader->set_int("gNormal", 1);

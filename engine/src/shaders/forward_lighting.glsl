@@ -44,7 +44,7 @@ uniform sampler2D texture_specular;
 uniform sampler2D texture_normal;
 uniform vec3 viewPos;
 
-#include includes/lighting
+#include includes/lighting.glsl
 #include includes/material.glsl
 
 void main() {

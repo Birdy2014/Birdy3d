@@ -210,21 +210,12 @@ namespace Birdy3d::core {
         if (name.front() == '/')
             name.erase(0, 1);
 
-        std::string extension;
-        std::size_t dot_pos = name.find_last_of('.');
-        if (dot_pos != std::string::npos) {
-            extension = name.substr(dot_pos);
-            name = name.substr(0, dot_pos);
-        }
-
         std::string default_dir;
         std::string subdir;
         switch (type) {
         case ResourceType::SHADER:
             default_dir = "../shaders/";
             subdir = "shaders/";
-            if (extension.size() == 0)
-                extension = ".glsl";
             break;
         case ResourceType::TEXTURE:
             subdir = "textures/";
@@ -237,40 +228,19 @@ namespace Birdy3d::core {
             break;
         case ResourceType::FONT:
             subdir = "fonts/";
-#if defined(BIRDY3D_PLATFORM_LINUX)
-            default_dir = "/usr/share/fonts/";
-#elif defined(BIRDY3D_PLATFORM_WINDOWS)
-            default_dir = "C:/Windows/Fonts/";
-#else
-            default_dir = "";
-#endif
-            if (extension.size() == 0)
-                extension = ".ttf";
             break;
         default:
             return {};
         }
 
-        if (std::filesystem::is_regular_file(name + extension))
-            return name + extension;
-        if (std::filesystem::is_regular_file("/" + name + extension))
-            return "/" + name + extension;
-        if (std::filesystem::is_regular_file(subdir + name + extension))
-            return subdir + name + extension;
+        if (std::filesystem::is_regular_file(name))
+            return name;
+        if (std::filesystem::is_regular_file(subdir + name))
+            return subdir + name;
+        if (!default_dir.empty() && std::filesystem::is_regular_file(default_dir + name))
+            return default_dir + name;
 
-        std::string path_fragment;
-        std::size_t last_slash = name.find_last_of('/');
-        if (last_slash != std::string::npos) {
-            path_fragment = name.substr(0, last_slash + 1);
-            name = name.substr(last_slash + 1);
-        }
-
-        std::string output_path;
-        output_path = search_for_file(default_dir + path_fragment, name + extension);
-        if (!output_path.empty())
-            return output_path;
-
-        Logger::error("can't find resource ", name, extension);
+        Logger::error("can't find resource ", name);
         return {};
     }
 
@@ -298,21 +268,6 @@ namespace Birdy3d::core {
             Logger::error("Failed to read file ", path);
         }
         return content;
-    }
-
-    std::string ResourceManager::search_for_file(std::string directory, std::string filename) {
-        if (!std::filesystem::is_directory(directory))
-            return {};
-        for (const auto& entry : std::filesystem::directory_iterator(directory)) {
-            if (entry.is_regular_file() && entry.path().filename() == filename)
-                return entry.path().string();
-            if (entry.is_directory()) {
-                std::string found = search_for_file(entry.path().string(), filename);
-                if (!found.empty())
-                    return found;
-            }
-        }
-        return {};
     }
 
 }

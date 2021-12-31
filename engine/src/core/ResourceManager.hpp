@@ -68,7 +68,6 @@ namespace Birdy3d::core {
         static std::shared_ptr<render::Model> get_model_ptr(const std::string& name);
         static std::shared_ptr<render::Texture> get_texture_ptr(const std::string& name);
 
-        static std::string search_for_file(std::string directory, std::string filename);
         static std::string get_executable_dir();
     };
 

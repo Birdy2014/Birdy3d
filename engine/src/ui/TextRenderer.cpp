@@ -228,7 +228,7 @@ namespace Birdy3d::ui {
     Text::Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size)
         : Shape(pos, 0_px, color, placement)
         , font_size(font_size)
-        , m_shader(core::ResourceManager::get_shader("text")) {
+        , m_shader(core::ResourceManager::get_shader("text.glsl")) {
         if (!m_cursor_rect)
             m_cursor_rect = std::make_unique<Rectangle>(0_px, 0_px, utils::Color::Name::FG);
         m_text = utils::Unicode::utf8_to_utf32(text);

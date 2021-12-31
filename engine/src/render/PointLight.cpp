@@ -17,7 +17,7 @@ namespace Birdy3d::render {
         , shadow_enabled(shadow_enabled) { }
 
     void PointLight::setup_shadow_map() {
-        m_depth_shader = core::ResourceManager::get_shader("point_light_depth");
+        m_depth_shader = core::ResourceManager::get_shader("point_light_depth.glsl");
         // framebuffer
         glGenFramebuffers(1, &m_shadow_map_fbo);
         // shadow map

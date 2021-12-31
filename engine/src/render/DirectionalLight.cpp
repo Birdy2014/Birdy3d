@@ -19,7 +19,7 @@ namespace Birdy3d::render {
     }
 
     void DirectionalLight::setup_shadow_map() {
-        m_depth_shader = core::ResourceManager::get_shader("directional_light_depth");
+        m_depth_shader = core::ResourceManager::get_shader("directional_light_depth.glsl");
         m_shadow_map = m_shadow_rendertarget.add_texture(Texture::Preset::DEPTH);
         m_shadow_rendertarget.finish();
 

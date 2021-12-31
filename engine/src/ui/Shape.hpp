@@ -25,7 +25,7 @@ namespace Birdy3d::ui {
 
         Shape(UIVector position, UIVector size, utils::Color::Name color = utils::Color::Name::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
             : name(name)
-            , m_shader(core::ResourceManager::get_shader("ui"))
+            , m_shader(core::ResourceManager::get_shader("ui.glsl"))
             , m_position(position)
             , m_rotation(0)
             , m_size(size)
