@@ -7,16 +7,17 @@ namespace Birdy3d::serializer {
     class JsonParser : public Parser {
     public:
         using Parser::Parser;
-        std::unique_ptr<Value> parse() override;
+        std::optional<Value> parse() override;
 
     private:
         // Parse Types
-        std::unique_ptr<String> parse_string();
-        std::unique_ptr<Number> parse_number();
-        std::unique_ptr<Bool> parse_bool();
-        std::unique_ptr<Null> parse_null();
-        std::unique_ptr<Array> parse_array();
-        std::unique_ptr<Object> parse_object();
+        std::optional<Value> parse_value();
+        std::optional<String> parse_string();
+        std::optional<Number> parse_number();
+        std::optional<Bool> parse_bool();
+        std::optional<Null> parse_null();
+        std::optional<Array> parse_array();
+        std::optional<Object> parse_object();
 
         // Utils
         void forward();
@@ -25,15 +26,15 @@ namespace Birdy3d::serializer {
     class MinimalJsonGenerator : public Generator {
     public:
         using Generator::Generator;
-        void generate(Value&) override;
+        void generate(const Value&) override;
 
     private:
-        void generate_string(String&);
-        void generate_number(Number&);
-        void generate_bool(Bool&);
-        void generate_null(Null&);
-        void generate_array(Array&);
-        void generate_object(Object&);
+        void generate_string(const String&);
+        void generate_number(const Number&);
+        void generate_bool(const Bool&);
+        void generate_null(const Null&);
+        void generate_array(const Array&);
+        void generate_object(const Object&);
     };
 
     class PrettyJsonGenerator : public Generator {
@@ -41,17 +42,17 @@ namespace Birdy3d::serializer {
         PrettyJsonGenerator(std::ostream& stream, std::size_t indent_width = 4)
             : Generator(stream)
             , m_indent_width(indent_width) { }
-        void generate(Value&) override;
+        void generate(const Value&) override;
 
     private:
         std::size_t m_indent_width = 4;
 
-        void generate_string(String&);
-        void generate_number(Number&);
-        void generate_bool(Bool&);
-        void generate_null(Null&);
-        void generate_array(Array&, std::size_t);
-        void generate_object(Object&, std::size_t);
+        void generate_string(const String&);
+        void generate_number(const Number&);
+        void generate_bool(const Bool&);
+        void generate_null(const Null&);
+        void generate_array(const Array&, std::size_t);
+        void generate_object(const Object&, std::size_t);
     };
 
 }

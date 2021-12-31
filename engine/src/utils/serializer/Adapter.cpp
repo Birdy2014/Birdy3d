@@ -6,39 +6,39 @@ namespace Birdy3d::serializer {
     /* --- Save --- */
 
     template <>
-    std::unique_ptr<Value> adapter_save(std::string& value) {
-        return std::make_unique<String>(value);
+    Value adapter_save(std::string& value) {
+        return String(value);
     }
 
     template <>
-    std::unique_ptr<Value> adapter_save(bool& value) {
-        return std::make_unique<Bool>(value);
+    Value adapter_save(bool& value) {
+        return Bool(value);
     }
 
     template <>
-    std::unique_ptr<Value> adapter_save(glm::vec2& value) {
-        auto object = std::make_unique<Object>();
-        object->value["x"] = std::make_unique<Number>(value.x);
-        object->value["y"] = std::make_unique<Number>(value.y);
+    Value adapter_save(glm::vec2& value) {
+        auto object = Object();
+        object.value["x"] = Number(value.x);
+        object.value["y"] = Number(value.y);
         return object;
     }
 
     template <>
-    std::unique_ptr<Value> adapter_save(glm::vec3& value) {
-        auto object = std::make_unique<Object>();
-        object->value["x"] = std::make_unique<Number>(value.x);
-        object->value["y"] = std::make_unique<Number>(value.y);
-        object->value["z"] = std::make_unique<Number>(value.z);
+    Value adapter_save(glm::vec3& value) {
+        auto object = Object();
+        object.value["x"] = Number(value.x);
+        object.value["y"] = Number(value.y);
+        object.value["z"] = Number(value.z);
         return object;
     }
 
     template <>
-    std::unique_ptr<Value> adapter_save(glm::vec4& value) {
-        auto object = std::make_unique<Object>();
-        object->value["x"] = std::make_unique<Number>(value.x);
-        object->value["y"] = std::make_unique<Number>(value.y);
-        object->value["z"] = std::make_unique<Number>(value.z);
-        object->value["w"] = std::make_unique<Number>(value.w);
+    Value adapter_save(glm::vec4& value) {
+        auto object = Object();
+        object.value["x"] = Number(value.x);
+        object.value["y"] = Number(value.y);
+        object.value["z"] = Number(value.z);
+        object.value["w"] = Number(value.w);
         return object;
     }
 
@@ -46,40 +46,49 @@ namespace Birdy3d::serializer {
 
     template <>
     void adapter_load(Value* from, std::string& to) {
-        if (auto* string_ptr = dynamic_cast<String*>(from))
+        if (auto string_ptr = std::get_if<String>(from))
             to = string_ptr->value;
     }
 
     template <>
     void adapter_load(Value* from, bool& to) {
-        if (auto* bool_ptr = dynamic_cast<Bool*>(from))
+        if (auto bool_ptr = std::get_if<Bool>(from))
             to = bool_ptr->value;
     }
 
     template <>
     void adapter_load(Value* from, glm::vec2& to) {
-        if (auto* object_ptr = from->as_object()) {
-            to.x = (*object_ptr)["x"]->as_number()->value;
-            to.y = (*object_ptr)["y"]->as_number()->value;
+        if (auto object_ptr = std::get_if<Object>(from)) {
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["x"]))
+                to.x = number_ptr->value;
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["y"]))
+                to.y = number_ptr->value;
         }
     }
 
     template <>
     void adapter_load(Value* from, glm::vec3& to) {
-        if (auto* object_ptr = from->as_object()) {
-            to.x = (*object_ptr)["x"]->as_number()->value;
-            to.y = (*object_ptr)["y"]->as_number()->value;
-            to.z = (*object_ptr)["z"]->as_number()->value;
+        if (auto object_ptr = std::get_if<Object>(from)) {
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["x"]))
+                to.x = number_ptr->value;
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["y"]))
+                to.y = number_ptr->value;
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["z"]))
+                to.z = number_ptr->value;
         }
     }
 
     template <>
     void adapter_load(Value* from, glm::vec4& to) {
-        if (auto* object_ptr = from->as_object()) {
-            to.x = (*object_ptr)["x"]->as_number()->value;
-            to.y = (*object_ptr)["y"]->as_number()->value;
-            to.z = (*object_ptr)["z"]->as_number()->value;
-            to.w = (*object_ptr)["w"]->as_number()->value;
+        if (auto object_ptr = std::get_if<Object>(from)) {
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["x"]))
+                to.x = number_ptr->value;
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["y"]))
+                to.y = number_ptr->value;
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["z"]))
+                to.z = number_ptr->value;
+            if (auto number_ptr = std::get_if<Number>(&(*object_ptr)["w"]))
+                to.w = number_ptr->value;
         }
     }
 

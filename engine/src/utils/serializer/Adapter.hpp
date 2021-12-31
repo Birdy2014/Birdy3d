@@ -13,33 +13,33 @@ namespace Birdy3d::serializer {
 
     // Save
     template <typename T>
-    std::unique_ptr<Value> adapter_save(T& value);
+    Value adapter_save(T& value);
     template <ArithmeticType T>
-    std::unique_ptr<Value> adapter_save(T& value);
+    Value adapter_save(T& value);
     template <class T>
-    std::unique_ptr<Value> adapter_save(T& value);
+    Value adapter_save(T& value);
     template <>
-    std::unique_ptr<Value> adapter_save(std::string& value);
+    Value adapter_save(std::string& value);
     template <>
-    std::unique_ptr<Value> adapter_save(bool& value);
+    Value adapter_save(bool& value);
     template <>
-    std::unique_ptr<Value> adapter_save(glm::vec2& value);
+    Value adapter_save(glm::vec2& value);
     template <>
-    std::unique_ptr<Value> adapter_save(glm::vec3& value);
+    Value adapter_save(glm::vec3& value);
     template <>
-    std::unique_ptr<Value> adapter_save(glm::vec4& value);
+    Value adapter_save(glm::vec4& value);
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::vector<T>& value);
+    Value adapter_save(std::vector<T>& value);
     template <typename T, std::size_t N>
-    std::unique_ptr<Value> adapter_save(std::array<T, N>& value);
+    Value adapter_save(std::array<T, N>& value);
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::unique_ptr<T>& value);
+    Value adapter_save(std::unique_ptr<T>& value);
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::shared_ptr<T>& value);
+    Value adapter_save(std::shared_ptr<T>& value);
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::weak_ptr<T>& value);
+    Value adapter_save(std::weak_ptr<T>& value);
     template <class T>
-    std::unique_ptr<Value> adapter_save(core::ResourceHandle<T>& value);
+    Value adapter_save(core::ResourceHandle<T>& value);
 
     // Load
     template <typename T>
@@ -98,7 +98,7 @@ namespace Birdy3d::serializer {
                 m_object->value[key] = adapter_save(value);
                 break;
             case Mode::LOAD:
-                adapter_load(m_object->value[key].get(), value);
+                adapter_load(&m_object->value[key], value);
                 break;
             case Mode::REFLECT:
                 adapter_reflect(m_class, key, typeid(value), &value);
@@ -120,61 +120,61 @@ namespace Birdy3d::serializer {
 
     // Implementations
     template <ArithmeticType T>
-    std::unique_ptr<Value> adapter_save(T& value) {
-        return std::make_unique<Number>(value);
+    Value adapter_save(T& value) {
+        return Number(value);
     }
 
     template <class T>
-    std::unique_ptr<Value> adapter_save(T& value) {
-        auto object = std::make_unique<Object>();
-        Adapter adapter(object.get(), Adapter::Mode::SAVE);
+    Value adapter_save(T& value) {
+        auto object = Object();
+        Adapter adapter(&object, Adapter::Mode::SAVE);
         value.serialize(adapter);
         return object;
     }
 
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::vector<T>& value) {
-        auto array = std::make_unique<Array>();
+    Value adapter_save(std::vector<T>& value) {
+        auto array = Array();
         for (T& item : value) {
-            array->value.push_back(adapter_save(item));
+            array.value.push_back(adapter_save(item));
         }
         return array;
     }
 
     template <typename T, std::size_t N>
-    std::unique_ptr<Value> adapter_save(std::array<T, N>& value) {
-        auto array = std::make_unique<Array>();
+    Value adapter_save(std::array<T, N>& value) {
+        auto array = Array();
         for (T& item : value) {
-            array->value.push_back(adapter_save(item));
+            array.value.push_back(adapter_save(item));
         }
         return array;
     }
 
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::unique_ptr<T>& value) {
+    Value adapter_save(std::unique_ptr<T>& value) {
         if (value == nullptr)
-            return std::make_unique<Null>();
-        auto object = std::make_unique<Object>();
-        object->value["type"] = std::make_unique<String>(BaseRegister<T>::instance_name(typeid(*value.get())));
-        object->value["data"] = adapter_save(*value.get());
+            return Null();
+        auto object = Object();
+        object.value["type"] = String(BaseRegister<T>::instance_name(typeid(*value.get())));
+        object.value["data"] = adapter_save(*value.get());
         return object;
     }
 
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::shared_ptr<T>& value) {
+    Value adapter_save(std::shared_ptr<T>& value) {
         if (value == nullptr)
-            return std::make_unique<Null>();
-        auto object = std::make_unique<Object>();
+            return Null();
+        auto object = Object();
         if (!PointerRegistry::is_ptr_stored(value)) {
-            object->value["type"] = std::make_unique<String>(BaseRegister<T>::instance_name(typeid(*value.get())));
-            object->value["data"] = adapter_save(*value.get());
+            object.value["type"] = String(BaseRegister<T>::instance_name(typeid(*value.get())));
+            object.value["data"] = adapter_save(*value.get());
         }
-        object->value["id"] = std::make_unique<Number>(PointerRegistry::get_id_from_ptr(value));
+        object.value["id"] = Number(PointerRegistry::get_id_from_ptr(value));
         return object;
     }
 
     template <typename T>
-    std::unique_ptr<Value> adapter_save(std::weak_ptr<T>& value) {
+    Value adapter_save(std::weak_ptr<T>& value) {
         auto ptr = value.lock();
         return adapter_save(ptr);
     }
@@ -184,13 +184,13 @@ namespace Birdy3d::serializer {
     // Implementations
     template <ArithmeticType T>
     void adapter_load(Value* from, T& to) {
-        if (auto* number_ptr = dynamic_cast<Number*>(from))
+        if (auto number_ptr = std::get_if<Number>(from))
             to = number_ptr->value;
     }
 
     template <class T>
     void adapter_load(Value* from, T& to) {
-        if (auto* object_ptr = dynamic_cast<Object*>(from)) {
+        if (auto object_ptr = std::get_if<Object>(from)) {
             Adapter adapter(object_ptr, Adapter::Mode::LOAD);
             to.serialize(adapter);
         }
@@ -198,32 +198,31 @@ namespace Birdy3d::serializer {
 
     template <typename T>
     void adapter_load(Value* from, std::vector<T>& to) {
-        if (auto* array_ptr = dynamic_cast<Array*>(from)) {
+        if (auto array_ptr = std::get_if<Array>(from)) {
             to.resize(array_ptr->value.size());
             for (std::size_t i = 0; i < array_ptr->value.size(); i++) {
-                adapter_load(array_ptr->value[i].get(), to[i]);
+                adapter_load(&array_ptr->value[i], to[i]);
             }
         }
     }
 
     template <typename T, std::size_t N>
     void adapter_load(Value* from, std::array<T, N>& to) {
-        if (auto* array_ptr = dynamic_cast<Array*>(from)) {
+        if (auto array_ptr = std::get_if<Array>(from)) {
             for (std::size_t i = 0; i < array_ptr->value.size(); i++) {
-                adapter_load(array_ptr->value[i].get(), to[i]);
+                adapter_load(&array_ptr->value[i], to[i]);
             }
         }
     }
 
     template <class T>
     void adapter_load(Value* from, std::unique_ptr<T>& to) {
-        if (auto* object_ptr = dynamic_cast<Object*>(from)) {
-            if (auto* type_string_ptr = dynamic_cast<String*>(object_ptr->value["type"].get())) {
-                if (auto* data_object_ptr = dynamic_cast<Object*>(object_ptr->value["data"].get())) {
-                    to = std::unique_ptr<T>(BaseRegister<T>::create_instance(type_string_ptr->value));
-                    adapter_load(data_object_ptr, *to.get());
-                    return;
-                }
+        if (auto object_ptr = std::get_if<Object>(from)) {
+            String* type_string_ptr;
+            if ((type_string_ptr = std::get_if<String>(&object_ptr->value["type"])) && std::holds_alternative<Object>(object_ptr->value["data"])) {
+                to = std::unique_ptr<T>(BaseRegister<T>::create_instance(type_string_ptr->value));
+                adapter_load(&object_ptr->value["data"], *to.get());
+                return;
             }
         }
         to = nullptr;
@@ -231,20 +230,19 @@ namespace Birdy3d::serializer {
 
     template <class T>
     void adapter_load(Value* from, std::shared_ptr<T>& to) {
-        if (auto* object_ptr = dynamic_cast<Object*>(from)) {
-            if (auto* id_number_ptr = dynamic_cast<Number*>(object_ptr->value["id"].get())) {
+        if (auto object_ptr = std::get_if<Object>(from)) {
+            if (auto id_number_ptr = std::get_if<Number>(&object_ptr->value["id"])) {
                 std::shared_ptr<void> ptr = PointerRegistry::get_ptr_from_id(id_number_ptr->value);
                 if (ptr) {
                     to = std::static_pointer_cast<T>(ptr);
                     return;
                 }
-                if (auto* type_string_ptr = dynamic_cast<String*>(object_ptr->value["type"].get())) {
-                    if (auto* data_object_ptr = dynamic_cast<Object*>(object_ptr->value["data"].get())) {
-                        to = std::unique_ptr<T>(BaseRegister<T>::create_instance(type_string_ptr->value));
-                        adapter_load(data_object_ptr, *to.get());
-                        PointerRegistry::add_ptr_and_id(id_number_ptr->value, to);
-                        return;
-                    }
+                String* type_string_ptr;
+                if ((type_string_ptr = std::get_if<String>(&object_ptr->value["type"])) && std::holds_alternative<Object>(object_ptr->value["data"])) {
+                    to = std::unique_ptr<T>(BaseRegister<T>::create_instance(type_string_ptr->value));
+                    adapter_load(&object_ptr->value["data"], *to.get());
+                    PointerRegistry::add_ptr_and_id(id_number_ptr->value, to);
+                    return;
                 }
             }
         }
@@ -257,5 +255,4 @@ namespace Birdy3d::serializer {
         adapter_load(from, ptr);
         to = ptr;
     }
-
 }

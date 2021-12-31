@@ -62,7 +62,7 @@ namespace Birdy3d::utils {
 namespace Birdy3d::serializer {
 
     template <>
-    std::unique_ptr<Value> adapter_save(utils::Color&);
+    Value adapter_save(utils::Color&);
 
     template <>
     void adapter_load(Value*, utils::Color&);

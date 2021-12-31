@@ -2,9 +2,10 @@
 
 #include "utils/serializer/TypeRegistry.hpp"
 #include <map>
-#include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace Birdy3d::serializer {
@@ -17,49 +18,41 @@ namespace Birdy3d::serializer {
     struct Object;
 
     // Types
-    struct Value {
-        virtual ~Value() = default;
-        String* as_string();
-        Number* as_number();
-        Bool* as_bool();
-        Null* as_null();
-        Array* as_array();
-        Object* as_object();
-    };
+    using Value = std::variant<Null, String, Number, Bool, Array, Object>;
 
-    struct String : public Value {
+    struct Null { };
+
+    struct String {
         String(std::string v)
             : value(v) { }
         std::string value;
     };
 
-    struct Number : public Value {
+    struct Number {
         Number(double v)
             : value(v) { }
         double value;
     };
 
-    struct Bool : public Value {
+    struct Bool {
         Bool(bool v)
             : value(v) { }
         bool value;
     };
 
-    struct Null : public Value { };
+    struct Array {
+        std::vector<Value> value;
 
-    struct Array : public Value {
-        std::vector<std::unique_ptr<Value>> value;
-
-        Value* operator[](std::size_t i) {
-            return value[i].get();
+        Value& operator[](std::size_t i) {
+            return value[i];
         }
     };
 
-    struct Object : public Value {
-        std::map<std::string, std::unique_ptr<Value>> value;
+    struct Object {
+        std::map<std::string, Value> value;
 
-        Value* operator[](std::string i) {
-            return value[i].get();
+        Value& operator[](std::string i) {
+            return value[i];
         }
     };
 
@@ -70,7 +63,7 @@ namespace Birdy3d::serializer {
             : m_content(content)
             , m_pos(0) { }
         virtual ~Parser() = default;
-        virtual std::unique_ptr<Value> parse() = 0;
+        virtual std::optional<Value> parse() = 0;
 
     protected:
         std::string m_content;
@@ -125,7 +118,7 @@ namespace Birdy3d::serializer {
         Generator(std::ostream& stream)
             : m_stream(stream) { }
         virtual ~Generator() = default;
-        virtual void generate(Value&) = 0;
+        virtual void generate(const Value&) = 0;
 
     protected:
         std::ostream& m_stream;

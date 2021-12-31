@@ -79,13 +79,13 @@ namespace Birdy3d::utils {
 namespace Birdy3d::serializer {
 
     template <>
-    std::unique_ptr<Value> adapter_save(utils::Color& value) {
-        return std::make_unique<String>(value.to_string());
+    Value adapter_save(utils::Color& value) {
+        return String(value.to_string());
     }
 
     template <>
     void adapter_load(Value* from, utils::Color& to) {
-        if (auto* string_ptr = from->as_string()) {
+        if (auto string_ptr = std::get_if<String>(from)) {
             to = utils::Color::parse(string_ptr->value);
         }
     }

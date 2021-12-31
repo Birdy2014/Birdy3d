@@ -41,13 +41,13 @@ namespace Birdy3d::core {
 namespace Birdy3d::serializer {
 
     template <class T>
-    std::unique_ptr<Value> adapter_save(core::ResourceHandle<T>& value) {
-        return std::make_unique<String>((std::string)value);
+    Value adapter_save(core::ResourceHandle<T>& value) {
+        return String((std::string)value);
     }
 
     template <class T>
     void adapter_load(Value* from, core::ResourceHandle<T>& to) {
-        if (auto* string_ptr = from->as_string()) {
+        if (auto* string_ptr = std::get_if<String>(from)) {
             to = core::ResourceHandle<T>(string_ptr->value);
         }
     }
