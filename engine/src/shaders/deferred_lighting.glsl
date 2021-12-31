@@ -23,7 +23,7 @@ uniform sampler2D ssao;
 
 uniform vec3 viewPos;
 
-#include includes/lighting
+#include includes/lighting.glsl
 
 void main() {
     vec3 fragPos = texture(gPosition, TexCoord).rgb;
