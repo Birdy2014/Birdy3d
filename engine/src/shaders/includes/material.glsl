@@ -1,3 +1,4 @@
+#type fragment
 struct Material {
     bool diffuse_map_enabled;
     vec4 diffuse_color;

@@ -1,5 +1,6 @@
+#include includes/lighting.glsl
+
 #type vertex
-#version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 
@@ -11,7 +12,6 @@ void main() {
 }
 
 #type fragment
-#version 330 core
 out vec4 FragColor;
 
 in vec2 TexCoord;
@@ -22,8 +22,6 @@ uniform sampler2D gAlbedoSpec;
 uniform sampler2D ssao;
 
 uniform vec3 viewPos;
-
-#include includes/lighting.glsl
 
 void main() {
     vec3 fragPos = texture(gPosition, TexCoord).rgb;
