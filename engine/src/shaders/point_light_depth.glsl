@@ -1,5 +1,4 @@
 #type vertex
-#version 330 core
 layout (location = 0) in vec3 aPos;
 
 uniform mat4 model;
@@ -9,7 +8,6 @@ void main() {
 }
 
 #type geometry
-#version 330 core
 layout (triangles) in;
 layout (triangle_strip, max_vertices=18) out;
 
@@ -30,7 +28,6 @@ void main() {
 }
 
 #type fragment
-#version 330 core
 in vec4 FragPos;
 
 uniform vec3 lightPos;

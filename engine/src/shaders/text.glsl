@@ -1,5 +1,4 @@
 #type vertex
-#version 330 core
 layout (location = 0) in vec2 pos;
 layout (location = 1) in vec2 tex;
 layout (location = 2) in vec4 color_in;
@@ -18,7 +17,6 @@ void main() {
 }
 
 #type fragment
-#version 330 core
 out vec4 frag_color;
 
 in vec2 frag_tex;

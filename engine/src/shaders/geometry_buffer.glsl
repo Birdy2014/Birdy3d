@@ -1,5 +1,6 @@
+#include includes/material.glsl
+
 #type vertex
-#version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
@@ -32,7 +33,6 @@ void main() {
 }
 
 #type fragment
-#version 330 core
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
@@ -41,8 +41,6 @@ in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
 in mat3 TBN;
-
-#include includes/material.glsl
 
 void main() {
     gPosition = FragPos;

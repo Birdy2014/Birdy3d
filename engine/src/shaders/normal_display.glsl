@@ -1,5 +1,4 @@
 #type vertex
-#version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 
@@ -17,7 +16,6 @@ void main() {
 }
 
 #type geometry
-#version 330 core
 layout (triangles) in;
 layout (line_strip, max_vertices = 6) out;
 
@@ -44,7 +42,6 @@ void main() {
 }
 
 #type fragment
-#version 330 core
 out vec4 FragColor;
 
 void main() {

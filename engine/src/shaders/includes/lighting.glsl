@@ -1,3 +1,4 @@
+#type fragment
 struct DirectionalLight {
     bool shadow_enabled;
 

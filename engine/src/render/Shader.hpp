@@ -10,8 +10,6 @@ namespace Birdy3d::render {
         static const int MAX_POINTLIGHTS = 5;
         static const int MAX_SPOTLIGHTS = 2;
 
-        unsigned int ID;
-
         Shader(const std::string& name);
         void use() const;
         void set_bool(const char* name, bool value) const;
@@ -41,11 +39,18 @@ namespace Birdy3d::render {
         void set_mat4(const std::string& name, const glm::mat4& mat) const;
 
     private:
+        struct PreprocessedSources {
+            std::string vertex_shader;
+            std::string geometry_shader;
+            std::string fragment_shader;
+        };
+
         std::string m_name;
+        GLuint m_id;
 
         bool check_compile_errors(GLuint shader, GLenum type);
-        std::unordered_map<GLenum, std::string> preprocess(std::string shaderSource);
-        void compile(std::unordered_map<GLenum, std::string>& shaderSources);
+        PreprocessedSources preprocess(std::string shader_source);
+        void compile(const PreprocessedSources& shader_sources);
     };
 
 }

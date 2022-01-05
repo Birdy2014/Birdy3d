@@ -1,5 +1,7 @@
+#include includes/lighting.glsl
+#include includes/material.glsl
+
 #type vertex
-#version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
@@ -31,7 +33,6 @@ void main() {
 }
 
 #type fragment
-#version 330 core
 out vec4 FragColor;
 
 in vec3 FragPos;
@@ -43,9 +44,6 @@ uniform sampler2D texture_diffuse;
 uniform sampler2D texture_specular;
 uniform sampler2D texture_normal;
 uniform vec3 viewPos;
-
-#include includes/lighting.glsl
-#include includes/material.glsl
 
 void main() {
     vec3 viewDir = normalize(viewPos - FragPos);
