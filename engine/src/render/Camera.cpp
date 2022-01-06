@@ -71,25 +71,6 @@ namespace Birdy3d::render {
         m_ssao_shader->set_int("texNoise", 2);
         m_ssao_blur_shader->use();
         m_ssao_blur_shader->set_int("ssaoInput", 0);
-        // Set the default shadowmaps to the first texture in the right format so that the shader doesn't crash
-        for (int i = 0; i < Shader::MAX_DIRECTIONAL_LIGHTS; i++) {
-            m_deferred_light_shader->use();
-            m_deferred_light_shader->set_int("dirLights[" + std::to_string(i) + "].shadowMap", 4);
-            m_forward_shader->use();
-            m_forward_shader->set_int("dirLights[" + std::to_string(i) + "].shadowMap", 4);
-        }
-        for (int i = 0; i < Shader::MAX_POINTLIGHTS; i++) {
-            m_deferred_light_shader->use();
-            m_deferred_light_shader->set_int("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
-            m_forward_shader->use();
-            m_forward_shader->set_int("pointLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
-        }
-        for (int i = 0; i < Shader::MAX_SPOTLIGHTS; i++) {
-            m_deferred_light_shader->use();
-            m_deferred_light_shader->set_int("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
-            m_forward_shader->use();
-            m_forward_shader->set_int("spotLights[" + std::to_string(i) + "].shadowMap", 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
-        }
 
         // SSAO noise texture
         std::uniform_real_distribution<GLfloat> random_floats(0.0, 1.0);
@@ -134,6 +115,21 @@ namespace Birdy3d::render {
 
         m_models.clear();
         entity->scene->get_components<ModelComponent>(m_models, false, true);
+
+        m_dirlights.clear();
+        m_pointlights.clear();
+        m_spotlights.clear();
+        entity->scene->get_components<DirectionalLight>(m_dirlights, false, true);
+        entity->scene->get_components<PointLight>(m_pointlights, false, true);
+        entity->scene->get_components<Spotlight>(m_spotlights, false, true);
+        if (m_dirlights.size() != m_dirlight_amount || m_pointlights.size() != m_pointlight_amount || m_spotlights.size() != m_spotlight_amount) {
+            auto shader_options_string = "DIRECTIONAL_LIGHTS_AMOUNT=" + std::to_string(m_dirlights.size()) + ":POINTLIGHTS_AMOUNT=" + std::to_string(m_pointlights.size()) + ":SPOTLIGHTS_AMOUNT=" + std::to_string(m_spotlights.size());
+            m_deferred_light_shader = "file::deferred_lighting.glsl:" + shader_options_string;
+            m_forward_shader = "file::forward_lighting.glsl:" + shader_options_string;
+            m_dirlight_amount = m_dirlights.size();
+            m_pointlight_amount = m_pointlights.size();
+            m_spotlight_amount = m_spotlights.size();
+        }
 
         if (m_deferred_enabled) {
             render_deferred();
@@ -240,19 +236,13 @@ namespace Birdy3d::render {
         m_gbuffer_normal->bind(1);
         m_gbuffer_albedo_spec->bind(2);
         m_ssao_blur_texture->bind(3);
-        auto dirlights = entity->scene->get_components<DirectionalLight>(false, true);
-        auto pointlights = entity->scene->get_components<PointLight>(false, true);
-        auto spotlights = entity->scene->get_components<Spotlight>(false, true);
         m_deferred_light_shader->use();
-        m_deferred_light_shader->set_int("nr_directional_lights", dirlights.size());
-        m_deferred_light_shader->set_int("nr_pointlights", pointlights.size());
-        m_deferred_light_shader->set_int("nr_spotlights", spotlights.size());
-        for (size_t i = 0; i < dirlights.size(); i++)
-            dirlights[i]->use(*m_deferred_light_shader, i, 4 + i);
-        for (size_t i = 0; i < pointlights.size(); i++)
-            pointlights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
-        for (size_t i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(*m_deferred_light_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+        for (size_t i = 0; i < m_dirlights.size(); i++)
+            m_dirlights[i]->use(*m_deferred_light_shader, i, 4 + i);
+        for (size_t i = 0; i < m_pointlights.size(); i++)
+            m_pointlights[i]->use(*m_deferred_light_shader, i, 4 + m_dirlights.size() + i);
+        for (size_t i = 0; i < m_spotlights.size(); i++)
+            m_spotlights[i]->use(*m_deferred_light_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
 
         m_deferred_light_shader->set_vec3("viewPos", world_pos);
         render_quad();
@@ -267,19 +257,13 @@ namespace Birdy3d::render {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        auto dirlights = entity->scene->get_components<DirectionalLight>(false, true);
-        auto pointlights = entity->scene->get_components<PointLight>(false, true);
-        auto spotlights = entity->scene->get_components<Spotlight>(false, true);
         m_forward_shader->use();
-        m_forward_shader->set_int("nr_directional_lights", dirlights.size());
-        m_forward_shader->set_int("nr_pointlights", pointlights.size());
-        m_forward_shader->set_int("nr_spotlights", spotlights.size());
-        for (size_t i = 0; i < dirlights.size(); i++)
-            dirlights[i]->use(*m_forward_shader, i, 4 + i);
-        for (size_t i = 0; i < pointlights.size(); i++)
-            pointlights[i]->use(*m_forward_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + i);
-        for (size_t i = 0; i < spotlights.size(); i++)
-            spotlights[i]->use(*m_forward_shader, i, 4 + Shader::MAX_DIRECTIONAL_LIGHTS + Shader::MAX_POINTLIGHTS + i);
+        for (size_t i = 0; i < m_dirlights.size(); i++)
+            m_dirlights[i]->use(*m_forward_shader, i, 4 + i);
+        for (size_t i = 0; i < m_pointlights.size(); i++)
+            m_pointlights[i]->use(*m_forward_shader, i, 4 + m_dirlights.size() + i);
+        for (size_t i = 0; i < m_spotlights.size(); i++)
+            m_spotlights[i]->use(*m_forward_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         if (renderOpaque) {

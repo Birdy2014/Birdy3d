@@ -6,11 +6,7 @@ namespace Birdy3d::render {
 
     class Shader {
     public:
-        static const int MAX_DIRECTIONAL_LIGHTS = 1;
-        static const int MAX_POINTLIGHTS = 5;
-        static const int MAX_SPOTLIGHTS = 2;
-
-        Shader(const std::string& name);
+        Shader(const std::string& name, std::map<std::string, std::string> params);
         void use() const;
         void set_bool(const char* name, bool value) const;
         void set_int(const char* name, int value) const;
@@ -48,6 +44,7 @@ namespace Birdy3d::render {
         };
 
         std::string m_name;
+        std::map<std::string, std::string> m_params;
         GLuint m_id;
 
         bool check_compile_errors(GLuint shader, GLenum type);
