@@ -43,13 +43,15 @@ namespace Birdy3d::render {
             std::string vertex_shader;
             std::string geometry_shader;
             std::string fragment_shader;
+
+            void operator+=(const PreprocessedSources&);
         };
 
         std::string m_name;
         GLuint m_id;
 
         bool check_compile_errors(GLuint shader, GLenum type);
-        PreprocessedSources preprocess(std::string shader_source);
+        PreprocessedSources preprocess_file(std::string name);
         void compile(const PreprocessedSources& shader_sources);
     };
 

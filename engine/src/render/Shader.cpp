@@ -2,15 +2,19 @@
 
 #include "core/Logger.hpp"
 #include "core/ResourceManager.hpp"
-#include <cstring>
+#include <fstream>
 
 namespace Birdy3d::render {
 
     Shader::Shader(const std::string& name)
         : m_name(name) {
-        std::string path = core::ResourceManager::get_resource_path(name, core::ResourceManager::ResourceType::SHADER);
-        std::string source = core::ResourceManager::read_file(path);
-        PreprocessedSources shader_sources = preprocess(source);
+        PreprocessedSources shader_sources = preprocess_file(name);
+        if (!shader_sources.vertex_shader.empty())
+            shader_sources.vertex_shader.insert(0, "#version 330 core\n");
+        if (!shader_sources.geometry_shader.empty())
+            shader_sources.geometry_shader.insert(0, "#version 330 core\n");
+        if (!shader_sources.fragment_shader.empty())
+            shader_sources.fragment_shader.insert(0, "#version 330 core\n");
         compile(shader_sources);
     }
 
@@ -46,67 +50,58 @@ namespace Birdy3d::render {
         return false;
     }
 
-    Shader::PreprocessedSources Shader::preprocess(std::string shader_source) {
-        // include
-        const char* include_token = "#include";
-        size_t pos = shader_source.find(include_token, 0);
-        while (pos != std::string::npos) {
-            size_t eol = shader_source.find_first_of('\n', pos);
-            size_t path_start = pos + strlen(include_token) + 1;
-            std::string include_path = shader_source.substr(path_start, eol - path_start);
-            std::string file_content = core::ResourceManager::read_file(core::ResourceManager::get_resource_path(include_path, core::ResourceManager::ResourceType::SHADER));
-            shader_source.erase(pos, eol - pos + 1);
-            shader_source.insert(pos, file_content);
-            pos = shader_source.find(include_token, pos + 1);
+    Shader::PreprocessedSources Shader::preprocess_file(std::string name) {
+        PreprocessedSources preprocessed_file;
+
+        std::string path = core::ResourceManager::get_resource_path(name, core::ResourceManager::ResourceType::SHADER);
+        if (path.empty())
+            return preprocessed_file;
+
+        std::ifstream stream;
+        stream.open(path);
+
+        std::string* current_shader_source = nullptr;
+        std::size_t line_number = 1;
+        for (std::string line; std::getline(stream, line); ++line_number) {
+            if (line.starts_with("#include")) {
+                auto include_name = line.substr(std::string("#include ").size());
+                preprocessed_file += preprocess_file(include_name);
+                continue;
+            }
+
+            if (line.starts_with("#type")) {
+                auto type_name = line.substr(std::string("#type ").size());
+                if (type_name == "vertex") {
+                    current_shader_source = &preprocessed_file.vertex_shader;
+                } else if (type_name == "geometry") {
+                    current_shader_source = &preprocessed_file.geometry_shader;
+                } else if (type_name == "fragment") {
+                    current_shader_source = &preprocessed_file.fragment_shader;
+                } else {
+                    core::Logger::error("Shader preprocessing error in file '", name, "': invalid type '", type_name, "'");
+                    return {};
+                }
+                *current_shader_source += "#line " + std::to_string(line_number + 1) + "\n";
+                continue;
+            }
+
+            if (current_shader_source)
+                *current_shader_source += line + "\n";
         }
 
         // constants
-        auto replace_all = [&](std::string toSearch, std::string replaceStr) {
-            size_t pos = shader_source.find(toSearch);
+        auto replace_all = [](std::string& where, std::string toSearch, std::string replaceStr) {
+            size_t pos = where.find(toSearch);
             while (pos != std::string::npos) {
-                shader_source.replace(pos, toSearch.size(), replaceStr);
-                pos = shader_source.find(toSearch, pos + replaceStr.size());
+                where.replace(pos, toSearch.size(), replaceStr);
+                pos = where.find(toSearch, pos + replaceStr.size());
             }
         };
-        replace_all("MAX_DIRECTIONAL_LIGHTS", std::to_string(MAX_DIRECTIONAL_LIGHTS));
-        replace_all("MAX_POINTLIGHTS", std::to_string(MAX_POINTLIGHTS));
-        replace_all("MAX_SPOTLIGHTS", std::to_string(MAX_SPOTLIGHTS));
+        replace_all(preprocessed_file.fragment_shader, "MAX_DIRECTIONAL_LIGHTS", std::to_string(MAX_DIRECTIONAL_LIGHTS));
+        replace_all(preprocessed_file.fragment_shader, "MAX_POINTLIGHTS", std::to_string(MAX_POINTLIGHTS));
+        replace_all(preprocessed_file.fragment_shader, "MAX_SPOTLIGHTS", std::to_string(MAX_SPOTLIGHTS));
 
-        // type
-        PreprocessedSources shader_sources;
-        const char* type_token = "#type";
-
-        std::size_t next_line;
-
-        for (pos = shader_source.find(type_token, 0); pos != std::string::npos;) {
-            std::size_t eol = shader_source.find_first_of('\n', pos);
-            next_line = shader_source.find_first_not_of('\n', eol);
-            std::size_t type_start = pos + strlen(type_token) + 1;
-            std::string type = shader_source.substr(type_start, eol - type_start);
-
-            std::string* preprocessed_shader = nullptr;
-            if (type == "vertex")
-                preprocessed_shader = &shader_sources.vertex_shader;
-            else if (type == "geometry")
-                preprocessed_shader = &shader_sources.geometry_shader;
-            else if (type == "fragment")
-                preprocessed_shader = &shader_sources.fragment_shader;
-            else {
-                core::Logger::error("Invalid shader type");
-            }
-
-            pos = shader_source.find(type_token, next_line);
-
-            // TODO: Add correct line numbers and file names
-            // unsigned int line_nr = std::count(shader_source.cbegin(), shader_source.cbegin() + next_line, '\n');
-            // preprocessed_shader += "#line " + std::to_string(line_nr + 1) + "\n";
-
-            if (preprocessed_shader->empty())
-                *preprocessed_shader += "#version 330 core\n";
-
-            *preprocessed_shader += shader_source.substr(next_line, pos - next_line);
-        }
-        return shader_sources;
+        return preprocessed_file;
     }
 
     void Shader::compile(const Shader::PreprocessedSources& shader_sources) {
@@ -269,6 +264,12 @@ namespace Birdy3d::render {
 
     void Shader::set_mat4(const std::string& name, const glm::mat4& mat) const {
         glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    void Shader::PreprocessedSources::operator+=(const PreprocessedSources& other) {
+        vertex_shader += other.vertex_shader;
+        geometry_shader += other.geometry_shader;
+        fragment_shader += other.fragment_shader;
     }
 
 }
