@@ -61,10 +61,6 @@ namespace Birdy3d::render {
         m_ssao_shader = core::ResourceManager::get_shader("ssao.glsl");
         m_ssao_blur_shader = core::ResourceManager::get_shader("ssao_blur.glsl");
         m_deferred_light_shader->use();
-        m_deferred_light_shader->set_int("gPosition", 0);
-        m_deferred_light_shader->set_int("gNormal", 1);
-        m_deferred_light_shader->set_int("gAlbedoSpec", 2);
-        m_deferred_light_shader->set_int("ssao", 3);
         m_ssao_shader->use();
         m_ssao_shader->set_int("gPosition", 0);
         m_ssao_shader->set_int("gNormal", 1);
@@ -125,6 +121,11 @@ namespace Birdy3d::render {
         if (m_dirlights.size() != m_dirlight_amount || m_pointlights.size() != m_pointlight_amount || m_spotlights.size() != m_spotlight_amount) {
             auto shader_options_string = "DIRECTIONAL_LIGHTS_AMOUNT=" + std::to_string(m_dirlights.size()) + ":POINTLIGHTS_AMOUNT=" + std::to_string(m_pointlights.size()) + ":SPOTLIGHTS_AMOUNT=" + std::to_string(m_spotlights.size());
             m_deferred_light_shader = "file::deferred_lighting.glsl:" + shader_options_string;
+            m_deferred_light_shader->use();
+            m_deferred_light_shader->set_int("gPosition", 0);
+            m_deferred_light_shader->set_int("gNormal", 1);
+            m_deferred_light_shader->set_int("gAlbedoSpec", 2);
+            m_deferred_light_shader->set_int("ssao", 3);
             m_forward_shader = "file::forward_lighting.glsl:" + shader_options_string;
             m_dirlight_amount = m_dirlights.size();
             m_pointlight_amount = m_pointlights.size();
@@ -236,7 +237,6 @@ namespace Birdy3d::render {
         m_gbuffer_normal->bind(1);
         m_gbuffer_albedo_spec->bind(2);
         m_ssao_blur_texture->bind(3);
-        m_deferred_light_shader->use();
         for (size_t i = 0; i < m_dirlights.size(); i++)
             m_dirlights[i]->use(*m_deferred_light_shader, i, 4 + i);
         for (size_t i = 0; i < m_pointlights.size(); i++)
@@ -257,7 +257,6 @@ namespace Birdy3d::render {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        m_forward_shader->use();
         for (size_t i = 0; i < m_dirlights.size(); i++)
             m_dirlights[i]->use(*m_forward_shader, i, 4 + i);
         for (size_t i = 0; i < m_pointlights.size(); i++)
@@ -274,6 +273,7 @@ namespace Birdy3d::render {
             glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width, m_height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         }
 
+        m_forward_shader->use();
         m_forward_shader->set_mat4("projection", m_projection);
         m_forward_shader->set_mat4("view", view);
         m_forward_shader->set_vec3("viewPos", world_pos);
