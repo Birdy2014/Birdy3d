@@ -117,11 +117,20 @@ namespace Birdy3d::core {
         std::shared_ptr<render::Shader> shader = m_shaders[name];
         if (!shader) {
             ResourceIdentifier id { name };
-            if (id.source == "file" || id.source == "") {
-                shader = std::make_shared<render::Shader>(id.name);
-            } else {
+            if (id.source != "file" && id.source != "") {
                 Logger::error("invalid shader source");
+                return nullptr;
             }
+            std::map<std::string, std::string> shader_parameters;
+            for (const auto& arg : id.args) {
+                auto split_index = arg.find_first_of('=');
+                if (!split_index)
+                    continue;
+                auto key = arg.substr(0, split_index);
+                auto value = arg.substr(split_index + 1);
+                shader_parameters[key] = value;
+            }
+            shader = std::make_shared<render::Shader>(id.name, shader_parameters);
             m_shaders[name] = shader;
         }
         return shader;

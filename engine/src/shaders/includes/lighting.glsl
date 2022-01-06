@@ -46,12 +46,21 @@ struct Spotlight {
     sampler2DShadow shadowMap;
 };
 
-uniform DirectionalLight dirLights[MAX_DIRECTIONAL_LIGHTS];
-uniform PointLight pointLights[MAX_POINTLIGHTS];
-uniform Spotlight spotlights[MAX_SPOTLIGHTS];
-uniform int nr_directional_lights;
-uniform int nr_pointlights;
-uniform int nr_spotlights;
+#parameter DIRECTIONAL_LIGHTS_AMOUNT 0
+#parameter POINTLIGHTS_AMOUNT 0
+#parameter SPOTLIGHTS_AMOUNT 0
+
+#if DIRECTIONAL_LIGHTS_AMOUNT > 0
+uniform DirectionalLight dirLights[DIRECTIONAL_LIGHTS_AMOUNT];
+#endif
+
+#if POINTLIGHTS_AMOUNT > 0
+uniform PointLight pointLights[POINTLIGHTS_AMOUNT];
+#endif
+
+#if SPOTLIGHTS_AMOUNT > 0
+uniform Spotlight spotlights[SPOTLIGHTS_AMOUNT];
+#endif
 
 float calc_specular_factor(vec3 normal, vec3 light_dir, vec3 view_dir, float shininess) {
     vec3 halfwayDir = normalize(light_dir + view_dir);
@@ -159,14 +168,20 @@ vec3 calcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
 
 vec3 calcLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess, float ambient_occlusion) {
     vec3 lighting = vec3(0);
-    for (int i = 0; i < nr_directional_lights; i++)
+#if DIRECTIONAL_LIGHTS_AMOUNT > 0
+    for (int i = 0; i < DIRECTIONAL_LIGHTS_AMOUNT; i++)
         lighting += calcDirLight(dirLights[i], normal, fragPos, viewDir, materialColor, shininess, ambient_occlusion);
+#endif
 
-    for (int i = 0; i < nr_pointlights; i++)
+#if POINTLIGHTS_AMOUNT > 0
+    for (int i = 0; i < POINTLIGHTS_AMOUNT; i++)
         lighting += calcPointLight(pointLights[i], normal, fragPos, viewDir, materialColor, shininess, ambient_occlusion);
+#endif
 
-    for (int i = 0; i < nr_spotlights; i++)
+#if SPOTLIGHTS_AMOUNT > 0
+    for (int i = 0; i < SPOTLIGHTS_AMOUNT; i++)
         lighting += calcSpotlight(spotlights[i], normal, fragPos, viewDir, materialColor, shininess, ambient_occlusion);
+#endif
 
     return lighting;
 }

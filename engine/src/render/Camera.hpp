@@ -36,6 +36,14 @@ namespace Birdy3d::render {
         unsigned int m_outline_vao = 0;
         unsigned int m_outline_vbo = 0;
 
+        std::vector<std::shared_ptr<DirectionalLight>> m_dirlights;
+        std::vector<std::shared_ptr<PointLight>> m_pointlights;
+        std::vector<std::shared_ptr<Spotlight>> m_spotlights;
+        // For updating shader
+        std::size_t m_dirlight_amount = 0;
+        std::size_t m_pointlight_amount = 0;
+        std::size_t m_spotlight_amount = 0;
+
         Rendertarget m_ssao_target;
         Texture* m_ssao_texture;
 

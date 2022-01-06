@@ -3,11 +3,13 @@
 #include "core/Logger.hpp"
 #include "core/ResourceManager.hpp"
 #include <fstream>
+#include <regex>
 
 namespace Birdy3d::render {
 
-    Shader::Shader(const std::string& name)
-        : m_name(name) {
+    Shader::Shader(const std::string& name, std::map<std::string, std::string> params)
+        : m_name(name)
+        , m_params(params) {
         PreprocessedSources shader_sources = preprocess_file(name);
         if (!shader_sources.vertex_shader.empty())
             shader_sources.vertex_shader.insert(0, "#version 330 core\n");
@@ -60,17 +62,23 @@ namespace Birdy3d::render {
         std::ifstream stream;
         stream.open(path);
 
+        const std::regex regex_include("#include ([a-zA-Z0-9_./]+)");
+        const std::regex regex_type("#type (vertex|geometry|fragment)");
+        const std::regex regex_parameter_empty("#parameter ([a-zA-Z0-9_]+)");
+        const std::regex regex_parameter_default("#parameter ([a-zA-Z0-9_]+) ([a-zA-Z0-9_\".]+)");
+
         std::string* current_shader_source = nullptr;
         std::size_t line_number = 1;
         for (std::string line; std::getline(stream, line); ++line_number) {
-            if (line.starts_with("#include")) {
-                auto include_name = line.substr(std::string("#include ").size());
+            std::smatch matches;
+            if (std::regex_match(line, matches, regex_include)) {
+                auto include_name = matches[1];
                 preprocessed_file += preprocess_file(include_name);
                 continue;
             }
 
-            if (line.starts_with("#type")) {
-                auto type_name = line.substr(std::string("#type ").size());
+            if (std::regex_match(line, matches, regex_type)) {
+                auto type_name = matches[1];
                 if (type_name == "vertex") {
                     current_shader_source = &preprocessed_file.vertex_shader;
                 } else if (type_name == "geometry") {
@@ -85,21 +93,25 @@ namespace Birdy3d::render {
                 continue;
             }
 
+            if (std::regex_match(line, matches, regex_parameter_empty)) {
+                std::string parameter_name = matches[1];
+                *current_shader_source += "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
+                continue;
+            }
+
+            if (std::regex_match(line, matches, regex_parameter_default)) {
+                std::string parameter_name = matches[1];
+                std::string parameter_default = matches[2];
+                if (m_params.count(parameter_name) > 0)
+                    *current_shader_source += "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
+                else
+                    *current_shader_source += "#define " + parameter_name + " " + parameter_default + "\n";
+                continue;
+            }
+
             if (current_shader_source)
                 *current_shader_source += line + "\n";
         }
-
-        // constants
-        auto replace_all = [](std::string& where, std::string toSearch, std::string replaceStr) {
-            size_t pos = where.find(toSearch);
-            while (pos != std::string::npos) {
-                where.replace(pos, toSearch.size(), replaceStr);
-                pos = where.find(toSearch, pos + replaceStr.size());
-            }
-        };
-        replace_all(preprocessed_file.fragment_shader, "MAX_DIRECTIONAL_LIGHTS", std::to_string(MAX_DIRECTIONAL_LIGHTS));
-        replace_all(preprocessed_file.fragment_shader, "MAX_POINTLIGHTS", std::to_string(MAX_POINTLIGHTS));
-        replace_all(preprocessed_file.fragment_shader, "MAX_SPOTLIGHTS", std::to_string(MAX_SPOTLIGHTS));
 
         return preprocessed_file;
     }
