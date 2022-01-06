@@ -126,26 +126,34 @@ $(document).ready(function(){initNavTree('Camera_8hpp_source.html',''); initResi
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> m_outline_vao = 0;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> m_outline_vbo = 0;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Rendertarget.html">Rendertarget</a> m_ssao_target;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Texture.html">Texture</a>* m_ssao_texture;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Rendertarget.html">Rendertarget</a> m_ssao_blur_target;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Texture.html">Texture</a>* m_ssao_blur_texture;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        GLuint m_ssao_noise;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <a class="code hl_class" href="classBirdy3d_1_1core_1_1ResourceHandle.html">core::ResourceHandle&lt;Shader&gt;</a> m_ssao_shader, m_ssao_blur_shader;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        std::vector&lt;std::shared_ptr&lt;ModelComponent&gt;&gt; m_models;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        std::vector&lt;std::shared_ptr&lt;DirectionalLight&gt;&gt; m_dirlights;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        std::vector&lt;std::shared_ptr&lt;PointLight&gt;&gt; m_pointlights;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        std::vector&lt;std::shared_ptr&lt;Spotlight&gt;&gt; m_spotlights;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="comment">// For updating shader</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        std::size_t m_dirlight_amount = 0;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        std::size_t m_pointlight_amount = 0;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        std::size_t m_spotlight_amount = 0;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Rendertarget.html">Rendertarget</a> m_ssao_target;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Texture.html">Texture</a>* m_ssao_texture;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordtype">void</span> render_quad();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordtype">void</span> render_deferred();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordtype">void</span> render_forward(<span class="keywordtype">bool</span> renderOpaque);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordtype">void</span> render_normals();</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, <a class="code hl_class" href="classBirdy3d_1_1render_1_1Camera.html">Camera</a>);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    };</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Rendertarget.html">Rendertarget</a> m_ssao_blur_target;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Texture.html">Texture</a>* m_ssao_blur_texture;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        GLuint m_ssao_noise;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <a class="code hl_class" href="classBirdy3d_1_1core_1_1ResourceHandle.html">core::ResourceHandle&lt;Shader&gt;</a> m_ssao_shader, m_ssao_blur_shader;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        std::vector&lt;std::shared_ptr&lt;ModelComponent&gt;&gt; m_models;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordtype">void</span> render_quad();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordtype">void</span> render_deferred();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordtype">void</span> render_forward(<span class="keywordtype">bool</span> renderOpaque);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordtype">void</span> render_normals();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, <a class="code hl_class" href="classBirdy3d_1_1render_1_1Camera.html">Camera</a>);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    };</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1core_1_1ResourceHandle_html"><div class="ttname"><a href="classBirdy3d_1_1core_1_1ResourceHandle.html">Birdy3d::core::ResourceHandle</a></div><div class="ttdef"><b>Definition:</b> ResourceHandle.hpp:12</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ecs_1_1Component_html"><div class="ttname"><a href="classBirdy3d_1_1ecs_1_1Component.html">Birdy3d::ecs::Component</a></div><div class="ttdef"><b>Definition:</b> Component.hpp:9</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ecs_1_1Entity_html"><div class="ttname"><a href="classBirdy3d_1_1ecs_1_1Entity.html">Birdy3d::ecs::Entity</a></div><div class="ttdef"><b>Definition:</b> Entity.hpp:10</div></div>
