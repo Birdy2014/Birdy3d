@@ -1,13 +1,15 @@
 #pragma once
 
 #include "ui/Widget.hpp"
+#include "ui/widgets/Scrollable.hpp"
 #include <string>
 
 namespace Birdy3d::ui {
 
-    class TextField : public Widget {
+    class TextField : public Scrollable {
     public:
         bool readonly = false;
+        bool multiline = false;
 
         TextField(Options);
         std::string text();
@@ -21,6 +23,8 @@ namespace Birdy3d::ui {
         bool m_selecting = false;
         bool m_changed = false;
 
+        virtual void draw() override;
+
         // Events
         virtual void on_update() override;
         virtual void on_click(const events::InputClickEvent& event) override;
@@ -32,6 +36,7 @@ namespace Birdy3d::ui {
 
         void clear_selection();
         void late_update() override;
+        void scroll_if_needed(std::size_t cursor_pos);
     };
 
 }

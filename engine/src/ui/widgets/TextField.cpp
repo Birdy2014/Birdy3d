@@ -8,7 +8,7 @@
 namespace Birdy3d::ui {
 
     TextField::TextField(Options options)
-        : Widget(options) {
+        : Scrollable(options) {
         add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG_INPUT);
         m_text = add_text(0_px, std::string(), utils::Color::Name::FG);
     }
@@ -40,26 +40,33 @@ namespace Birdy3d::ui {
     }
 
     void TextField::on_update() {
+        Scrollable::on_update();
         if (m_selecting) {
             glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
-            int char_pos = core::Application::theme().text_renderer().char_index(*m_text, core::Application::theme().font_size(), local_pos.x - m_side_padding, true);
+            glm::vec2 scrolled_text_local_pos = local_pos - m_scroll_offset;
+            int char_pos = core::Application::theme().text_renderer().char_index(*m_text, core::Application::theme().font_size(), scrolled_text_local_pos.x - m_side_padding, true);
             if (m_text->highlight_start == (std::size_t)char_pos) {
                 m_text->highlight_visible = false;
             } else {
                 m_text->highlight_end = char_pos + (m_text->highlight_start < (std::size_t)char_pos ? -1 : 0);
                 m_text->highlight_visible = true;
+                scroll_if_needed(m_text->highlight_end);
             }
         }
     }
 
     void TextField::on_click(const events::InputClickEvent& event) {
+        if (multiline)
+            Scrollable::on_click(event);
+
         if (readonly || event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
             glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
-            int char_pos = core::Application::theme().text_renderer().char_index(*m_text, core::Application::theme().font_size(), local_pos.x - m_side_padding, true);
+            glm::vec2 scrolled_text_local_pos = local_pos - m_scroll_offset;
+            int char_pos = core::Application::theme().text_renderer().char_index(*m_text, core::Application::theme().font_size(), scrolled_text_local_pos.x - m_side_padding, true);
             m_selecting = true;
             m_text->highlight_start = char_pos;
             m_text->cursor_visible = false;
@@ -94,12 +101,14 @@ namespace Birdy3d::ui {
                 if (m_text->cursor_pos == m_text->length())
                     break;
                 m_text->erase(m_text->cursor_pos);
+                m_changed = true;
                 break;
             case GLFW_KEY_BACKSPACE:
                 if (m_text->cursor_pos == 0)
                     break;
                 m_text->erase(m_text->cursor_pos - 1);
                 m_text->cursor_pos--;
+                m_changed = true;
                 break;
             case GLFW_KEY_LEFT:
                 if (m_text->cursor_pos == 0)
@@ -113,8 +122,12 @@ namespace Birdy3d::ui {
                 break;
             }
         }
+        scroll_if_needed(m_text->cursor_pos);
+    }
 
-        m_changed = true;
+    void TextField::draw() {
+        if (multiline)
+            Scrollable::draw();
     }
 
     void TextField::on_char(const events::InputCharEvent& event) {
@@ -132,6 +145,7 @@ namespace Birdy3d::ui {
         m_text->insert(m_text->cursor_pos, c);
         m_text->cursor_pos++;
         m_changed = true;
+        scroll_if_needed(m_text->cursor_pos);
     }
 
     void TextField::on_mouse_enter() {
@@ -170,6 +184,17 @@ namespace Birdy3d::ui {
             execute_callbacks("change");
             m_changed = false;
         }
+    }
+
+    void TextField::scroll_if_needed(std::size_t cursor_pos) {
+        auto cursor_pixel_pos = core::Application::theme().text_renderer().text_size((std::u32string)*m_text, m_text->font_size, cursor_pos) + m_scroll_offset;
+        // Scroll right if the cursor is too far left
+        if (cursor_pixel_pos.x < 0)
+            m_scroll_offset.x -= cursor_pixel_pos.x;
+        // Scroll left if the cursor is too far right
+        if (cursor_pixel_pos.x > m_actual_size.x)
+            m_scroll_offset.x -= cursor_pixel_pos.x - m_actual_size.x;
+        // TODO: Scroll y
     }
 
 }
