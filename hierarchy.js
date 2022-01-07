@@ -99,16 +99,18 @@ var hierarchy =
       [ "Birdy3d::ui::Container", "classBirdy3d_1_1ui_1_1Container.html", [
         [ "Birdy3d::ui::Canvas", "classBirdy3d_1_1ui_1_1Canvas.html", null ],
         [ "Birdy3d::ui::CollapsibleContainer", "classBirdy3d_1_1ui_1_1CollapsibleContainer.html", null ],
-        [ "Birdy3d::ui::ScrollContainer", "classBirdy3d_1_1ui_1_1ScrollContainer.html", null ],
         [ "Birdy3d::ui::Window", "classBirdy3d_1_1ui_1_1Window.html", null ]
       ] ],
       [ "Birdy3d::ui::ContextMenu", "classBirdy3d_1_1ui_1_1ContextMenu.html", null ],
       [ "Birdy3d::ui::FPSCounter", "classBirdy3d_1_1ui_1_1FPSCounter.html", null ],
       [ "Birdy3d::ui::Label", "classBirdy3d_1_1ui_1_1Label.html", null ],
       [ "Birdy3d::ui::MenuBar", "classBirdy3d_1_1ui_1_1MenuBar.html", null ],
-      [ "Birdy3d::ui::TextField", "classBirdy3d_1_1ui_1_1TextField.html", [
-        [ "Birdy3d::ui::NumberInput", "classBirdy3d_1_1ui_1_1NumberInput.html", null ],
-        [ "Birdy3d::ui::Textarea", "classBirdy3d_1_1ui_1_1Textarea.html", null ]
+      [ "Birdy3d::ui::Scrollable", "classBirdy3d_1_1ui_1_1Scrollable.html", [
+        [ "Birdy3d::ui::ScrollContainer", "classBirdy3d_1_1ui_1_1ScrollContainer.html", null ],
+        [ "Birdy3d::ui::TextField", "classBirdy3d_1_1ui_1_1TextField.html", [
+          [ "Birdy3d::ui::NumberInput", "classBirdy3d_1_1ui_1_1NumberInput.html", null ],
+          [ "Birdy3d::ui::Textarea", "classBirdy3d_1_1ui_1_1Textarea.html", null ]
+        ] ]
       ] ],
       [ "Birdy3d::ui::TreeView", "classBirdy3d_1_1ui_1_1TreeView.html", null ],
       [ "Birdy3d::ui::WindowSnapArea", "classBirdy3d_1_1ui_1_1WindowSnapArea.html", null ]
