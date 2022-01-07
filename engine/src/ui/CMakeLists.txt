@@ -14,7 +14,7 @@ target_sources(Birdy3d_engine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/CheckBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/ContextMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/NumberInput.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/ScrollContainer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/Scrollable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/Textarea.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/TextField.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/TreeView.cpp
