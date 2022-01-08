@@ -12,6 +12,7 @@ namespace Birdy3d::ui {
         bool multiline = false;
 
         TextField(Options);
+        glm::vec2 minimal_size() override;
         std::string text();
         void text(std::string);
         void append(std::string);

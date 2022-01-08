@@ -13,6 +13,10 @@ namespace Birdy3d::ui {
         m_text = add_text(0_px, std::string(), utils::Color::Name::FG);
     }
 
+    glm::vec2 TextField::minimal_size() {
+        return { 1.0f, core::Application::theme().line_height() };
+    }
+
     std::string TextField::text() {
         return *m_text;
     }
