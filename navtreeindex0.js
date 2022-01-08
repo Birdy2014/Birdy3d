@@ -167,6 +167,7 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1ui_1_1Unit.html":[1,0,0,6,34],
 "classBirdy3d_1_1ui_1_1Widget.html":[1,0,0,6,35],
 "classBirdy3d_1_1ui_1_1Widget.html#a78aea295dee05e6a0130836ba7321878":[1,0,0,6,35,1],
+"classBirdy3d_1_1ui_1_1Widget.html#ac802f692aba1281eaf2066b4a0a3fa7a":[1,0,0,6,35,2],
 "classBirdy3d_1_1ui_1_1Window.html":[1,0,0,6,36],
 "classBirdy3d_1_1ui_1_1WindowSnapArea.html":[1,0,0,6,37],
 "classBirdy3d_1_1utils_1_1Color.html":[1,0,0,7,0],

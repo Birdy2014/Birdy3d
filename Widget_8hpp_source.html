@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">   22</a></span>        <span class="keyword">struct </span><a class="code hl_struct" href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Options</a> {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            <a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> pos = { 0 };</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            <a class="code hl_class" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> size = { 0 };</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            Placement placement = Placement::BOTTOM_LEFT;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            Placement placement = Placement::TOP_LEFT;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <span class="keywordtype">bool</span> hidden = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            std::string name = {};</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="comment">// External Event calls</span></div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordtype">void</span> external_draw();</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordtype">bool</span> update_hover(<span class="keywordtype">bool</span> hover);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordtype">void</span> update_visible_area(glm::vec2 parent_visible_bottom_left, glm::vec2 parent_visible_top_right);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordtype">void</span> update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> late_update();</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> on_update();</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
@@ -175,7 +175,7 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        glm::vec2 m_visible_size = glm::vec2(1);</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        glm::vec2 m_visible_pos = glm::vec2(1);</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        glm::mat4 m_move = glm::mat4(1);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        glm::vec4 m_padding = glm::vec4(0); <span class="comment">// left, right, down, up</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1ui_1_1Widget.html#ac802f692aba1281eaf2066b4a0a3fa7a">   88</a></span>        glm::vec4 <a class="code hl_variable" href="classBirdy3d_1_1ui_1_1Widget.html#ac802f692aba1281eaf2066b4a0a3fa7a">m_padding</a> = glm::vec4(0); </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordtype">bool</span> m_children_visible = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordtype">bool</span> m_shapes_visible = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
@@ -199,11 +199,11 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> on_resize() { }</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="comment">// Shapes</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        Triangle* add_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        Triangle* add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::BOTTOM_LEFT, <span class="keywordtype">float</span> font_size = 0);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        Triangle* add_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        Triangle* add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::TOP_LEFT, <span class="keywordtype">float</span> font_size = 0);</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="comment">// Layout</span></div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">typename</span>... Args&gt;</div>
@@ -254,7 +254,8 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Canvas_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Canvas.html">Birdy3d::ui::Canvas</a></div><div class="ttdef"><b>Definition:</b> Canvas.hpp:10</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1UIVector_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1UIVector.html">Birdy3d::ui::UIVector</a></div><div class="ttdef"><b>Definition:</b> Units.hpp:58</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Widget_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:20</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Widget_html_a78aea295dee05e6a0130836ba7321878"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Widget.html#a78aea295dee05e6a0130836ba7321878">Birdy3d::ui::Widget::draw</a></div><div class="ttdeci">virtual void draw()</div><div class="ttdoc">Custom drawing.</div><div class="ttdef"><b>Definition:</b> Widget.cpp:84</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Widget_html_a78aea295dee05e6a0130836ba7321878"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Widget.html#a78aea295dee05e6a0130836ba7321878">Birdy3d::ui::Widget::draw</a></div><div class="ttdeci">virtual void draw()</div><div class="ttdoc">Custom drawing.</div><div class="ttdef"><b>Definition:</b> Widget.cpp:89</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Widget_html_ac802f692aba1281eaf2066b4a0a3fa7a"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Widget.html#ac802f692aba1281eaf2066b4a0a3fa7a">Birdy3d::ui::Widget::m_padding</a></div><div class="ttdeci">glm::vec4 m_padding</div><div class="ttdoc">left, right, up, down</div><div class="ttdef"><b>Definition:</b> Widget.hpp:88</div></div>
 <div class="ttc" id="astructBirdy3d_1_1ui_1_1Widget_1_1Options_html"><div class="ttname"><a href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Birdy3d::ui::Widget::Options</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:22</div></div>
 <div class="ttc" id="astructBirdy3d_1_1ui_1_1Widget_1_1Options_html_a33a7842432766b56a39e92478380d55e"><div class="ttname"><a href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html#a33a7842432766b56a39e92478380d55e">Birdy3d::ui::Widget::Options::row</a></div><div class="ttdeci">int row</div><div class="ttdoc">Row in GridLayout.</div><div class="ttdef"><b>Definition:</b> Widget.hpp:32</div></div>
 <div class="ttc" id="astructBirdy3d_1_1ui_1_1Widget_1_1Options_html_a83684503f8dbb888e0b4a5ee13a076b8"><div class="ttname"><a href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html#a83684503f8dbb888e0b4a5ee13a076b8">Birdy3d::ui::Widget::Options::weight</a></div><div class="ttdeci">float weight</div><div class="ttdoc">Size ratio in DirectionalLayout. 0 means stay on minimum size.</div><div class="ttdef"><b>Definition:</b> Widget.hpp:30</div></div>
