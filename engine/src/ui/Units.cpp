@@ -131,9 +131,9 @@ namespace Birdy3d::ui {
             out.x = parentSize.x / 2 - s.x / 2 + p.x;
         }
         if (placement == Placement::TOP_LEFT || placement == Placement::TOP_RIGHT || placement == Placement::TOP_CENTER) {
-            out.y = parentSize.y + p.y - s.y;
-        } else if (placement == Placement::BOTTOM_LEFT || placement == Placement::BOTTOM_RIGHT || placement == Placement::BOTTOM_CENTER) {
             out.y = p.y;
+        } else if (placement == Placement::BOTTOM_LEFT || placement == Placement::BOTTOM_RIGHT || placement == Placement::BOTTOM_CENTER) {
+            out.y = parentSize.y + p.y - s.y;
         } else if (placement == Placement::CENTER_LEFT || placement == Placement::CENTER_RIGHT || placement == Placement::CENTER) {
             out.y = parentSize.y / 2 - s.y / 2 + p.y;
         }

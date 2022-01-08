@@ -116,13 +116,13 @@ int main() {
     auto canvas = std::make_shared<ui::Canvas>();
     core::Application::canvas = canvas;
 
-    ui::Console::attach(*canvas);
-
     auto menu_bar = canvas->add_child<ui::MenuBar>({ .size = ui::UIVector(100_p, core::Application::theme().line_height()), .placement = ui::Placement::TOP_LEFT });
     auto& bar_item1 = menu_bar->add_item("Item 1");
     bar_item1.add_child("Hallo");
     auto& bar_item2 = menu_bar->add_item("Item 2");
     bar_item2.add_child("Welt");
+
+    ui::Console::attach(*canvas);
 
     auto snap_area = canvas->add_child<ui::WindowSnapArea>({ .size = ui::UIVector(600_px, 400_px), .placement = ui::Placement::BOTTOM_RIGHT }, ui::WindowSnapArea::Mode::HORIZONTAL);
 

@@ -36,10 +36,12 @@ namespace Birdy3d::ui {
 
         void draw_canvas() {
             if (updated) {
+                glDisable(GL_CULL_FACE);
                 glClear(GL_DEPTH_BUFFER_BIT);
                 glEnable(GL_SCISSOR_TEST);
                 Widget::external_draw();
                 glDisable(GL_SCISSOR_TEST);
+                glEnable(GL_CULL_FACE);
             }
         }
 

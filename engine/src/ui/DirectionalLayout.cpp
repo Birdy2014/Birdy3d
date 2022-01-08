@@ -62,7 +62,7 @@ namespace Birdy3d::ui {
         else if (dir == Direction::UP || dir == Direction::DOWN)
             widget_size = (size.y - gapps) / weights;
 
-        // Change widgetSize based on minimum size
+        // Change widget_size based on minimum size
         bool done = false;
         while (!done) {
             done = true;
@@ -94,10 +94,10 @@ namespace Birdy3d::ui {
                 w->arrange(pos + glm::vec2(size.x - current_widget_size - offset, 0), glm::vec2(current_widget_size, size.y));
                 break;
             case Direction::DOWN:
-                w->arrange(pos + glm::vec2(0, size.y - current_widget_size - offset), glm::vec2(size.x, current_widget_size));
+                w->arrange(pos + glm::vec2(0, offset), glm::vec2(size.x, current_widget_size));
                 break;
             case Direction::UP:
-                w->arrange(pos + glm::vec2(0, offset), glm::vec2(size.x, current_widget_size));
+                w->arrange(pos + glm::vec2(0, size.y - current_widget_size - offset), glm::vec2(size.x, current_widget_size));
                 break;
             }
             offset += current_widget_size + gap;
@@ -118,11 +118,11 @@ namespace Birdy3d::ui {
                 offset += widget_size.x + gap;
                 break;
             case Direction::DOWN:
-                w->arrange(pos + glm::vec2(0, size.y - widget_size.y - offset), widget_size);
+                w->arrange(pos + glm::vec2(0, offset), widget_size);
                 offset += widget_size.y + gap;
                 break;
             case Direction::UP:
-                w->arrange(pos + glm::vec2(0, offset), widget_size);
+                w->arrange(pos + glm::vec2(0, size.y - widget_size.y - offset), widget_size);
                 offset += widget_size.y + gap;
                 break;
             }

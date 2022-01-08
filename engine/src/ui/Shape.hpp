@@ -23,7 +23,7 @@ namespace Birdy3d::ui {
         /// Controls whether the shape is behind or before the child widgets.
         bool in_foreground = false;
 
-        Shape(UIVector position, UIVector size, utils::Color::Name color = utils::Color::Name::WHITE, Placement placement = Placement::BOTTOM_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
+        Shape(UIVector position, UIVector size, utils::Color::Name color = utils::Color::Name::WHITE, Placement placement = Placement::TOP_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
             : name(name)
             , m_shader(core::ResourceManager::get_shader("ui.glsl"))
             , m_position(position)
@@ -81,8 +81,7 @@ namespace Birdy3d::ui {
         glm::mat4 projection() {
             glm::vec2 viewport = core::Application::get_viewport_size();
             // The -1 is necessary, because the parameter describes the rightmost/top coordinate, not the screen size
-            return glm::ortho(0.0f, viewport.x - 1, 0.0f, viewport.y - 1);
-            // TODO: Flip y-coordinate by swapping the last two parameters
+            return glm::ortho(0.0f, viewport.x - 1, viewport.y - 1, 0.0f);
         }
 
     protected:

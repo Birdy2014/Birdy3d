@@ -84,10 +84,8 @@ namespace Birdy3d::ui {
                 widget_position.x += width + m_gap;
             }
             for (const auto [row, height] : result_heights) {
-                // The loop counts from the top down, but the coordinates go from bottom up.
-                // Change this to "if (row > child->row) break;" when reversing the y-axis.
-                if (row <= child->options.row)
-                    continue;
+                if (row >= child->options.row)
+                    break;
                 widget_position.y += height + m_gap;
             }
 

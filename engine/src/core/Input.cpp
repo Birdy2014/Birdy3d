@@ -29,7 +29,7 @@ namespace Birdy3d::core {
         double x, y;
         glfwGetCursorPos(Application::get_window(), &x, &y);
         last_cursor_pos = Input::current_cursor_pos;
-        current_cursor_pos = glm::vec2(x + 2, Application::get_viewport_size().y - y);
+        current_cursor_pos = glm::vec2(x, y);
     }
 
     bool Input::key_pressed(int key) {

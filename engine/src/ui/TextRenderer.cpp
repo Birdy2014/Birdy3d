@@ -32,7 +32,7 @@ namespace Birdy3d::ui {
             throw std::runtime_error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, m_font_size);
         m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), utils::Color::Name::FG, Rectangle::Type::FILLED);
-        m_text = std::make_unique<Text>(0_px, "", utils::Color::Name::FG, Placement::BOTTOM_LEFT, m_font_size);
+        m_text = std::make_unique<Text>(0_px, "", utils::Color::Name::FG, Placement::TOP_LEFT, m_font_size);
 
         // Setup texture atlas
         m_texture_atlas_size = glm::vec2(m_font_size * 10, m_font_size * 10);
@@ -98,7 +98,7 @@ namespace Birdy3d::ui {
         if (cursor && cursorpos <= text.length()) {
             auto size = text_size(text, font_size, cursorpos);
             float xpos = x + size.x - 1;
-            float ypos = y - size.y + m_theme.line_height();
+            float ypos = y + size.y - m_theme.line_height();
 
             m_rect->type = Rectangle::FILLED;
             m_rect->position(UIVector(xpos, ypos));
@@ -367,13 +367,13 @@ namespace Birdy3d::ui {
             font_size = renderer.m_font_size;
         float scale = (font_size / renderer.m_font_size);
         float x = 0;
-        float y = font_size / 5; // Offet between baseline and bottom
+        float y = 0;
         utils::Color current_color = core::Application::theme().color(m_color);
         std::size_t index_escaped = 0;
         for (auto it = m_text.cbegin(); it != m_text.cend(); it++, index_escaped++) {
             if (*it == '\n') {
                 x = 0;
-                y -= renderer.m_theme.line_height();
+                y += renderer.m_theme.line_height();
                 continue;
             }
 
@@ -391,17 +391,20 @@ namespace Birdy3d::ui {
             if (renderer.m_chars.count(*it) == 0)
                 renderer.add_char(*it);
             Character ch = renderer.m_chars[*it];
-            float bottom_to_origin = (ch.size.y - ch.bearing.y) * scale;
+
             float xpos = x + ch.bearing.x * scale;
-            float ypos = y - bottom_to_origin;
+
+            float max_font_top_to_origin = font_size * (4.0f / 5.0f);
+            float ypos = y + max_font_top_to_origin - ch.bearing.y;
+
             float w = ch.size.x * scale;
             float h = ch.size.y * scale;
 
             GLuint start_index = vertices.size();
-            vertices.emplace_back(glm::vec2(xpos, ypos), glm::vec2(ch.texcoord1.x, ch.texcoord2.y), current_color); // Bottom Left
-            vertices.emplace_back(glm::vec2(xpos + w, ypos), glm::vec2(ch.texcoord2.x, ch.texcoord2.y), current_color); // Bottom Right
-            vertices.emplace_back(glm::vec2(xpos, ypos + h), glm::vec2(ch.texcoord1.x, ch.texcoord1.y), current_color); // Top Left
-            vertices.emplace_back(glm::vec2(xpos + w, ypos + h), glm::vec2(ch.texcoord2.x, ch.texcoord1.y), current_color); // Top Right
+            vertices.emplace_back(glm::vec2(xpos, ypos + h), glm::vec2(ch.texcoord1.x, ch.texcoord2.y), current_color); // Bottom Left
+            vertices.emplace_back(glm::vec2(xpos + w, ypos + h), glm::vec2(ch.texcoord2.x, ch.texcoord2.y), current_color); // Bottom Right
+            vertices.emplace_back(glm::vec2(xpos, ypos), glm::vec2(ch.texcoord1.x, ch.texcoord1.y), current_color); // Top Left
+            vertices.emplace_back(glm::vec2(xpos + w, ypos), glm::vec2(ch.texcoord2.x, ch.texcoord1.y), current_color); // Top Right
 
             indices.push_back(start_index + 0);
             indices.push_back(start_index + 1);
@@ -426,7 +429,7 @@ namespace Birdy3d::ui {
         Theme& theme = core::Application::theme();
         auto size = theme.text_renderer().text_size(m_text, font_size, cursor_pos);
         float xpos = m_position.x + size.x - 1;
-        float ypos = m_position.y - size.y + theme.line_height();
+        float ypos = m_position.y + size.y - theme.line_height();
 
         m_cursor_rect->type = Rectangle::FILLED;
         m_cursor_rect->position(UIVector(xpos, ypos));

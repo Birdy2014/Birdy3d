@@ -29,9 +29,9 @@ namespace Birdy3d::ui {
             glm::vec2 offsets = core::Input::cursor_pos_offset();
             float change = offsets.x + offsets.y;
             if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
-                change *= 0.1;
+                change *= 0.1f;
             if (core::Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
-                change *= 0.01;
+                change *= 0.01f;
             value(value() + change);
         }
         TextField::on_update();
@@ -40,9 +40,9 @@ namespace Birdy3d::ui {
     void NumberInput::on_scroll(const events::InputScrollEvent& event) {
         float change = event.yoffset;
         if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
-            change *= 0.1;
+            change *= 0.1f;
         if (core::Input::key_pressed(GLFW_KEY_LEFT_SHIFT))
-            change *= 0.01;
+            change *= 0.01f;
 
         value(m_value + change);
     }

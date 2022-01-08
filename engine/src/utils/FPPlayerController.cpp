@@ -67,7 +67,7 @@ namespace Birdy3d::utils {
         yoffset *= sensitivity;
 
         entity->transform.orientation.y += xoffset;
-        entity->transform.orientation.x += yoffset;
+        entity->transform.orientation.x -= yoffset;
 
         float max_pitch = std::numbers::pi / 2 - 0.001;
         if (entity->transform.orientation.x > max_pitch)
