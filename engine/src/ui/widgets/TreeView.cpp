@@ -12,7 +12,7 @@
 namespace Birdy3d::ui {
 
     TreeItem::TreeItem(std::string text, TreeView* treeview)
-        : text(std::make_unique<Text>(0_px, text, utils::Color::Name::FG, Placement::BOTTOM_LEFT))
+        : text(std::make_unique<Text>(0_px, text, utils::Color::Name::FG, Placement::TOP_LEFT))
         , m_treeview(treeview)
         , m_collapse_button(std::make_unique<Triangle>(0_px, UIVector(core::Application::theme().font_size() / 2), utils::Color::Name::FG)) { }
 
@@ -39,18 +39,18 @@ namespace Birdy3d::ui {
     }
 
     void TreeView::draw() {
-        int offset_y = core::Application::theme().line_height();
+        int offset_y = 0;
         for (const auto& row : m_flat_tree_list) {
             if (m_selected_item == &row.second) {
-                m_item_highlight_rect->position(UIVector(0_px, -offset_y + (int)core::Application::theme().line_height()));
+                m_item_highlight_rect->position(UIVector(0_px, offset_y));
                 m_item_highlight_rect->draw(m_move);
             }
             if (!row.second.children.empty()) {
-                row.second.m_collapse_button->position(glm::vec2(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, m_actual_size.y - offset_y + (core::Application::theme().line_height() - row.second.m_collapse_button->size().x) / 2.0f));
+                row.second.m_collapse_button->position(glm::vec2(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, offset_y + (core::Application::theme().line_height() - row.second.m_collapse_button->size().x) / 2.0f));
                 row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 30.0f : 60.0f));
                 row.second.m_collapse_button->draw(m_move);
             }
-            row.second.text->position(UIVector(row.first * m_indent_size + m_offset_x_left, m_actual_size.y - offset_y));
+            row.second.text->position(UIVector(row.first * m_indent_size + m_offset_x_left, offset_y));
             row.second.text->draw(m_move);
             offset_y += core::Application::theme().line_height();
         }
@@ -80,7 +80,6 @@ namespace Birdy3d::ui {
             return;
 
         glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
-        local_pos = glm::vec2(local_pos.x, m_actual_size.y - local_pos.y);
         int offset_y = 0;
         for (auto& item : m_flat_tree_list) {
             offset_y += core::Application::theme().line_height();

@@ -52,8 +52,13 @@ namespace Birdy3d::ui {
         if (options.hidden)
             return;
 
+        // Transform to OpenGL coordinates
+        auto viewport_y = core::Application::get_viewport_size().y;
+        auto visible_pos_bottom = m_visible_pos.y + m_visible_size.y;
+        auto visible_pos_bottom_moved_origin = viewport_y - visible_pos_bottom;
+
         // Background
-        glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
+        glScissor(m_visible_pos.x, visible_pos_bottom_moved_origin - 1, m_visible_size.x + 2, m_visible_size.y + 2);
 
         if (m_shapes_visible) {
             for (const auto& s : m_shapes) {
@@ -68,7 +73,7 @@ namespace Birdy3d::ui {
                 child->external_draw();
 
             // Foreground
-            glScissor(m_visible_pos.x, m_visible_pos.y, m_visible_size.x + 2, m_visible_size.y + 2);
+            glScissor(m_visible_pos.x, visible_pos_bottom_moved_origin - 1, m_visible_size.x + 2, m_visible_size.y + 2);
         }
 
         draw();
@@ -183,12 +188,12 @@ namespace Birdy3d::ui {
         return success;
     }
 
-    void Widget::update_visible_area(glm::vec2 parent_visible_bottom_left, glm::vec2 parent_visible_top_right) {
+    void Widget::update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right) {
         if (options.hidden)
             return;
-        m_visible_pos = glm::vec2(std::max(parent_visible_bottom_left.x, m_actual_pos.x), std::max(parent_visible_bottom_left.y, m_actual_pos.y));
+        m_visible_pos = glm::vec2(std::max(parent_visible_top_left.x, m_actual_pos.x), std::max(parent_visible_top_left.y, m_actual_pos.y));
         glm::vec2 actual_pos2 = m_actual_pos + m_actual_size;
-        glm::vec2 visible_pos2 = glm::vec2(std::min(parent_visible_top_right.x, actual_pos2.x), std::min(parent_visible_top_right.y, actual_pos2.y));
+        glm::vec2 visible_pos2 = glm::vec2(std::min(parent_visible_bottom_right.x, actual_pos2.x), std::min(parent_visible_bottom_right.y, actual_pos2.y));
         m_visible_size = visible_pos2 - m_visible_pos;
 
         for (const auto& child : m_children)

@@ -8,7 +8,7 @@ namespace Birdy3d::ui {
 
     class Rectangle : public Shape {
     public:
-        Rectangle(UIVector pos, UIVector size, utils::Color::Name color = utils::Color::Name::WHITE, Type type = FILLED, Placement placement = Placement::BOTTOM_LEFT);
+        Rectangle(UIVector pos, UIVector size, utils::Color::Name color = utils::Color::Name::WHITE, Type type = FILLED, Placement placement = Placement::TOP_LEFT);
         ~Rectangle();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;

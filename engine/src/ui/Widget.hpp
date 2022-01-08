@@ -22,7 +22,7 @@ namespace Birdy3d::ui {
         struct Options {
             UIVector pos = { 0 };
             UIVector size = { 0 };
-            Placement placement = Placement::BOTTOM_LEFT;
+            Placement placement = Placement::TOP_LEFT;
             bool hidden = false;
             std::string name = {};
 
@@ -65,7 +65,7 @@ namespace Birdy3d::ui {
         // External Event calls
         void external_draw();
         bool update_hover(bool hover);
-        void update_visible_area(glm::vec2 parent_visible_bottom_left, glm::vec2 parent_visible_top_right);
+        void update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right);
         virtual void late_update();
         virtual void on_update();
 
@@ -85,7 +85,7 @@ namespace Birdy3d::ui {
         glm::vec2 m_visible_size = glm::vec2(1);
         glm::vec2 m_visible_pos = glm::vec2(1);
         glm::mat4 m_move = glm::mat4(1);
-        glm::vec4 m_padding = glm::vec4(0); // left, right, down, up
+        glm::vec4 m_padding = glm::vec4(0); ///< left, right, up, down
         bool m_children_visible = true;
         bool m_shapes_visible = true;
 
@@ -114,11 +114,11 @@ namespace Birdy3d::ui {
         virtual void on_resize() { }
 
         // Shapes
-        Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Triangle* add_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Triangle* add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::BOTTOM_LEFT);
-        Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::BOTTOM_LEFT, float font_size = 0);
+        Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Triangle* add_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Triangle* add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::TOP_LEFT, float font_size = 0);
 
         // Layout
         template <class T, typename... Args>

@@ -23,18 +23,18 @@ namespace Birdy3d::ui {
         if (m_changed)
             update_lines();
 
+        // smooth scrolling
+        float scrolldelta = (scrollpos - m_tmpscroll) * core::Application::delta_time;
+        m_tmpscroll += scrolldelta * 10;
+        if (scrolldelta < 0.0002 && scrolldelta > -0.0002)
+            m_tmpscroll = scrollpos;
+
         int linec = m_actual_size.y / core::Application::theme().line_height();
         size_t line;
         for (int l = 0; l < linec + 1; l++) {
-            // smooth scrolling
-            float scrolldelta = (scrollpos - m_tmpscroll) * core::Application::delta_time;
-            m_tmpscroll += scrolldelta;
-            if (scrolldelta < 0.0002 && scrolldelta > -0.0002)
-                m_tmpscroll = scrollpos;
-
             // draw lines
             line = l + floor(m_tmpscroll);
-            int y = m_actual_size.y - (l + 1) * core::Application::theme().line_height() + (m_tmpscroll - floor(m_tmpscroll)) * core::Application::theme().line_height();
+            int y = l * core::Application::theme().line_height() - (m_tmpscroll - floor(m_tmpscroll)) * core::Application::theme().line_height();
             int selection_start = m_selection_start <= m_selection_end ? m_selection_start : m_selection_end;
             int selection_end = m_selection_start <= m_selection_end ? m_selection_end + 1 : m_selection_start;
             selection_end--;
@@ -133,10 +133,9 @@ namespace Birdy3d::ui {
         update_lines();
     }
 
-    // TODO: key repeat
     void Textarea::on_key(const events::InputKeyEvent& event) {
         TextField::on_key(event);
-        if (readonly || event.action != GLFW_PRESS || m_cursor_pos <= 0)
+        if (readonly || (event.action != GLFW_PRESS && event.action != GLFW_REPEAT) || m_cursor_pos <= 0)
             return;
         glm::ivec2 pos = get_2d_pos(m_cursor_pos);
         switch (event.key) {
@@ -177,7 +176,7 @@ namespace Birdy3d::ui {
     size_t Textarea::cursor_char_pos() {
         glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
 
-        int y = m_tmpscroll + (m_actual_size.y - local_pos.y) / core::Application::theme().line_height();
+        int y = m_tmpscroll + local_pos.y / core::Application::theme().line_height();
         if (y >= m_lines.size())
             y = m_lines.size() - 1;
 
