@@ -40,7 +40,7 @@ namespace Birdy3d::core {
         template <typename T>
         static void assert_not_null(void* obj, const T& message) {
             if (obj == nullptr)
-                Logger::critical("Assert not null failed: ", message);
+                Logger::critical("Assert not null failed: {}", message);
         }
 
     private:

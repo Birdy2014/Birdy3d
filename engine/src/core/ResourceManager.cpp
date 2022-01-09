@@ -118,7 +118,7 @@ namespace Birdy3d::core {
         if (!shader) {
             ResourceIdentifier id { name };
             if (id.source != "file" && id.source != "") {
-                Logger::error("invalid shader source");
+                Logger::error("invalid shader source '{}'", id.source);
                 return nullptr;
             }
             std::map<std::string, std::string> shader_parameters;
@@ -153,7 +153,7 @@ namespace Birdy3d::core {
                     return nullptr;
                 }
             } else {
-                Logger::error("invalid shader source");
+                Logger::error("invalid theme source '{}'", id.source);
             }
             m_themes[name] = theme;
         }
@@ -179,9 +179,9 @@ namespace Birdy3d::core {
                 else if (id.name == "ico_sphere" && id.args.size() == 1)
                     model = utils::PrimitiveGenerator::generate_ico_sphere(std::stoi(id.args[0]));
                 else
-                    Logger::error("invalid primitive type");
+                    Logger::error("invalid primitive type '{}'", id.name);
             } else {
-                Logger::error("invalid model source");
+                Logger::error("invalid model source '{}'", id.source);
             }
             m_models[name] = model;
         }
@@ -201,7 +201,7 @@ namespace Birdy3d::core {
                 utils::Color color = id.name;
                 texture = std::make_shared<render::Texture>(color);
             } else {
-                Logger::error("invalid texture source");
+                Logger::error("invalid texture source '{}'", id.source);
             }
             m_textures[name] = texture;
         }
@@ -249,7 +249,7 @@ namespace Birdy3d::core {
         if (!default_dir.empty() && std::filesystem::is_regular_file(default_dir + name))
             return default_dir + name;
 
-        Logger::error("can't find resource ", name);
+        Logger::error("can't find resource '{}'", name);
         return {};
     }
 
@@ -274,7 +274,7 @@ namespace Birdy3d::core {
             if (convert_eol)
                 content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
         } catch (std::ifstream::failure& e) {
-            Logger::error("Failed to read file ", path);
+            Logger::error("Failed to read file '{}'", path);
         }
         return content;
     }
