@@ -37,6 +37,7 @@ var hierarchy =
       [ "Birdy3d::events::WindowResizeEvent", "classBirdy3d_1_1events_1_1WindowResizeEvent.html", null ]
     ] ],
     [ "Birdy3d::events::EventBus", "classBirdy3d_1_1events_1_1EventBus.html", null ],
+    [ "fmt::formatter< glm::vec< L, T > >", "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html", null ],
     [ "Birdy3d::serializer::Generator", "classBirdy3d_1_1serializer_1_1Generator.html", [
       [ "Birdy3d::serializer::MinimalJsonGenerator", "classBirdy3d_1_1serializer_1_1MinimalJsonGenerator.html", null ],
       [ "Birdy3d::serializer::PrettyJsonGenerator", "classBirdy3d_1_1serializer_1_1PrettyJsonGenerator.html", null ]
@@ -49,7 +50,6 @@ var hierarchy =
     [ "Birdy3d::ui::Layout", "classBirdy3d_1_1ui_1_1Layout.html", [
       [ "Birdy3d::ui::AbsoluteLayout", "classBirdy3d_1_1ui_1_1AbsoluteLayout.html", null ],
       [ "Birdy3d::ui::DirectionalLayout", "classBirdy3d_1_1ui_1_1DirectionalLayout.html", null ],
-      [ "Birdy3d::ui::EmptyLayout", "classBirdy3d_1_1ui_1_1EmptyLayout.html", null ],
       [ "Birdy3d::ui::GridLayout", "classBirdy3d_1_1ui_1_1GridLayout.html", null ],
       [ "Birdy3d::ui::MaxLayout", "classBirdy3d_1_1ui_1_1MaxLayout.html", null ]
     ] ],

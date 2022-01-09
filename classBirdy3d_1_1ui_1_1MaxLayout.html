@@ -91,6 +91,11 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1ui_1_1MaxLayout.html',
   <div class="headertitle"><div class="title">Birdy3d::ui::MaxLayout Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Fills the available area with the first child widget.  
+ <a href="classBirdy3d_1_1ui_1_1MaxLayout.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Birdy3d::ui::MaxLayout:</div>
 <div class="dyncontent">
@@ -104,11 +109,15 @@ Inheritance diagram for Birdy3d::ui::MaxLayout:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adeab75ebe158fe1aa7ffd3da32c58501"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#adeab75ebe158fe1aa7ffd3da32c58501">arrange</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, glm::vec2 pos, glm::vec2 size) const override</td></tr>
+<tr class="memdesc:adeab75ebe158fe1aa7ffd3da32c58501"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position and size of all widgets in the list.  <a href="classBirdy3d_1_1ui_1_1MaxLayout.html#adeab75ebe158fe1aa7ffd3da32c58501">More...</a><br /></td></tr>
 <tr class="separator:adeab75ebe158fe1aa7ffd3da32c58501"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d947badd1c7ac0230ea648682864346"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#a0d947badd1c7ac0230ea648682864346">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children) const override</td></tr>
+<tr class="memdesc:a0d947badd1c7ac0230ea648682864346"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the minimal size that the widgets can fit in with the current layout.  <a href="classBirdy3d_1_1ui_1_1MaxLayout.html#a0d947badd1c7ac0230ea648682864346">More...</a><br /></td></tr>
 <tr class="separator:a0d947badd1c7ac0230ea648682864346"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Fills the available area with the first child widget. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="adeab75ebe158fe1aa7ffd3da32c58501" name="adeab75ebe158fe1aa7ffd3da32c58501"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adeab75ebe158fe1aa7ffd3da32c58501">&#9670;&nbsp;</a></span>arrange()</h2>
 
@@ -149,7 +158,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html">Birdy3d::ui::Layout</a>.</p>
+<p>Sets the position and size of all widgets in the list. </p>
+<p >The size of the widgets is set so that they match the size given in the size parameter. The size parameter can never exceed the value returned by <a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#a0d947badd1c7ac0230ea648682864346" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size()</a>. An overloaded function should call Widget::arrange(glm::vec2, glm::vec2) on each child widget. </p>
+
+<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#acd0831671b62c233281f912f71bd3d4d">Birdy3d::ui::Layout</a>.</p>
 
 </div>
 </div>
@@ -177,7 +189,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html">Birdy3d::ui::Layout</a>.</p>
+<p>Computes the minimal size that the widgets can fit in with the current layout. </p>
+
+<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51">Birdy3d::ui::Layout</a>.</p>
 
 </div>
 </div>

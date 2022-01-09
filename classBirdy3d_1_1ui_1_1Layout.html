@@ -99,21 +99,98 @@ Inheritance diagram for Birdy3d::ui::Layout:</div>
   <map id="Birdy3d::ui::Layout_map" name="Birdy3d::ui::Layout_map">
 <area href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html" alt="Birdy3d::ui::AbsoluteLayout" shape="rect" coords="0,56,177,80"/>
 <area href="classBirdy3d_1_1ui_1_1DirectionalLayout.html" alt="Birdy3d::ui::DirectionalLayout" shape="rect" coords="187,56,364,80"/>
-<area href="classBirdy3d_1_1ui_1_1EmptyLayout.html" alt="Birdy3d::ui::EmptyLayout" shape="rect" coords="374,56,551,80"/>
-<area href="classBirdy3d_1_1ui_1_1GridLayout.html" alt="Birdy3d::ui::GridLayout" shape="rect" coords="561,56,738,80"/>
-<area href="classBirdy3d_1_1ui_1_1MaxLayout.html" alt="Birdy3d::ui::MaxLayout" shape="rect" coords="748,56,925,80"/>
+<area href="classBirdy3d_1_1ui_1_1GridLayout.html" alt="Birdy3d::ui::GridLayout" shape="rect" coords="374,56,551,80"/>
+<area href="classBirdy3d_1_1ui_1_1MaxLayout.html" title="Fills the available area with the first child widget." alt="Birdy3d::ui::MaxLayout" shape="rect" coords="561,56,738,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acd0831671b62c233281f912f71bd3d4d"><td class="memItemLeft" align="right" valign="top"><a id="acd0831671b62c233281f912f71bd3d4d" name="acd0831671b62c233281f912f71bd3d4d"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>arrange</b> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, glm::vec2 pos, glm::vec2 size) const =0</td></tr>
+<tr class="memitem:acd0831671b62c233281f912f71bd3d4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#acd0831671b62c233281f912f71bd3d4d">arrange</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, glm::vec2 pos, glm::vec2 size) const =0</td></tr>
+<tr class="memdesc:acd0831671b62c233281f912f71bd3d4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position and size of all widgets in the list.  <a href="classBirdy3d_1_1ui_1_1Layout.html#acd0831671b62c233281f912f71bd3d4d">More...</a><br /></td></tr>
 <tr class="separator:acd0831671b62c233281f912f71bd3d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8573b631644ed225f36159d0f21e8b51"><td class="memItemLeft" align="right" valign="top"><a id="a8573b631644ed225f36159d0f21e8b51" name="a8573b631644ed225f36159d0f21e8b51"></a>
-virtual glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>minimal_size</b> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children) const =0</td></tr>
+<tr class="memitem:a8573b631644ed225f36159d0f21e8b51"><td class="memItemLeft" align="right" valign="top">virtual glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children) const =0</td></tr>
+<tr class="memdesc:a8573b631644ed225f36159d0f21e8b51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the minimal size that the widgets can fit in with the current layout.  <a href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51">More...</a><br /></td></tr>
 <tr class="separator:a8573b631644ed225f36159d0f21e8b51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="acd0831671b62c233281f912f71bd3d4d" name="acd0831671b62c233281f912f71bd3d4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd0831671b62c233281f912f71bd3d4d">&#9670;&nbsp;</a></span>arrange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Birdy3d::ui::Layout::arrange </td>
+          <td>(</td>
+          <td class="paramtype">const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the position and size of all widgets in the list. </p>
+<p >The size of the widgets is set so that they match the size given in the size parameter. The size parameter can never exceed the value returned by <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size()</a>. An overloaded function should call Widget::arrange(glm::vec2, glm::vec2) on each child widget. </p>
+
+<p>Implemented in <a class="el" href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#ad945ac66a2eba47681b462500ac66759">Birdy3d::ui::AbsoluteLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a76972fc60f14af4fa924b45392f3ff8a">Birdy3d::ui::DirectionalLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1GridLayout.html#aaa4e5af3bfecbb861405b0f1a6410743">Birdy3d::ui::GridLayout</a>, and <a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#adeab75ebe158fe1aa7ffd3da32c58501">Birdy3d::ui::MaxLayout</a>.</p>
+
+</div>
+</div>
+<a id="a8573b631644ed225f36159d0f21e8b51" name="a8573b631644ed225f36159d0f21e8b51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8573b631644ed225f36159d0f21e8b51">&#9670;&nbsp;</a></span>minimal_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual glm::vec2 Birdy3d::ui::Layout::minimal_size </td>
+          <td>(</td>
+          <td class="paramtype">const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>children</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Computes the minimal size that the widgets can fit in with the current layout. </p>
+
+<p>Implemented in <a class="el" href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#a0693f33f8ec1ec5e8a1504535e339c5b">Birdy3d::ui::AbsoluteLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a94250201e2b12dc8a983d378d8adf2bb">Birdy3d::ui::DirectionalLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1GridLayout.html#ade34bd7a55f3dc01bc33da4b453d5ba6">Birdy3d::ui::GridLayout</a>, and <a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#a0d947badd1c7ac0230ea648682864346">Birdy3d::ui::MaxLayout</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>engine/src/ui/<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a></li>
 </ul>

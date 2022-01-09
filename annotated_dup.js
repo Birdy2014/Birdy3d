@@ -72,7 +72,7 @@ var annotated_dup =
         [ "String", "structBirdy3d_1_1serializer_1_1String.html", null ]
       ] ],
       [ "ui", null, [
-        [ "AbsoluteLayout", "classBirdy3d_1_1ui_1_1AbsoluteLayout.html", null ],
+        [ "AbsoluteLayout", "classBirdy3d_1_1ui_1_1AbsoluteLayout.html", "classBirdy3d_1_1ui_1_1AbsoluteLayout" ],
         [ "Button", "classBirdy3d_1_1ui_1_1Button.html", null ],
         [ "Canvas", "classBirdy3d_1_1ui_1_1Canvas.html", null ],
         [ "Character", "structBirdy3d_1_1ui_1_1Character.html", null ],
@@ -83,13 +83,12 @@ var annotated_dup =
         [ "Container", "classBirdy3d_1_1ui_1_1Container.html", null ],
         [ "ContextItem", "classBirdy3d_1_1ui_1_1ContextItem.html", null ],
         [ "ContextMenu", "classBirdy3d_1_1ui_1_1ContextMenu.html", "classBirdy3d_1_1ui_1_1ContextMenu" ],
-        [ "DirectionalLayout", "classBirdy3d_1_1ui_1_1DirectionalLayout.html", null ],
-        [ "EmptyLayout", "classBirdy3d_1_1ui_1_1EmptyLayout.html", null ],
+        [ "DirectionalLayout", "classBirdy3d_1_1ui_1_1DirectionalLayout.html", "classBirdy3d_1_1ui_1_1DirectionalLayout" ],
         [ "FPSCounter", "classBirdy3d_1_1ui_1_1FPSCounter.html", null ],
-        [ "GridLayout", "classBirdy3d_1_1ui_1_1GridLayout.html", null ],
+        [ "GridLayout", "classBirdy3d_1_1ui_1_1GridLayout.html", "classBirdy3d_1_1ui_1_1GridLayout" ],
         [ "Label", "classBirdy3d_1_1ui_1_1Label.html", null ],
-        [ "Layout", "classBirdy3d_1_1ui_1_1Layout.html", null ],
-        [ "MaxLayout", "classBirdy3d_1_1ui_1_1MaxLayout.html", null ],
+        [ "Layout", "classBirdy3d_1_1ui_1_1Layout.html", "classBirdy3d_1_1ui_1_1Layout" ],
+        [ "MaxLayout", "classBirdy3d_1_1ui_1_1MaxLayout.html", "classBirdy3d_1_1ui_1_1MaxLayout" ],
         [ "MenuBar", "classBirdy3d_1_1ui_1_1MenuBar.html", "classBirdy3d_1_1ui_1_1MenuBar" ],
         [ "NumberInput", "classBirdy3d_1_1ui_1_1NumberInput.html", null ],
         [ "Rectangle", "classBirdy3d_1_1ui_1_1Rectangle.html", null ],
@@ -117,5 +116,8 @@ var annotated_dup =
         [ "PrimitiveGenerator", "classBirdy3d_1_1utils_1_1PrimitiveGenerator.html", null ],
         [ "Unicode", "classBirdy3d_1_1utils_1_1Unicode.html", null ]
       ] ]
+    ] ],
+    [ "fmt", null, [
+      [ "formatter< glm::vec< L, T > >", "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html", null ]
     ] ]
 ];

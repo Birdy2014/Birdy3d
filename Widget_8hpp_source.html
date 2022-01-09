@@ -169,7 +169,7 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        std::vector&lt;std::unique_ptr&lt;Shape&gt;&gt; m_shapes;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        std::list&lt;std::shared_ptr&lt;Widget&gt;&gt; m_children;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        std::unique_ptr&lt;Layout&gt; m_layout = std::make_unique&lt;EmptyLayout&gt;();</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        std::unique_ptr&lt;Layout&gt; m_layout = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        glm::vec2 m_actual_size = glm::vec2(1);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        glm::vec2 m_actual_pos = glm::vec2(1);</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        glm::vec2 m_visible_size = glm::vec2(1);</div>

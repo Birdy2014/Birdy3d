@@ -118,8 +118,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>DirectionalLayout</b> (Direction dir, float gap=0, bool preserve_child_size=false)</td></tr>
 <tr class="separator:a06b4ba50b2e3acd5c5440e721f34c476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76972fc60f14af4fa924b45392f3ff8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a76972fc60f14af4fa924b45392f3ff8a">arrange</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, glm::vec2 pos, glm::vec2 size) const override</td></tr>
+<tr class="memdesc:a76972fc60f14af4fa924b45392f3ff8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position and size of all widgets in the list.  <a href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a76972fc60f14af4fa924b45392f3ff8a">More...</a><br /></td></tr>
 <tr class="separator:a76972fc60f14af4fa924b45392f3ff8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94250201e2b12dc8a983d378d8adf2bb"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a94250201e2b12dc8a983d378d8adf2bb">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children) const override</td></tr>
+<tr class="memdesc:a94250201e2b12dc8a983d378d8adf2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the minimal size that the widgets can fit in with the current layout.  <a href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a94250201e2b12dc8a983d378d8adf2bb">More...</a><br /></td></tr>
 <tr class="separator:a94250201e2b12dc8a983d378d8adf2bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -175,7 +177,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>preserve_child_size</
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html">Birdy3d::ui::Layout</a>.</p>
+<p>Sets the position and size of all widgets in the list. </p>
+<p >The size of the widgets is set so that they match the size given in the size parameter. The size parameter can never exceed the value returned by <a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a94250201e2b12dc8a983d378d8adf2bb" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size()</a>. An overloaded function should call Widget::arrange(glm::vec2, glm::vec2) on each child widget. </p>
+
+<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#acd0831671b62c233281f912f71bd3d4d">Birdy3d::ui::Layout</a>.</p>
 
 </div>
 </div>
@@ -203,7 +208,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>preserve_child_size</
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html">Birdy3d::ui::Layout</a>.</p>
+<p>Computes the minimal size that the widgets can fit in with the current layout. </p>
+
+<p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51">Birdy3d::ui::Layout</a>.</p>
 
 </div>
 </div>

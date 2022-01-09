@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['print_0',['print',['../classBirdy3d_1_1ui_1_1Console.html#aa8b3e2ed27171ff9da58b71cdbc3a646',1,'Birdy3d::ui::Console']]],
-  ['println_1',['println',['../classBirdy3d_1_1ui_1_1Console.html#a1515795f80e2880cd2b6f424c2bad8e1',1,'Birdy3d::ui::Console']]],
-  ['priority_2',['priority',['../classBirdy3d_1_1ecs_1_1Component.html#afd2d3418e99c259107ee481f3e1a8bdd',1,'Birdy3d::ecs::Component::priority()'],['../classBirdy3d_1_1physics_1_1Collider.html#a22174909aeb146bfd829fc8679541f10',1,'Birdy3d::physics::Collider::priority()']]]
+  ['minimal_5fsize_0',['minimal_size',['../classBirdy3d_1_1ui_1_1AbsoluteLayout.html#a0693f33f8ec1ec5e8a1504535e339c5b',1,'Birdy3d::ui::AbsoluteLayout::minimal_size()'],['../classBirdy3d_1_1ui_1_1DirectionalLayout.html#a94250201e2b12dc8a983d378d8adf2bb',1,'Birdy3d::ui::DirectionalLayout::minimal_size()'],['../classBirdy3d_1_1ui_1_1GridLayout.html#ade34bd7a55f3dc01bc33da4b453d5ba6',1,'Birdy3d::ui::GridLayout::minimal_size()'],['../classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51',1,'Birdy3d::ui::Layout::minimal_size()'],['../classBirdy3d_1_1ui_1_1MaxLayout.html#a0d947badd1c7ac0230ea648682864346',1,'Birdy3d::ui::MaxLayout::minimal_size()']]]
 ];
