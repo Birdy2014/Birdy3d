@@ -61,7 +61,7 @@ namespace Birdy3d::core {
         ResourceManager::init();
         event_bus = new events::EventBus();
         if (!theme(theme_name))
-            Logger::critical("Invalid Theme");
+            Logger::critical("Invalid Theme '{}'", theme_name);
         ui::ConsoleCommands::register_all();
 
         return true;
