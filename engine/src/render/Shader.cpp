@@ -38,14 +38,14 @@ namespace Birdy3d::render {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if (!success) {
                 glGetShaderInfoLog(shader, 1024, nullptr, info_log);
-                core::Logger::error("shader compilation error: name: ", m_name + " type: ", type_string, "\n", info_log);
+                core::Logger::error("shader compilation error: name: {}, type: {}\n{}", m_name, type_string, info_log);
                 return true;
             }
         } else {
             glGetProgramiv(shader, GL_LINK_STATUS, &success);
             if (!success) {
                 glGetProgramInfoLog(shader, 1024, nullptr, info_log);
-                core::Logger::error("program linking error: name: ", m_name, "\n", info_log);
+                core::Logger::error("program linking error: name: {}\n{}", m_name, info_log);
                 return true;
             }
         }
@@ -86,7 +86,7 @@ namespace Birdy3d::render {
                 } else if (type_name == "fragment") {
                     current_shader_source = &preprocessed_file.fragment_shader;
                 } else {
-                    core::Logger::error("Shader preprocessing error in file '", name, "': invalid type '", type_name, "'");
+                    core::Logger::error("Shader preprocessing error in file '{}': invalid type '{}'", name, static_cast<std::string>(type_name));
                     return {};
                 }
                 *current_shader_source += "#line " + std::to_string(line_number + 1) + "\n";

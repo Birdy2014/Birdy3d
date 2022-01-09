@@ -10,7 +10,7 @@ namespace Birdy3d::render {
         unsigned char* data = stbi_load(file_path.data(), &m_width, &m_height, &m_channels, 0);
 
         if (!data) {
-            core::Logger::warn("Failed to load texture at: ", file_path);
+            core::Logger::warn("Failed to load texture at {}", file_path);
             return;
         }
 
@@ -29,7 +29,7 @@ namespace Birdy3d::render {
             format = GL_RGBA;
             break;
         default:
-            core::Logger::critical("Invalid number of texture channels: ", m_channels);
+            core::Logger::critical("Invalid number of texture channels: {}", m_channels);
             stbi_image_free(data);
             return;
         }

@@ -31,12 +31,12 @@ namespace Birdy3d::physics {
         } else {
             auto model_component = entity->get_component<render::ModelComponent>();
             if (!model_component) {
-                core::Logger::warn("Entity '", entity->name, "' doesn't have any ModelComponent");
+                core::Logger::warn("Entity '{}' doesn't have any ModelComponent", entity->name);
                 return;
             }
             auto model = model_component->model();
             if (!model) {
-                core::Logger::warn("Entity '", entity->name, "' doesn't have any model");
+                core::Logger::warn("Entity '{}' doesn't have any model", entity->name);
                 return;
             }
             if (m_generation_mode == GenerationMode::COPY)
@@ -86,14 +86,14 @@ namespace Birdy3d::physics {
 
         while (true) {
             if (direction == glm::vec3(0))
-                core::Logger::critical("direction ist 0 in loop. point_count: ", m_point_count);
+                core::Logger::critical("direction ist 0 in loop. point_count: {}", m_point_count);
             s = support(mesh_a, mesh_b, transform_a, transform_b, direction);
 
             if (glm::dot(s, direction) <= 0)
                 return false;
 
             if (m_points[0] == s)
-                core::Logger::critical("points are the same collides 1 nr:", m_point_count);
+                core::Logger::critical("points are the same collides 1 nr: {}", m_point_count);
             push_front(s);
 
             if (next_simplex(direction))

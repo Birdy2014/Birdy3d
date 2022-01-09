@@ -14,7 +14,7 @@
 namespace Birdy3d::render {
 
     Model::Model(const std::string& path) {
-        core::Logger::debug("Loading model: ", path);
+        core::Logger::debug("Loading model: {}", path);
         load(path);
         compute_bounding_box();
     }
@@ -67,7 +67,7 @@ namespace Birdy3d::render {
         const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            core::Logger::critical("ASSIMP: ", importer.GetErrorString());
+            core::Logger::critical("ASSIMP error: {}", importer.GetErrorString());
             return;
         }
         m_directory = path.substr(0, path.find_last_of('/'));

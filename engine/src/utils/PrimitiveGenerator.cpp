@@ -88,7 +88,7 @@ namespace Birdy3d::utils {
         int latitude_count = resolution;
 
         if (longitude_count < 2 || latitude_count < 2) {
-            core::Logger::warn("Invalid uv_sphere resolution: longitude_count: ", longitude_count, " latitude_count: ", latitude_count);
+            core::Logger::warn("Invalid uv_sphere resolution: longitude_count: {} latitude_count: {}", longitude_count, latitude_count);
             return nullptr;
         }
 

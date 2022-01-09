@@ -66,3 +66,12 @@ if (NOT LIBRARY_ASSIMP)
 
     FetchContent_MakeAvailable(assimp)
 endif()
+
+find_library(LIBRARY_FMT fmt)
+if(NOT LIBRARY_FMT)
+    FetchContent_Declare(fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG master
+    )
+    FetchContent_MakeAvailable(fmt)
+endif()
