@@ -79,7 +79,7 @@ namespace Birdy3d::ui {
 
         std::vector<std::unique_ptr<Shape>> m_shapes;
         std::list<std::shared_ptr<Widget>> m_children;
-        std::unique_ptr<Layout> m_layout = std::make_unique<EmptyLayout>();
+        std::unique_ptr<Layout> m_layout = nullptr;
         glm::vec2 m_actual_size = glm::vec2(1);
         glm::vec2 m_actual_pos = glm::vec2(1);
         glm::vec2 m_visible_size = glm::vec2(1);
