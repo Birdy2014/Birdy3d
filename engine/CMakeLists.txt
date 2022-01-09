@@ -7,9 +7,9 @@ add_subdirectory(vendor)
 
 # TODO: Store this in a variable, if linux, etc.
 if(WIN32)
-    target_link_libraries(Birdy3d_engine glfw opengl32 assimp freetype)
+    target_link_libraries(Birdy3d_engine glfw opengl32 assimp freetype fmt)
 else()
-    target_link_libraries(Birdy3d_engine glfw GL X11 pthread Xrandr Xi dl assimp freetype)
+    target_link_libraries(Birdy3d_engine glfw GL X11 pthread Xrandr Xi dl assimp freetype fmt)
 endif()
 
 add_custom_target(

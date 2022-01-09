@@ -54,12 +54,12 @@ namespace Birdy3d::ui {
 
     bool TextRenderer::add_char(char32_t c) {
         if (FT_Load_Char(*m_face, c, FT_LOAD_RENDER)) {
-            core::Logger::warn("freetype: Failed to load Glyph ", (unsigned)c);
+            core::Logger::warn("freetype: Failed to load glyph '{}'", (unsigned)c);
             return false;
         }
         if (m_texture_atlas_current_pos.x + (*m_face)->glyph->bitmap.width > m_texture_atlas_size.x) {
             if (m_texture_atlas_current_pos.y + m_font_size > m_texture_atlas_size.y) {
-                core::Logger::warn("Failed to load glyph '", (unsigned)c, "': font texture atlas full");
+                core::Logger::warn("Failed to load glyph '{}': no space left in font atlas", (unsigned)c);
                 return false;
             }
             m_texture_atlas_current_pos.x = 0;

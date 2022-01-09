@@ -57,7 +57,7 @@ namespace Birdy3d::utils {
         } else if ((int)colorString.length() == 3 + has_hash) {
             color_length = 1;
         } else {
-            core::Logger::warn("Invalid color: ", colorString);
+            core::Logger::warn("Invalid color: {}", colorString);
             return glm::vec4(1);
         }
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glm/gtx/string_cast.hpp>
+#include <fmt/core.h>
+#include <fmt/format.h>
 #include <iostream>
 #include <sstream>
 
@@ -9,36 +10,30 @@ namespace Birdy3d::core {
     class Logger {
     public:
         template <typename... Args>
-        static void debug(Args... args) {
-            std::stringstream stream;
-            stream << "DEBUG: ";
-            print(stream, args...);
-            std::cout << stream.str() << '\n';
-            print_console(stream.str(), Type::DEBUG);
+        static void debug(const std::string_view format_string, const Args&... args) {
+            auto formatted = "DEBUG: " + fmt::vformat(format_string, fmt::make_format_args(args...));
+            std::cout << formatted << '\n';
+            print_console(formatted, Type::DEBUG);
         }
 
         template <typename... Args>
-        static void warn(Args... args) {
-            std::stringstream stream;
-            stream << "WARNING: ";
-            print(stream, args...);
-            std::cerr << stream.str() << '\n';
-            print_console(stream.str(), Type::WARN);
+        static void warn(const std::string_view format_string, const Args&... args) {
+            auto formatted = "WARNING: " + fmt::vformat(format_string, fmt::make_format_args(args...));
+            std::cerr << formatted << '\n';
+            print_console(formatted, Type::WARN);
         }
 
         template <typename... Args>
-        static void error(Args... args) {
-            std::stringstream stream;
-            stream << "ERROR: ";
-            print(stream, args...);
-            std::cerr << stream.str() << '\n';
-            print_console(stream.str(), Type::ERROR);
+        static void error(const std::string_view format_string, const Args&... args) {
+            auto formatted = "ERROR: " + fmt::vformat(format_string, fmt::make_format_args(args...));
+            std::cerr << formatted << '\n';
+            print_console(formatted, Type::ERROR);
         }
 
         template <typename... Args>
-        static void critical(Args... args) {
-            std::cerr << "CRITICAL: ";
-            print(std::cerr, args...);
+        static void critical(const std::string_view format_string, const Args&... args) {
+            auto formatted = "CRITICAL: " + fmt::vformat(format_string, fmt::make_format_args(args...));
+            std::cerr << formatted << '\n';
             std::abort();
         }
 
@@ -49,20 +44,6 @@ namespace Birdy3d::core {
         }
 
     private:
-        template <typename T>
-        static void print(std::ostream& stream, const T& message) {
-            if constexpr (std::is_same<T, glm::vec4>::value || std::is_same<T, glm::vec3>::value || std::is_same<T, glm::vec2>::value || std::is_same<T, glm::mat4>::value)
-                stream << glm::to_string(message);
-            else
-                stream << message;
-        }
-
-        template <typename T, typename... Args>
-        static void print(std::ostream& stream, const T& message, Args... args) {
-            print(stream, message);
-            print(stream, args...);
-        }
-
         enum class Type {
             DEBUG,
             WARN,
@@ -74,4 +55,4 @@ namespace Birdy3d::core {
 
 }
 
-#define BIRDY3D_TODO ::Birdy3d::core::Logger::critical("Not implemented: ", __PRETTY_FUNCTION__);
+#define BIRDY3D_TODO ::Birdy3d::core::Logger::critical("Not implemented: {}", __PRETTY_FUNCTION__);

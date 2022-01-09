@@ -467,7 +467,7 @@ int main() {
         auto new_cube = scene->add_child("New Cube", glm::vec3(x, y, z));
         new_cube->add_component<render::ModelComponent>("primitive::cube", new_material);
         tree->sync_scene_tree(scene.get());
-        core::Logger::debug("Created cube at x: ", x, " y: ", y, " z: ", z);
+        core::Logger::debug("Created cube at ({} {} {})", x, y, z);
     },
         GLFW_KEY_N);
 
