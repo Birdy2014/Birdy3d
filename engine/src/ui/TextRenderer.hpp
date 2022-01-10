@@ -34,7 +34,6 @@ namespace Birdy3d::ui {
         UIVector text_size(std::string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
         UIVector text_size(std::u32string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
         float char_width(char32_t c, float font_size = 0);
-        int char_index(std::u32string text, float font_size, float x_pos, bool between_chars = false);
         static std::size_t text_length(std::u32string);
 
     private:

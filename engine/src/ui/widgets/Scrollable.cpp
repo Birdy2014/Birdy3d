@@ -33,13 +33,16 @@ namespace Birdy3d::ui {
         m_scrollbar_horizontal.parent_size(m_actual_size);
 
         for (const auto& shape : m_shapes) {
-            shape->parent_size(m_actual_size);
             auto shape_pos = shape->position().to_pixels(m_actual_size);
             auto shape_size = shape->size().to_pixels(m_actual_size);
             if (m_content_size.x < shape_pos.x + shape_size.x)
                 m_content_size.x = shape_pos.x + shape_size.x;
             if (m_content_size.y < shape_pos.y + shape_size.y)
                 m_content_size.y = shape_pos.y + shape_size.y;
+        }
+
+        for (const auto& shape : m_shapes) {
+            shape->parent_size(m_content_size);
         }
 
         m_max_scroll_offset.x = std::min(m_actual_size.x - m_content_size.x, 0.0f);
