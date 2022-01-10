@@ -173,23 +173,6 @@ namespace Birdy3d::ui {
         return (ch.advance >> 6) * (font_size / m_font_size);
     }
 
-    int TextRenderer::char_index(std::u32string text, float font_size, float x_pos, bool between_chars) {
-        float width = 0;
-        float current_char_width;
-        for (size_t i = 0; i < text.size(); i++) {
-            if (text[i] == '\x1B') {
-                i++; // Go to color
-                if (i >= text.length())
-                    break;
-                continue;
-            }
-            width += current_char_width = char_width(text[i], font_size);
-            if ((between_chars && x_pos < width - current_char_width / 2) || (!between_chars && x_pos < width))
-                return i;
-        }
-        return text.size();
-    }
-
     std::size_t TextRenderer::text_length(std::u32string text) {
         std::size_t index_escaped = 0;
         for (auto it = text.cbegin(); it != text.cend(); it++) {
@@ -366,12 +349,15 @@ namespace Birdy3d::ui {
         if (font_size == 0)
             font_size = renderer.m_font_size;
         float scale = (font_size / renderer.m_font_size);
+        float max_x = 0;
         float x = 0;
         float y = 0;
         utils::Color current_color = core::Application::theme().color(m_color);
         std::size_t index_escaped = 0;
         for (auto it = m_text.cbegin(); it != m_text.cend(); it++, index_escaped++) {
             if (*it == '\n') {
+                if (max_x < x)
+                    max_x = x;
                 x = 0;
                 y += renderer.m_theme.line_height();
                 continue;
@@ -416,7 +402,9 @@ namespace Birdy3d::ui {
 
             x += (ch.advance >> 6) * scale;
         }
-        m_size = glm::vec2(x, renderer.m_theme.line_height() + y);
+        if (max_x < x)
+            max_x = x;
+        m_size = glm::vec2(max_x, renderer.m_theme.line_height() + y);
         // Write to buffers
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -427,9 +415,31 @@ namespace Birdy3d::ui {
 
     void Text::draw_cursor(glm::mat4 move) {
         Theme& theme = core::Application::theme();
-        auto size = theme.text_renderer().text_size(m_text, font_size, cursor_pos);
-        float xpos = m_position.x + size.x - 1;
-        float ypos = m_position.y + size.y - theme.line_height();
+        TextRenderer& renderer = theme.text_renderer();
+
+        float scale = font_size > 0 ? font_size / theme.text_renderer().m_font_size : 1;
+        glm::vec2 cursor_pixel_pos(0, font_size);
+        for (std::size_t i = 0; i < m_text.length() && i < cursor_pos; i++) {
+            char32_t c = m_text[i];
+            if (c == '\n') {
+                cursor_pixel_pos.x = 0;
+                cursor_pixel_pos.y += theme.line_height();
+                continue;
+            }
+            if (c == '\x1B') {
+                i++; // Go to color
+                if (i >= m_text.length() || i >= cursor_pos)
+                    break;
+                continue;
+            }
+            if (renderer.m_chars.count(c) == 0)
+                renderer.add_char(c);
+            Character ch = renderer.m_chars[c];
+            cursor_pixel_pos.x += (ch.advance >> 6) * scale;
+        }
+
+        float xpos = m_position.x + cursor_pixel_pos.x - 1;
+        float ypos = m_position.y + cursor_pixel_pos.y - theme.line_height();
 
         m_cursor_rect->type = Rectangle::FILLED;
         m_cursor_rect->position(UIVector(xpos, ypos));
@@ -453,6 +463,9 @@ namespace Birdy3d::ui {
         bool started_highlight = false;
         std::size_t index_escaped = 0;
         for (auto it = m_text.cbegin(); it != m_text.cend(); it++, index_escaped++) {
+            if (index_escaped > hl_end)
+                break;
+
             if (*it == '\x1B') {
                 it++;
                 if (it == m_text.cend())
@@ -474,10 +487,10 @@ namespace Birdy3d::ui {
                     m_cursor_rect->color(utils::Color::Name::TEXT_HIGHLIGHT);
                     m_cursor_rect->draw(move);
                 }
-                if (index_escaped == hl_end)
+                if (index_escaped >= hl_end)
                     return;
                 current_pos.x = 0;
-                current_pos.y -= theme.line_height();
+                current_pos.y += theme.line_height();
                 start_pos = current_pos;
                 continue;
             }

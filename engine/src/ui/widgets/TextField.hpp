@@ -17,6 +17,7 @@ namespace Birdy3d::ui {
         void text(std::string);
         void append(std::string);
         void clear();
+        void scroll_down();
 
     protected:
         float m_side_padding = 2;
@@ -38,6 +39,9 @@ namespace Birdy3d::ui {
         void clear_selection();
         void late_update() override;
         void scroll_if_needed(std::size_t cursor_pos);
+
+    private:
+        std::size_t char_index(glm::vec2 pos);
     };
 
 }

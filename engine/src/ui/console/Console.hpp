@@ -5,7 +5,6 @@
 namespace Birdy3d::ui {
 
     class Window;
-    class Textarea;
     class TextField;
 
     typedef std::function<void(std::vector<std::string>)> CommandCallback;
@@ -57,7 +56,7 @@ namespace Birdy3d::ui {
 
         static std::map<std::string, CommandCallback> m_commands;
         static std::shared_ptr<Window> m_console_window;
-        static std::shared_ptr<Textarea> m_console_output;
+        static std::shared_ptr<TextField> m_console_output;
         static std::shared_ptr<TextField> m_console_input;
         static bool m_created;
 

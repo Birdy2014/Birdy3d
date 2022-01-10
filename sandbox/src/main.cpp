@@ -140,7 +140,8 @@ int main() {
 
     auto test_button = menu->add_child<ui::Button>({ .size = ui::UIVector(200_px, 50_px), .placement = ui::Placement::BOTTOM_LEFT }, "Fenster anzeigen");
 
-    auto area = menu->add_child<ui::Textarea>({ .weight = 2 });
+    auto area = menu->add_child<ui::TextField>({ .weight = 2 });
+    area->multiline = true;
     area->append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
 
     auto tree_window = canvas->add_child<ui::Window>({ .size = ui::UIVector(200_px, 300_px) });
