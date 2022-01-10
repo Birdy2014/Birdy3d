@@ -196,14 +196,20 @@ namespace Birdy3d::ui {
     }
 
     void TextField::scroll_if_needed(std::size_t cursor_pos) {
-        auto cursor_pixel_pos = coordinate_of_index(cursor_pos) + m_scroll_offset;
-        // Scroll right if the cursor is too far left
+        const auto cursor_pixel_pos = coordinate_of_index(cursor_pos) + m_scroll_offset;
+        const auto line_height = core::Application::theme().line_height();
+        // Scroll left
         if (cursor_pixel_pos.x < 0)
             m_scroll_offset.x -= cursor_pixel_pos.x;
-        // Scroll left if the cursor is too far right
+        // Scroll right
         if (cursor_pixel_pos.x > m_actual_size.x)
             m_scroll_offset.x -= cursor_pixel_pos.x - m_actual_size.x;
-        // TODO: Scroll y
+        // Scroll up
+        if (cursor_pixel_pos.y - line_height < 0)
+            m_scroll_offset.y -= cursor_pixel_pos.y - line_height;
+        // Scroll down
+        if (cursor_pixel_pos.y > m_actual_size.y)
+            m_scroll_offset.y -= cursor_pixel_pos.y - m_actual_size.y;
     }
 
     std::size_t TextField::char_index(glm::vec2 pos) {

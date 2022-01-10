@@ -42,7 +42,13 @@ namespace Birdy3d::ui {
 
     private:
         std::size_t char_index(glm::vec2 pos);
-        glm::vec2 coordinate_of_index(std::size_t);
+
+        /**
+         * @brief Pixel coordinates of a character in the text.
+         *
+         * The bottom right coordinates of the character, relative to the origin of m_text.
+         */
+        glm::vec2 coordinate_of_index(std::size_t index);
     };
 
 }
