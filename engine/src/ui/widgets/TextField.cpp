@@ -128,8 +128,22 @@ namespace Birdy3d::ui {
                     break;
                 m_text->cursor_pos++;
                 break;
+            case GLFW_KEY_UP: {
+                if (!multiline)
+                    break;
+                const auto cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
+                const auto line_height = core::Application::theme().line_height();
+                m_text->cursor_pos = char_index({ cursor_pixel_pos.x, cursor_pixel_pos.y - line_height * 2.0f });
+                break;
             }
-            // TODO: UP and DOWN if multiline
+            case GLFW_KEY_DOWN: {
+                if (!multiline)
+                    break;
+                const auto cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
+                m_text->cursor_pos = char_index({ cursor_pixel_pos.x, cursor_pixel_pos.y });
+                break;
+            }
+            }
         }
         scroll_if_needed(m_text->cursor_pos);
     }
