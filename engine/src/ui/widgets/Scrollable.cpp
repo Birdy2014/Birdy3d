@@ -120,6 +120,10 @@ namespace Birdy3d::ui {
         Widget::on_update();
     }
 
+    void Scrollable::on_resize() {
+        check_scroll_bounds();
+    }
+
     void Scrollable::check_scroll_bounds() {
         if (m_scroll_offset.x > 0)
             m_scroll_offset.x = 0;

@@ -21,6 +21,7 @@ namespace Birdy3d::ui {
         void on_scroll(const events::InputScrollEvent& event) override;
         void on_click(const events::InputClickEvent& event) override;
         void on_update() override;
+        void on_resize() override;
 
     private:
         Rectangle m_scrollbar_vertical;
