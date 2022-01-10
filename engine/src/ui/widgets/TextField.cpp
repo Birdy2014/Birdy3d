@@ -196,8 +196,7 @@ namespace Birdy3d::ui {
     }
 
     void TextField::scroll_if_needed(std::size_t cursor_pos) {
-        // TODO: Fix x scroll for other lines than 1
-        auto cursor_pixel_pos = core::Application::theme().text_renderer().text_size((std::u32string)*m_text, m_text->font_size, cursor_pos) + m_scroll_offset;
+        auto cursor_pixel_pos = coordinate_of_index(cursor_pos) + m_scroll_offset;
         // Scroll right if the cursor is too far left
         if (cursor_pixel_pos.x < 0)
             m_scroll_offset.x -= cursor_pixel_pos.x;
@@ -230,6 +229,26 @@ namespace Birdy3d::ui {
                 return i;
         }
         return m_text->length();
+    }
+
+    glm::vec2 TextField::coordinate_of_index(std::size_t index) {
+        const auto line_height = core::Application::theme().line_height();
+        glm::vec2 pos = { 0.0f, line_height };
+        for (std::size_t i = 0; i < m_text->length() && i < index; ++i) {
+            if (m_text->text()[i] == '\x1B') {
+                i++; // Go to color
+                if (i >= m_text->length() || i >= index)
+                    break;
+                continue;
+            }
+            if (m_text->text()[i] == '\n') {
+                pos.x = 0.0f;
+                pos.y += line_height;
+                continue;
+            }
+            pos.x += core::Application::theme().text_renderer().char_width(m_text->text()[i], m_text->font_size);
+        }
+        return pos;
     }
 
 }
