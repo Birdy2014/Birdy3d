@@ -42,6 +42,7 @@ namespace Birdy3d::ui {
 
     private:
         std::size_t char_index(glm::vec2 pos);
+        glm::vec2 coordinate_of_index(std::size_t);
     };
 
 }
