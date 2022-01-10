@@ -182,6 +182,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a14b4ba8d41027568a40a051f44adcb31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbeddcfe50ef6ce7cfd95af140d7298c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#acbeddcfe50ef6ce7cfd95af140d7298c">on_update</a> () override</td></tr>
 <tr class="separator:acbeddcfe50ef6ce7cfd95af140d7298c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3db4d9fbfc836cdb1e7415adc98bce6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#aa3db4d9fbfc836cdb1e7415adc98bce6">on_resize</a> () override</td></tr>
+<tr class="separator:aa3db4d9fbfc836cdb1e7415adc98bce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
 <tr class="memitem:a3e6f1a5013e02e9cf8c20b4753122688 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a3e6f1a5013e02e9cf8c20b4753122688" name="a3e6f1a5013e02e9cf8c20b4753122688"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (glm::vec2) const</td></tr>
@@ -210,9 +212,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus</b> 
 <tr class="memitem:a0be27670e64fee7b5a9b31a5ace65388 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a0be27670e64fee7b5a9b31a5ace65388" name="a0be27670e64fee7b5a9b31a5ace65388"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus_lost</b> ()</td></tr>
 <tr class="separator:a0be27670e64fee7b5a9b31a5ace65388 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84a60e1d95880336cd816f61cabf395e inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a84a60e1d95880336cd816f61cabf395e" name="a84a60e1d95880336cd816f61cabf395e"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_resize</b> ()</td></tr>
-<tr class="separator:a84a60e1d95880336cd816f61cabf395e inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf295ba3c947f277b0f312aa73c874be inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="adf295ba3c947f277b0f312aa73c874be" name="adf295ba3c947f277b0f312aa73c874be"></a>
 <a class="el" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>add_rectangle</b> (<a class="el" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> pos, <a class="el" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> size, utils::Color::Name, Placement=Placement::TOP_LEFT)</td></tr>
 <tr class="separator:adf295ba3c947f277b0f312aa73c874be inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -426,6 +425,33 @@ typedef std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classBirdy3d_1_1events_1_1InputClickEvent.html">events::InputClickEvent</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a>.</p>
+
+</div>
+</div>
+<a id="aa3db4d9fbfc836cdb1e7415adc98bce6" name="aa3db4d9fbfc836cdb1e7415adc98bce6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3db4d9fbfc836cdb1e7415adc98bce6">&#9670;&nbsp;</a></span>on_resize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Birdy3d::ui::Scrollable::on_resize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
