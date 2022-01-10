@@ -95,48 +95,47 @@ $(document).ready(function(){initNavTree('Console_8hpp_source.html',''); initRes
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span>Birdy3d::ui {</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <span class="keyword">class </span>Window;</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">class </span>Textarea;</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keyword">class </span>TextField;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keyword">typedef</span> std::function&lt;void(std::vector&lt;std::string&gt;)&gt; CommandCallback;</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1ui_1_1Console.html">   13</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1ui_1_1Console.html">Console</a> {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#af532ad21bd7062b170fdd3c935d5295c">attach</a>(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1Canvas.html">Canvas</a>&amp;);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#aa8b3e2ed27171ff9da58b71cdbc3a646">print</a>(<span class="keyword">const</span> std::string&amp;, utils::Color::Name = utils::Color::Name::NONE);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#a1515795f80e2880cd2b6f424c2bad8e1">println</a>(<span class="keyword">const</span> std::string&amp;, utils::Color::Name = utils::Color::Name::NONE);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#a20068a7a44f21e4d037b5a6e8f7827d5">exec</a>(std::string);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#a20068a7a44f21e4d037b5a6e8f7827d5">exec</a>(std::string name, std::vector&lt;std::string&gt; args);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#aa5ecc4e042fb0ec5f383b16c2d644ea4">register_command</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> CommandCallback&amp;);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="comment">// This is required for console.list_commands</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1ui_1_1ConsoleCommands.html">ConsoleCommands</a>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">static</span> std::map&lt;std::string, CommandCallback&gt; m_commands;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">static</span> std::shared_ptr&lt;Window&gt; m_console_window;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">static</span> std::shared_ptr&lt;Textarea&gt; m_console_output;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">static</span> std::shared_ptr&lt;TextField&gt; m_console_input;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">static</span> <span class="keywordtype">bool</span> m_created;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> create_window();</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> input_callback();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    };</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">class </span>TextField;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">typedef</span> std::function&lt;void(std::vector&lt;std::string&gt;)&gt; CommandCallback;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1ui_1_1Console.html">   12</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1ui_1_1Console.html">Console</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#af532ad21bd7062b170fdd3c935d5295c">attach</a>(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1Canvas.html">Canvas</a>&amp;);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#aa8b3e2ed27171ff9da58b71cdbc3a646">print</a>(<span class="keyword">const</span> std::string&amp;, utils::Color::Name = utils::Color::Name::NONE);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#a1515795f80e2880cd2b6f424c2bad8e1">println</a>(<span class="keyword">const</span> std::string&amp;, utils::Color::Name = utils::Color::Name::NONE);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#a20068a7a44f21e4d037b5a6e8f7827d5">exec</a>(std::string);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#a20068a7a44f21e4d037b5a6e8f7827d5">exec</a>(std::string name, std::vector&lt;std::string&gt; args);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classBirdy3d_1_1ui_1_1Console.html#aa5ecc4e042fb0ec5f383b16c2d644ea4">register_command</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> CommandCallback&amp;);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="comment">// This is required for console.list_commands</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1ui_1_1ConsoleCommands.html">ConsoleCommands</a>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keyword">static</span> std::map&lt;std::string, CommandCallback&gt; m_commands;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">static</span> std::shared_ptr&lt;Window&gt; m_console_window;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">static</span> std::shared_ptr&lt;TextField&gt; m_console_output;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">static</span> std::shared_ptr&lt;TextField&gt; m_console_input;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">static</span> <span class="keywordtype">bool</span> m_created;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> create_window();</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> input_callback();</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    };</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Canvas_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Canvas.html">Birdy3d::ui::Canvas</a></div><div class="ttdef"><b>Definition:</b> Canvas.hpp:10</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1ConsoleCommands_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1ConsoleCommands.html">Birdy3d::ui::ConsoleCommands</a></div><div class="ttdef"><b>Definition:</b> Commands.hpp:5</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html">Birdy3d::ui::Console</a></div><div class="ttdef"><b>Definition:</b> Console.hpp:13</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html">Birdy3d::ui::Console</a></div><div class="ttdef"><b>Definition:</b> Console.hpp:12</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html_a1515795f80e2880cd2b6f424c2bad8e1"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html#a1515795f80e2880cd2b6f424c2bad8e1">Birdy3d::ui::Console::println</a></div><div class="ttdeci">static void println(const std::string &amp;, utils::Color::Name=utils::Color::Name::NONE)</div><div class="ttdoc">Prints line of text to the console.</div><div class="ttdef"><b>Definition:</b> Console.cpp:62</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html_a20068a7a44f21e4d037b5a6e8f7827d5"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html#a20068a7a44f21e4d037b5a6e8f7827d5">Birdy3d::ui::Console::exec</a></div><div class="ttdeci">static void exec(std::string)</div><div class="ttdoc">Executes a command in the console and prints the command.</div><div class="ttdef"><b>Definition:</b> Console.cpp:74</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html_aa5ecc4e042fb0ec5f383b16c2d644ea4"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html#aa5ecc4e042fb0ec5f383b16c2d644ea4">Birdy3d::ui::Console::register_command</a></div><div class="ttdeci">static void register_command(const std::string &amp;name, const CommandCallback &amp;)</div><div class="ttdoc">Register a new command to the console.</div><div class="ttdef"><b>Definition:</b> Console.cpp:118</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html_aa8b3e2ed27171ff9da58b71cdbc3a646"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html#aa8b3e2ed27171ff9da58b71cdbc3a646">Birdy3d::ui::Console::print</a></div><div class="ttdeci">static void print(const std::string &amp;, utils::Color::Name=utils::Color::Name::NONE)</div><div class="ttdoc">Prints text to the console.</div><div class="ttdef"><b>Definition:</b> Console.cpp:50</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html_af532ad21bd7062b170fdd3c935d5295c"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html#af532ad21bd7062b170fdd3c935d5295c">Birdy3d::ui::Console::attach</a></div><div class="ttdeci">static void attach(Canvas &amp;)</div><div class="ttdoc">Attaches the console to a canvas.</div><div class="ttdef"><b>Definition:</b> Console.cpp:19</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Console_html_af532ad21bd7062b170fdd3c935d5295c"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Console.html#af532ad21bd7062b170fdd3c935d5295c">Birdy3d::ui::Console::attach</a></div><div class="ttdeci">static void attach(Canvas &amp;)</div><div class="ttdoc">Attaches the console to a canvas.</div><div class="ttdef"><b>Definition:</b> Console.cpp:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

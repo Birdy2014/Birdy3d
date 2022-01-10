@@ -9,7 +9,6 @@ var dir_ba035d603da85925e3cfbb533a2a2c7a =
     [ "NumberInput.hpp", "NumberInput_8hpp_source.html", null ],
     [ "Scrollable.hpp", "Scrollable_8hpp_source.html", null ],
     [ "ScrollContainer.hpp", "ScrollContainer_8hpp_source.html", null ],
-    [ "Textarea.hpp", "Textarea_8hpp_source.html", null ],
     [ "TextField.hpp", "TextField_8hpp_source.html", null ],
     [ "TreeView.hpp", "TreeView_8hpp_source.html", null ],
     [ "WindowSnapArea.hpp", "WindowSnapArea_8hpp_source.html", null ]

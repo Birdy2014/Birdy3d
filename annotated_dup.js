@@ -96,7 +96,6 @@ var annotated_dup =
         [ "ScrollContainer", "classBirdy3d_1_1ui_1_1ScrollContainer.html", null ],
         [ "Shape", "classBirdy3d_1_1ui_1_1Shape.html", "classBirdy3d_1_1ui_1_1Shape" ],
         [ "Text", "classBirdy3d_1_1ui_1_1Text.html", null ],
-        [ "Textarea", "classBirdy3d_1_1ui_1_1Textarea.html", "classBirdy3d_1_1ui_1_1Textarea" ],
         [ "TextField", "classBirdy3d_1_1ui_1_1TextField.html", "classBirdy3d_1_1ui_1_1TextField" ],
         [ "TextRenderer", "classBirdy3d_1_1ui_1_1TextRenderer.html", null ],
         [ "TextVertex", "structBirdy3d_1_1ui_1_1TextVertex.html", null ],

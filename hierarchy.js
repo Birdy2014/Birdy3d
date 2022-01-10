@@ -108,8 +108,7 @@ var hierarchy =
       [ "Birdy3d::ui::Scrollable", "classBirdy3d_1_1ui_1_1Scrollable.html", [
         [ "Birdy3d::ui::ScrollContainer", "classBirdy3d_1_1ui_1_1ScrollContainer.html", null ],
         [ "Birdy3d::ui::TextField", "classBirdy3d_1_1ui_1_1TextField.html", [
-          [ "Birdy3d::ui::NumberInput", "classBirdy3d_1_1ui_1_1NumberInput.html", null ],
-          [ "Birdy3d::ui::Textarea", "classBirdy3d_1_1ui_1_1Textarea.html", null ]
+          [ "Birdy3d::ui::NumberInput", "classBirdy3d_1_1ui_1_1NumberInput.html", null ]
         ] ]
       ] ],
       [ "Birdy3d::ui::TreeView", "classBirdy3d_1_1ui_1_1TreeView.html", null ],
