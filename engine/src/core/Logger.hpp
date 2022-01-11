@@ -1,9 +1,9 @@
 #pragma once
 
-#include <fmt/core.h>
 #include <fmt/format.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <iostream>
-#include <sstream>
 
 namespace Birdy3d::core {
 
@@ -54,5 +54,20 @@ namespace Birdy3d::core {
     };
 
 }
+
+template <glm::length_t L, typename T>
+struct fmt::formatter<glm::vec<L, T>> {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+        auto it = ctx.begin(), end = ctx.end();
+        if (it != end && *it != '}')
+            throw format_error("invalid format");
+        return it;
+    }
+
+    template <typename FormatContext>
+    auto format(const glm::vec<L, T>& v, FormatContext& ctx) -> decltype(ctx.out()) {
+        return format_to(ctx.out(), "{}", glm::to_string(v));
+    }
+};
 
 #define BIRDY3D_TODO ::Birdy3d::core::Logger::critical("Not implemented: {}", __PRETTY_FUNCTION__);
