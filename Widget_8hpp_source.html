@@ -160,7 +160,7 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> on_update();</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="comment">// Callbacks</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">typedef</span> std::function&lt;void()&gt; CallbackType;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">typedef</span> std::function&lt;void(std::any)&gt; CallbackType;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordtype">void</span> add_callback(<span class="keyword">const</span> std::string&amp; name, CallbackType callback);</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
@@ -184,7 +184,7 @@ $(document).ready(function(){initNavTree('Widget_8hpp_source.html',''); initResi
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> contains(glm::vec2) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="comment">// Callbacks</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordtype">void</span> execute_callbacks(<span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordtype">void</span> execute_callbacks(<span class="keyword">const</span> std::string&amp; name, std::any = {});</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keywordtype">bool</span> has_callbacks(<span class="keyword">const</span> std::string&amp; name);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="comment">// Events</span></div>

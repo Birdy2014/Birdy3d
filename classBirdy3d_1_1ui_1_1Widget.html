@@ -111,7 +111,7 @@ Inheritance diagram for Birdy3d::ui::Widget:</div>
 <area href="classBirdy3d_1_1ui_1_1Label.html" alt="Birdy3d::ui::Label" shape="rect" coords="189,336,368,360"/>
 <area href="classBirdy3d_1_1ui_1_1MenuBar.html" alt="Birdy3d::ui::MenuBar" shape="rect" coords="189,392,368,416"/>
 <area href="classBirdy3d_1_1ui_1_1Scrollable.html" alt="Birdy3d::ui::Scrollable" shape="rect" coords="189,448,368,472"/>
-<area href="classBirdy3d_1_1ui_1_1TreeView.html" alt="Birdy3d::ui::TreeView" shape="rect" coords="189,504,368,528"/>
+<area href="classBirdy3d_1_1ui_1_1TreeView.html" title="Widget that displays a Tree." alt="Birdy3d::ui::TreeView" shape="rect" coords="189,504,368,528"/>
 <area href="classBirdy3d_1_1ui_1_1WindowSnapArea.html" alt="Birdy3d::ui::WindowSnapArea" shape="rect" coords="189,560,368,584"/>
   </map>
 </div></div>
@@ -123,9 +123,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a53624325084042ec6ee1edefb5241e69"><td class="memItemLeft" align="right" valign="top"><a id="a53624325084042ec6ee1edefb5241e69" name="a53624325084042ec6ee1edefb5241e69"></a>
-typedef std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
-<tr class="separator:a53624325084042ec6ee1edefb5241e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb8a27c865be05d4a88e8bff7c4d4063"><td class="memItemLeft" align="right" valign="top"><a id="acb8a27c865be05d4a88e8bff7c4d4063" name="acb8a27c865be05d4a88e8bff7c4d4063"></a>
+typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
+<tr class="separator:acb8a27c865be05d4a88e8bff7c4d4063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -213,9 +213,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a3e6f1a5013e02e9cf8c20b4753122688"><td class="memItemLeft" align="right" valign="top"><a id="a3e6f1a5013e02e9cf8c20b4753122688" name="a3e6f1a5013e02e9cf8c20b4753122688"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (glm::vec2) const</td></tr>
 <tr class="separator:a3e6f1a5013e02e9cf8c20b4753122688"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc45d3175f210fbbedfea83e30920fda"><td class="memItemLeft" align="right" valign="top"><a id="acc45d3175f210fbbedfea83e30920fda" name="acc45d3175f210fbbedfea83e30920fda"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name)</td></tr>
-<tr class="separator:acc45d3175f210fbbedfea83e30920fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ebe2edf54bae3584a82c9e92ff6d9d6"><td class="memItemLeft" align="right" valign="top"><a id="a9ebe2edf54bae3584a82c9e92ff6d9d6" name="a9ebe2edf54bae3584a82c9e92ff6d9d6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name, std::any={})</td></tr>
+<tr class="separator:a9ebe2edf54bae3584a82c9e92ff6d9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a6aebdc268562fdf4be39e1188dfbbb"><td class="memItemLeft" align="right" valign="top"><a id="a8a6aebdc268562fdf4be39e1188dfbbb" name="a8a6aebdc268562fdf4be39e1188dfbbb"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_callbacks</b> (const std::string &amp;name)</td></tr>
 <tr class="separator:a8a6aebdc268562fdf4be39e1188dfbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
