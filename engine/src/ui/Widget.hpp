@@ -70,7 +70,7 @@ namespace Birdy3d::ui {
         virtual void on_update();
 
         // Callbacks
-        typedef std::function<void()> CallbackType;
+        typedef std::function<void(std::any)> CallbackType;
 
         void add_callback(const std::string& name, CallbackType callback);
 
@@ -99,7 +99,7 @@ namespace Birdy3d::ui {
         virtual bool contains(glm::vec2) const;
 
         // Callbacks
-        void execute_callbacks(const std::string& name);
+        void execute_callbacks(const std::string& name, std::any = {});
         bool has_callbacks(const std::string& name);
 
         // Events

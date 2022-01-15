@@ -5,7 +5,6 @@
 
 namespace Birdy3d::ui {
 
-    class ContextMenu;
     class TreeView;
 
     class TreeItem {
@@ -28,11 +27,16 @@ namespace Birdy3d::ui {
         void set_treeview(TreeView* treeview);
     };
 
+    /**
+     * @brief Widget that displays a Tree.
+     *
+     * The following callbacks can be added using the Widget::add_callback function:
+     * - select: Fires when an item has been selected with any mouse button. Passes a pointer to the selected TreeItem.
+     * - select_secundary: Fires when an item has been selected with the right mouse button. Passes a pointer to the selected TreeItem.
+     *   This can be used to open a ContextMenu.
+     */
     class TreeView : public Widget {
     public:
-        std::function<void(TreeItem&)> callback_select;
-        std::weak_ptr<ContextMenu> context_menu;
-
         TreeView(Options);
         virtual void draw() override;
         virtual glm::vec2 minimal_size() override;

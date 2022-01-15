@@ -253,9 +253,9 @@ namespace Birdy3d::ui {
         m_callbacks[name].push_back(callback);
     }
 
-    void Widget::execute_callbacks(const std::string& name) {
+    void Widget::execute_callbacks(const std::string& name, std::any value) {
         for (auto& callback : m_callbacks[name])
-            std::invoke(callback);
+            std::invoke(callback, value);
     }
 
     bool Widget::has_callbacks(const std::string& name) {

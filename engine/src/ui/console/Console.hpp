@@ -61,7 +61,7 @@ namespace Birdy3d::ui {
         static bool m_created;
 
         static void create_window();
-        static void input_callback();
+        static void input_callback(std::any);
     };
 
 }
