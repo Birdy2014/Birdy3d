@@ -41,7 +41,7 @@ namespace Birdy3d::ui {
         m_created = true;
     }
 
-    void Console::input_callback() {
+    void Console::input_callback(std::any) {
         std::string input = m_console_input->text();
         m_console_input->clear();
         exec(input);

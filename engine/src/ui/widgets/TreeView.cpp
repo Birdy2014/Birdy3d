@@ -88,12 +88,9 @@ namespace Birdy3d::ui {
                     // Select
                     m_item_highlight_rect->hidden(false);
                     m_selected_item = &item.second;
-                    if (callback_select)
-                        callback_select(item.second);
-                    if (event.button == GLFW_MOUSE_BUTTON_RIGHT) {
-                        if (auto menu = context_menu.lock())
-                            menu->open();
-                    }
+                    execute_callbacks("select", &item.second);
+                    if (event.button == GLFW_MOUSE_BUTTON_RIGHT)
+                        execute_callbacks("select_secundary", &item.second);
                 } else if (local_pos.x > m_offset_x_left + (item.first - 1) * m_indent_size) {
                     // Toggle children
                     item.second.collapsed = !item.second.collapsed;
