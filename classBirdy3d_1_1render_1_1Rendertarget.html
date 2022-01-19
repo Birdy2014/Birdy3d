@@ -87,8 +87,6 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1render_1_1Rendertarget
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="#friends">Friends</a> &#124;
 <a href="classBirdy3d_1_1render_1_1Rendertarget-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Birdy3d::render::Rendertarget Class Reference</div></div>
 </div><!--header-->
@@ -99,15 +97,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a931c1aff49d09c384bdc5d190ae391c7"><td class="memItemLeft" align="right" valign="top"><a id="a931c1aff49d09c384bdc5d190ae391c7" name="a931c1aff49d09c384bdc5d190ae391c7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Rendertarget</b> (int width, int height)</td></tr>
 <tr class="separator:a931c1aff49d09c384bdc5d190ae391c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13c88178639fbec144e5084165abcaf0"><td class="memItemLeft" align="right" valign="top"><a id="a13c88178639fbec144e5084165abcaf0" name="a13c88178639fbec144e5084165abcaf0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Rendertarget</b> (int width, int height, std::initializer_list&lt; Texture::Preset &gt; presets, bool depth_rbo)</td></tr>
-<tr class="separator:a13c88178639fbec144e5084165abcaf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65819ee92f942206c09afc4ae65c4cc2"><td class="memItemLeft" align="right" valign="top"><a id="a65819ee92f942206c09afc4ae65c4cc2" name="a65819ee92f942206c09afc4ae65c4cc2"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Rendertarget</b> (<a class="el" href="classBirdy3d_1_1render_1_1Rendertarget.html">Rendertarget</a> &amp;)=delete</td></tr>
 <tr class="separator:a65819ee92f942206c09afc4ae65c4cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a146e128963e0b5adcfda4b58c7c81b7f"><td class="memItemLeft" align="right" valign="top"><a id="a146e128963e0b5adcfda4b58c7c81b7f" name="a146e128963e0b5adcfda4b58c7c81b7f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>serialize</b> (<a class="el" href="classBirdy3d_1_1serializer_1_1Adapter.html">serializer::Adapter</a> &amp;)</td></tr>
-<tr class="separator:a146e128963e0b5adcfda4b58c7c81b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a28e92f8002c42d99e48c0f779a9465"><td class="memItemLeft" align="right" valign="top"><a id="a0a28e92f8002c42d99e48c0f779a9465" name="a0a28e92f8002c42d99e48c0f779a9465"></a>
 <a class="el" href="classBirdy3d_1_1render_1_1Texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>add_texture</b> (Texture::Preset)</td></tr>
 <tr class="separator:a0a28e92f8002c42d99e48c0f779a9465"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,36 +112,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>finish</b> ()</td></t
 <tr class="memitem:aca6bdd5681d8570234f139367159531c"><td class="memItemLeft" align="right" valign="top"><a id="aca6bdd5681d8570234f139367159531c" name="aca6bdd5681d8570234f139367159531c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resize</b> (int width, int height)</td></tr>
 <tr class="separator:aca6bdd5681d8570234f139367159531c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16d6ae108a9c83148c4e3828352e4325"><td class="memItemLeft" align="right" valign="top"><a id="a16d6ae108a9c83148c4e3828352e4325" name="a16d6ae108a9c83148c4e3828352e4325"></a>
-<a class="el" href="classBirdy3d_1_1render_1_1Texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_texture</b> (int index)</td></tr>
-<tr class="separator:a16d6ae108a9c83148c4e3828352e4325"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c213faacb0050158f8c1e95df8cc7b2"><td class="memItemLeft" align="right" valign="top"><a id="a7c213faacb0050158f8c1e95df8cc7b2" name="a7c213faacb0050158f8c1e95df8cc7b2"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>initialized</b> ()</td></tr>
-<tr class="separator:a7c213faacb0050158f8c1e95df8cc7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a059d133752de046bbc1632c69b8df502"><td class="memItemLeft" align="right" valign="top"><a id="a059d133752de046bbc1632c69b8df502" name="a059d133752de046bbc1632c69b8df502"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>width</b> ()</td></tr>
-<tr class="separator:a059d133752de046bbc1632c69b8df502"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac230108b936f98fefdbaafab62a8629d"><td class="memItemLeft" align="right" valign="top"><a id="ac230108b936f98fefdbaafab62a8629d" name="ac230108b936f98fefdbaafab62a8629d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> ()</td></tr>
-<tr class="separator:ac230108b936f98fefdbaafab62a8629d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1602ba9e527159ec2262cc178216d193"><td class="memItemLeft" align="right" valign="top"><a id="a1602ba9e527159ec2262cc178216d193" name="a1602ba9e527159ec2262cc178216d193"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bind</b> ()</td></tr>
 <tr class="separator:a1602ba9e527159ec2262cc178216d193"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30b6a76722ff04639cda6e21b2a56e30"><td class="memItemLeft" align="right" valign="top"><a id="a30b6a76722ff04639cda6e21b2a56e30" name="a30b6a76722ff04639cda6e21b2a56e30"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> ()</td></tr>
 <tr class="separator:a30b6a76722ff04639cda6e21b2a56e30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a858ff29dd8d397d3f5885314fe24d0df"><td class="memItemLeft" align="right" valign="top"><a id="a858ff29dd8d397d3f5885314fe24d0df" name="a858ff29dd8d397d3f5885314fe24d0df"></a>
-static std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1render_1_1Rendertarget.html">Rendertarget</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>DEFAULT</b></td></tr>
-<tr class="separator:a858ff29dd8d397d3f5885314fe24d0df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
-Friends</h2></td></tr>
-<tr class="memitem:a0818553b329f99d15d5e373e903a9f54"><td class="memItemLeft" align="right" valign="top"><a id="a0818553b329f99d15d5e373e903a9f54" name="a0818553b329f99d15d5e373e903a9f54"></a>
-class&#160;</td><td class="memItemRight" valign="bottom"><b>core::Application</b></td></tr>
-<tr class="separator:a0818553b329f99d15d5e373e903a9f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>engine/src/render/<a class="el" href="Rendertarget_8hpp_source.html">Rendertarget.hpp</a></li>
