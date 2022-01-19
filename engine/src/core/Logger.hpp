@@ -19,21 +19,21 @@ namespace Birdy3d::core {
         template <typename... Args>
         static void warn(const std::string_view format_string, const Args&... args) {
             auto formatted = "WARNING: " + fmt::vformat(format_string, fmt::make_format_args(args...));
-            std::cerr << formatted << '\n';
+            std::cerr << "\e[0;33m" << formatted << "\e[0m\n";
             print_console(formatted, Type::WARN);
         }
 
         template <typename... Args>
         static void error(const std::string_view format_string, const Args&... args) {
             auto formatted = "ERROR: " + fmt::vformat(format_string, fmt::make_format_args(args...));
-            std::cerr << formatted << '\n';
+            std::cerr << "\e[0;31m" << formatted << "\e[0m\n";
             print_console(formatted, Type::ERROR);
         }
 
         template <typename... Args>
         static void critical(const std::string_view format_string, const Args&... args) {
             auto formatted = "CRITICAL: " + fmt::vformat(format_string, fmt::make_format_args(args...));
-            std::cerr << formatted << '\n';
+            std::cerr << "\e[1;31m" << formatted << "\e[0m\n";
             std::abort();
         }
 
