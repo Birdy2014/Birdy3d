@@ -20,23 +20,25 @@
 namespace Birdy3d::render {
 
     Camera::Camera()
-        : m_width(1)
-        , m_height(1)
+        : m_old_target_width(1)
+        , m_old_target_height(1)
         , m_deferred_enabled(false)
-        , m_gbuffer(m_width, m_height)
-        , m_ssao_target(m_width, m_height)
-        , m_ssao_blur_target(m_width, m_height) { }
+        , m_target(Rendertarget::DEFAULT)
+        , m_gbuffer(1, 1)
+        , m_ssao_target(1, 1)
+        , m_ssao_blur_target(1, 1) { }
 
-    Camera::Camera(int width, int height, bool deferred)
-        : m_width(width)
-        , m_height(height)
+    Camera::Camera(std::shared_ptr<Rendertarget> target, bool deferred)
+        : m_old_target_width(target->width())
+        , m_old_target_height(target->height())
         , m_deferred_enabled(deferred)
-        , m_gbuffer(m_width, m_height)
-        , m_ssao_target(m_width, m_height)
-        , m_ssao_blur_target(m_width, m_height) { }
+        , m_target(target)
+        , m_gbuffer(target->width(), target->height())
+        , m_ssao_target(target->width(), target->height())
+        , m_ssao_blur_target(target->width(), target->height()) { }
 
     void Camera::start() {
-        m_projection = glm::perspective(glm::radians(80.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
+        m_projection = glm::perspective(glm::radians(80.0f), (float)m_old_target_width / (float)m_old_target_height, 0.1f, 100.0f);
 
         m_gbuffer_position = m_gbuffer.add_texture(Texture::Preset::COLOR_RGBA_FLOAT);
         m_gbuffer_normal = m_gbuffer.add_texture(Texture::Preset::COLOR_RGBA_FLOAT);
@@ -94,20 +96,23 @@ namespace Birdy3d::render {
         }
     }
 
-    void Camera::resize(int width, int height) {
-        if (m_width != width || m_height != height) {
-            m_width = width;
-            m_height = height;
-            m_projection = glm::perspective(glm::radians(80.0f), (float)width / (float)height, 0.1f, 100.0f);
-            m_gbuffer.resize(width, height);
-            m_ssao_target.resize(width, height);
-            m_ssao_blur_target.resize(width, height);
-        }
-    }
-
     void Camera::render() {
+        if (!m_target) {
+            core::Logger::error("Camera Rendertarget not set");
+            return;
+        }
+
         entity->scene->m_current_camera = this;
         glClearColor(0.0, 0.0, 0.0, 1.0);
+
+        if (m_old_target_width != m_target->width() || m_old_target_height != m_target->height()) {
+            m_old_target_width = m_target->width();
+            m_old_target_height = m_target->height();
+            m_projection = glm::perspective(glm::radians(80.0f), (float)m_target->width() / (float)m_target->height(), 0.1f, 100.0f);
+            m_gbuffer.resize(m_target->width(), m_target->height());
+            m_ssao_target.resize(m_target->width(), m_target->height());
+            m_ssao_blur_target.resize(m_target->width(), m_target->height());
+        }
 
         m_models.clear();
         entity->scene->get_components<ModelComponent>(m_models, false, true);
@@ -231,7 +236,6 @@ namespace Birdy3d::render {
         render_quad();
 
         // 4. lighting pass
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         m_gbuffer_position->bind(0);
         m_gbuffer_normal->bind(1);
@@ -244,6 +248,7 @@ namespace Birdy3d::render {
         for (size_t i = 0; i < m_spotlights.size(); i++)
             m_spotlights[i]->use(*m_deferred_light_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
 
+        m_target->bind();
         m_deferred_light_shader->set_vec3("viewPos", world_pos);
         render_quad();
     }
@@ -264,13 +269,13 @@ namespace Birdy3d::render {
         for (size_t i = 0; i < m_spotlights.size(); i++)
             m_spotlights[i]->use(*m_forward_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        m_target->bind();
         if (renderOpaque) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } else {
             glBindFramebuffer(GL_READ_FRAMEBUFFER, m_gbuffer.id());
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width, m_height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_target->id());
+            glBlitFramebuffer(0, 0, m_target->width() - 1, m_target->height() - 1, 0, 0, m_target->width() - 1, m_target->height() - 1, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         }
 
         m_forward_shader->use();
@@ -303,7 +308,7 @@ namespace Birdy3d::render {
 
         glEnable(GL_DEPTH_TEST);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        m_target->bind();
 
         m_normal_shader->use();
         m_normal_shader->set_mat4("projection", m_projection);
@@ -404,7 +409,7 @@ namespace Birdy3d::render {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        m_target->bind();
         glClear(GL_DEPTH_BUFFER_BIT);
 
         m_simple_color_shader->use();
@@ -423,7 +428,7 @@ namespace Birdy3d::render {
         glm::mat4 view = glm::lookAt(world_pos, world_pos + world_forward, up);
 
         glEnable(GL_DEPTH_TEST);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        m_target->bind();
         glClear(GL_DEPTH_BUFFER_BIT);
 
         glDisable(GL_CULL_FACE);

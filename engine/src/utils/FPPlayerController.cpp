@@ -16,13 +16,8 @@ namespace Birdy3d::utils {
 
     void FPPlayerController::start() {
         m_cam = entity->get_component<render::Camera>();
-        if (auto cam_ptr = m_cam.lock()) {
-            glm::vec2 viewport = core::Application::get_viewport_size();
-            cam_ptr->resize(viewport.x, viewport.y);
-        }
         if (auto canvas = core::Application::canvas.lock())
             m_menu = canvas->get_widget("menu");
-        core::Application::event_bus->subscribe(this, &FPPlayerController::on_resize);
         core::Input::set_cursor_hidden(true);
 
         if (auto menu_ptr = m_menu.lock())
@@ -32,7 +27,6 @@ namespace Birdy3d::utils {
     }
 
     void FPPlayerController::cleanup() {
-        core::Application::event_bus->unsubscribe(this, &FPPlayerController::on_resize);
         if (m_menu.lock()) {
             core::Application::event_bus->unsubscribe(this, &FPPlayerController::on_key);
         }
@@ -74,11 +68,6 @@ namespace Birdy3d::utils {
             entity->transform.orientation.x = max_pitch;
         if (entity->transform.orientation.x < -max_pitch)
             entity->transform.orientation.x = -max_pitch;
-    }
-
-    void FPPlayerController::on_resize(const events::WindowResizeEvent& event) {
-        if (auto cam_ptr = m_cam.lock())
-            cam_ptr->resize(event.width, event.height);
     }
 
     void FPPlayerController::on_key(const events::InputKeyEvent& event) {

@@ -22,7 +22,6 @@ namespace Birdy3d::utils {
         std::weak_ptr<render::Camera> m_cam;
         std::weak_ptr<ui::Widget> m_menu;
 
-        void on_resize(const events::WindowResizeEvent& event);
         void on_key(const events::InputKeyEvent& event);
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, FPPlayerController);
