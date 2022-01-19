@@ -66,13 +66,17 @@ namespace Birdy3d::render {
     }
 
     Texture::Texture(int width, int height, Preset preset)
-        : m_width(width)
+        : m_preset(preset)
+        , m_width(width)
         , m_height(height)
         , m_resizable(true) {
         glGenTextures(1, &m_id);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_id);
         switch (preset) {
+        case Preset::NONE:
+            core::Logger::error("Invalid Texture preset");
+            return;
         case Preset::COLOR_RGB:
             m_channels = 3;
             m_internalformat = GL_RGB;

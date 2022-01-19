@@ -61,8 +61,6 @@ namespace Birdy3d::render {
     void PointLight::gen_shadow_map() {
         glm::vec3 world_pos = entity->transform.world_position();
 
-        GLint viewport[4];
-        glGetIntegerv(GL_VIEWPORT, viewport);
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
         glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_map_fbo);
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -86,10 +84,6 @@ namespace Birdy3d::render {
             m->render_depth(*m_depth_shader);
         }
 
-        // reset framebuffer and viewport
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, viewport[2], viewport[3]);
-        glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_BACK);
     }
 

@@ -8,6 +8,7 @@ namespace Birdy3d::render {
     class Texture {
     public:
         enum class Preset {
+            NONE,
             COLOR_RGB,
             COLOR_RGBA,
             COLOR_R_FLOAT,
@@ -26,8 +27,10 @@ namespace Birdy3d::render {
         void resize(int width, int height);
         GLuint id() const;
         bool is_depth() const;
+        Preset preset() const { return m_preset; }
 
     private:
+        Preset m_preset = Preset::NONE;
         int m_width, m_height, m_channels;
         bool m_transparent;
         GLuint m_id;

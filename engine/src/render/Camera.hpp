@@ -13,18 +13,18 @@ namespace Birdy3d::render {
         bool display_normals = false;
 
         Camera();
-        Camera(int width, int height, bool deferred);
+        Camera(std::shared_ptr<Rendertarget> target, bool deferred);
         void start() override;
         void cleanup() override;
         void render();
         void render_outline(const ecs::Entity*);
         void render_collider_wireframe();
-        void resize(int width, int height);
         void serialize(serializer::Adapter&) override;
 
     private:
-        int m_width, m_height;
+        int m_old_target_width, m_old_target_height;
         bool m_deferred_enabled;
+        std::shared_ptr<Rendertarget> m_target;
 
         Rendertarget m_gbuffer;
         Texture *m_gbuffer_position, *m_gbuffer_normal, *m_gbuffer_albedo_spec;

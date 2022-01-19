@@ -7,9 +7,11 @@
 #include "events/InputEvents.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "render/Camera.hpp"
+#include "render/Rendertarget.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"
 #include "ui/console/Commands.hpp"
+#include <memory>
 
 namespace Birdy3d::core {
 
@@ -63,6 +65,7 @@ namespace Birdy3d::core {
         if (!theme(theme_name))
             Logger::critical("Invalid Theme '{}'", theme_name);
         ui::ConsoleCommands::register_all();
+        render::Rendertarget::DEFAULT = std::shared_ptr<render::Rendertarget>(new render::Rendertarget(width, height, 0));
 
         return true;
     }
@@ -114,7 +117,7 @@ namespace Birdy3d::core {
     }
 
     void Application::framebuffer_size_callback(GLFWwindow*, int width, int height) {
-        glViewport(0, 0, width, height);
+        render::Rendertarget::DEFAULT->resize(width, height);
         event_bus->emit<events::WindowResizeEvent>(width, height);
     }
 

@@ -409,8 +409,7 @@ int main() {
         core::Application::scene = scene;
 
         auto player = scene->add_child("Player", glm::vec3(0, 0, 3));
-        auto viewport = core::Application::get_viewport_size();
-        scene->main_camera = player->add_component<render::Camera>(viewport.x, viewport.y, true);
+        scene->main_camera = player->add_component<render::Camera>(render::Rendertarget::DEFAULT, true);
         auto player_controller = player->add_component<utils::FPPlayerController>();
 
         auto flashlight = player->add_child("Flashlight", glm::vec3(0), glm::vec3(0));
