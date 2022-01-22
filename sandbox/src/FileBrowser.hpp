@@ -34,7 +34,7 @@ private:
             , m_path(path) {
             using namespace Birdy3d::ui::literals;
             add_filled_rectangle(0_px, 100_p, Birdy3d::utils::Color::Name::BG_INPUT);
-            m_label = add_text(0_px, path.filename(), Birdy3d::utils::Color::Name::FG, Birdy3d::ui::Placement::BOTTOM_LEFT);
+            m_label = add_text(0_px, path.filename().string(), Birdy3d::utils::Color::Name::FG, Birdy3d::ui::Placement::BOTTOM_LEFT);
             this->options.size = { 100 };
         }
 
@@ -53,7 +53,7 @@ private:
 
     void sync() {
         // Sync directory tree
-        m_tree->root_item().text->text(std::filesystem::canonical(m_root_directory).filename());
+        m_tree->root_item().text->text(std::filesystem::canonical(m_root_directory).filename().string());
         m_tree->root_item().data = m_root_directory;
         sync(m_tree->root_item(), m_root_directory);
 
@@ -96,7 +96,7 @@ private:
                 return std::any_cast<std::filesystem::path>(child_item.data) == child_path;
             });
             if (it == item.children.end()) {
-                std::string name = child_path.filename();
+                std::string name = child_path.filename().string();
                 Birdy3d::ui::TreeItem& new_item = item.add_child(name);
                 new_item.data = child_path;
                 sync(new_item, child_path);
