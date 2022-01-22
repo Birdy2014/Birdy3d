@@ -97,10 +97,11 @@ Inheritance diagram for Birdy3d::ui::Layout:</div>
  <div class="center">
   <img src="classBirdy3d_1_1ui_1_1Layout.png" usemap="#Birdy3d::ui::Layout_map" alt=""/>
   <map id="Birdy3d::ui::Layout_map" name="Birdy3d::ui::Layout_map">
-<area href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html" alt="Birdy3d::ui::AbsoluteLayout" shape="rect" coords="0,56,177,80"/>
-<area href="classBirdy3d_1_1ui_1_1DirectionalLayout.html" alt="Birdy3d::ui::DirectionalLayout" shape="rect" coords="187,56,364,80"/>
-<area href="classBirdy3d_1_1ui_1_1GridLayout.html" alt="Birdy3d::ui::GridLayout" shape="rect" coords="374,56,551,80"/>
-<area href="classBirdy3d_1_1ui_1_1MaxLayout.html" title="Fills the available area with the first child widget." alt="Birdy3d::ui::MaxLayout" shape="rect" coords="561,56,738,80"/>
+<area href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html" alt="Birdy3d::ui::AbsoluteLayout" shape="rect" coords="0,56,189,80"/>
+<area href="classBirdy3d_1_1ui_1_1DirectionalLayout.html" alt="Birdy3d::ui::DirectionalLayout" shape="rect" coords="199,56,388,80"/>
+<area href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html" alt="Birdy3d::ui::DynamicGridLayout" shape="rect" coords="398,56,587,80"/>
+<area href="classBirdy3d_1_1ui_1_1MaxLayout.html" title="Fills the available area with the first child widget." alt="Birdy3d::ui::MaxLayout" shape="rect" coords="597,56,786,80"/>
+<area href="classBirdy3d_1_1ui_1_1StaticGridLayout.html" alt="Birdy3d::ui::StaticGridLayout" shape="rect" coords="796,56,985,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -157,7 +158,7 @@ Public Member Functions</h2></td></tr>
 <p>Sets the position and size of all widgets in the list. </p>
 <p >The size of the widgets is set so that they match the size given in the size parameter. The size parameter can never exceed the value returned by <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size()</a>. An overloaded function should call Widget::arrange(glm::vec2, glm::vec2) on each child widget. </p>
 
-<p>Implemented in <a class="el" href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#ad945ac66a2eba47681b462500ac66759">Birdy3d::ui::AbsoluteLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a76972fc60f14af4fa924b45392f3ff8a">Birdy3d::ui::DirectionalLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1GridLayout.html#aaa4e5af3bfecbb861405b0f1a6410743">Birdy3d::ui::GridLayout</a>, and <a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#adeab75ebe158fe1aa7ffd3da32c58501">Birdy3d::ui::MaxLayout</a>.</p>
+<p>Implemented in <a class="el" href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#ad945ac66a2eba47681b462500ac66759">Birdy3d::ui::AbsoluteLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a76972fc60f14af4fa924b45392f3ff8a">Birdy3d::ui::DirectionalLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1StaticGridLayout.html#ac10a466ccdfc532a03e4f0d6ecf5ab50">Birdy3d::ui::StaticGridLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#ae17d88bab650f3e85d4fb243a33903b4">Birdy3d::ui::DynamicGridLayout</a>, and <a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#adeab75ebe158fe1aa7ffd3da32c58501">Birdy3d::ui::MaxLayout</a>.</p>
 
 </div>
 </div>
@@ -187,7 +188,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Computes the minimal size that the widgets can fit in with the current layout. </p>
 
-<p>Implemented in <a class="el" href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#a0693f33f8ec1ec5e8a1504535e339c5b">Birdy3d::ui::AbsoluteLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a94250201e2b12dc8a983d378d8adf2bb">Birdy3d::ui::DirectionalLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1GridLayout.html#ade34bd7a55f3dc01bc33da4b453d5ba6">Birdy3d::ui::GridLayout</a>, and <a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#a0d947badd1c7ac0230ea648682864346">Birdy3d::ui::MaxLayout</a>.</p>
+<p>Implemented in <a class="el" href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#a0693f33f8ec1ec5e8a1504535e339c5b">Birdy3d::ui::AbsoluteLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DirectionalLayout.html#a94250201e2b12dc8a983d378d8adf2bb">Birdy3d::ui::DirectionalLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1StaticGridLayout.html#aca25107484f7edfc36131a08e93c8e92">Birdy3d::ui::StaticGridLayout</a>, <a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#ae0ef2905f0f0b68dcad00faf6c112bd9">Birdy3d::ui::DynamicGridLayout</a>, and <a class="el" href="classBirdy3d_1_1ui_1_1MaxLayout.html#a0d947badd1c7ac0230ea648682864346">Birdy3d::ui::MaxLayout</a>.</p>
 
 </div>
 </div>

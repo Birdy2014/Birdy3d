@@ -50,8 +50,9 @@ var hierarchy =
     [ "Birdy3d::ui::Layout", "classBirdy3d_1_1ui_1_1Layout.html", [
       [ "Birdy3d::ui::AbsoluteLayout", "classBirdy3d_1_1ui_1_1AbsoluteLayout.html", null ],
       [ "Birdy3d::ui::DirectionalLayout", "classBirdy3d_1_1ui_1_1DirectionalLayout.html", null ],
-      [ "Birdy3d::ui::GridLayout", "classBirdy3d_1_1ui_1_1GridLayout.html", null ],
-      [ "Birdy3d::ui::MaxLayout", "classBirdy3d_1_1ui_1_1MaxLayout.html", null ]
+      [ "Birdy3d::ui::DynamicGridLayout", "classBirdy3d_1_1ui_1_1DynamicGridLayout.html", null ],
+      [ "Birdy3d::ui::MaxLayout", "classBirdy3d_1_1ui_1_1MaxLayout.html", null ],
+      [ "Birdy3d::ui::StaticGridLayout", "classBirdy3d_1_1ui_1_1StaticGridLayout.html", null ]
     ] ],
     [ "Birdy3d::core::Logger", "classBirdy3d_1_1core_1_1Logger.html", null ],
     [ "Birdy3d::render::Material", "classBirdy3d_1_1render_1_1Material.html", null ],

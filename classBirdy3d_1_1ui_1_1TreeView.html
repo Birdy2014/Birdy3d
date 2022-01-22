@@ -249,7 +249,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_resize</b>
 <a class="el" href="classBirdy3d_1_1ui_1_1Text.html">Text</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>add_text</b> (<a class="el" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> pos, std::string text, utils::Color::Name, Placement=Placement::TOP_LEFT, float font_size=0)</td></tr>
 <tr class="separator:a8522fbdf0c735a59f6be40331afb3099 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c7bc38b0c4a89e7ca5b5a5ac6c2d42c inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memTemplParams" colspan="2"><a id="a8c7bc38b0c4a89e7ca5b5a5ac6c2d42c" name="a8c7bc38b0c4a89e7ca5b5a5ac6c2d42c"></a>
-template&lt;class T , typename... Args&gt; </td></tr>
+template&lt;is_layout T, typename... Args&gt; </td></tr>
 <tr class="memitem:a8c7bc38b0c4a89e7ca5b5a5ac6c2d42c inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_layout</b> (Args... args)</td></tr>
 <tr class="separator:a8c7bc38b0c4a89e7ca5b5a5ac6c2d42c inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5b1aa1104bf02eff109defb57ae33a8 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="ab5b1aa1104bf02eff109defb57ae33a8" name="ab5b1aa1104bf02eff109defb57ae33a8"></a>
@@ -262,11 +262,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>add_child</b> (std::s
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_children</b> ()</td></tr>
 <tr class="separator:a4d800feaf05cb0b130abc054e9f8f730 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aecf09d2c16550d8fdf513ad3548347 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memTemplParams" colspan="2"><a id="a7aecf09d2c16550d8fdf513ad3548347" name="a7aecf09d2c16550d8fdf513ad3548347"></a>
-template&lt;class T , typename... Args&gt; </td></tr>
+template&lt;is_widget T, typename... Args&gt; </td></tr>
 <tr class="memitem:a7aecf09d2c16550d8fdf513ad3548347 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_child</b> (<a class="el" href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Options</a> options, Args... args)</td></tr>
 <tr class="separator:a7aecf09d2c16550d8fdf513ad3548347 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac90c8361243f0f79f107bf882596f0d6 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memTemplParams" colspan="2"><a id="ac90c8361243f0f79f107bf882596f0d6" name="ac90c8361243f0f79f107bf882596f0d6"></a>
-template&lt;class T  = Widget&gt; </td></tr>
+template&lt;is_widget T = Widget&gt; </td></tr>
 <tr class="memitem:ac90c8361243f0f79f107bf882596f0d6 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_widget</b> (const std::string &amp;name, bool hidden=true)</td></tr>
 <tr class="separator:ac90c8361243f0f79f107bf882596f0d6 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
