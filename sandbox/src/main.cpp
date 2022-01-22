@@ -1,4 +1,5 @@
 #include "Birdy3d.hpp"
+#include "FileBrowser.hpp"
 #include <filesystem>
 #include <fstream>
 #ifdef BIRDY3D_PLATFORM_LINUX
@@ -144,6 +145,11 @@ int main() {
     area->multiline = true;
     area->append("Hallo Welt\nHallo Welt\naaaaaaaa\naaaaaaa\naaaaaa\naaaaaa");
 
+    auto file_browser_window = canvas->add_child<ui::Window>({ .size = ui::UIVector { 500_px, 200_px } });
+    file_browser_window->set_layout<ui::MaxLayout>();
+    file_browser_window->title("FileBrowser");
+    file_browser_window->add_child<FileBrowser>({}, "./");
+
     auto tree_window = canvas->add_child<ui::Window>({ .size = ui::UIVector(200_px, 300_px) });
     tree_window->set_layout<ui::MaxLayout>();
     tree_window->title("Scene");
@@ -176,7 +182,7 @@ int main() {
         for (const auto& component : core::Application::selected_entity->components()) {
             const auto& c = serializer::Reflector::get_class(component.get());
             auto box = inspector_component_container->add_child<ui::CollapsibleContainer>({ .pos = ui::UIVector(0_px, 5_px), .size = ui::UIVector(100_p, 0_px) }, c.name);
-            box->set_layout<ui::GridLayout>(5);
+            box->set_layout<ui::StaticGridLayout>(5);
             int current_row = 0;
             for (const auto& member : c.m_members) {
                 auto label = box->add_child<ui::Label>({ .placement = ui::Placement::BOTTOM_LEFT, .column = 0, .row = current_row }, member.name);
@@ -306,7 +312,7 @@ int main() {
     inspector_scroll_view->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::DOWN, 10, true);
 
     auto transform_box = inspector_scroll_view->add_child<ui::CollapsibleContainer>({ .pos = ui::UIVector(0_px, 5_px), .size = ui::UIVector(100_p, 0_px) }, "Transform");
-    transform_box->set_layout<ui::GridLayout>(5);
+    transform_box->set_layout<ui::StaticGridLayout>(5);
 
     auto position_label = transform_box->add_child<ui::Label>({ .placement = ui::Placement::CENTER_LEFT, .column = 0, .row = 0 }, "position");
 
