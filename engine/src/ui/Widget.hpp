@@ -17,6 +17,11 @@ namespace Birdy3d::ui {
     class Theme;
     class Triangle;
 
+    template <class T>
+    concept is_widget = std::is_base_of_v<Widget, T>;
+    template <class T>
+    concept is_layout = std::is_base_of_v<Layout, T>;
+
     class Widget {
     public:
         struct Options {
@@ -121,9 +126,8 @@ namespace Birdy3d::ui {
         Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::TOP_LEFT, float font_size = 0);
 
         // Layout
-        template <class T, typename... Args>
+        template <is_layout T, typename... Args>
         void set_layout(Args... args) {
-            static_assert(std::is_base_of<Layout, T>::value);
             m_layout = std::make_unique<T>(args...);
         }
 
@@ -132,17 +136,15 @@ namespace Birdy3d::ui {
         void add_child(std::shared_ptr<Widget>);
         void clear_children();
 
-        template <class T, typename... Args>
+        template <is_widget T, typename... Args>
         std::shared_ptr<T> add_child(Options options, Args... args) {
-            static_assert(std::is_base_of<Widget, T>::value);
             auto widget = std::make_shared<T>(options, args...);
             add_child(widget);
             return std::static_pointer_cast<T>(widget);
         }
 
-        template <class T = Widget>
+        template <is_widget T = Widget>
         std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
-            static_assert(std::is_base_of<Widget, T>::value);
             if (this->options.hidden && !hidden)
                 return nullptr;
             for (const auto& child : m_children) {
