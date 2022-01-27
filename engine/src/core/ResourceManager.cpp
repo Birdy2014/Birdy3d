@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <numeric>
 #include <string>
 
 #if defined(BIRDY3D_PLATFORM_LINUX)
@@ -21,8 +22,8 @@
 namespace Birdy3d::core {
 
     template <>
-    bool ResourceHandle<render::Shader>::load(std::string new_name) {
-        auto val = ResourceManager::get_shader_ptr(new_name);
+    bool ResourceHandle<render::Shader>::load(const ResourceIdentifier& new_id) {
+        auto val = ResourceManager::get_shader_ptr(new_id);
         if (!val)
             return false;
         m_ptr = val;
@@ -30,8 +31,8 @@ namespace Birdy3d::core {
     }
 
     template <>
-    bool ResourceHandle<ui::Theme>::load(std::string new_name) {
-        auto val = ResourceManager::get_theme_ptr(new_name);
+    bool ResourceHandle<ui::Theme>::load(const ResourceIdentifier& new_id) {
+        auto val = ResourceManager::get_theme_ptr(new_id);
         if (!val)
             return false;
         m_ptr = val;
@@ -39,8 +40,8 @@ namespace Birdy3d::core {
     }
 
     template <>
-    bool ResourceHandle<render::Model>::load(std::string new_name) {
-        auto val = ResourceManager::get_model_ptr(new_name);
+    bool ResourceHandle<render::Model>::load(const ResourceIdentifier& new_id) {
+        auto val = ResourceManager::get_model_ptr(new_id);
         if (!val)
             return false;
         m_ptr = val;
@@ -48,15 +49,15 @@ namespace Birdy3d::core {
     }
 
     template <>
-    bool ResourceHandle<render::Texture>::load(std::string new_name) {
-        auto val = ResourceManager::get_texture_ptr(new_name);
+    bool ResourceHandle<render::Texture>::load(const ResourceIdentifier& new_id) {
+        auto val = ResourceManager::get_texture_ptr(new_id);
         if (!val)
             return false;
         m_ptr = val;
         return true;
     }
 
-    ResourceManager::ResourceIdentifier::ResourceIdentifier(std::string full_name) {
+    ResourceIdentifier::ResourceIdentifier(std::string full_name) {
         std::vector<std::string> parts;
         std::size_t last_pos = 0;
         std::size_t current_pos = full_name.find_first_of(':');
@@ -80,11 +81,24 @@ namespace Birdy3d::core {
 
         if (parts.size() >= args_start) {
             for (auto it = parts.begin() + args_start; it != parts.end(); it++) {
-                if (it->empty())
+                if (it->empty()) {
+                    core::Logger::warn("Invalid ResourceIdentifier: '{}'", full_name);
                     continue;
-                args.push_back(*it);
+                }
+                auto equalpos = it->find_first_of('=');
+                if (equalpos == std::string::npos || equalpos == 0) {
+                    core::Logger::warn("Invalid ResourceIdentifier: '{}'", full_name);
+                    continue;
+                }
+                auto key = it->substr(0, equalpos);
+                auto value = it->substr(equalpos + 1);
+                args[key] = value;
             }
         }
+    }
+
+    ResourceIdentifier::operator std::string() const {
+        return source + "::" + name + std::accumulate(args.cbegin(), args.cend(), std::string {}, [](const std::string& sum, const std::pair<std::string, std::string>& element) { return sum + ":" + element.first + "=" + element.second; });
     }
 
     std::unordered_map<std::string, std::shared_ptr<render::Shader>> ResourceManager::m_shaders;
@@ -113,21 +127,16 @@ namespace Birdy3d::core {
         return ResourceHandle<render::Texture>(name);
     }
 
-    std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(const std::string& name) {
+    std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(const ResourceIdentifier& id) {
+        std::string name = static_cast<std::string>(id);
         std::shared_ptr<render::Shader> shader = m_shaders[name];
         if (!shader) {
-            ResourceIdentifier id { name };
             if (id.source != "file" && id.source != "") {
                 Logger::error("invalid shader source '{}'", id.source);
                 return nullptr;
             }
             std::map<std::string, std::string> shader_parameters;
-            for (const auto& arg : id.args) {
-                auto split_index = arg.find_first_of('=');
-                if (!split_index)
-                    continue;
-                auto key = arg.substr(0, split_index);
-                auto value = arg.substr(split_index + 1);
+            for (const auto& [key, value] : id.args) {
                 shader_parameters[key] = value;
             }
             shader = std::make_shared<render::Shader>(id.name, shader_parameters);
@@ -136,10 +145,10 @@ namespace Birdy3d::core {
         return shader;
     }
 
-    std::shared_ptr<ui::Theme> ResourceManager::get_theme_ptr(const std::string& name) {
+    std::shared_ptr<ui::Theme> ResourceManager::get_theme_ptr(const ResourceIdentifier& id) {
+        std::string name = static_cast<std::string>(id);
         std::shared_ptr<ui::Theme> theme = m_themes[name];
         if (!theme) {
-            ResourceIdentifier id { name };
             if (id.source == "file" || id.source == "") {
                 std::string path = get_resource_path(id.name, ResourceType::THEME);
                 if (path.empty())
@@ -160,26 +169,39 @@ namespace Birdy3d::core {
         return theme;
     }
 
-    std::shared_ptr<render::Model> ResourceManager::get_model_ptr(const std::string& name) {
+    std::shared_ptr<render::Model> ResourceManager::get_model_ptr(const ResourceIdentifier& id) {
+        std::string name = static_cast<std::string>(id);
         std::shared_ptr<render::Model> model = m_models[name];
         if (!model) {
-            ResourceIdentifier id { name };
             if (id.source == "file" || id.source == "") {
                 std::string path = get_resource_path(id.name, ResourceType::MODEL);
                 if (path.empty())
                     return nullptr;
                 model = std::make_shared<render::Model>(path);
             } else if (id.source == "primitive") {
-                if (id.name == "plane")
+                if (id.name == "plane") {
                     model = utils::PrimitiveGenerator::generate_plane();
-                else if (id.name == "cube")
+                } else if (id.name == "cube") {
                     model = utils::PrimitiveGenerator::generate_cube();
-                else if (id.name == "uv_sphere" && id.args.size() == 1)
-                    model = utils::PrimitiveGenerator::generate_uv_sphere(std::stoi(id.args[0]));
-                else if (id.name == "ico_sphere" && id.args.size() == 1)
-                    model = utils::PrimitiveGenerator::generate_ico_sphere(std::stoi(id.args[0]));
-                else
+                } else if (id.name == "uv_sphere") {
+                    int resolution = 5;
+                    if (id.args.contains("resolution")) {
+                        int resolution_arg = std::stoi(id.args.at("resolution"));
+                        if (resolution_arg > resolution)
+                            resolution = resolution_arg;
+                    }
+                    model = utils::PrimitiveGenerator::generate_uv_sphere(resolution);
+                } else if (id.name == "ico_sphere") {
+                    int resolution = 5;
+                    if (id.args.contains("resolution")) {
+                        int resolution_arg = std::stoi(id.args.at("resolution"));
+                        if (resolution_arg > resolution)
+                            resolution = resolution_arg;
+                    }
+                    model = utils::PrimitiveGenerator::generate_ico_sphere(resolution);
+                } else {
                     Logger::error("invalid primitive type '{}'", id.name);
+                }
             } else {
                 Logger::error("invalid model source '{}'", id.source);
             }
@@ -188,10 +210,10 @@ namespace Birdy3d::core {
         return model;
     }
 
-    std::shared_ptr<render::Texture> ResourceManager::get_texture_ptr(const std::string& name) {
+    std::shared_ptr<render::Texture> ResourceManager::get_texture_ptr(const ResourceIdentifier& id) {
+        std::string name = static_cast<std::string>(id);
         std::shared_ptr<render::Texture> texture = m_textures[name];
         if (!texture) {
-            ResourceIdentifier id { name };
             if (id.source == "file" || id.source == "") {
                 std::string path = get_resource_path(id.name, ResourceType::TEXTURE);
                 if (path.empty())

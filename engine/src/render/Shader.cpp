@@ -55,7 +55,7 @@ namespace Birdy3d::render {
     Shader::PreprocessedSources Shader::preprocess_file(std::string name) {
         PreprocessedSources preprocessed_file;
 
-        std::string path = core::ResourceManager::get_resource_path(name, core::ResourceManager::ResourceType::SHADER);
+        std::string path = core::ResourceManager::get_resource_path(name, core::ResourceType::SHADER);
         if (path.empty())
             return preprocessed_file;
 
