@@ -73,7 +73,7 @@ var hierarchy =
     [ "Birdy3d::serializer::Reflector", "classBirdy3d_1_1serializer_1_1Reflector.html", null ],
     [ "Birdy3d::render::Rendertarget", "classBirdy3d_1_1render_1_1Rendertarget.html", null ],
     [ "Birdy3d::core::ResourceHandle< T >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
-    [ "Birdy3d::core::ResourceManager::ResourceIdentifier", "classBirdy3d_1_1core_1_1ResourceManager_1_1ResourceIdentifier.html", null ],
+    [ "Birdy3d::core::ResourceIdentifier", "classBirdy3d_1_1core_1_1ResourceIdentifier.html", null ],
     [ "Birdy3d::core::ResourceManager", "classBirdy3d_1_1core_1_1ResourceManager.html", null ],
     [ "Birdy3d::serializer::Serializer", "classBirdy3d_1_1serializer_1_1Serializer.html", null ],
     [ "Birdy3d::render::Shader", "classBirdy3d_1_1render_1_1Shader.html", null ],

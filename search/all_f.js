@@ -8,7 +8,7 @@ var searchData=
   ['register_5fcommand_5',['register_command',['../classBirdy3d_1_1ui_1_1Console.html#aa5ecc4e042fb0ec5f383b16c2d644ea4',1,'Birdy3d::ui::Console']]],
   ['rendertarget_6',['Rendertarget',['../classBirdy3d_1_1render_1_1Rendertarget.html',1,'Birdy3d::render']]],
   ['resourcehandle_7',['ResourceHandle',['../classBirdy3d_1_1core_1_1ResourceHandle.html',1,'Birdy3d::core']]],
-  ['resourceidentifier_8',['ResourceIdentifier',['../classBirdy3d_1_1core_1_1ResourceManager_1_1ResourceIdentifier.html',1,'Birdy3d::core::ResourceManager']]],
+  ['resourceidentifier_8',['ResourceIdentifier',['../classBirdy3d_1_1core_1_1ResourceIdentifier.html',1,'Birdy3d::core']]],
   ['resourcemanager_9',['ResourceManager',['../classBirdy3d_1_1core_1_1ResourceManager.html',1,'Birdy3d::core']]],
   ['row_10',['row',['../structBirdy3d_1_1ui_1_1Widget_1_1Options.html#a33a7842432766b56a39e92478380d55e',1,'Birdy3d::ui::Widget::Options']]]
 ];

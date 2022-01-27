@@ -6,6 +6,6 @@ var searchData=
   ['reflector_3',['Reflector',['../classBirdy3d_1_1serializer_1_1Reflector.html',1,'Birdy3d::serializer']]],
   ['rendertarget_4',['Rendertarget',['../classBirdy3d_1_1render_1_1Rendertarget.html',1,'Birdy3d::render']]],
   ['resourcehandle_5',['ResourceHandle',['../classBirdy3d_1_1core_1_1ResourceHandle.html',1,'Birdy3d::core']]],
-  ['resourceidentifier_6',['ResourceIdentifier',['../classBirdy3d_1_1core_1_1ResourceManager_1_1ResourceIdentifier.html',1,'Birdy3d::core::ResourceManager']]],
+  ['resourceidentifier_6',['ResourceIdentifier',['../classBirdy3d_1_1core_1_1ResourceIdentifier.html',1,'Birdy3d::core']]],
   ['resourcemanager_7',['ResourceManager',['../classBirdy3d_1_1core_1_1ResourceManager.html',1,'Birdy3d::core']]]
 ];
