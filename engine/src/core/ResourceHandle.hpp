@@ -25,6 +25,7 @@ namespace Birdy3d::core {
 
         ResourceIdentifier() = default;
         ResourceIdentifier(std::string);
+        ResourceIdentifier(const char* str);
         explicit operator std::string() const;
     };
 
