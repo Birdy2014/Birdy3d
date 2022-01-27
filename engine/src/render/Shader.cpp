@@ -11,6 +11,13 @@ namespace Birdy3d::render {
         : m_name(name)
         , m_params(params) {
         PreprocessedSources shader_sources = preprocess_file(name);
+
+        for (const auto& param : m_params) {
+            auto it = std::find(m_valid_param_names.cbegin(), m_valid_param_names.cend(), param.first);
+            if (it == m_valid_param_names.cend())
+                core::Logger::warn("Shader '{}': invalid parameter '{}'", name, param.first);
+        }
+
         if (!shader_sources.vertex_shader.empty())
             shader_sources.vertex_shader.insert(0, "#version 330 core\n");
         if (!shader_sources.geometry_shader.empty())
@@ -95,6 +102,7 @@ namespace Birdy3d::render {
 
             if (std::regex_match(line, matches, regex_parameter_empty)) {
                 std::string parameter_name = matches[1];
+                m_valid_param_names.insert(parameter_name);
                 *current_shader_source += "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
                 continue;
             }
@@ -102,6 +110,7 @@ namespace Birdy3d::render {
             if (std::regex_match(line, matches, regex_parameter_default)) {
                 std::string parameter_name = matches[1];
                 std::string parameter_default = matches[2];
+                m_valid_param_names.insert(parameter_name);
                 if (m_params.count(parameter_name) > 0)
                     *current_shader_source += "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
                 else

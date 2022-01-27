@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include <set>
 
 namespace Birdy3d::render {
 
@@ -45,6 +46,7 @@ namespace Birdy3d::render {
 
         std::string m_name;
         std::map<std::string, std::string> m_params;
+        std::set<std::string> m_valid_param_names;
         GLuint m_id;
 
         bool check_compile_errors(GLuint shader, GLenum type);
