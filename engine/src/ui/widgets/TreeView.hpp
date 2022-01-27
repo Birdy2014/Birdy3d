@@ -37,6 +37,8 @@ namespace Birdy3d::ui {
      */
     class TreeView : public Widget {
     public:
+        bool show_root_item = true;
+
         TreeView(Options);
         virtual void draw() override;
         virtual glm::vec2 minimal_size() override;

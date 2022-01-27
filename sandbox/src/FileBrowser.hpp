@@ -12,6 +12,7 @@ public:
         using namespace Birdy3d::ui::literals;
         set_layout<Birdy3d::ui::DirectionalLayout>(Birdy3d::ui::DirectionalLayout::Direction::RIGHT, true);
         m_tree = add_child<Birdy3d::ui::TreeView>({ .size = { 50_px, 100_p }, .weight = 0.4 });
+        m_tree->show_root_item = false;
         auto& builtin_root = m_tree->root_item().add_child("builtin");
         builtin_root.data = std::filesystem::path("_builtin");
         auto& builtin_models = builtin_root.add_child("models");
