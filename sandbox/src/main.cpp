@@ -1,5 +1,6 @@
 #include "Birdy3d.hpp"
 #include "FileBrowser.hpp"
+#include "ResourceInput.hpp"
 #include <filesystem>
 #include <fstream>
 #ifdef BIRDY3D_PLATFORM_LINUX
@@ -212,29 +213,13 @@ int main() {
                         *(float*)member.value = number_input.lock()->value();
                     });
                 } else if (member.type == typeid(core::ResourceHandle<render::Shader>)) {
-                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
-                    text_field.lock()->text(*(core::ResourceHandle<render::Shader>*)member.value);
-                    text_field.lock()->add_callback("change", [text_field, member](std::any) {
-                        *(core::ResourceHandle<render::Shader>*)member.value = text_field.lock()->text();
-                    });
+                    box->add_child<ResourceInput<render::Shader>>(widget_options, static_cast<core::ResourceHandle<render::Shader>*>(member.value));
                 } else if (member.type == typeid(core::ResourceHandle<ui::Theme>)) {
-                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
-                    text_field.lock()->text(*(core::ResourceHandle<ui::Theme>*)member.value);
-                    text_field.lock()->add_callback("change", [text_field, member](std::any) {
-                        *(core::ResourceHandle<ui::Theme>*)member.value = text_field.lock()->text();
-                    });
+                    box->add_child<ResourceInput<ui::Theme>>(widget_options, static_cast<core::ResourceHandle<ui::Theme>*>(member.value));
                 } else if (member.type == typeid(core::ResourceHandle<render::Model>)) {
-                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
-                    text_field.lock()->text(*(core::ResourceHandle<render::Model>*)member.value);
-                    text_field.lock()->add_callback("change", [text_field, member](std::any) {
-                        *(core::ResourceHandle<render::Model>*)member.value = text_field.lock()->text();
-                    });
+                    box->add_child<ResourceInput<render::Model>>(widget_options, static_cast<core::ResourceHandle<render::Model>*>(member.value));
                 } else if (member.type == typeid(core::ResourceHandle<render::Texture>)) {
-                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
-                    text_field.lock()->text(*(core::ResourceHandle<render::Texture>*)member.value);
-                    text_field.lock()->add_callback("change", [text_field, member](std::any) {
-                        *(core::ResourceHandle<render::Texture>*)member.value = text_field.lock()->text();
-                    });
+                    box->add_child<ResourceInput<render::Texture>>(widget_options, static_cast<core::ResourceHandle<render::Texture>*>(member.value));
                 } else {
                     std::cout << member.name << '\n';
                 }

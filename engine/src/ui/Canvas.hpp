@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Application.hpp"
+#include "core/Input.hpp"
 #include "events/EventBus.hpp"
 #include "ui/AbsoluteLayout.hpp"
 #include "ui/Container.hpp"
@@ -87,11 +88,22 @@ namespace Birdy3d::ui {
             m_cursor_grabbed = false;
         }
 
+        void start_drag(std::any data) {
+            set_focused(this);
+            m_cursor_grabbed = true;
+            m_dragging = true;
+            m_dragging_value = data;
+            core::Input::set_cursor(core::Input::CURSOR_HAND);
+        }
+
     private:
         Widget* m_hovering_widget = nullptr;
         Widget* m_focused_widget = nullptr;
         Widget* m_last_focused_widget = nullptr;
         bool m_cursor_grabbed = false;
+
+        bool m_dragging = false;
+        std::any m_dragging_value;
 
         void on_scroll_raw(const events::InputScrollEvent& event) {
             if (m_cursor_grabbed) {
@@ -103,6 +115,17 @@ namespace Birdy3d::ui {
         }
 
         void on_click_raw(const events::InputClickEvent& event) {
+            if (m_dragging) {
+                if (event.action == GLFW_RELEASE) {
+                    m_cursor_grabbed = false;
+                    m_dragging = false;
+                    Widget::update_hover(true);
+                    m_hovering_widget->on_drop(m_dragging_value);
+                    core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
+                }
+                return;
+            }
+
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
                     m_focused_widget->on_click(event);
