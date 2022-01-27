@@ -236,7 +236,6 @@ namespace Birdy3d::render {
         render_quad();
 
         // 4. lighting pass
-        glClear(GL_COLOR_BUFFER_BIT);
         m_gbuffer_position->bind(0);
         m_gbuffer_normal->bind(1);
         m_gbuffer_albedo_spec->bind(2);
@@ -249,6 +248,7 @@ namespace Birdy3d::render {
             m_spotlights[i]->use(*m_deferred_light_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
 
         m_target->bind();
+        glClear(GL_COLOR_BUFFER_BIT);
         m_deferred_light_shader->set_vec3("viewPos", world_pos);
         render_quad();
     }
