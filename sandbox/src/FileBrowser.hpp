@@ -12,6 +12,11 @@ public:
         using namespace Birdy3d::ui::literals;
         set_layout<Birdy3d::ui::DirectionalLayout>(Birdy3d::ui::DirectionalLayout::Direction::RIGHT, true);
         m_tree = add_child<Birdy3d::ui::TreeView>({ .size = { 50_px, 100_p }, .weight = 0.4 });
+        auto& builtin_root = m_tree->root_item().add_child("builtin");
+        builtin_root.data = std::filesystem::path("_builtin");
+        auto& builtin_models = builtin_root.add_child("models");
+        builtin_models.data = std::filesystem::path("_builtin_models");
+        m_root_directory_item = &m_tree->root_item().add_child("");
         m_file_container = add_child<Birdy3d::ui::Container>({});
         m_file_container->set_layout<Birdy3d::ui::DynamicGridLayout>(5);
         m_tree->add_callback("select", [this](std::any data) {
@@ -52,15 +57,26 @@ private:
     std::filesystem::path m_current_directory;
     std::shared_ptr<Birdy3d::ui::TreeView> m_tree;
     std::shared_ptr<Birdy3d::ui::Container> m_file_container;
+    Birdy3d::ui::TreeItem* m_root_directory_item;
 
     void sync() {
         // Sync directory tree
-        m_tree->root_item().text->text(std::filesystem::canonical(m_root_directory).filename().string());
-        m_tree->root_item().data = m_root_directory;
-        sync(m_tree->root_item(), m_root_directory);
+        m_root_directory_item->text->text(std::filesystem::canonical(m_root_directory).filename().string());
+        m_root_directory_item->data = m_root_directory;
+        sync(*m_root_directory_item, m_root_directory);
 
         // Sync files
         m_file_container->clear_children();
+
+        if (m_current_directory.string().starts_with("_builtin")) {
+            if (m_current_directory.string() == "_builtin_models") {
+                m_file_container->add_child<FileItem>({}, "primitive::plane");
+                m_file_container->add_child<FileItem>({}, "primitive::cube");
+                m_file_container->add_child<FileItem>({}, "primitive::uv_sphere:resolution=20");
+            }
+            return;
+        }
+
         for (const auto& entry : std::filesystem::directory_iterator { m_current_directory }) {
             if (entry.is_directory())
                 continue;

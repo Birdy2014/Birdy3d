@@ -97,6 +97,9 @@ namespace Birdy3d::core {
         }
     }
 
+    ResourceIdentifier::ResourceIdentifier(const char* full_name)
+        : ResourceIdentifier(std::string { full_name }) {};
+
     ResourceIdentifier::operator std::string() const {
         return source + "::" + name + std::accumulate(args.cbegin(), args.cend(), std::string {}, [](const std::string& sum, const std::pair<std::string, std::string>& element) { return sum + ":" + element.first + "=" + element.second; });
     }
