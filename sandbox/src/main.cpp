@@ -447,7 +447,7 @@ int main() {
 
         // Spheres
         auto sphere1 = scene->add_child("Sphere1", glm::vec3(-3.0f, 1.0f, -1.0f), glm::vec3(0), glm::vec3(0.5));
-        sphere1->add_component<render::ModelComponent>("primitive::uv_sphere:20", nullptr);
+        sphere1->add_component<render::ModelComponent>("primitive::uv_sphere:resolution=20", nullptr);
         sphere1->add_component<physics::Collider>(physics::GenerationMode::HULL_MODEL);
         sphere1->add_component<TestComponent>();
         sphere1->add_component<MoveUpDown>(0.4, 1, 5);

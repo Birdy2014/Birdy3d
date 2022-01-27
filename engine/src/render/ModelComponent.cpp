@@ -34,7 +34,7 @@ namespace Birdy3d::render {
     }
 
     void ModelComponent::model(const std::string& name) {
-        m_model.load(name);
+        m_model = name;
     }
 
     BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, ModelComponent);

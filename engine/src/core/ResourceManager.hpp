@@ -11,24 +11,6 @@ namespace Birdy3d::core {
 
     class ResourceManager {
     public:
-        enum class ResourceType {
-            SHADER,
-            TEXTURE,
-            THEME,
-            MODEL,
-            FONT
-        };
-
-        class ResourceIdentifier {
-        public:
-            ResourceType type;
-            std::string source;
-            std::string name;
-            std::vector<std::string> args;
-
-            ResourceIdentifier(std::string);
-        };
-
         static ResourceHandle<render::Shader> get_shader(const std::string& name);
         static ResourceHandle<ui::Theme> get_theme(const std::string& name);
         static ResourceHandle<render::Model> get_model(const std::string& name);
@@ -63,10 +45,10 @@ namespace Birdy3d::core {
         static std::unordered_map<std::string, std::shared_ptr<render::Model>> m_models;
         static std::unordered_map<std::string, std::shared_ptr<render::Texture>> m_textures;
 
-        static std::shared_ptr<render::Shader> get_shader_ptr(const std::string& name);
-        static std::shared_ptr<ui::Theme> get_theme_ptr(const std::string& name);
-        static std::shared_ptr<render::Model> get_model_ptr(const std::string& name);
-        static std::shared_ptr<render::Texture> get_texture_ptr(const std::string& name);
+        static std::shared_ptr<render::Shader> get_shader_ptr(const ResourceIdentifier&);
+        static std::shared_ptr<ui::Theme> get_theme_ptr(const ResourceIdentifier&);
+        static std::shared_ptr<render::Model> get_model_ptr(const ResourceIdentifier&);
+        static std::shared_ptr<render::Texture> get_texture_ptr(const ResourceIdentifier&);
 
         static std::string get_executable_dir();
     };

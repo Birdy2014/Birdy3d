@@ -22,7 +22,7 @@ namespace Birdy3d::ui {
 
     TextRenderer::TextRenderer(Theme& theme)
         : m_theme(theme) {
-        std::string path = core::ResourceManager::get_resource_path(theme.font(), core::ResourceManager::ResourceType::FONT);
+        std::string path = core::ResourceManager::get_resource_path(theme.font(), core::ResourceType::FONT);
         m_font_size = theme.font_size();
         m_ft = (FT_Library*)malloc(sizeof(FT_Library));
         m_face = (FT_Face*)malloc(sizeof(FT_Face));

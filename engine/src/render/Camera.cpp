@@ -124,14 +124,19 @@ namespace Birdy3d::render {
         entity->scene->get_components<PointLight>(m_pointlights, false, true);
         entity->scene->get_components<Spotlight>(m_spotlights, false, true);
         if (m_dirlights.size() != m_dirlight_amount || m_pointlights.size() != m_pointlight_amount || m_spotlights.size() != m_spotlight_amount) {
-            auto shader_options_string = "DIRECTIONAL_LIGHTS_AMOUNT=" + std::to_string(m_dirlights.size()) + ":POINTLIGHTS_AMOUNT=" + std::to_string(m_pointlights.size()) + ":SPOTLIGHTS_AMOUNT=" + std::to_string(m_spotlights.size());
-            m_deferred_light_shader = "file::deferred_lighting.glsl:" + shader_options_string;
+            m_deferred_light_shader.arg("DIRECTIONAL_LIGHTS_AMOUNT", m_dirlights.size());
+            m_deferred_light_shader.arg("POINTLIGHTS_AMOUNT", m_pointlights.size());
+            m_deferred_light_shader.arg("SPOTLIGHTS_AMOUNT", m_spotlights.size());
+            m_deferred_light_shader.load();
             m_deferred_light_shader->use();
             m_deferred_light_shader->set_int("gPosition", 0);
             m_deferred_light_shader->set_int("gNormal", 1);
             m_deferred_light_shader->set_int("gAlbedoSpec", 2);
             m_deferred_light_shader->set_int("ssao", 3);
-            m_forward_shader = "file::forward_lighting.glsl:" + shader_options_string;
+            m_forward_shader.arg("DIRECTIONAL_LIGHTS_AMOUNT", m_dirlights.size());
+            m_forward_shader.arg("POINTLIGHTS_AMOUNT", m_pointlights.size());
+            m_forward_shader.arg("SPOTLIGHTS_AMOUNT", m_spotlights.size());
+            m_forward_shader.load();
             m_dirlight_amount = m_dirlights.size();
             m_pointlight_amount = m_pointlights.size();
             m_spotlight_amount = m_spotlights.size();
