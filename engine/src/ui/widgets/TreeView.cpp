@@ -47,7 +47,7 @@ namespace Birdy3d::ui {
             }
             if (!row.second.children.empty()) {
                 row.second.m_collapse_button->position(glm::vec2(row.first * m_indent_size + m_offset_x_left + m_offset_x_button, offset_y + (core::Application::theme().line_height() - row.second.m_collapse_button->size().x) / 2.0f));
-                row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 30.0f : 60.0f));
+                row.second.m_collapse_button->rotation(glm::radians(row.second.collapsed ? 30.0f : 0.0f));
                 row.second.m_collapse_button->draw(m_move);
             }
             row.second.text->position(UIVector(row.first * m_indent_size + m_offset_x_left, offset_y));
