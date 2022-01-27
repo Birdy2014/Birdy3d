@@ -29,20 +29,22 @@ public:
 private:
     class FileItem : public Birdy3d::ui::Widget {
     public:
-        FileItem(Birdy3d::ui::Widget::Options options, std::filesystem::path path)
+        FileItem(Birdy3d::ui::Widget::Options options, Birdy3d::core::ResourceIdentifier id)
             : Birdy3d::ui::Widget(options)
-            , m_path(path) {
+            , m_resource_id(id) {
             using namespace Birdy3d::ui::literals;
             add_filled_rectangle(0_px, 100_p, Birdy3d::utils::Color::Name::BG_INPUT);
-            m_label = add_text(0_px, path.filename().string(), Birdy3d::utils::Color::Name::FG, Birdy3d::ui::Placement::BOTTOM_LEFT);
+            m_label = add_text(0_px, std::filesystem::path(id.name).filename().string(), Birdy3d::utils::Color::Name::FG, Birdy3d::ui::Placement::BOTTOM_LEFT);
             this->options.size = { 100 };
         }
 
     private:
-        std::filesystem::path m_path;
+        Birdy3d::core::ResourceIdentifier m_resource_id;
         Birdy3d::ui::Text* m_label;
 
         void on_click(const Birdy3d::events::InputClickEvent& event) override {
+            if (event.button == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_PRESS)
+                canvas->start_drag(m_resource_id);
         }
     };
 
@@ -62,7 +64,7 @@ private:
         for (const auto& entry : std::filesystem::directory_iterator { m_current_directory }) {
             if (entry.is_directory())
                 continue;
-            m_file_container->add_child<FileItem>({}, entry.path());
+            m_file_container->add_child<FileItem>({}, "file::" + entry.path().string());
         }
     }
 

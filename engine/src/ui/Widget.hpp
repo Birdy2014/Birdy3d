@@ -117,6 +117,7 @@ namespace Birdy3d::ui {
         virtual void on_focus() { }
         virtual void on_focus_lost() { }
         virtual void on_resize() { }
+        virtual void on_drop(const std::any&) { }
 
         // Shapes
         Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
