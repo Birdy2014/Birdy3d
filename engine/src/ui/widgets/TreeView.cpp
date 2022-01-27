@@ -103,7 +103,13 @@ namespace Birdy3d::ui {
 
     void TreeView::update_flat_tree_list() {
         m_flat_tree_list.clear();
-        update_flat_tree_list(m_root_item, 0);
+        if (show_root_item) {
+            update_flat_tree_list(m_root_item, 0);
+        } else {
+            for (TreeItem& child : m_root_item.children) {
+                update_flat_tree_list(child, 0);
+            }
+        }
     }
 
     void TreeView::update_flat_tree_list(TreeItem& item, int indent) {
