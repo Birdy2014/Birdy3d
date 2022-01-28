@@ -10,6 +10,8 @@ namespace Birdy3d::ui {
         ScrollContainer(Options options)
             : Scrollable(options) { }
 
+        using Scrollable::m_horizontal_scroll_enabled;
+        using Scrollable::m_vertical_scroll_enabled;
         using Widget::add_child;
         using Widget::clear_children;
         using Widget::get_widget;

@@ -148,4 +148,38 @@ namespace Birdy3d::ui {
         return {};
     }
 
+    glm::vec2 DynamicGridLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children, float suggested_size, Layout::Direction direction) const {
+        if (direction == Layout::Direction::HORIZONTAL) {
+            glm::vec2 offset { 0 };
+            float row_height = 0;
+            for (const auto& child : children) {
+                auto child_size = child->minimal_size();
+                if (offset.x + child_size.x > suggested_size) {
+                    offset.y += row_height + m_gap;
+                    row_height = 0;
+                    offset.x = 0;
+                }
+                offset.x += child_size.x + m_gap;
+                if (row_height < child_size.y)
+                    row_height = child_size.y;
+            }
+            offset.y += row_height;
+            return offset;
+        } else {
+            // TODO: Vertical
+            BIRDY3D_TODO
+        }
+        return {};
+    }
+
+    float DynamicGridLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children, Layout::Direction direction) const {
+        float minsize = 0;
+        for (const auto& child : children) {
+            auto direction_size = direction == Layout::Direction::HORIZONTAL ? child->minimal_size().x : child->minimal_size().y;
+            if (direction_size > minsize)
+                minsize = direction_size;
+        }
+        return minsize;
+    }
+
 }

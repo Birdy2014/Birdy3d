@@ -10,15 +10,18 @@ public:
         , m_root_directory(root_directory)
         , m_current_directory(root_directory) {
         using namespace Birdy3d::ui::literals;
-        set_layout<Birdy3d::ui::DirectionalLayout>(Birdy3d::ui::DirectionalLayout::Direction::RIGHT, true);
-        m_tree = add_child<Birdy3d::ui::TreeView>({ .size = { 50_px, 100_p }, .weight = 0.4 });
+        set_layout<Birdy3d::ui::DirectionalLayout>(Birdy3d::ui::DirectionalLayout::Direction::RIGHT, 10);
+        auto tree_scroll_container = add_child<Birdy3d::ui::ScrollContainer>({ .size = { 50_px, 100_p }, .weight = 0.4 });
+        tree_scroll_container->set_layout<Birdy3d::ui::MaxLayout>();
+        m_tree = tree_scroll_container->add_child<Birdy3d::ui::TreeView>({});
         m_tree->show_root_item = false;
         auto& builtin_root = m_tree->root_item().add_child("builtin");
         builtin_root.data = std::filesystem::path("_builtin");
         auto& builtin_models = builtin_root.add_child("models");
         builtin_models.data = std::filesystem::path("_builtin_models");
         m_root_directory_item = &m_tree->root_item().add_child("");
-        m_file_container = add_child<Birdy3d::ui::Container>({});
+        m_file_container = add_child<Birdy3d::ui::ScrollContainer>({});
+        m_file_container->m_horizontal_scroll_enabled = false;
         m_file_container->set_layout<Birdy3d::ui::DynamicGridLayout>(5);
         m_tree->add_callback("select", [this](std::any data) {
             if (data.type() != typeid(Birdy3d::ui::TreeItem*))
@@ -57,7 +60,7 @@ private:
     std::filesystem::path m_root_directory;
     std::filesystem::path m_current_directory;
     std::shared_ptr<Birdy3d::ui::TreeView> m_tree;
-    std::shared_ptr<Birdy3d::ui::Container> m_file_container;
+    std::shared_ptr<Birdy3d::ui::ScrollContainer> m_file_container;
     Birdy3d::ui::TreeItem* m_root_directory_item;
 
     void sync() {

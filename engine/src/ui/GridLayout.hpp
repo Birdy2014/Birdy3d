@@ -19,6 +19,8 @@ namespace Birdy3d::ui {
         DynamicGridLayout(int gap = 0);
         void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const override;
         glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override;
+        glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children, float suggested_size, Direction) const override;
+        float minimal_size(const std::list<std::shared_ptr<Widget>>& children, Direction) const override;
 
     private:
         int m_gap;
