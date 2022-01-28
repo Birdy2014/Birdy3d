@@ -194,6 +194,12 @@ int main() {
                     text_field.lock()->add_callback("change", [text_field, member](std::any) {
                         *(std::string*)member.value = text_field.lock()->text();
                     });
+                } else if (member.type == typeid(utils::Color)) {
+                    std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
+                    text_field.lock()->text(reinterpret_cast<utils::Color*>(member.value)->to_string());
+                    text_field.lock()->add_callback("change", [text_field, member](std::any) {
+                        *(utils::Color*)member.value = text_field.lock()->text();
+                    });
                 } else if (member.type == typeid(bool)) {
                     std::weak_ptr<ui::CheckBox> checkbox = box->add_child<ui::CheckBox>(widget_options, member.name);
                     checkbox.lock()->checked = *(bool*)member.value;
@@ -404,7 +410,7 @@ int main() {
         auto player_controller = player->add_component<utils::FPPlayerController>();
 
         auto flashlight = player->add_child("Flashlight", glm::vec3(0), glm::vec3(0));
-        flashlight->add_component<render::Spotlight>(glm::vec3(0), glm::vec3(1), glm::radians(30.0f), glm::radians(40.0f), 0.08f, 0.02f, false);
+        flashlight->add_component<render::Spotlight>(utils::Color::WHITE, 0.0f, 0.8f, 0.08f, 0.02f, glm::radians(30.0f), glm::radians(40.0f), false);
         flashlight->hidden = true;
 
         player_controller->flashlight = flashlight;
@@ -439,12 +445,12 @@ int main() {
 
         // Light
         auto dir_light = scene->add_child("DirLight", glm::vec3(0.2f, 3.0f, 0.0f), glm::vec3(glm::radians(-45.0f), glm::radians(-45.0f), glm::radians(45.0f)));
-        dir_light->add_component<render::DirectionalLight>(glm::vec3(0.2f), glm::vec3(0.7f));
+        dir_light->add_component<render::DirectionalLight>(utils::Color::WHITE, 0.1f, 0.6f);
         auto point_light = scene->add_child("Point Light", glm::vec3(2.0f, 1.5f, 4.0f));
-        point_light->add_component<render::PointLight>(glm::vec3(0.2f), glm::vec3(1.0f), 0.09f, 0.032f);
+        point_light->add_component<render::PointLight>(utils::Color::WHITE, 0.2f, 0.9f, 0.09f, 0.032f);
         point_light->add_component<MoveUpDown>(0.1, 1, 3);
         auto spot_light = scene->add_child("Spotlight", glm::vec3(-6.0f, 3.0f, -2.0f), glm::vec3(glm::radians(-90.0f), 0, 0));
-        spot_light->add_component<render::Spotlight>(glm::vec3(0), glm::vec3(1.0f), glm::radians(40.0f), glm::radians(50.0f), 0.09f, 0.032f);
+        spot_light->add_component<render::Spotlight>("#ee9955", 0.0f, 1.0f, 0.09f, 0.032f, glm::radians(40.0f), glm::radians(50.0f));
 
         core::Application::event_bus->subscribe<events::InputKeyEvent>([point_light](const events::InputKeyEvent&) {
             point_light->hidden = !point_light->hidden;

@@ -9,9 +9,10 @@
 
 namespace Birdy3d::render {
 
-    PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, float linear, float quadratic, bool shadow_enabled)
-        : ambient(ambient)
-        , diffuse(diffuse)
+    PointLight::PointLight(utils::Color color, float intensity_ambient, float intensity_diffuse, float linear, float quadratic, bool shadow_enabled)
+        : color(color)
+        , intensity_ambient(intensity_ambient)
+        , intensity_diffuse(intensity_diffuse)
         , linear(linear)
         , quadratic(quadratic)
         , shadow_enabled(shadow_enabled) { }
@@ -39,23 +40,23 @@ namespace Birdy3d::render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void PointLight::use(const Shader& lightShader, int id, int textureid) {
+    void PointLight::use(const Shader& light_shader, int id, int textureid) {
         if (!m_shadow_map_updated) {
             gen_shadow_map();
             m_shadow_map_updated = true;
         }
         std::string name = "pointLights[" + std::to_string(id) + "].";
-        lightShader.use();
-        lightShader.set_bool(name + "shadow_enabled", shadow_enabled);
-        lightShader.set_vec3(name + "position", entity->transform.world_position());
-        lightShader.set_vec3(name + "ambient", ambient);
-        lightShader.set_vec3(name + "diffuse", diffuse);
-        lightShader.set_float(name + "linear", linear);
-        lightShader.set_float(name + "quadratic", quadratic);
+        light_shader.use();
+        light_shader.set_bool(name + "shadow_enabled", shadow_enabled);
+        light_shader.set_vec3(name + "position", entity->transform.world_position());
+        light_shader.set_vec3(name + "ambient", color.value * intensity_ambient);
+        light_shader.set_vec3(name + "diffuse", color.value * intensity_diffuse);
+        light_shader.set_float(name + "linear", linear);
+        light_shader.set_float(name + "quadratic", quadratic);
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_shadow_map);
-        lightShader.set_int(name + "shadowMap", textureid);
-        lightShader.set_float(name + "far", m_far);
+        light_shader.set_int(name + "shadowMap", textureid);
+        light_shader.set_float(name + "far", m_far);
     }
 
     void PointLight::gen_shadow_map() {
@@ -98,8 +99,9 @@ namespace Birdy3d::render {
 
     void PointLight::serialize(serializer::Adapter& adapter) {
         adapter("shadow_enabled", shadow_enabled);
-        adapter("ambient", ambient);
-        adapter("diffuse", diffuse);
+        adapter("color", color);
+        adapter("intensity_ambient", intensity_ambient);
+        adapter("intensity_diffuse", intensity_diffuse);
         adapter("linear", linear);
         adapter("quadratic", quadratic);
         adapter("far", m_far);

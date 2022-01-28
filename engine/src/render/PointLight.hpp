@@ -3,21 +3,23 @@
 #include "core/ResourceHandle.hpp"
 #include "ecs/Component.hpp"
 #include "render/Shader.hpp"
+#include "utils/Color.hpp"
 
 namespace Birdy3d::render {
 
     class PointLight : public ecs::Component {
     public:
-        glm::vec3 ambient;
-        glm::vec3 diffuse;
+        utils::Color color;
+        float intensity_ambient;
+        float intensity_diffuse;
         float linear;
         float quadratic;
         bool shadow_enabled;
 
-        PointLight(glm::vec3 ambient = glm::vec3(0), glm::vec3 diffuse = glm::vec3(0), float linear = 0, float quadratic = 0, bool shadow_enabled = true);
+        PointLight(utils::Color color = utils::Color::WHITE, float intensity_ambient = 1, float intensity_diffuse = 1, float linear = 0, float quadratic = 0, bool shadow_enabled = true);
         void setup_shadow_map();
         void gen_shadow_map();
-        void use(const Shader& lightShader, int id, int textureid);
+        void use(const Shader& light_shader, int id, int textureid);
         void start() override;
         void update() override;
         void serialize(serializer::Adapter&) override;

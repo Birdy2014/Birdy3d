@@ -10,9 +10,10 @@
 
 namespace Birdy3d::render {
 
-    DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, bool shadow_enabled)
-        : ambient(ambient)
-        , diffuse(diffuse)
+    DirectionalLight::DirectionalLight(utils::Color color, float intensity_ambient, float intensity_diffuse, bool shadow_enabled)
+        : color(color)
+        , intensity_ambient(intensity_ambient)
+        , intensity_diffuse(intensity_diffuse)
         , shadow_enabled(shadow_enabled)
         , m_shadow_rendertarget(SHADOW_WIDTH, SHADOW_HEIGHT) {
         m_cam_offset = 1000;
@@ -28,21 +29,21 @@ namespace Birdy3d::render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void DirectionalLight::use(const Shader& lightShader, int id, int textureid) {
+    void DirectionalLight::use(const Shader& light_shader, int id, int textureid) {
         if (!m_shadow_map_updated) {
             gen_shadow_map();
             m_shadow_map_updated = true;
         }
         std::string name = "dirLights[" + std::to_string(id) + "].";
-        lightShader.use();
-        lightShader.set_bool(name + "shadow_enabled", shadow_enabled);
-        lightShader.set_vec3(name + "position", entity->scene->m_current_camera->entity->transform.world_position() - entity->world_forward() * m_cam_offset);
-        lightShader.set_vec3(name + "direction", entity->world_forward());
-        lightShader.set_vec3(name + "ambient", ambient);
-        lightShader.set_vec3(name + "diffuse", diffuse);
+        light_shader.use();
+        light_shader.set_bool(name + "shadow_enabled", shadow_enabled);
+        light_shader.set_vec3(name + "position", entity->scene->m_current_camera->entity->transform.world_position() - entity->world_forward() * m_cam_offset);
+        light_shader.set_vec3(name + "direction", entity->world_forward());
+        light_shader.set_vec3(name + "ambient", color.value * intensity_ambient);
+        light_shader.set_vec3(name + "diffuse", color.value * intensity_diffuse);
         m_shadow_map->bind(textureid);
-        lightShader.set_mat4(name + "lightSpaceMatrix", m_light_space_transform);
-        lightShader.set_int(name + "shadowMap", textureid);
+        light_shader.set_mat4(name + "lightSpaceMatrix", m_light_space_transform);
+        light_shader.set_int(name + "shadowMap", textureid);
         // TODO: cascaded shadow map
     }
 
@@ -78,8 +79,9 @@ namespace Birdy3d::render {
 
     void DirectionalLight::serialize(serializer::Adapter& adapter) {
         adapter("shadow_enabled", shadow_enabled);
-        adapter("ambient", ambient);
-        adapter("diffuse", diffuse);
+        adapter("color", color);
+        adapter("intensity_ambient", intensity_ambient);
+        adapter("intensity_diffuse", intensity_diffuse);
         adapter("cam_offset", m_cam_offset);
     }
 
