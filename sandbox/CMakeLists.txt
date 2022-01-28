@@ -1,5 +1,3 @@
-project(Birdy3d_sandbox)
-
 add_executable(Birdy3d_sandbox ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 target_include_directories(Birdy3d_sandbox PRIVATE Birdy3d_engine)
