@@ -1,5 +1,3 @@
-project(Birdy3d_engine)
-
 add_library(Birdy3d_engine STATIC)
 
 add_subdirectory(src)

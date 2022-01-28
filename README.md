@@ -19,7 +19,7 @@ On Linux you need the following dependencies:
 - freetype2 (optional)
 
 ```
-cmake -B build -DBUILD_RELEASE=TRUE -G Make
+cmake -B build -DCMAKE_BUILD_TYPE=Release -G Make
 cmake --build build -- -j4
 ```
 
@@ -31,8 +31,8 @@ On Windows, you need:
 - freetype2 (optional)
 
 ```
-cmake -B build -DBUILD_RELEASE=TRUE -G 'Visual Studio 16 2019'
-cmake --build build --config RELEASE
+cmake -B build -G 'Visual Studio 16 2019'
+cmake --build build --config Release
 ```
 
 The Executable can then be found under *build/out/bin*.

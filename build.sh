@@ -6,7 +6,7 @@ trap exit INT
 cd "$(dirname "$0")"
 
 build() {
-    cmake -B build "-DBUILD_RELEASE=$1" -G Ninja
+    cmake -B build "-DCMAKE_BUILD_TYPE=$1" -G Ninja
     cmake --build build || exit 1
 
     # Copy compile_commands.json
@@ -20,13 +20,13 @@ fi
 
 case $1 in
     run)
-        build FALSE && ./build/out/bin/Birdy3d_sandbox
+        build Debug && ./build/out/bin/Birdy3d_sandbox
         ;;
     build)
-        build FALSE
+        build Debug
         ;;
     release)
-        build TRUE
+        build Release
         ;;
     clean)
         rm -rf build
