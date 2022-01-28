@@ -37,7 +37,6 @@
 #include "render/Texture.hpp"
 
 // UI
-#include "ui/AbsoluteLayout.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Container.hpp"
 #include "ui/DirectionalLayout.hpp"

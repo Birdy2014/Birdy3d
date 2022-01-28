@@ -10,6 +10,11 @@ namespace Birdy3d::ui {
 
     class Layout {
     public:
+        enum class Direction {
+            HORIZONTAL,
+            VERTICAL
+        };
+
         virtual ~Layout() = default;
 
         /**
@@ -25,6 +30,22 @@ namespace Birdy3d::ui {
          * @brief Computes the minimal size that the widgets can fit in with the current layout.
          */
         virtual glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const = 0;
+
+        /**
+         * @brief Like minimal_size(const std::list<std::shared_ptr<Widget>>&) const, but with a suggested size in one dimension.
+         *
+         * This is useful for Layouts that place child widgets
+         * differently depending on the width or height.
+         */
+        virtual glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children, float suggested_size, Direction) const;
+
+        /**
+         * @brief Get minimal size in a direction if the other dimension is arbitrary.
+         *
+         * This can be different than minimal_size(const std::list<std::shared_ptr<Widget>>&) const,
+         * if the layout changes the placement of widgets depending on its dimensions.
+         */
+        virtual float minimal_size(const std::list<std::shared_ptr<Widget>>& children, Direction) const;
     };
 
     /**
@@ -34,6 +55,16 @@ namespace Birdy3d::ui {
     public:
         void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const override;
         glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override;
+    };
+
+    /**
+     * @brief Places widgets at their preferred position with their
+     * preferred size.
+     */
+    class AbsoluteLayout : public Layout {
+    public:
+        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const override;
+        glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children [[maybe_unused]]) const override;
     };
 
 }

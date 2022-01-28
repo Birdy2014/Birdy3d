@@ -13,6 +13,8 @@ namespace Birdy3d::ui {
         void arrange(glm::vec2 pos, glm::vec2 size) override;
 
     protected:
+        bool m_horizontal_scroll_enabled = true;
+        bool m_vertical_scroll_enabled = true;
         glm::vec2 m_scroll_offset = glm::vec2(0);
         glm::vec2 m_content_size;
         glm::vec2 m_max_scroll_offset;
