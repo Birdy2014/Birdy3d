@@ -10,14 +10,15 @@
 
 namespace Birdy3d::render {
 
-    Spotlight::Spotlight(glm::vec3 ambient, glm::vec3 diffuse, float innerCutOff, float outerCutOff, float linear, float quadratic, bool shadow_enabled)
-        : ambient(ambient)
-        , diffuse(diffuse)
+    Spotlight::Spotlight(utils::Color color, float intensity_ambient, float intensity_diffuse, float linear, float quadratic, float inner_cutoff, float outer_cutoff, bool shadow_enabled)
+        : color(color)
+        , intensity_ambient(intensity_ambient)
+        , intensity_diffuse(intensity_diffuse)
         , linear(linear)
         , quadratic(quadratic)
         , shadow_enabled(shadow_enabled)
-        , m_inner_cutoff(innerCutOff)
-        , m_outer_cutoff(outerCutOff)
+        , m_inner_cutoff(inner_cutoff)
+        , m_outer_cutoff(outer_cutoff)
         , m_shadow_rendertarget(SHADOW_WIDTH, SHADOW_HEIGHT) { }
 
     void Spotlight::setup_shadow_map() {
@@ -54,25 +55,25 @@ namespace Birdy3d::render {
         glCullFace(GL_BACK);
     }
 
-    void Spotlight::use(const Shader& lightShader, int id, int textureid) {
+    void Spotlight::use(const Shader& light_shader, int id, int textureid) {
         if (!m_shadow_map_updated) {
             gen_shadow_map();
             m_shadow_map_updated = true;
         }
         std::string name = "spotlights[" + std::to_string(id) + "].";
-        lightShader.use();
-        lightShader.set_bool(name + "shadow_enabled", shadow_enabled);
-        lightShader.set_vec3(name + "position", entity->transform.world_position());
-        lightShader.set_vec3(name + "direction", entity->world_forward());
-        lightShader.set_vec3(name + "ambient", ambient);
-        lightShader.set_vec3(name + "diffuse", diffuse);
-        lightShader.set_float(name + "innerCutOff", glm::cos(m_inner_cutoff));
-        lightShader.set_float(name + "outerCutOff", glm::cos(m_outer_cutoff));
-        lightShader.set_float(name + "linear", linear);
-        lightShader.set_float(name + "quadratic", quadratic);
+        light_shader.use();
+        light_shader.set_bool(name + "shadow_enabled", shadow_enabled);
+        light_shader.set_vec3(name + "position", entity->transform.world_position());
+        light_shader.set_vec3(name + "direction", entity->world_forward());
+        light_shader.set_vec3(name + "ambient", color.value * intensity_ambient);
+        light_shader.set_vec3(name + "diffuse", color.value * intensity_diffuse);
+        light_shader.set_float(name + "innerCutOff", glm::cos(m_inner_cutoff));
+        light_shader.set_float(name + "outerCutOff", glm::cos(m_outer_cutoff));
+        light_shader.set_float(name + "linear", linear);
+        light_shader.set_float(name + "quadratic", quadratic);
         m_shadow_map->bind(textureid);
-        lightShader.set_mat4(name + "lightSpaceMatrix", m_light_space_transform);
-        lightShader.set_int(name + "shadowMap", textureid);
+        light_shader.set_mat4(name + "lightSpaceMatrix", m_light_space_transform);
+        light_shader.set_int(name + "shadowMap", textureid);
     }
 
     void Spotlight::start() {
@@ -86,8 +87,9 @@ namespace Birdy3d::render {
 
     void Spotlight::serialize(serializer::Adapter& adapter) {
         adapter("shadow_enabled", shadow_enabled);
-        adapter("ambient", ambient);
-        adapter("diffuse", diffuse);
+        adapter("color", color);
+        adapter("intensity_ambient", intensity_ambient);
+        adapter("intensity_diffuse", intensity_diffuse);
         adapter("linear", linear);
         adapter("quadratic", quadratic);
         adapter("inner_cutoff", m_inner_cutoff);
