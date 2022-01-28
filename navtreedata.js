@@ -44,7 +44,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"AbsoluteLayout_8hpp_source.html"
+"Adapter_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

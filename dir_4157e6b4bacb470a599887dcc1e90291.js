@@ -2,7 +2,6 @@ var dir_4157e6b4bacb470a599887dcc1e90291 =
 [
     [ "console", "dir_6e3ba39fa3683f99cdf280386233f11a.html", "dir_6e3ba39fa3683f99cdf280386233f11a" ],
     [ "widgets", "dir_ba035d603da85925e3cfbb533a2a2c7a.html", "dir_ba035d603da85925e3cfbb533a2a2c7a" ],
-    [ "AbsoluteLayout.hpp", "AbsoluteLayout_8hpp_source.html", null ],
     [ "Canvas.hpp", "Canvas_8hpp_source.html", null ],
     [ "Container.hpp", "Container_8hpp_source.html", null ],
     [ "DirectionalLayout.hpp", "DirectionalLayout_8hpp_source.html", null ],

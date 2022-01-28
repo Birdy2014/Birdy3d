@@ -91,6 +91,11 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1ui_1_1AbsoluteLayout.h
   <div class="headertitle"><div class="title">Birdy3d::ui::AbsoluteLayout Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Places widgets at their preferred position with their preferred size.  
+ <a href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Birdy3d::ui::AbsoluteLayout:</div>
 <div class="dyncontent">
@@ -109,8 +114,25 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0693f33f8ec1ec5e8a1504535e339c5b"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#a0693f33f8ec1ec5e8a1504535e339c5b">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children) const override</td></tr>
 <tr class="memdesc:a0693f33f8ec1ec5e8a1504535e339c5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the minimal size that the widgets can fit in with the current layout.  <a href="classBirdy3d_1_1ui_1_1AbsoluteLayout.html#a0693f33f8ec1ec5e8a1504535e339c5b">More...</a><br /></td></tr>
 <tr class="separator:a0693f33f8ec1ec5e8a1504535e339c5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classBirdy3d_1_1ui_1_1Layout"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classBirdy3d_1_1ui_1_1Layout')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html">Birdy3d::ui::Layout</a></td></tr>
+<tr class="memitem:ae54e3095872f00650d159a31c9a21104 inherit pub_methods_classBirdy3d_1_1ui_1_1Layout"><td class="memItemLeft" align="right" valign="top">virtual glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#ae54e3095872f00650d159a31c9a21104">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, float suggested_size, Direction) const</td></tr>
+<tr class="memdesc:ae54e3095872f00650d159a31c9a21104 inherit pub_methods_classBirdy3d_1_1ui_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size(const std::list&lt;std::shared_ptr&lt;Widget&gt;&gt;&amp;) const</a>, but with a suggested size in one dimension.  <a href="classBirdy3d_1_1ui_1_1Layout.html#ae54e3095872f00650d159a31c9a21104">More...</a><br /></td></tr>
+<tr class="separator:ae54e3095872f00650d159a31c9a21104 inherit pub_methods_classBirdy3d_1_1ui_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92055cbcdf4821cf65d9dafa7b8b1e8c inherit pub_methods_classBirdy3d_1_1ui_1_1Layout"><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a92055cbcdf4821cf65d9dafa7b8b1e8c">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, Direction) const</td></tr>
+<tr class="memdesc:a92055cbcdf4821cf65d9dafa7b8b1e8c inherit pub_methods_classBirdy3d_1_1ui_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get minimal size in a direction if the other dimension is arbitrary.  <a href="classBirdy3d_1_1ui_1_1Layout.html#a92055cbcdf4821cf65d9dafa7b8b1e8c">More...</a><br /></td></tr>
+<tr class="separator:a92055cbcdf4821cf65d9dafa7b8b1e8c inherit pub_methods_classBirdy3d_1_1ui_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classBirdy3d_1_1ui_1_1Layout"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classBirdy3d_1_1ui_1_1Layout')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html">Birdy3d::ui::Layout</a></td></tr>
+<tr class="memitem:a40f14566c6a8df2904ced5d332937065 inherit pub_types_classBirdy3d_1_1ui_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a id="a40f14566c6a8df2904ced5d332937065" name="a40f14566c6a8df2904ced5d332937065"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Direction</b> { <b>HORIZONTAL</b>
+, <b>VERTICAL</b>
+ }</td></tr>
+<tr class="separator:a40f14566c6a8df2904ced5d332937065 inherit pub_types_classBirdy3d_1_1ui_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Places widgets at their preferred position with their preferred size. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad945ac66a2eba47681b462500ac66759" name="ad945ac66a2eba47681b462500ac66759"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad945ac66a2eba47681b462500ac66759">&#9670;&nbsp;</a></span>arrange()</h2>
 
@@ -146,7 +168,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -177,7 +199,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -188,8 +210,9 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>engine/src/ui/<a class="el" href="AbsoluteLayout_8hpp_source.html">AbsoluteLayout.hpp</a></li>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>engine/src/ui/<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a></li>
+<li>engine/src/ui/Layout.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

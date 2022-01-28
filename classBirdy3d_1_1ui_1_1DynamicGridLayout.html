@@ -112,6 +112,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae0ef2905f0f0b68dcad00faf6c112bd9"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#ae0ef2905f0f0b68dcad00faf6c112bd9">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children) const override</td></tr>
 <tr class="memdesc:ae0ef2905f0f0b68dcad00faf6c112bd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the minimal size that the widgets can fit in with the current layout.  <a href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#ae0ef2905f0f0b68dcad00faf6c112bd9">More...</a><br /></td></tr>
 <tr class="separator:ae0ef2905f0f0b68dcad00faf6c112bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74c50fdae6c49c38ab4922fc0b5611f3"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#a74c50fdae6c49c38ab4922fc0b5611f3">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, float suggested_size, Direction) const override</td></tr>
+<tr class="memdesc:a74c50fdae6c49c38ab4922fc0b5611f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like <a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#ae0ef2905f0f0b68dcad00faf6c112bd9" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size(const std::list&lt;std::shared_ptr&lt;Widget&gt;&gt;&amp;) const</a>, but with a suggested size in one dimension.  <a href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#a74c50fdae6c49c38ab4922fc0b5611f3">More...</a><br /></td></tr>
+<tr class="separator:a74c50fdae6c49c38ab4922fc0b5611f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d3b3052e56ad1a6b626c5901183d03c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#a5d3b3052e56ad1a6b626c5901183d03c">minimal_size</a> (const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;children, Direction) const override</td></tr>
+<tr class="memdesc:a5d3b3052e56ad1a6b626c5901183d03c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get minimal size in a direction if the other dimension is arbitrary.  <a href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#a5d3b3052e56ad1a6b626c5901183d03c">More...</a><br /></td></tr>
+<tr class="separator:a5d3b3052e56ad1a6b626c5901183d03c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classBirdy3d_1_1ui_1_1Layout"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classBirdy3d_1_1ui_1_1Layout')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html">Birdy3d::ui::Layout</a></td></tr>
+<tr class="memitem:a40f14566c6a8df2904ced5d332937065 inherit pub_types_classBirdy3d_1_1ui_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a id="a40f14566c6a8df2904ced5d332937065" name="a40f14566c6a8df2904ced5d332937065"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Direction</b> { <b>HORIZONTAL</b>
+, <b>VERTICAL</b>
+ }</td></tr>
+<tr class="separator:a40f14566c6a8df2904ced5d332937065 inherit pub_types_classBirdy3d_1_1ui_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="ae17d88bab650f3e85d4fb243a33903b4" name="ae17d88bab650f3e85d4fb243a33903b4"></a>
@@ -162,7 +176,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="ae0ef2905f0f0b68dcad00faf6c112bd9" name="ae0ef2905f0f0b68dcad00faf6c112bd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0ef2905f0f0b68dcad00faf6c112bd9">&#9670;&nbsp;</a></span>minimal_size()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0ef2905f0f0b68dcad00faf6c112bd9">&#9670;&nbsp;</a></span>minimal_size() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,6 +202,94 @@ Public Member Functions</h2></td></tr>
 <p>Computes the minimal size that the widgets can fit in with the current layout. </p>
 
 <p>Implements <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a8573b631644ed225f36159d0f21e8b51">Birdy3d::ui::Layout</a>.</p>
+
+</div>
+</div>
+<a id="a5d3b3052e56ad1a6b626c5901183d03c" name="a5d3b3052e56ad1a6b626c5901183d03c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d3b3052e56ad1a6b626c5901183d03c">&#9670;&nbsp;</a></span>minimal_size() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Birdy3d::ui::DynamicGridLayout::minimal_size </td>
+          <td>(</td>
+          <td class="paramtype">const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Layout::Direction&#160;</td>
+          <td class="paramname"><em>direction</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get minimal size in a direction if the other dimension is arbitrary. </p>
+<p >This can be different than <a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#ae0ef2905f0f0b68dcad00faf6c112bd9" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size(const std::list&lt;std::shared_ptr&lt;Widget&gt;&gt;&amp;) const</a>, if the layout changes the placement of widgets depending on its dimensions. </p>
+
+<p>Reimplemented from <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#a92055cbcdf4821cf65d9dafa7b8b1e8c">Birdy3d::ui::Layout</a>.</p>
+
+</div>
+</div>
+<a id="a74c50fdae6c49c38ab4922fc0b5611f3" name="a74c50fdae6c49c38ab4922fc0b5611f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74c50fdae6c49c38ab4922fc0b5611f3">&#9670;&nbsp;</a></span>minimal_size() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">glm::vec2 Birdy3d::ui::DynamicGridLayout::minimal_size </td>
+          <td>(</td>
+          <td class="paramtype">const std::list&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>suggested_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Layout::Direction&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Like <a class="el" href="classBirdy3d_1_1ui_1_1DynamicGridLayout.html#ae0ef2905f0f0b68dcad00faf6c112bd9" title="Computes the minimal size that the widgets can fit in with the current layout.">minimal_size(const std::list&lt;std::shared_ptr&lt;Widget&gt;&gt;&amp;) const</a>, but with a suggested size in one dimension. </p>
+<p >This is useful for Layouts that place child widgets differently depending on the width or height. </p>
+
+<p>Reimplemented from <a class="el" href="classBirdy3d_1_1ui_1_1Layout.html#ae54e3095872f00650d159a31c9a21104">Birdy3d::ui::Layout</a>.</p>
 
 </div>
 </div>
