@@ -104,18 +104,18 @@ Inheritance diagram for Birdy3d::render::DirectionalLight:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab2cdbe1430316a026fa06c159048f760"><td class="memItemLeft" align="right" valign="top"><a id="ab2cdbe1430316a026fa06c159048f760" name="ab2cdbe1430316a026fa06c159048f760"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DirectionalLight</b> (glm::vec3 ambient=glm::vec3(0), glm::vec3 diffuse=glm::vec3(0), bool shadow_enabled=true)</td></tr>
-<tr class="separator:ab2cdbe1430316a026fa06c159048f760"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae877b08f005a7954958f4f07b9a3419f"><td class="memItemLeft" align="right" valign="top"><a id="ae877b08f005a7954958f4f07b9a3419f" name="ae877b08f005a7954958f4f07b9a3419f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>DirectionalLight</b> (<a class="el" href="classBirdy3d_1_1utils_1_1Color.html">utils::Color</a> color=utils::Color::WHITE, float intensity_ambient=1, float intensity_diffuse=1, bool shadow_enabled=true)</td></tr>
+<tr class="separator:ae877b08f005a7954958f4f07b9a3419f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad194df1ee89aa75745c39b2bbd2e871c"><td class="memItemLeft" align="right" valign="top"><a id="ad194df1ee89aa75745c39b2bbd2e871c" name="ad194df1ee89aa75745c39b2bbd2e871c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setup_shadow_map</b> ()</td></tr>
 <tr class="separator:ad194df1ee89aa75745c39b2bbd2e871c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cd48a352ff564838bfa53cc7e6cf268"><td class="memItemLeft" align="right" valign="top"><a id="a9cd48a352ff564838bfa53cc7e6cf268" name="a9cd48a352ff564838bfa53cc7e6cf268"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>gen_shadow_map</b> ()</td></tr>
 <tr class="separator:a9cd48a352ff564838bfa53cc7e6cf268"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab36f6a7f8122adcebd6e04d02c66f5bd"><td class="memItemLeft" align="right" valign="top"><a id="ab36f6a7f8122adcebd6e04d02c66f5bd" name="ab36f6a7f8122adcebd6e04d02c66f5bd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>use</b> (const <a class="el" href="classBirdy3d_1_1render_1_1Shader.html">Shader</a> &amp;lightShader, int id, int textureid)</td></tr>
-<tr class="separator:ab36f6a7f8122adcebd6e04d02c66f5bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6a7c2e2db0ed098097241d15459f711"><td class="memItemLeft" align="right" valign="top"><a id="ac6a7c2e2db0ed098097241d15459f711" name="ac6a7c2e2db0ed098097241d15459f711"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>use</b> (const <a class="el" href="classBirdy3d_1_1render_1_1Shader.html">Shader</a> &amp;light_shader, int id, int textureid)</td></tr>
+<tr class="separator:ac6a7c2e2db0ed098097241d15459f711"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4010f41ef7ff9237a05679bb445ad894"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1render_1_1DirectionalLight.html#a4010f41ef7ff9237a05679bb445ad894">start</a> () override</td></tr>
 <tr class="separator:a4010f41ef7ff9237a05679bb445ad894"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c71775e6fc52b1df9451f927b87c142"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1render_1_1DirectionalLight.html#a2c71775e6fc52b1df9451f927b87c142">update</a> () override</td></tr>
@@ -144,12 +144,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> ()</td></t
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a7057126363db82905dfb5cd6af220bdd"><td class="memItemLeft" align="right" valign="top"><a id="a7057126363db82905dfb5cd6af220bdd" name="a7057126363db82905dfb5cd6af220bdd"></a>
-glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>ambient</b></td></tr>
-<tr class="separator:a7057126363db82905dfb5cd6af220bdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e5fd590f9b0962fdae57a294459da09"><td class="memItemLeft" align="right" valign="top"><a id="a7e5fd590f9b0962fdae57a294459da09" name="a7e5fd590f9b0962fdae57a294459da09"></a>
-glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>diffuse</b></td></tr>
-<tr class="separator:a7e5fd590f9b0962fdae57a294459da09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a188083794f19fd99813027cf22a4b07c"><td class="memItemLeft" align="right" valign="top"><a id="a188083794f19fd99813027cf22a4b07c" name="a188083794f19fd99813027cf22a4b07c"></a>
+<a class="el" href="classBirdy3d_1_1utils_1_1Color.html">utils::Color</a>&#160;</td><td class="memItemRight" valign="bottom"><b>color</b></td></tr>
+<tr class="separator:a188083794f19fd99813027cf22a4b07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a761d8ef2cab3947830523a07be74888f"><td class="memItemLeft" align="right" valign="top"><a id="a761d8ef2cab3947830523a07be74888f" name="a761d8ef2cab3947830523a07be74888f"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>intensity_ambient</b></td></tr>
+<tr class="separator:a761d8ef2cab3947830523a07be74888f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a488f8c9cd6fb2c5e0927d23f05ebf4"><td class="memItemLeft" align="right" valign="top"><a id="a9a488f8c9cd6fb2c5e0927d23f05ebf4" name="a9a488f8c9cd6fb2c5e0927d23f05ebf4"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>intensity_diffuse</b></td></tr>
+<tr class="separator:a9a488f8c9cd6fb2c5e0927d23f05ebf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88fc9c190ddc96d291f21b318fdee07c"><td class="memItemLeft" align="right" valign="top"><a id="a88fc9c190ddc96d291f21b318fdee07c" name="a88fc9c190ddc96d291f21b318fdee07c"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>shadow_enabled</b></td></tr>
 <tr class="separator:a88fc9c190ddc96d291f21b318fdee07c"><td class="memSeparator" colspan="2">&#160;</td></tr>

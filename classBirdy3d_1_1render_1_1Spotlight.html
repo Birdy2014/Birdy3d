@@ -104,18 +104,18 @@ Inheritance diagram for Birdy3d::render::Spotlight:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0f7c57b080655424d6885df03fe124f7"><td class="memItemLeft" align="right" valign="top"><a id="a0f7c57b080655424d6885df03fe124f7" name="a0f7c57b080655424d6885df03fe124f7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Spotlight</b> (glm::vec3 ambient=glm::vec3(0), glm::vec3 diffuse=glm::vec3(0), float innerCutOff=0, float outerCutOff=0, float linear=0, float quadratic=0, bool shadow_enabled=true)</td></tr>
-<tr class="separator:a0f7c57b080655424d6885df03fe124f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75aaca8cc46bcb2511bd36327764a7c9"><td class="memItemLeft" align="right" valign="top"><a id="a75aaca8cc46bcb2511bd36327764a7c9" name="a75aaca8cc46bcb2511bd36327764a7c9"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Spotlight</b> (<a class="el" href="classBirdy3d_1_1utils_1_1Color.html">utils::Color</a> color=utils::Color::WHITE, float intensity_ambient=1, float intensity_diffuse=1, float linear=0, float quadratic=0, float inner_cutoff=glm::radians(40.0f), float outer_cutoff=glm::radians(50.0f), bool shadow_enabled=true)</td></tr>
+<tr class="separator:a75aaca8cc46bcb2511bd36327764a7c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a644e8c926a726e4d527a78b303cd02b0"><td class="memItemLeft" align="right" valign="top"><a id="a644e8c926a726e4d527a78b303cd02b0" name="a644e8c926a726e4d527a78b303cd02b0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setup_shadow_map</b> ()</td></tr>
 <tr class="separator:a644e8c926a726e4d527a78b303cd02b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a318412e61d17fedd33e0dd700d7debe7"><td class="memItemLeft" align="right" valign="top"><a id="a318412e61d17fedd33e0dd700d7debe7" name="a318412e61d17fedd33e0dd700d7debe7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>gen_shadow_map</b> ()</td></tr>
 <tr class="separator:a318412e61d17fedd33e0dd700d7debe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a211f2cf738664d65d836521505fd6a95"><td class="memItemLeft" align="right" valign="top"><a id="a211f2cf738664d65d836521505fd6a95" name="a211f2cf738664d65d836521505fd6a95"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>use</b> (const <a class="el" href="classBirdy3d_1_1render_1_1Shader.html">Shader</a> &amp;lightShader, int id, int textureid)</td></tr>
-<tr class="separator:a211f2cf738664d65d836521505fd6a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34932f319e966e66e20cba158e8f623a"><td class="memItemLeft" align="right" valign="top"><a id="a34932f319e966e66e20cba158e8f623a" name="a34932f319e966e66e20cba158e8f623a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>use</b> (const <a class="el" href="classBirdy3d_1_1render_1_1Shader.html">Shader</a> &amp;light_shader, int id, int textureid)</td></tr>
+<tr class="separator:a34932f319e966e66e20cba158e8f623a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa037c79c80b421df8e3f30f9cb51536c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1render_1_1Spotlight.html#aa037c79c80b421df8e3f30f9cb51536c">start</a> () override</td></tr>
 <tr class="separator:aa037c79c80b421df8e3f30f9cb51536c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16a2606a7afe50d75b32e64123f70e3c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1render_1_1Spotlight.html#a16a2606a7afe50d75b32e64123f70e3c">update</a> () override</td></tr>
@@ -144,18 +144,27 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> ()</td></t
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ab3671703254f909d10c673333fc7de7d"><td class="memItemLeft" align="right" valign="top"><a id="ab3671703254f909d10c673333fc7de7d" name="ab3671703254f909d10c673333fc7de7d"></a>
-glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>ambient</b></td></tr>
-<tr class="separator:ab3671703254f909d10c673333fc7de7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa56a850e1b074fecfd1782119b196aec"><td class="memItemLeft" align="right" valign="top"><a id="aa56a850e1b074fecfd1782119b196aec" name="aa56a850e1b074fecfd1782119b196aec"></a>
-glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>diffuse</b></td></tr>
-<tr class="separator:aa56a850e1b074fecfd1782119b196aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ddbf6b73f423f353128a0314e1295d5"><td class="memItemLeft" align="right" valign="top"><a id="a2ddbf6b73f423f353128a0314e1295d5" name="a2ddbf6b73f423f353128a0314e1295d5"></a>
+<a class="el" href="classBirdy3d_1_1utils_1_1Color.html">utils::Color</a>&#160;</td><td class="memItemRight" valign="bottom"><b>color</b></td></tr>
+<tr class="separator:a2ddbf6b73f423f353128a0314e1295d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4300ca60a07641fb1fa9cc11f65b77c"><td class="memItemLeft" align="right" valign="top"><a id="af4300ca60a07641fb1fa9cc11f65b77c" name="af4300ca60a07641fb1fa9cc11f65b77c"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>intensity_ambient</b></td></tr>
+<tr class="separator:af4300ca60a07641fb1fa9cc11f65b77c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab60a6dab2e4d4c885ad5751d664203cf"><td class="memItemLeft" align="right" valign="top"><a id="ab60a6dab2e4d4c885ad5751d664203cf" name="ab60a6dab2e4d4c885ad5751d664203cf"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>intensity_diffuse</b></td></tr>
+<tr class="separator:ab60a6dab2e4d4c885ad5751d664203cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dbd0161e38ac503ecd8de1829473ee9"><td class="memItemLeft" align="right" valign="top"><a id="a5dbd0161e38ac503ecd8de1829473ee9" name="a5dbd0161e38ac503ecd8de1829473ee9"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>linear</b></td></tr>
 <tr class="separator:a5dbd0161e38ac503ecd8de1829473ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addde6aea37aac73051fedefd6ccb28c0"><td class="memItemLeft" align="right" valign="top"><a id="addde6aea37aac73051fedefd6ccb28c0" name="addde6aea37aac73051fedefd6ccb28c0"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>quadratic</b></td></tr>
 <tr class="separator:addde6aea37aac73051fedefd6ccb28c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9eca6146e89dd979ec11776c4d999a"><td class="memItemLeft" align="right" valign="top"><a id="a1a9eca6146e89dd979ec11776c4d999a" name="a1a9eca6146e89dd979ec11776c4d999a"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>m_inner_cutoff</b></td></tr>
+<tr class="separator:a1a9eca6146e89dd979ec11776c4d999a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a270630d2ecde930215e9e59904ad9a4e"><td class="memItemLeft" align="right" valign="top"><a id="a270630d2ecde930215e9e59904ad9a4e" name="a270630d2ecde930215e9e59904ad9a4e"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>m_outer_cutoff</b></td></tr>
+<tr class="separator:a270630d2ecde930215e9e59904ad9a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00493c5e017a4a73689396c30f05b806"><td class="memItemLeft" align="right" valign="top"><a id="a00493c5e017a4a73689396c30f05b806" name="a00493c5e017a4a73689396c30f05b806"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>shadow_enabled</b></td></tr>
 <tr class="separator:a00493c5e017a4a73689396c30f05b806"><td class="memSeparator" colspan="2">&#160;</td></tr>
