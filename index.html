@@ -103,7 +103,7 @@ Building</h1>
 <li>glm (optional)</li>
 <li>freetype2 (optional)</li>
 </ul>
-<div class="fragment"><div class="line">cmake -B build -DBUILD_RELEASE=TRUE -G Make</div>
+<div class="fragment"><div class="line">cmake -B build -DCMAKE_BUILD_TYPE=Release -G Make</div>
 <div class="line">cmake --build build -- -j4</div>
 </div><!-- fragment --><p >On Windows, you need:</p><ul>
 <li>Visual Studio 2019 (or newer)</li>
@@ -112,8 +112,8 @@ Building</h1>
 <li>glm (optional)</li>
 <li>freetype2 (optional)</li>
 </ul>
-<div class="fragment"><div class="line">cmake -B build -DBUILD_RELEASE=TRUE -G &#39;Visual Studio 16 2019&#39;</div>
-<div class="line">cmake --build build --config RELEASE</div>
+<div class="fragment"><div class="line">cmake -B build -G &#39;Visual Studio 16 2019&#39;</div>
+<div class="line">cmake --build build --config Release</div>
 </div><!-- fragment --><p >The Executable can then be found under <em>build/out/bin</em>. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
