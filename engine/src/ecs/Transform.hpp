@@ -16,14 +16,16 @@ namespace Birdy3d::ecs {
         Transform3d(Entity*);
         Transform3d(const Transform3d&);
         void update(bool changed = false);
-        glm::mat4 matrix();
+        glm::mat4 global_matrix();
+        glm::mat4 local_matrix();
         glm::vec3 world_position();
         glm::vec3 world_orientation();
         glm::vec3 world_scale();
         void serialize(serializer::Adapter&);
 
     private:
-        glm::mat4 m_matrix;
+        glm::mat4 m_global_matrix;
+        glm::mat4 m_local_matrix;
         Entity* m_entity = nullptr;
 
         // Copies for change detection

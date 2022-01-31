@@ -324,7 +324,7 @@ namespace Birdy3d::render {
         }
     }
 
-    void Camera::render_outline(const ecs::Entity* selected_entity) {
+    void Camera::render_outline(ecs::Entity* selected_entity) {
         if (selected_entity == nullptr)
             return;
 
@@ -342,46 +342,33 @@ namespace Birdy3d::render {
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         }
 
-        const float outline_offset = 0.4;
-
         glm::vec3 low(std::numeric_limits<float>::infinity());
         glm::vec3 high(-std::numeric_limits<float>::infinity());
 
-        std::pair<glm::vec3, glm::vec3> bounding_box;
-        glm::mat4 model;
-        for (auto model_component : selected_entity->get_components<ModelComponent>(false, true)) {
-            model = model_component->entity->transform.matrix();
-            bounding_box = model_component->model()->bounding_box();
-            glm::vec3 model_low = model * glm::vec4(bounding_box.first, 1.0f);
-            glm::vec3 model_high = model * glm::vec4(bounding_box.second, 1.0f);
-            if (model_low.x < low.x)
-                low.x = model_low.x;
-            if (model_low.y < low.y)
-                low.y = model_low.y;
-            if (model_low.z < low.z)
-                low.z = model_low.z;
-            if (model_high.x < low.x)
-                low.x = model_high.x;
-            if (model_high.y < low.y)
-                low.y = model_high.y;
-            if (model_high.z < low.z)
-                low.z = model_high.z;
-            if (model_high.x > high.x)
-                high.x = model_high.x;
-            if (model_high.y > high.y)
-                high.y = model_high.y;
-            if (model_high.z > high.z)
-                high.z = model_high.z;
-            if (model_low.x > high.x)
-                high.x = model_low.x;
-            if (model_low.y > high.y)
-                high.y = model_low.y;
-            if (model_low.z > high.z)
-                high.z = model_low.z;
-        }
+        std::function<void(ecs::Entity*, glm::mat4)> compute_matrix = [&low, &high, &compute_matrix](ecs::Entity* entity, glm::mat4 model) {
+            for (auto model_component : entity->get_components<ModelComponent>(false, false)) {
+                auto bounding_box = model_component->model()->bounding_box();
+                glm::vec3 model_low = model * glm::vec4(bounding_box.first, 1.0f);
+                glm::vec3 model_high = model * glm::vec4(bounding_box.second, 1.0f);
+                if (model_low.x < low.x)
+                    low.x = model_low.x;
+                if (model_low.y < low.y)
+                    low.y = model_low.y;
+                if (model_low.z < low.z)
+                    low.z = model_low.z;
+                if (model_high.x > high.x)
+                    high.x = model_high.x;
+                if (model_high.y > high.y)
+                    high.y = model_high.y;
+                if (model_high.z > high.z)
+                    high.z = model_high.z;
+            }
+            for (auto child : entity->children()) {
+                compute_matrix(child.get(), model * child->transform.local_matrix());
+            }
+        };
 
-        low -= outline_offset;
-        high += outline_offset;
+        compute_matrix(selected_entity, glm::mat4 { 1 });
 
         // clang-format off
         glm::vec3 vertices[24] = {
@@ -421,7 +408,7 @@ namespace Birdy3d::render {
         m_simple_color_shader->set_mat4("projection", m_projection);
         m_simple_color_shader->set_mat4("view", view);
         m_simple_color_shader->set_vec4("color", utils::Color("#e0902180"));
-        m_simple_color_shader->set_mat4("model", glm::mat4(1));
+        m_simple_color_shader->set_mat4("model", selected_entity->transform.global_matrix());
         glBindVertexArray(m_outline_vao);
         glDrawArrays(GL_LINES, 0, 24);
     }

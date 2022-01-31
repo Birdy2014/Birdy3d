@@ -32,7 +32,7 @@ namespace Birdy3d::render {
     void Model::render(ecs::Entity& entity, const Material* material, const Shader& shader, bool transparent) const {
         if (material == nullptr)
             material = &m_embedded_material;
-        glm::mat4 model = entity.transform.matrix();
+        glm::mat4 model = entity.transform.global_matrix();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
             if (transparent == material->transparent())
@@ -41,7 +41,7 @@ namespace Birdy3d::render {
     }
 
     void Model::render_depth(ecs::Entity& entity, const Shader& shader) const {
-        glm::mat4 model = entity.transform.matrix();
+        glm::mat4 model = entity.transform.global_matrix();
         shader.use();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
@@ -50,7 +50,7 @@ namespace Birdy3d::render {
     }
 
     void Model::render_wireframe(ecs::Entity& entity, const Shader& shader) const {
-        glm::mat4 model = entity.transform.matrix();
+        glm::mat4 model = entity.transform.global_matrix();
         shader.use();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
