@@ -11,8 +11,9 @@ namespace Birdy3d::ecs {
     void Scene::start() {
         set_scene(this);
         m_physics_world = std::make_unique<physics::PhysicsWorld>(this);
-        transform.update(true);
+        // The transform must be updated after the Entity::start, because Entity parents might not be set.
         Entity::start();
+        transform.update(true);
     }
 
     void Scene::update() {
