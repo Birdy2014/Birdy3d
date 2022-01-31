@@ -190,9 +190,10 @@ namespace Birdy3d::ui {
     }
 
     utils::Color::Name TextRenderer::parse_color_escape(char32_t c) {
-        if (c >= 16)
+        // NONE must be the last element; use reflection when available.
+        if (c >= (int)utils::Color::Name::NONE)
             return utils::Color::Name::NONE;
-        return (utils::Color::Name)c;
+        return static_cast<utils::Color::Name>(c);
     }
 
     struct TextVertex {
