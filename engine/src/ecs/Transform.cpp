@@ -24,30 +24,37 @@ namespace Birdy3d::ecs {
             m_old_position = position;
             m_old_orientation = orientation;
             m_old_scale = scale;
+            // Recalculate local matrix
+            m_local_matrix = glm::mat4(1);
+            m_local_matrix = glm::translate(m_local_matrix, this->position);
+            m_local_matrix = glm::rotate(m_local_matrix, this->orientation.x, glm::vec3(1, 0, 0));
+            m_local_matrix = glm::rotate(m_local_matrix, this->orientation.y, glm::vec3(0, 1, 0));
+            m_local_matrix = glm::rotate(m_local_matrix, this->orientation.z, glm::vec3(0, 0, 1));
+            m_local_matrix = glm::scale(m_local_matrix, this->scale);
             // Send event
             core::Application::event_bus->emit<events::TransformChangedEvent>(m_entity);
         }
         if (changed) {
             // Update matrix
-            m_matrix = glm::mat4(1);
             if (m_entity->parent)
-                m_matrix = m_matrix * m_entity->parent->transform.matrix();
-            m_matrix = glm::translate(m_matrix, this->position);
-            m_matrix = glm::rotate(m_matrix, this->orientation.x, glm::vec3(1, 0, 0));
-            m_matrix = glm::rotate(m_matrix, this->orientation.y, glm::vec3(0, 1, 0));
-            m_matrix = glm::rotate(m_matrix, this->orientation.z, glm::vec3(0, 0, 1));
-            m_matrix = glm::scale(m_matrix, this->scale);
+                m_global_matrix = m_entity->parent->transform.global_matrix() * m_local_matrix;
+            else
+                m_global_matrix = m_local_matrix;
         }
         for (auto child_entity : m_entity->children())
             child_entity->transform.update(changed);
     }
 
-    glm::mat4 Transform3d::matrix() {
-        return m_matrix;
+    glm::mat4 Transform3d::global_matrix() {
+        return m_global_matrix;
+    }
+
+    glm::mat4 Transform3d::local_matrix() {
+        return m_local_matrix;
     }
 
     glm::vec3 Transform3d::world_position() {
-        return matrix() * glm::vec4(0, 0, 0, 1);
+        return global_matrix() * glm::vec4(0, 0, 0, 1);
     }
 
     glm::vec3 Transform3d::world_orientation() {

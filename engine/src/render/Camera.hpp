@@ -17,7 +17,7 @@ namespace Birdy3d::render {
         void start() override;
         void cleanup() override;
         void render();
-        void render_outline(const ecs::Entity*);
+        void render_outline(ecs::Entity*);
         void render_collider_wireframe();
         void serialize(serializer::Adapter&) override;
 
