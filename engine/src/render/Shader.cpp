@@ -19,11 +19,11 @@ namespace Birdy3d::render {
         }
 
         if (!shader_sources.vertex_shader.empty())
-            shader_sources.vertex_shader.insert(0, "#version 330 core\n");
+            shader_sources.vertex_shader.insert(0, "#version 460 core\n");
         if (!shader_sources.geometry_shader.empty())
-            shader_sources.geometry_shader.insert(0, "#version 330 core\n");
+            shader_sources.geometry_shader.insert(0, "#version 460 core\n");
         if (!shader_sources.fragment_shader.empty())
-            shader_sources.fragment_shader.insert(0, "#version 330 core\n");
+            shader_sources.fragment_shader.insert(0, "#version 460 core\n");
         compile(shader_sources);
     }
 
