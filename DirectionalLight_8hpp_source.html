@@ -113,24 +113,24 @@ $(document).ready(function(){initNavTree('DirectionalLight_8hpp_source.html','')
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordtype">void</span> serialize(<a class="code hl_class" href="classBirdy3d_1_1serializer_1_1Adapter.html">serializer::Adapter</a>&amp;) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordtype">float</span> m_cam_offset;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        glm::mat4 m_light_space_transform;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_class" href="classBirdy3d_1_1core_1_1ResourceHandle.html">core::ResourceHandle&lt;Shader&gt;</a> m_depth_shader;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Rendertarget.html">Rendertarget</a> m_shadow_rendertarget;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Texture.html">Texture</a>* m_shadow_map;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> SHADOW_SIZE = 2048;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordtype">float</span> m_cam_offset = 1000.0f;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        std::vector&lt;float&gt; m_shadow_cascade_levels;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        std::vector&lt;glm::mat4&gt; m_light_space_transforms;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <a class="code hl_class" href="classBirdy3d_1_1core_1_1ResourceHandle.html">core::ResourceHandle&lt;Shader&gt;</a> m_depth_shader;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        GLuint m_shadow_map_fbo, m_shadow_map;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordtype">bool</span> m_shadow_map_updated = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(<a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Component.html">ecs::Component</a>, <a class="code hl_class" href="classBirdy3d_1_1render_1_1DirectionalLight.html">DirectionalLight</a>);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    };</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        glm::mat4 calculate_light_space_matrix(<span class="keyword">const</span> <span class="keywordtype">float</span> near_plane, <span class="keyword">const</span> <span class="keywordtype">float</span> far_plane);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(<a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Component.html">ecs::Component</a>, <a class="code hl_class" href="classBirdy3d_1_1render_1_1DirectionalLight.html">DirectionalLight</a>);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    };</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1core_1_1ResourceHandle_html"><div class="ttname"><a href="classBirdy3d_1_1core_1_1ResourceHandle.html">Birdy3d::core::ResourceHandle</a></div><div class="ttdef"><b>Definition:</b> ResourceHandle.hpp:33</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ecs_1_1Component_html"><div class="ttname"><a href="classBirdy3d_1_1ecs_1_1Component.html">Birdy3d::ecs::Component</a></div><div class="ttdef"><b>Definition:</b> Component.hpp:9</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1render_1_1DirectionalLight_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1DirectionalLight.html">Birdy3d::render::DirectionalLight</a></div><div class="ttdef"><b>Definition:</b> DirectionalLight.hpp:10</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1render_1_1Rendertarget_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Rendertarget.html">Birdy3d::render::Rendertarget</a></div><div class="ttdef"><b>Definition:</b> Rendertarget.hpp:8</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1render_1_1Shader_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Shader.html">Birdy3d::render::Shader</a></div><div class="ttdef"><b>Definition:</b> Shader.hpp:8</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1render_1_1Texture_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Texture.html">Birdy3d::render::Texture</a></div><div class="ttdef"><b>Definition:</b> Texture.hpp:8</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Adapter_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Adapter.html">Birdy3d::serializer::Adapter</a></div><div class="ttdef"><b>Definition:</b> Adapter.hpp:78</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1utils_1_1Color_html"><div class="ttname"><a href="classBirdy3d_1_1utils_1_1Color.html">Birdy3d::utils::Color</a></div><div class="ttdef"><b>Definition:</b> Color.hpp:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
