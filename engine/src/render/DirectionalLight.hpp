@@ -23,13 +23,15 @@ namespace Birdy3d::render {
         void serialize(serializer::Adapter&) override;
 
     private:
-        const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
-        float m_cam_offset;
-        glm::mat4 m_light_space_transform;
+        const unsigned int SHADOW_SIZE = 2048;
+        float m_cam_offset = 1000.0f;
+        std::vector<float> m_shadow_cascade_levels;
+        std::vector<glm::mat4> m_light_space_transforms;
         core::ResourceHandle<Shader> m_depth_shader;
-        Rendertarget m_shadow_rendertarget;
-        Texture* m_shadow_map;
+        GLuint m_shadow_map_fbo, m_shadow_map;
         bool m_shadow_map_updated = false;
+
+        glm::mat4 calculate_light_space_matrix(const float near_plane, const float far_plane);
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(ecs::Component, DirectionalLight);
     };

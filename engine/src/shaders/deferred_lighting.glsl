@@ -21,6 +21,7 @@ uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 uniform sampler2D ssao;
 
+uniform mat4 view;
 uniform vec3 viewPos;
 
 void main() {
@@ -31,7 +32,7 @@ void main() {
     vec3 viewDir = normalize(viewPos - fragPos);
     float ambient_occlusion = texture(ssao, TexCoord).r;
 
-    vec3 lighting = calcLights(normal, fragPos, viewDir, diffuse, specular, ambient_occlusion);
+    vec3 lighting = calcLights(view, normal, fragPos, viewDir, diffuse, specular, ambient_occlusion);
 
     FragColor = vec4(lighting, 1.0f);
 }

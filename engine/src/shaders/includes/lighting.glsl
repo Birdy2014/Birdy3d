@@ -1,3 +1,5 @@
+#parameter SHADOW_CASCADE_SIZE 1
+
 #type fragment
 struct DirectionalLight {
     bool shadow_enabled;
@@ -8,8 +10,9 @@ struct DirectionalLight {
     vec3 ambient;
     vec3 diffuse;
 
-    mat4 lightSpaceMatrix;
-    sampler2DShadow shadowMap;
+    mat4 lightSpaceMatrices[SHADOW_CASCADE_SIZE];
+    float shadow_cascade_levels[SHADOW_CASCADE_SIZE];
+    sampler2DArrayShadow shadowMap;
 };
 
 struct PointLight {
@@ -69,7 +72,7 @@ float calc_specular_factor(vec3 normal, vec3 light_dir, vec3 view_dir, float shi
     return pow(max(dot(normal, halfwayDir), 0.0f), shininess) * (shininess / 100.0f);
 }
 
-vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess, float ambient_occlusion) {
+vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess, float ambient_occlusion, mat4 view) {
     vec3 lightDir = normalize(-light.direction);
 
     // ambient lighting
@@ -89,13 +92,51 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDi
         return lighting + ambient;
 
     // SHADOW
-    vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos, 1.0);
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords = projCoords * 0.5f + 0.5f;
-    //float bias = max(0.0001f * (1.0f - dot(normal, lightDir)), 0.0f);
+    /*
     float bias = 0.0f;
 
-    float shadow = texture(light.shadowMap, projCoords, bias);
+    float shadow = 0.0;
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos + vec3(x, y, 0.0f) * 0.001, 1.0);
+            vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+            projCoords = projCoords * 0.5f + 0.5f;
+            shadow += texture(light.shadowMap, projCoords, bias);
+        }
+    }
+    shadow /= 9.0;
+    */
+
+    vec4 fragPosViewSpace = view * vec4(fragPos, 1.0);
+    float depthValue = abs(fragPosViewSpace.z);
+
+    int layer = -1;
+    for (int i = 0; i < SHADOW_CASCADE_SIZE; ++i) {
+        if (depthValue < light.shadow_cascade_levels[i]) {
+            layer = i;
+            break;
+        }
+    }
+    if (layer == -1) {
+        layer = SHADOW_CASCADE_SIZE - 1;
+    }
+
+    vec4 fragPosLightSpace = light.lightSpaceMatrices[layer] * vec4(fragPos, 1.0);
+
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // get depth of current fragment from light's perspective
+    // float currentDepth = projCoords.z;
+    // if (currentDepth > 1.0) {
+    //     return 0.0;
+    // }
+    // calculate bias (based on depth map resolution and slope)
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    bias *= 1 / (light.shadow_cascade_levels[layer] * 0.5f);
+
+    // float shadow = texture(light.shadowMap, vec4(projCoords, layer), bias);
+    float shadow = texture(light.shadowMap, vec4(projCoords.xy, layer, projCoords.z));
 
     return lighting * shadow + ambient;
 }
@@ -166,11 +207,11 @@ vec3 calcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     return lighting * shadow + ambient;
 }
 
-vec3 calcLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess, float ambient_occlusion) {
+vec3 calcLights(mat4 view, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 materialColor, float shininess, float ambient_occlusion) {
     vec3 lighting = vec3(0);
 #if DIRECTIONAL_LIGHTS_AMOUNT > 0
     for (int i = 0; i < DIRECTIONAL_LIGHTS_AMOUNT; i++)
-        lighting += calcDirLight(dirLights[i], normal, fragPos, viewDir, materialColor, shininess, ambient_occlusion);
+        lighting += calcDirLight(dirLights[i], normal, fragPos, viewDir, materialColor, shininess, ambient_occlusion, view);
 #endif
 
 #if POINTLIGHTS_AMOUNT > 0

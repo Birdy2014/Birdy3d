@@ -22,7 +22,8 @@ namespace Birdy3d::core {
     std::weak_ptr<ui::Canvas> Application::canvas;
     ecs::Entity* Application::selected_entity = nullptr;
     GLFWwindow* Application::m_window = nullptr;
-    std::unordered_map<Option, bool> Application::m_options_bool;
+    std::unordered_map<BoolOption, bool> Application::m_options_bool;
+    std::unordered_map<IntOption, int> Application::m_options_int;
 
     bool Application::init(const char* window_name, int width, int height, const std::string& theme_name) {
         glfwInit();
@@ -66,6 +67,8 @@ namespace Birdy3d::core {
             Logger::critical("Invalid Theme '{}'", theme_name);
         ui::ConsoleCommands::register_all();
         render::Rendertarget::DEFAULT = std::shared_ptr<render::Rendertarget>(new render::Rendertarget(width, height, 0));
+        option_bool(BoolOption::VSYNC, true);
+        option_int(IntOption::SHADOW_CASCADE_SIZE, 5);
 
         return true;
     }
@@ -99,7 +102,7 @@ namespace Birdy3d::core {
                 if (auto camera = scene_ptr->main_camera.lock()) {
                     camera->render();
                     camera->render_outline(selected_entity);
-                    if (option_bool(Option::SHOW_COLLIDERS))
+                    if (option_bool(BoolOption::SHOW_COLLIDERS))
                         camera->render_collider_wireframe();
                 }
             }
@@ -154,23 +157,31 @@ namespace Birdy3d::core {
         return glm::vec2(viewport[2], viewport[3]);
     }
 
-    bool Application::option_bool(Option option) {
+    bool Application::option_bool(BoolOption option) {
         return m_options_bool[option];
     }
 
-    void Application::option_toggle(Option option) {
+    void Application::option_toggle(BoolOption option) {
         option_bool(option, !option_bool(option));
     }
 
-    void Application::option_bool(Option option, bool value) {
+    void Application::option_bool(BoolOption option, bool value) {
         m_options_bool[option] = value;
         switch (option) {
-        case Option::VSYNC:
+        case BoolOption::VSYNC:
             glfwSwapInterval(value);
             break;
         default:
             break;
         }
+    }
+
+    int Application::option_int(IntOption option) {
+        return m_options_int[option];
+    }
+
+    void Application::option_int(IntOption option, int value) {
+        m_options_int[option] = value;
     }
 
     ui::Theme& Application::theme() {

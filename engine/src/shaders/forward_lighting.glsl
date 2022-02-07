@@ -44,6 +44,7 @@ uniform sampler2D texture_diffuse;
 uniform sampler2D texture_specular;
 uniform sampler2D texture_normal;
 uniform vec3 viewPos;
+uniform mat4 view;
 
 void main() {
     vec3 viewDir = normalize(viewPos - FragPos);
@@ -53,7 +54,7 @@ void main() {
     if (var_diffuse.a < 0.1)
         discard;
 
-    vec3 lighting = calcLights(var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular, 1.0f);
+    vec3 lighting = calcLights(view, var_normal, FragPos, viewDir, var_diffuse.rgb, var_specular, 1.0f);
 
     FragColor = vec4(lighting, var_diffuse.a);
 }

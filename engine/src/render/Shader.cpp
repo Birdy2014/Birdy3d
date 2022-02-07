@@ -89,6 +89,7 @@ namespace Birdy3d::render {
                 if (type_name == "vertex") {
                     current_shader_source = &preprocessed_file.vertex_shader;
                 } else if (type_name == "geometry") {
+                    preprocessed_file.has_geometry_shader = true;
                     current_shader_source = &preprocessed_file.geometry_shader;
                 } else if (type_name == "fragment") {
                     current_shader_source = &preprocessed_file.fragment_shader;
@@ -103,7 +104,10 @@ namespace Birdy3d::render {
             if (std::regex_match(line, matches, regex_parameter_empty)) {
                 std::string parameter_name = matches[1];
                 m_valid_param_names.insert(parameter_name);
-                *current_shader_source += "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
+                auto define = "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
+                preprocessed_file.vertex_shader += define;
+                preprocessed_file.geometry_shader += define;
+                preprocessed_file.fragment_shader += define;
                 continue;
             }
 
@@ -111,10 +115,11 @@ namespace Birdy3d::render {
                 std::string parameter_name = matches[1];
                 std::string parameter_default = matches[2];
                 m_valid_param_names.insert(parameter_name);
-                if (m_params.count(parameter_name) > 0)
-                    *current_shader_source += "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
-                else
-                    *current_shader_source += "#define " + parameter_name + " " + parameter_default + "\n";
+                auto define = (m_params.count(parameter_name) > 0) ? "#define " + parameter_name + " " + m_params[parameter_name] + "\n"
+                                                                   : "#define " + parameter_name + " " + parameter_default + "\n";
+                preprocessed_file.vertex_shader += define;
+                preprocessed_file.geometry_shader += define;
+                preprocessed_file.fragment_shader += define;
                 continue;
             }
 
@@ -141,7 +146,7 @@ namespace Birdy3d::render {
             return;
         }
 
-        if (!shader_sources.geometry_shader.empty()) {
+        if (shader_sources.has_geometry_shader) {
             geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
             const char* geometry_source_string = shader_sources.geometry_shader.c_str();
             glShaderSource(geometry_shader, 1, &geometry_source_string, nullptr);
@@ -291,6 +296,8 @@ namespace Birdy3d::render {
         vertex_shader += other.vertex_shader;
         geometry_shader += other.geometry_shader;
         fragment_shader += other.fragment_shader;
+        if (other.has_geometry_shader)
+            has_geometry_shader = true;
     }
 
 }

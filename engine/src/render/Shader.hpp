@@ -40,6 +40,7 @@ namespace Birdy3d::render {
             std::string vertex_shader;
             std::string geometry_shader;
             std::string fragment_shader;
+            bool has_geometry_shader { false };
 
             void operator+=(const PreprocessedSources&);
         };

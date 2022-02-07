@@ -54,11 +54,14 @@ namespace Birdy3d::core {
         }
 
         void arg(std::string key, std::string value) {
+            auto old = m_id.args[key];
             m_id.args[key] = value;
+            if (old != value)
+                load();
         }
 
         void arg(std::string key, std::integral auto value) {
-            m_id.args[key] = std::to_string(value);
+            arg(key, std::to_string(value));
         }
 
     private:
