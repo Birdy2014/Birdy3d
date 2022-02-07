@@ -476,12 +476,12 @@ int main() {
         GLFW_KEY_N);
 
     core::Application::event_bus->subscribe<events::InputKeyEvent>([](const events::InputKeyEvent&) {
-        core::Application::option_toggle(core::Option::VSYNC);
+        core::Application::option_toggle(core::BoolOption::VSYNC);
     },
         GLFW_KEY_V);
 
     core::Application::event_bus->subscribe<events::InputKeyEvent>([](const events::InputKeyEvent&) {
-        core::Application::option_toggle(core::Option::SHOW_COLLIDERS);
+        core::Application::option_toggle(core::BoolOption::SHOW_COLLIDERS);
     },
         GLFW_KEY_P);
 

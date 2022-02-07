@@ -16,13 +16,13 @@ namespace Birdy3d::render {
         , intensity_diffuse(intensity_diffuse)
         , linear(linear)
         , quadratic(quadratic)
-        , shadow_enabled(shadow_enabled)
         , m_inner_cutoff(inner_cutoff)
         , m_outer_cutoff(outer_cutoff)
+        , shadow_enabled(shadow_enabled)
         , m_shadow_rendertarget(SHADOW_WIDTH, SHADOW_HEIGHT) { }
 
     void Spotlight::setup_shadow_map() {
-        m_depth_shader = core::ResourceManager::get_shader("directional_light_depth.glsl");
+        m_depth_shader = core::ResourceManager::get_shader("spot_light_depth.glsl");
         m_shadow_map = m_shadow_rendertarget.add_texture(Texture::Preset::DEPTH);
         m_shadow_rendertarget.finish();
 

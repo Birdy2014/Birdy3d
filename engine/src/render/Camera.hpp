@@ -11,6 +11,11 @@ namespace Birdy3d::render {
     class Camera : public ecs::Component {
     public:
         bool display_normals = false;
+        bool deferred_enabled = true;
+        float fov = glm::radians(80.0f);
+        float near = 0.1f;
+        float far = 100.0f;
+        std::shared_ptr<Rendertarget> target;
 
         Camera();
         Camera(std::shared_ptr<Rendertarget> target, bool deferred);
@@ -20,16 +25,18 @@ namespace Birdy3d::render {
         void render_outline(ecs::Entity*);
         void render_collider_wireframe();
         void serialize(serializer::Adapter&) override;
+        glm::mat4 view() { return m_view; }
+        glm::mat4 projection() { return m_projection; }
 
     private:
         int m_old_target_width, m_old_target_height;
-        bool m_deferred_enabled;
-        std::shared_ptr<Rendertarget> m_target;
 
         Rendertarget m_gbuffer;
         Texture *m_gbuffer_position, *m_gbuffer_normal, *m_gbuffer_albedo_spec;
 
+        glm::mat4 m_view;
         glm::mat4 m_projection;
+
         unsigned int m_quad_vao = 0;
         unsigned int m_quad_vbo;
         core::ResourceHandle<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader, m_normal_shader, m_simple_color_shader;
