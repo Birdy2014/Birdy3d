@@ -7,19 +7,42 @@
 
 namespace Birdy3d::utils {
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_plane() {
-        // clang-format off
-        std::vector<render::Vertex> vertices = {
-            render::Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            render::Vertex { glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            render::Vertex { glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.625f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-            render::Vertex { glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.25f), glm::vec3(-1.0f, 0.0f, 0.0f) },
-        };
-        std::vector<unsigned int> indices = {
-            0, 1, 2,
-            0, 3, 1,
-        };
-        // clang-format on
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_plane(unsigned int resolution) {
+        std::vector<render::Vertex> vertices;
+        std::vector<unsigned int> indices;
+        std::size_t vertex_count = (resolution + 1) * (resolution + 1);
+        std::size_t index_count = 6 * resolution * resolution;
+        vertices.reserve(vertex_count);
+        indices.reserve(index_count);
+
+        float pos_step = 2.0f / resolution;
+        float tex_step = 1.0f / resolution;
+
+        for (std::size_t x = 0; x <= resolution; ++x) {
+            for (std::size_t z = 0; z <= resolution; ++z) {
+                // clang-format off
+                vertices.emplace_back<render::Vertex>({
+                    { x * pos_step - 1.0f, 0.0f, z * pos_step - 1.0f },
+                    { 0.0f, 1.0f, 0.0f },
+                    { x * tex_step, (resolution - z) * tex_step },
+                    { -1.0f, 0.0f, 0.0f }
+                });
+                // clang-format on
+            }
+        }
+
+        for (std::size_t v = 0; v < vertex_count - resolution - 2; ++v) {
+            if ((v + 1) % (resolution + 1) == 0)
+                ++v;
+
+            indices.push_back(v);
+            indices.push_back(v + 1);
+            indices.push_back(v + resolution + 1);
+
+            indices.push_back(v + 1);
+            indices.push_back(v + resolution + 2);
+            indices.push_back(v + resolution + 1);
+        }
 
         std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
         return std::make_shared<render::Model>(std::move(mesh));
