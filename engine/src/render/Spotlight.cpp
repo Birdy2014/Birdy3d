@@ -47,7 +47,7 @@ namespace Birdy3d::render {
         glm::mat4 light_view = glm::lookAt(world_pos, world_pos + entity->world_forward(), entity->world_up());
 
         m_light_space_transform = light_projection * light_view;
-        m_depth_shader->set_mat4("lightSpaceMatrix", m_light_space_transform);
+        m_depth_shader->set_mat4("light_space_matrix", m_light_space_transform);
         for (auto m : entity->scene->get_components<ModelComponent>(false, true)) {
             m->render_depth(*m_depth_shader);
         }
@@ -67,13 +67,13 @@ namespace Birdy3d::render {
         light_shader.set_vec3(name + "direction", entity->world_forward());
         light_shader.set_vec3(name + "ambient", color.value * intensity_ambient);
         light_shader.set_vec3(name + "diffuse", color.value * intensity_diffuse);
-        light_shader.set_float(name + "innerCutOff", glm::cos(m_inner_cutoff));
-        light_shader.set_float(name + "outerCutOff", glm::cos(m_outer_cutoff));
+        light_shader.set_float(name + "inner_cutoff", glm::cos(m_inner_cutoff));
+        light_shader.set_float(name + "outer_cutoff", glm::cos(m_outer_cutoff));
         light_shader.set_float(name + "linear", linear);
         light_shader.set_float(name + "quadratic", quadratic);
         m_shadow_map->bind(textureid);
-        light_shader.set_mat4(name + "lightSpaceMatrix", m_light_space_transform);
-        light_shader.set_int(name + "shadowMap", textureid);
+        light_shader.set_mat4(name + "light_space_matrix", m_light_space_transform);
+        light_shader.set_int(name + "shadow_map", textureid);
     }
 
     void Spotlight::start() {

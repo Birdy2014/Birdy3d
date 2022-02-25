@@ -41,7 +41,7 @@ namespace Birdy3d::ui {
         m_shader->set_mat4("move", move);
         m_shader->set_mat4("move_self", m_move_self);
         m_shader->set_vec4("color", core::Application::theme().color(m_color));
-        m_shader->set_int("rectTexture", 0);
+        m_shader->set_int("rect_texture", 0);
         glBindVertexArray(m_vao);
         if (type == Shape::OUTLINE)
             glDrawArrays(GL_LINE_LOOP, 0, 4);

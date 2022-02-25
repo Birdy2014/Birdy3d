@@ -1,38 +1,38 @@
 #include includes/lighting.glsl
 
 #type vertex
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
+layout (location = 0) in vec3 in_pos;
+layout (location = 1) in vec2 in_tex_coord;
 
-out vec2 TexCoord;
+out vec2 v_tex_coord;
 
 void main() {
-    gl_Position = vec4(aPos, 1.0);
-    TexCoord = aTexCoord;
+    gl_Position = vec4(in_pos, 1.0);
+    v_tex_coord = in_tex_coord;
 }
 
 #type fragment
-out vec4 FragColor;
+out vec4 frag_color;
 
-in vec2 TexCoord;
+in vec2 v_tex_coord;
 
-uniform sampler2D gPosition;
-uniform sampler2D gNormal;
-uniform sampler2D gAlbedoSpec;
+uniform sampler2D gbuffer_position;
+uniform sampler2D gbuffer_normal;
+uniform sampler2D gbuffer_albedo_spec;
 uniform sampler2D ssao;
 
 uniform mat4 view;
-uniform vec3 viewPos;
+uniform vec3 view_pos;
 
 void main() {
-    vec3 fragPos = texture(gPosition, TexCoord).rgb;
-    vec3 normal = texture(gNormal, TexCoord).rgb;
-    vec3 diffuse = texture(gAlbedoSpec, TexCoord).rgb;
-    float specular = texture(gAlbedoSpec, TexCoord).a * 100.0f;
-    vec3 viewDir = normalize(viewPos - fragPos);
-    float ambient_occlusion = texture(ssao, TexCoord).r;
+    vec3 frag_pos = texture(gbuffer_position, v_tex_coord).rgb;
+    vec3 normal = texture(gbuffer_normal, v_tex_coord).rgb;
+    vec3 diffuse = texture(gbuffer_albedo_spec, v_tex_coord).rgb;
+    float specular = texture(gbuffer_albedo_spec, v_tex_coord).a * 100.0f;
+    vec3 view_dir = normalize(view_pos - frag_pos);
+    float ambient_occlusion = texture(ssao, v_tex_coord).r;
 
-    vec3 lighting = calcLights(view, normal, fragPos, viewDir, diffuse, specular, ambient_occlusion);
+    vec3 lighting = calc_lights(view, normal, frag_pos, view_dir, diffuse, specular, ambient_occlusion);
 
-    FragColor = vec4(lighting, 1.0f);
+    frag_color = vec4(lighting, 1.0f);
 }

@@ -1,55 +1,24 @@
+#include includes/geometry_vertex_shader.glsl
 #include includes/material.glsl
 
-#type vertex
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoords;
-layout (location = 3) in vec3 aTangent;
-
-out vec3 FragPos;
-out vec2 TexCoords;
-out vec3 Normal;
-out mat3 TBN;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-void main() {
-    vec4 worldPos = model * vec4(aPos, 1.0f);
-
-    FragPos = worldPos.xyz;
-    TexCoords = aTexCoords;
-
-    mat3 normalMatrix = transpose(inverse(mat3(model)));
-    vec3 T = normalize(normalMatrix * aTangent);
-    Normal = normalize(normalMatrix * aNormal);
-    T = normalize(T - dot(T, Normal) * Normal);
-    vec3 B = cross(Normal, T);
-
-    TBN = mat3(T, B, Normal);
-
-    gl_Position = projection * view * worldPos;
-}
-
 #type fragment
-layout (location = 0) out vec3 gPosition;
-layout (location = 1) out vec3 gNormal;
-layout (location = 2) out vec4 gAlbedoSpec;
+layout (location = 0) out vec3 gbuffer_position;
+layout (location = 1) out vec3 gbuffer_normal;
+layout (location = 2) out vec4 gbuffer_albedo_spec;
 
-in vec2 TexCoords;
-in vec3 FragPos;
-in vec3 Normal;
+in vec2 v_tex_coords;
+in vec3 v_frag_pos;
+in vec3 v_normal;
 in mat3 TBN;
 
 void main() {
-    gPosition = FragPos;
-    gAlbedoSpec.rgb = material.diffuse_map_enabled ? texture(material.diffuse_map, TexCoords).rgb : material.diffuse_color.rgb;
+    gbuffer_position = v_frag_pos;
+    gbuffer_albedo_spec.rgb = material.diffuse_map_enabled ? texture(material.diffuse_map, v_tex_coords).rgb : material.diffuse_color.rgb;
 
     if (material.normal_map_enabled)
-        gNormal = normalize(TBN * (texture(material.normal_map, TexCoords).rgb * 2.0 - 1.0));
+        gbuffer_normal = normalize(TBN * (texture(material.normal_map, v_tex_coords).rgb * 2.0 - 1.0));
     else
-        gNormal = normalize(Normal);
+        gbuffer_normal = normalize(v_normal);
 
-    gAlbedoSpec.a = material.specular_map_enabled ? texture(material.specular_map, TexCoords).r : material.specular_value / 100;
+    gbuffer_albedo_spec.a = material.specular_map_enabled ? texture(material.specular_map, v_tex_coords).r : material.specular_value / 100;
 }

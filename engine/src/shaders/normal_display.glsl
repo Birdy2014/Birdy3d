@@ -1,6 +1,6 @@
 #type vertex
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNormal;
+layout (location = 0) in vec3 in_pos;
+layout (location = 1) in vec3 in_normal;
 
 out VS_OUT {
     vec3 normal;
@@ -10,9 +10,9 @@ uniform mat4 view;
 uniform mat4 model;
 
 void main() {
-    gl_Position = view * model * vec4(aPos, 1.0);
-    mat3 normalMatrix = mat3(transpose(inverse(view * model)));
-    vs_out.normal = normalize(normalMatrix * aNormal);
+    gl_Position = view * model * vec4(in_pos, 1.0);
+    mat3 normal_matrix = mat3(transpose(inverse(view * model)));
+    vs_out.normal = normalize(normal_matrix * in_normal);
 }
 
 #type geometry
@@ -42,8 +42,8 @@ void main() {
 }
 
 #type fragment
-out vec4 FragColor;
+out vec4 frag_color;
 
 void main() {
-    FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+    frag_color = vec4(1.0, 1.0, 0.0, 1.0);
 }
