@@ -53,7 +53,7 @@ namespace Birdy3d::render {
             gen_shadow_map();
             m_shadow_map_updated = true;
         }
-        std::string name = "dirLights[" + std::to_string(id) + "].";
+        std::string name = "directional_lights[" + std::to_string(id) + "].";
         light_shader.use();
         light_shader.set_bool(name + "shadow_enabled", shadow_enabled);
         light_shader.set_vec3(name + "position", entity->scene->m_current_camera->entity->transform.world_position() - entity->world_forward() * m_cam_offset);
@@ -63,10 +63,10 @@ namespace Birdy3d::render {
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_2D_ARRAY, m_shadow_map);
         for (int i = 0; i < core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE); ++i) {
-            light_shader.set_mat4(name + "lightSpaceMatrices[" + std::to_string(i) + "]", m_light_space_transforms[i]);
+            light_shader.set_mat4(name + "light_space_matrices[" + std::to_string(i) + "]", m_light_space_transforms[i]);
             light_shader.set_float(name + "shadow_cascade_levels[" + std::to_string(i) + "]", m_shadow_cascade_levels[i]);
         }
-        light_shader.set_int(name + "shadowMap", textureid);
+        light_shader.set_int(name + "shadow_map", textureid);
     }
 
     void DirectionalLight::gen_shadow_map() {

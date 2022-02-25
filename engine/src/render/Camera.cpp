@@ -64,11 +64,11 @@ namespace Birdy3d::render {
         m_ssao_blur_shader = core::ResourceManager::get_shader("ssao_blur.glsl");
         m_deferred_light_shader->use();
         m_ssao_shader->use();
-        m_ssao_shader->set_int("gPosition", 0);
-        m_ssao_shader->set_int("gNormal", 1);
-        m_ssao_shader->set_int("texNoise", 2);
+        m_ssao_shader->set_int("gbuffer_position", 0);
+        m_ssao_shader->set_int("gbuffer_normal", 1);
+        m_ssao_shader->set_int("tex_noise", 2);
         m_ssao_blur_shader->use();
-        m_ssao_blur_shader->set_int("ssaoInput", 0);
+        m_ssao_blur_shader->set_int("ssao_input", 0);
 
         // SSAO noise texture
         std::uniform_real_distribution<GLfloat> random_floats(0.0, 1.0);
@@ -248,12 +248,12 @@ namespace Birdy3d::render {
 
         target->bind();
         glClear(GL_COLOR_BUFFER_BIT);
-        m_deferred_light_shader->set_int("gPosition", 0);
-        m_deferred_light_shader->set_int("gNormal", 1);
-        m_deferred_light_shader->set_int("gAlbedoSpec", 2);
+        m_deferred_light_shader->set_int("gbuffer_position", 0);
+        m_deferred_light_shader->set_int("gbuffer_normal", 1);
+        m_deferred_light_shader->set_int("gbuffer_albedo_spec", 2);
         m_deferred_light_shader->set_int("ssao", 3);
         m_deferred_light_shader->set_mat4("view", m_view);
-        m_deferred_light_shader->set_vec3("viewPos", entity->transform.world_position());
+        m_deferred_light_shader->set_vec3("view_pos", entity->transform.world_position());
         render_quad();
     }
 
@@ -281,7 +281,7 @@ namespace Birdy3d::render {
         m_forward_shader->use();
         m_forward_shader->set_mat4("projection", m_projection);
         m_forward_shader->set_mat4("view", m_view);
-        m_forward_shader->set_vec3("viewPos", entity->transform.world_position());
+        m_forward_shader->set_vec3("view_pos", entity->transform.world_position());
         if (renderOpaque) {
             for (auto m : m_models) {
                 m->render(*m_forward_shader, false);

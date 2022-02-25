@@ -45,7 +45,7 @@ namespace Birdy3d::render {
             gen_shadow_map();
             m_shadow_map_updated = true;
         }
-        std::string name = "pointLights[" + std::to_string(id) + "].";
+        std::string name = "point_lights[" + std::to_string(id) + "].";
         light_shader.use();
         light_shader.set_bool(name + "shadow_enabled", shadow_enabled);
         light_shader.set_vec3(name + "position", entity->transform.world_position());
@@ -55,7 +55,7 @@ namespace Birdy3d::render {
         light_shader.set_float(name + "quadratic", quadratic);
         glActiveTexture(GL_TEXTURE0 + textureid);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_shadow_map);
-        light_shader.set_int(name + "shadowMap", textureid);
+        light_shader.set_int(name + "shadow_map", textureid);
         light_shader.set_float(name + "far", m_far);
     }
 
@@ -73,14 +73,14 @@ namespace Birdy3d::render {
         float near = 1.0f;
         glm::mat4 shadow_proj = glm::perspective(glm::radians(90.0f), aspect, near, m_far);
 
-        m_depth_shader->set_mat4("shadowMatrices[0]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-        m_depth_shader->set_mat4("shadowMatrices[1]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-        m_depth_shader->set_mat4("shadowMatrices[2]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
-        m_depth_shader->set_mat4("shadowMatrices[3]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
-        m_depth_shader->set_mat4("shadowMatrices[4]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
-        m_depth_shader->set_mat4("shadowMatrices[5]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+        m_depth_shader->set_mat4("shadow_matrices[0]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+        m_depth_shader->set_mat4("shadow_matrices[1]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+        m_depth_shader->set_mat4("shadow_matrices[2]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+        m_depth_shader->set_mat4("shadow_matrices[3]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+        m_depth_shader->set_mat4("shadow_matrices[4]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+        m_depth_shader->set_mat4("shadow_matrices[5]", shadow_proj * glm::lookAt(world_pos, world_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
         m_depth_shader->set_float("far_plane", m_far);
-        m_depth_shader->set_vec3("lightPos", world_pos);
+        m_depth_shader->set_vec3("light_pos", world_pos);
         for (auto m : entity->scene->get_components<ModelComponent>(false, true)) {
             m->render_depth(*m_depth_shader);
         }
