@@ -60,6 +60,9 @@ namespace Birdy3d::core {
         glfwSetKeyCallback(m_window, key_callback);
         glfwSetCharCallback(m_window, character_callback);
 
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(gl_message_callback, 0);
+
         // Init variables
         ResourceManager::init();
         event_bus = new events::EventBus();
@@ -145,6 +148,40 @@ namespace Birdy3d::core {
 
     void Application::character_callback(GLFWwindow*, unsigned int codepoint) {
         event_bus->emit<events::InputCharEvent>(codepoint);
+    }
+
+    void Application::gl_message_callback(GLenum source, GLenum type, GLenum, GLenum severity, GLsizei, const GLchar* message, const void*) {
+        static const std::unordered_map<GLenum, std::string> error_source_map {
+            { GL_DEBUG_SOURCE_API, "SOURCE_API" },
+            { GL_DEBUG_SOURCE_WINDOW_SYSTEM, "WINDOW_SYSTEM" },
+            { GL_DEBUG_SOURCE_SHADER_COMPILER, "SHADER_COMPILER" },
+            { GL_DEBUG_SOURCE_THIRD_PARTY, "THIRD_PARTY" },
+            { GL_DEBUG_SOURCE_APPLICATION, "APPLICATION" },
+            { GL_DEBUG_SOURCE_OTHER, "OTHER" }
+        };
+        static const std::unordered_map<GLenum, std::string> error_type_map {
+            { GL_DEBUG_TYPE_ERROR, "ERROR" },
+            { GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "DEPRECATED_BEHAVIOR" },
+            { GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "UNDEFINED_BEHAVIOR" },
+            { GL_DEBUG_TYPE_PORTABILITY, "PORTABILITY" },
+            { GL_DEBUG_TYPE_PERFORMANCE, "PERFORMANCE" },
+            { GL_DEBUG_TYPE_OTHER, "OTHER" },
+            { GL_DEBUG_TYPE_MARKER, "MARKER" }
+        };
+        static const std::unordered_map<GLenum, std::string> error_severity_map {
+            { GL_DEBUG_SEVERITY_HIGH, "HIGH" },
+            { GL_DEBUG_SEVERITY_MEDIUM, "MEDIUM" },
+            { GL_DEBUG_SEVERITY_LOW, "LOW" },
+            { GL_DEBUG_SEVERITY_NOTIFICATION, "NOTIFICATION" }
+        };
+
+        if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+            return;
+
+        if (type == GL_DEBUG_TYPE_ERROR)
+            core::Logger::error("OpenGL: source = {}, severity = {}, message = {}\n", error_source_map.at(source), error_severity_map.at(severity), message);
+        else
+            core::Logger::warn("OpenGL: source = {}, type = {}, severity = {}, message = {}\n", error_source_map.at(source), error_type_map.at(type), error_severity_map.at(severity), message);
     }
 
     GLFWwindow* Application::get_window() {
