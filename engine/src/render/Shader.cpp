@@ -197,99 +197,99 @@ namespace Birdy3d::render {
     }
 
     void Shader::set_bool(const char* name, bool value) const {
-        glUniform1i(glGetUniformLocation(m_id, name), (int)value);
+        glProgramUniform1i(m_id, glGetUniformLocation(m_id, name), (int)value);
     }
 
     void Shader::set_int(const char* name, int value) const {
-        glUniform1i(glGetUniformLocation(m_id, name), value);
+        glProgramUniform1i(m_id, glGetUniformLocation(m_id, name), value);
     }
 
     void Shader::set_float(const char* name, float value) const {
-        glUniform1f(glGetUniformLocation(m_id, name), value);
+        glProgramUniform1f(m_id, glGetUniformLocation(m_id, name), value);
     }
 
     void Shader::set_vec2(const char* name, const glm::vec2& value) const {
-        glUniform2fv(glGetUniformLocation(m_id, name), 1, &value[0]);
+        glProgramUniform2fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
     void Shader::set_vec2(const char* name, float x, float y) const {
-        glUniform2f(glGetUniformLocation(m_id, name), x, y);
+        glProgramUniform2f(m_id, glGetUniformLocation(m_id, name), x, y);
     }
 
     void Shader::set_vec3(const char* name, const glm::vec3& value) const {
-        glUniform3fv(glGetUniformLocation(m_id, name), 1, &value[0]);
+        glProgramUniform3fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
     void Shader::set_vec3(const char* name, float x, float y, float z) const {
-        glUniform3f(glGetUniformLocation(m_id, name), x, y, z);
+        glProgramUniform3f(m_id, glGetUniformLocation(m_id, name), x, y, z);
     }
 
     void Shader::set_vec4(const char* name, const glm::vec4& value) const {
-        glUniform4fv(glGetUniformLocation(m_id, name), 1, &value[0]);
+        glProgramUniform4fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
     void Shader::set_vec4(const char* name, float x, float y, float z, float w) const {
-        glUniform4f(glGetUniformLocation(m_id, name), x, y, z, w);
+        glProgramUniform4f(m_id, glGetUniformLocation(m_id, name), x, y, z, w);
     }
 
     void Shader::set_mat2(const char* name, const glm::mat2& mat) const {
-        glUniformMatrix2fv(glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
+        glProgramUniformMatrix2fv(m_id, glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
     }
 
     void Shader::set_mat3(const char* name, const glm::mat3& mat) const {
-        glUniformMatrix3fv(glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
+        glProgramUniformMatrix3fv(m_id, glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
     }
 
     void Shader::set_mat4(const char* name, const glm::mat4& mat) const {
-        glUniformMatrix4fv(glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
+        glProgramUniformMatrix4fv(m_id, glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
     }
 
     void Shader::set_bool(const std::string& name, bool value) const {
-        glUniform1i(glGetUniformLocation(m_id, name.c_str()), (int)value);
+        glProgramUniform1i(m_id, glGetUniformLocation(m_id, name.c_str()), (int)value);
     }
 
     void Shader::set_int(const std::string& name, int value) const {
-        glUniform1i(glGetUniformLocation(m_id, name.c_str()), value);
+        glProgramUniform1i(m_id, glGetUniformLocation(m_id, name.c_str()), value);
     }
 
     void Shader::set_float(const std::string& name, float value) const {
-        glUniform1f(glGetUniformLocation(m_id, name.c_str()), value);
+        glProgramUniform1f(m_id, glGetUniformLocation(m_id, name.c_str()), value);
     }
 
     void Shader::set_vec2(const std::string& name, const glm::vec2& value) const {
-        glUniform2fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+        glProgramUniform2fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
     void Shader::set_vec2(const std::string& name, float x, float y) const {
-        glUniform2f(glGetUniformLocation(m_id, name.c_str()), x, y);
+        glProgramUniform2f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y);
     }
 
     void Shader::set_vec3(const std::string& name, const glm::vec3& value) const {
-        glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+        glProgramUniform3fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
     void Shader::set_vec3(const std::string& name, float x, float y, float z) const {
-        glUniform3f(glGetUniformLocation(m_id, name.c_str()), x, y, z);
+        glProgramUniform3f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y, z);
     }
 
     void Shader::set_vec4(const std::string& name, const glm::vec4& value) const {
-        glUniform4fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+        glProgramUniform4fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
     void Shader::set_vec4(const std::string& name, float x, float y, float z, float w) const {
-        glUniform4f(glGetUniformLocation(m_id, name.c_str()), x, y, z, w);
+        glProgramUniform4f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y, z, w);
     }
 
     void Shader::set_mat2(const std::string& name, const glm::mat2& mat) const {
-        glUniformMatrix2fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+        glProgramUniformMatrix2fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
     void Shader::set_mat3(const std::string& name, const glm::mat3& mat) const {
-        glUniformMatrix3fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+        glProgramUniformMatrix3fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
     void Shader::set_mat4(const std::string& name, const glm::mat4& mat) const {
-        glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+        glProgramUniformMatrix4fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
     void Shader::PreprocessedSources::operator+=(const PreprocessedSources& other) {
