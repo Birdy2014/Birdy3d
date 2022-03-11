@@ -48,6 +48,44 @@ namespace Birdy3d::utils {
         return std::make_shared<render::Model>(std::move(mesh));
     }
 
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_quad_plane(unsigned int resolution) {
+        std::vector<render::Vertex> vertices;
+        std::vector<unsigned int> indices;
+        std::size_t vertex_count = (resolution + 1) * (resolution + 1);
+        std::size_t index_count = 4 * resolution * resolution;
+        vertices.reserve(vertex_count);
+        indices.reserve(index_count);
+
+        float pos_step = 2.0f / resolution;
+        float tex_step = 1.0f / resolution;
+
+        for (std::size_t x = 0; x <= resolution; ++x) {
+            for (std::size_t z = 0; z <= resolution; ++z) {
+                // clang-format off
+                vertices.emplace_back<render::Vertex>({
+                    { x * pos_step - 1.0f, 0.0f, z * pos_step - 1.0f },
+                    { 0.0f, 1.0f, 0.0f },
+                    { x * tex_step, (resolution - z) * tex_step },
+                    { -1.0f, 0.0f, 0.0f }
+                });
+                // clang-format on
+            }
+        }
+
+        for (std::size_t v = 0; v < vertex_count - resolution - 2; ++v) {
+            if ((v + 1) % (resolution + 1) == 0)
+                ++v;
+
+            indices.push_back(v);
+            indices.push_back(v + 1);
+            indices.push_back(v + resolution + 1);
+            indices.push_back(v + resolution + 2);
+        }
+
+        std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
+        return std::make_shared<render::Model>(std::move(mesh));
+    }
+
     std::shared_ptr<render::Model> PrimitiveGenerator::generate_cube() {
         // clang-format off
         std::vector<render::Vertex> vertices = {

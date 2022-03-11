@@ -19,6 +19,7 @@ namespace Birdy3d::render {
 
     void DirectionalLight::setup_shadow_map() {
         m_depth_shader = "directional_light_depth.glsl";
+        m_depth_tesselation_shader = "directional_light_depth_tesselation.glsl";
 
         glGenFramebuffers(1, &m_shadow_map_fbo);
 
@@ -78,7 +79,7 @@ namespace Birdy3d::render {
 
         int shadow_cascade_size = core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE);
         m_depth_shader.arg("SHADOW_CASCADE_SIZE", shadow_cascade_size);
-        m_depth_shader->use();
+        m_depth_tesselation_shader.arg("SHADOW_CASCADE_SIZE", shadow_cascade_size);
 
         float nearest = 5.0f;
         float camera_near = entity->scene->m_current_camera->near;
@@ -92,9 +93,16 @@ namespace Birdy3d::render {
             m_shadow_cascade_levels[i] = far;
             m_light_space_transforms[i] = calculate_light_space_matrix(near, far);
             m_depth_shader->set_mat4("light_space_matrices[" + std::to_string(i) + "]", m_light_space_transforms[i]);
+            m_depth_tesselation_shader->set_mat4("light_space_matrices[" + std::to_string(i) + "]", m_light_space_transforms[i]);
         }
         for (auto m : entity->scene->get_components<ModelComponent>(false, true)) {
-            m->render_depth(*m_depth_shader);
+            if (auto material = m->material(); material ? material->height_map_enabled : false) {
+                m_depth_tesselation_shader->use();
+                m->render_depth(*m_depth_tesselation_shader);
+            } else {
+                m_depth_shader->use();
+                m->render_depth(*m_depth_shader);
+            }
         }
 
         glCullFace(GL_BACK);

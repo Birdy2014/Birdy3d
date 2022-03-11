@@ -63,6 +63,9 @@ namespace Birdy3d::core {
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(gl_message_callback, 0);
 
+        // TODO: Support triangle patches
+        glPatchParameteri(GL_PATCH_VERTICES, 4);
+
         // Init variables
         ResourceManager::init();
         event_bus = new events::EventBus();

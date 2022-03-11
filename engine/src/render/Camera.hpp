@@ -39,7 +39,8 @@ namespace Birdy3d::render {
 
         unsigned int m_quad_vao = 0;
         unsigned int m_quad_vbo;
-        core::ResourceHandle<Shader> m_deferred_geometry_shader, m_deferred_light_shader, m_forward_shader, m_normal_shader, m_simple_color_shader;
+        core::ResourceHandle<Shader> m_deferred_geometry_shader, m_deferred_geometry_tesselation_shader, m_deferred_light_shader;
+        core::ResourceHandle<Shader> m_forward_shader, m_forward_tesselation_shader, m_normal_shader, m_simple_color_shader;
         unsigned int m_outline_vao = 0;
         unsigned int m_outline_vbo = 0;
 

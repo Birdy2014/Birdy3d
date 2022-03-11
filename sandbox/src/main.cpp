@@ -421,6 +421,10 @@ int main() {
         red_transparent_material->diffuse_color = glm::vec4(1.0f, 0.0f, 1.0f, 0.5f);
         auto blue_transparent_material = std::make_shared<render::Material>();
         blue_transparent_material->diffuse_color = glm::vec4(0.0f, 1.0f, 1.0f, 0.5f);
+        auto heightmap_material = std::make_shared<render::Material>();
+        heightmap_material->height_map_enabled = true;
+        heightmap_material->height_map("file::earth-heightmap.png");
+        heightmap_material->specular_value = 1.0f;
 
         auto obj = scene->add_child("obj", glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f));
         obj->add_component<physics::Collider>(physics::GenerationMode::HULL_MODEL);
@@ -430,7 +434,7 @@ int main() {
         obj2->add_component<render::ModelComponent>("primitive::cube", white_material);
 
         auto plane = scene->add_child("plane", glm::vec3(2.0f, -4.0f, 2.0f), glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-        plane->add_component<render::ModelComponent>("primitive::plane", white_material);
+        plane->add_component<render::ModelComponent>("primitive::quad_plane:resolution=4", heightmap_material);
 
         auto obj3 = scene->add_child("obj3", glm::vec3(-3.0f, 5.0f, -1.0f), glm::vec3(0.0f));
         obj3->add_component<render::ModelComponent>("primitive::cube", blue_transparent_material);

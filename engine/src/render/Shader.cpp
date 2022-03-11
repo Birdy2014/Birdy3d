@@ -11,6 +11,7 @@ namespace Birdy3d::render {
         : m_name(name)
         , m_params(params) {
         PreprocessedSources shader_sources = preprocess_file(name);
+        m_has_tesselation = shader_sources.has_tesselation_control_shader && shader_sources.has_tesselation_evaluation_shader;
 
         for (const auto& param : m_params) {
             auto it = std::find(m_valid_param_names.cbegin(), m_valid_param_names.cend(), param.first);
@@ -18,12 +19,11 @@ namespace Birdy3d::render {
                 core::Logger::warn("Shader '{}': invalid parameter '{}'", name, param.first);
         }
 
-        if (!shader_sources.vertex_shader.empty())
-            shader_sources.vertex_shader.insert(0, "#version 460 core\n");
-        if (!shader_sources.geometry_shader.empty())
-            shader_sources.geometry_shader.insert(0, "#version 460 core\n");
-        if (!shader_sources.fragment_shader.empty())
-            shader_sources.fragment_shader.insert(0, "#version 460 core\n");
+        shader_sources.vertex_shader.insert(0, "#version 460 core\n");
+        shader_sources.tesselation_control_shader.insert(0, "#version 460 core\n");
+        shader_sources.tesselation_evaluation_shader.insert(0, "#version 460 core\n");
+        shader_sources.geometry_shader.insert(0, "#version 460 core\n");
+        shader_sources.fragment_shader.insert(0, "#version 460 core\n");
         compile(shader_sources);
     }
 
@@ -31,6 +31,10 @@ namespace Birdy3d::render {
         std::string type_string = "Invalid type";
         if (type == GL_VERTEX_SHADER)
             type_string = "vertex";
+        else if (type == GL_TESS_CONTROL_SHADER)
+            type_string = "tesselation control";
+        else if (type == GL_TESS_EVALUATION_SHADER)
+            type_string = "tesselation evaluation";
         else if (type == GL_GEOMETRY_SHADER)
             type_string = "geometry";
         else if (type == GL_FRAGMENT_SHADER)
@@ -63,14 +67,16 @@ namespace Birdy3d::render {
         PreprocessedSources preprocessed_file;
 
         std::string path = core::ResourceManager::get_resource_path(name, core::ResourceType::SHADER);
-        if (path.empty())
+        if (path.empty()) {
+            core::Logger::error("Shader preprocessing error: can't find file '{}'", name);
             return preprocessed_file;
+        }
 
         std::ifstream stream;
         stream.open(path);
 
         const std::regex regex_include("#include ([a-zA-Z0-9_./]+)");
-        const std::regex regex_type("#type (vertex|geometry|fragment)");
+        const std::regex regex_type("#type ([a-z_]+)");
         const std::regex regex_parameter_empty("#parameter ([a-zA-Z0-9_]+)");
         const std::regex regex_parameter_default("#parameter ([a-zA-Z0-9_]+) ([a-zA-Z0-9_\".]+)");
 
@@ -88,6 +94,12 @@ namespace Birdy3d::render {
                 auto type_name = matches[1];
                 if (type_name == "vertex") {
                     current_shader_source = &preprocessed_file.vertex_shader;
+                } else if (type_name == "tesselation_control") {
+                    preprocessed_file.has_tesselation_control_shader = true;
+                    current_shader_source = &preprocessed_file.tesselation_control_shader;
+                } else if (type_name == "tesselation_evaluation") {
+                    preprocessed_file.has_tesselation_evaluation_shader = true;
+                    current_shader_source = &preprocessed_file.tesselation_evaluation_shader;
                 } else if (type_name == "geometry") {
                     preprocessed_file.has_geometry_shader = true;
                     current_shader_source = &preprocessed_file.geometry_shader;
@@ -106,6 +118,8 @@ namespace Birdy3d::render {
                 m_valid_param_names.insert(parameter_name);
                 auto define = "#define " + parameter_name + " " + m_params[parameter_name] + "\n";
                 preprocessed_file.vertex_shader += define;
+                preprocessed_file.tesselation_control_shader += define;
+                preprocessed_file.tesselation_evaluation_shader += define;
                 preprocessed_file.geometry_shader += define;
                 preprocessed_file.fragment_shader += define;
                 continue;
@@ -118,6 +132,8 @@ namespace Birdy3d::render {
                 auto define = (m_params.count(parameter_name) > 0) ? "#define " + parameter_name + " " + m_params[parameter_name] + "\n"
                                                                    : "#define " + parameter_name + " " + parameter_default + "\n";
                 preprocessed_file.vertex_shader += define;
+                preprocessed_file.tesselation_control_shader += define;
+                preprocessed_file.tesselation_evaluation_shader += define;
                 preprocessed_file.geometry_shader += define;
                 preprocessed_file.fragment_shader += define;
                 continue;
@@ -133,7 +149,31 @@ namespace Birdy3d::render {
     void Shader::compile(const Shader::PreprocessedSources& shader_sources) {
         m_id = glCreateProgram();
 
-        GLuint vertex_shader = 0, geometry_shader = 0, fragment_shader = 0;
+        GLuint vertex_shader = 0, tesselation_control_shader = 0, tesselation_evaluation_shader = 0, geometry_shader = 0, fragment_shader = 0;
+
+        auto delete_shaders = [&] {
+            if (vertex_shader) {
+                glDetachShader(m_id, vertex_shader);
+                glDeleteShader(vertex_shader);
+            }
+            if (tesselation_control_shader) {
+                glDetachShader(m_id, tesselation_control_shader);
+                glDeleteShader(tesselation_control_shader);
+            }
+            if (tesselation_evaluation_shader) {
+                glDetachShader(m_id, tesselation_evaluation_shader);
+                glDeleteShader(tesselation_evaluation_shader);
+            }
+            if (geometry_shader) {
+                glDetachShader(m_id, vertex_shader);
+                glDeleteShader(geometry_shader);
+            }
+            if (fragment_shader) {
+                glDetachShader(m_id, fragment_shader);
+                glDeleteShader(fragment_shader);
+            }
+            glDeleteProgram(m_id);
+        };
 
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
         const char* vertex_source_string = shader_sources.vertex_shader.c_str();
@@ -141,9 +181,32 @@ namespace Birdy3d::render {
         glCompileShader(vertex_shader);
         glAttachShader(m_id, vertex_shader);
         if (check_compile_errors(vertex_shader, GL_VERTEX_SHADER)) {
-            glDeleteShader(vertex_shader);
-            glDeleteProgram(m_id);
+            delete_shaders();
             return;
+        }
+
+        if (shader_sources.has_tesselation_control_shader) {
+            tesselation_control_shader = glCreateShader(GL_TESS_CONTROL_SHADER);
+            const char* tesselation_control_source_string = shader_sources.tesselation_control_shader.c_str();
+            glShaderSource(tesselation_control_shader, 1, &tesselation_control_source_string, nullptr);
+            glCompileShader(tesselation_control_shader);
+            glAttachShader(m_id, tesselation_control_shader);
+            if (check_compile_errors(tesselation_control_shader, GL_TESS_CONTROL_SHADER)) {
+                delete_shaders();
+                return;
+            }
+        }
+
+        if (shader_sources.has_tesselation_evaluation_shader) {
+            tesselation_evaluation_shader = glCreateShader(GL_TESS_EVALUATION_SHADER);
+            const char* tesselation_evaluation_source_string = shader_sources.tesselation_evaluation_shader.c_str();
+            glShaderSource(tesselation_evaluation_shader, 1, &tesselation_evaluation_source_string, nullptr);
+            glCompileShader(tesselation_evaluation_shader);
+            glAttachShader(m_id, tesselation_evaluation_shader);
+            if (check_compile_errors(tesselation_evaluation_shader, GL_TESS_EVALUATION_SHADER)) {
+                delete_shaders();
+                return;
+            }
         }
 
         if (shader_sources.has_geometry_shader) {
@@ -153,12 +216,7 @@ namespace Birdy3d::render {
             glCompileShader(geometry_shader);
             glAttachShader(m_id, geometry_shader);
             if (check_compile_errors(geometry_shader, GL_GEOMETRY_SHADER)) {
-                if (geometry_shader) {
-                    glDeleteShader(geometry_shader);
-                    glDetachShader(m_id, vertex_shader);
-                }
-                glDeleteShader(vertex_shader);
-                glDeleteProgram(m_id);
+                delete_shaders();
                 return;
             }
         }
@@ -169,27 +227,22 @@ namespace Birdy3d::render {
         glCompileShader(fragment_shader);
         glAttachShader(m_id, fragment_shader);
         if (check_compile_errors(fragment_shader, GL_FRAGMENT_SHADER)) {
-            glDeleteShader(fragment_shader);
-            glDetachShader(m_id, vertex_shader);
-            glDeleteShader(vertex_shader);
-            if (geometry_shader) {
-                glDetachShader(m_id, geometry_shader);
-                glDeleteShader(geometry_shader);
-            }
-            glDeleteProgram(m_id);
+            delete_shaders();
             return;
         }
+
         glLinkProgram(m_id);
         check_compile_errors(m_id, 0);
-
-        glDetachShader(m_id, vertex_shader);
-        glDeleteShader(vertex_shader);
-        if (geometry_shader) {
-            glDetachShader(m_id, geometry_shader);
+        if (vertex_shader)
+            glDeleteShader(vertex_shader);
+        if (tesselation_control_shader)
+            glDeleteShader(tesselation_control_shader);
+        if (tesselation_evaluation_shader)
+            glDeleteShader(tesselation_evaluation_shader);
+        if (geometry_shader)
             glDeleteShader(geometry_shader);
-        }
-        glDetachShader(m_id, fragment_shader);
-        glDeleteShader(fragment_shader);
+        if (fragment_shader)
+            glDeleteShader(fragment_shader);
     }
 
     void Shader::use() const {
@@ -294,8 +347,14 @@ namespace Birdy3d::render {
 
     void Shader::PreprocessedSources::operator+=(const PreprocessedSources& other) {
         vertex_shader += other.vertex_shader;
+        tesselation_control_shader += other.tesselation_control_shader;
+        tesselation_evaluation_shader += other.tesselation_evaluation_shader;
         geometry_shader += other.geometry_shader;
         fragment_shader += other.fragment_shader;
+        if (other.has_tesselation_control_shader)
+            has_tesselation_control_shader = true;
+        if (other.has_tesselation_evaluation_shader)
+            has_tesselation_evaluation_shader = true;
         if (other.has_geometry_shader)
             has_geometry_shader = true;
     }

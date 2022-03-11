@@ -24,6 +24,9 @@ namespace Birdy3d::render {
         utils::Color emissive_color = utils::Color::BLACK;
         void emissive_map(const core::ResourceIdentifier&);
 
+        bool height_map_enabled = false;
+        void height_map(const core::ResourceIdentifier&);
+
         void use(const Shader& shader) const;
         bool transparent() const;
 
@@ -34,6 +37,7 @@ namespace Birdy3d::render {
         core::ResourceHandle<Texture> m_specular_map = core::ResourceManager::get_texture("color::" + utils::Color::BLACK.to_string());
         core::ResourceHandle<Texture> m_normal_map = core::ResourceManager::get_texture("color::" + utils::Color::WHITE.to_string());
         core::ResourceHandle<Texture> m_emissive_map = core::ResourceManager::get_texture("color::" + utils::Color::BLACK.to_string());
+        core::ResourceHandle<Texture> m_height_map = core::ResourceManager::get_texture("color::" + utils::Color::BLACK.to_string());
 
         BIRDY3D_REGISTER_TYPE_DEC(Material);
     };

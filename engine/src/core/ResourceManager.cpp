@@ -190,6 +190,14 @@ namespace Birdy3d::core {
                             resolution = resolution_arg;
                     }
                     model = utils::PrimitiveGenerator::generate_plane(resolution);
+                } else if (id.name == "quad_plane") {
+                    int resolution = 1;
+                    if (id.args.contains("resolution")) {
+                        int resolution_arg = std::stoi(id.args.at("resolution"));
+                        if (resolution_arg > resolution)
+                            resolution = resolution_arg;
+                    }
+                    model = utils::PrimitiveGenerator::generate_quad_plane(resolution);
                 } else if (id.name == "cube") {
                     model = utils::PrimitiveGenerator::generate_cube();
                 } else if (id.name == "uv_sphere") {

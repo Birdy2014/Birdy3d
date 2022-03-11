@@ -45,7 +45,7 @@ namespace Birdy3d::render {
         shader.use();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
-            m->render_depth();
+            m->render_depth(shader.has_tesselation());
         }
     }
 
@@ -54,7 +54,7 @@ namespace Birdy3d::render {
         shader.use();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
-            m->render_wireframe();
+            m->render_wireframe(shader.has_tesselation());
         }
     }
 
@@ -151,6 +151,12 @@ namespace Birdy3d::render {
             material->GetTexture(aiTextureType_EMISSIVE, 0, &path);
             m_embedded_material.emissive_map(m_directory + "/" + path.C_Str());
             m_embedded_material.emissive_map_enabled = true;
+        }
+
+        if (material->GetTextureCount(aiTextureType_HEIGHT) > 0) {
+            material->GetTexture(aiTextureType_HEIGHT, 0, &path);
+            m_embedded_material.height_map(m_directory + "/" + path.C_Str());
+            m_embedded_material.height_map_enabled = true;
         }
 
         return std::make_unique<Mesh>(vertices, indices);

@@ -3,11 +3,15 @@
 namespace Birdy3d::render {
 
     ModelComponent::ModelComponent()
-        : material(nullptr) { }
+        : m_material(nullptr) { }
 
-    ModelComponent::ModelComponent(const std::string& name, std::shared_ptr<Material> material)
-        : material(material)
-        , m_model(name) { }
+    ModelComponent::ModelComponent(core::ResourceHandle<Model> model, std::shared_ptr<Material> material)
+        : m_model(model)
+        , m_material(material) { }
+
+    ModelComponent::ModelComponent(std::string model, std::shared_ptr<Material> material)
+        : m_model(model)
+        , m_material(material) { }
 
     void ModelComponent::start() {
         if (!m_model)
@@ -16,12 +20,12 @@ namespace Birdy3d::render {
 
     void ModelComponent::serialize(serializer::Adapter& adapter) {
         adapter("model", m_model);
-        adapter("material", material);
+        adapter("material", m_material);
     }
 
     void ModelComponent::render(const Shader& shader, bool transparent) const {
         if (m_model)
-            m_model->render(*entity, material.get(), shader, transparent);
+            m_model->render(*entity, m_material.get(), shader, transparent);
     }
 
     void ModelComponent::render_depth(const Shader& shader) const {
@@ -33,8 +37,20 @@ namespace Birdy3d::render {
         return m_model;
     }
 
-    void ModelComponent::model(const std::string& name) {
-        m_model = name;
+    void ModelComponent::model(core::ResourceHandle<Model> model) {
+        m_model = model;
+    }
+
+    const Material* ModelComponent::material() {
+        if (m_material)
+            return m_material.get();
+        if (m_model)
+            return &m_model->embedded_material();
+        return {};
+    }
+
+    void ModelComponent::material(std::shared_ptr<Material> material) {
+        m_material = material;
     }
 
     BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, ModelComponent);

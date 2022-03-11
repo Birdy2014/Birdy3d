@@ -7,7 +7,7 @@ layout (location = 3) in vec3 in_tangent;
 out vec3 v_frag_pos;
 out vec2 v_tex_coords;
 out vec3 v_normal;
-out mat3 TBN;
+out mat3 v_tbn_matrix;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -25,7 +25,7 @@ void main() {
     T = normalize(T - dot(T, v_normal) * v_normal);
     vec3 B = cross(v_normal, T);
 
-    TBN = mat3(T, B, v_normal);
+    v_tbn_matrix = mat3(T, B, v_normal);
 
     gl_Position = projection * view * world_pos;
 }

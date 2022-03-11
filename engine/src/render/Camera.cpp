@@ -56,8 +56,10 @@ namespace Birdy3d::render {
             core::Logger::critical("SSAO blur FBO not complete!");
 
         m_deferred_geometry_shader = core::ResourceManager::get_shader("geometry_buffer.glsl");
+        m_deferred_geometry_tesselation_shader = core::ResourceManager::get_shader("geometry_buffer_tesselation.glsl");
         m_deferred_light_shader = core::ResourceManager::get_shader("deferred_lighting.glsl");
         m_forward_shader = core::ResourceManager::get_shader("forward_lighting.glsl");
+        m_forward_tesselation_shader = core::ResourceManager::get_shader("forward_lighting_tesselation.glsl");
         m_normal_shader = core::ResourceManager::get_shader("normal_display.glsl");
         m_simple_color_shader = core::ResourceManager::get_shader("simple_color.glsl");
         m_ssao_shader = core::ResourceManager::get_shader("ssao.glsl");
@@ -135,6 +137,9 @@ namespace Birdy3d::render {
             m_forward_shader.arg("DIRECTIONAL_LIGHTS_AMOUNT", m_dirlights.size());
             m_forward_shader.arg("POINTLIGHTS_AMOUNT", m_pointlights.size());
             m_forward_shader.arg("SPOTLIGHTS_AMOUNT", m_spotlights.size());
+            m_forward_tesselation_shader.arg("DIRECTIONAL_LIGHTS_AMOUNT", m_dirlights.size());
+            m_forward_tesselation_shader.arg("POINTLIGHTS_AMOUNT", m_pointlights.size());
+            m_forward_tesselation_shader.arg("SPOTLIGHTS_AMOUNT", m_spotlights.size());
             m_dirlight_amount = m_dirlights.size();
             m_pointlight_amount = m_pointlights.size();
             m_spotlight_amount = m_spotlights.size();
@@ -208,8 +213,18 @@ namespace Birdy3d::render {
         m_deferred_geometry_shader->use();
         m_deferred_geometry_shader->set_mat4("projection", m_projection);
         m_deferred_geometry_shader->set_mat4("view", m_view);
+
+        m_deferred_geometry_tesselation_shader->use();
+        m_deferred_geometry_tesselation_shader->set_mat4("projection", m_projection);
+        m_deferred_geometry_tesselation_shader->set_mat4("view", m_view);
         for (auto m : m_models) {
-            m->render(*m_deferred_geometry_shader, false);
+            if (auto material = m->material(); material ? material->height_map_enabled : false) {
+                m_deferred_geometry_tesselation_shader->use();
+                m->render(*m_deferred_geometry_tesselation_shader, false);
+            } else {
+                m_deferred_geometry_shader->use();
+                m->render(*m_deferred_geometry_shader, false);
+            }
         }
 
         // 2. SSAO
@@ -262,12 +277,20 @@ namespace Birdy3d::render {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         m_forward_shader.arg("SHADOW_CASCADE_SIZE", core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE));
+        m_forward_tesselation_shader.arg("SHADOW_CASCADE_SIZE", core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE));
         for (size_t i = 0; i < m_dirlights.size(); i++)
             m_dirlights[i]->use(*m_forward_shader, i, 4 + i);
         for (size_t i = 0; i < m_pointlights.size(); i++)
             m_pointlights[i]->use(*m_forward_shader, i, 4 + m_dirlights.size() + i);
         for (size_t i = 0; i < m_spotlights.size(); i++)
             m_spotlights[i]->use(*m_forward_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
+
+        for (size_t i = 0; i < m_dirlights.size(); i++)
+            m_dirlights[i]->use(*m_forward_tesselation_shader, i, 4 + i);
+        for (size_t i = 0; i < m_pointlights.size(); i++)
+            m_pointlights[i]->use(*m_forward_tesselation_shader, i, 4 + m_dirlights.size() + i);
+        for (size_t i = 0; i < m_spotlights.size(); i++)
+            m_spotlights[i]->use(*m_forward_tesselation_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
 
         target->bind();
         if (renderOpaque) {
@@ -282,9 +305,20 @@ namespace Birdy3d::render {
         m_forward_shader->set_mat4("projection", m_projection);
         m_forward_shader->set_mat4("view", m_view);
         m_forward_shader->set_vec3("view_pos", entity->transform.world_position());
+
+        m_forward_tesselation_shader->use();
+        m_forward_tesselation_shader->set_mat4("projection", m_projection);
+        m_forward_tesselation_shader->set_mat4("view", m_view);
+        m_forward_tesselation_shader->set_vec3("view_pos", entity->transform.world_position());
         if (renderOpaque) {
             for (auto m : m_models) {
-                m->render(*m_forward_shader, false);
+                if (auto material = m->material(); material ? material->height_map_enabled : false) {
+                    m_forward_tesselation_shader->use();
+                    m->render(*m_forward_tesselation_shader, false);
+                } else {
+                    m_forward_shader->use();
+                    m->render(*m_forward_shader, false);
+                }
             }
         }
 
@@ -295,6 +329,7 @@ namespace Birdy3d::render {
             sorted[distance] = m.get();
         }
 
+        m_forward_shader->use();
         for (auto it = sorted.rbegin(); it != sorted.rend(); it++) {
             it->second->render(*m_forward_shader, true);
         }

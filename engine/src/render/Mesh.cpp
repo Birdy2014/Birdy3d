@@ -57,20 +57,29 @@ namespace Birdy3d::render {
 
         // draw mesh
         glBindVertexArray(m_vao);
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        if (shader.has_tesselation())
+            glDrawElements(GL_PATCHES, indices.size(), GL_UNSIGNED_INT, 0);
+        else
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
-    void Mesh::render_depth() const {
+    void Mesh::render_depth(bool use_tesselation) const {
         glBindVertexArray(m_vao);
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        if (use_tesselation)
+            glDrawElements(GL_PATCHES, indices.size(), GL_UNSIGNED_INT, 0);
+        else
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
-    void Mesh::render_wireframe() const {
+    void Mesh::render_wireframe(bool use_tesselation) const {
         glBindVertexArray(m_vao);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        if (use_tesselation)
+            glDrawElements(GL_PATCHES, indices.size(), GL_UNSIGNED_INT, 0);
+        else
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 

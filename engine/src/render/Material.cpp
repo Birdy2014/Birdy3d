@@ -20,6 +20,10 @@ namespace Birdy3d::render {
         m_emissive_map = id;
     }
 
+    void Material::height_map(const core::ResourceIdentifier& id) {
+        m_height_map = id;
+    }
+
     void Material::use(const Shader& shader) const {
         shader.set_bool("material.diffuse_map_enabled", diffuse_map_enabled);
         shader.set_vec4("material.diffuse_color", diffuse_color);
@@ -39,6 +43,10 @@ namespace Birdy3d::render {
         shader.set_vec4("material.emissive_color", emissive_color);
         m_emissive_map->bind(3);
         shader.set_int("material.emissive_map", 3);
+
+        // shader.set_bool("material.height_map_enabled", height_map_enabled);
+        m_height_map->bind(4);
+        shader.set_int("height_map", 4);
     }
 
     bool Material::transparent() const {
@@ -63,6 +71,9 @@ namespace Birdy3d::render {
         adapter("emissive_map_enabled", emissive_map_enabled);
         adapter("emissive_color", emissive_color);
         adapter("emissive_map", m_emissive_map);
+
+        adapter("height_map_enabled", height_map_enabled);
+        adapter("height_map", m_height_map);
     }
 
     BIRDY3D_REGISTER_TYPE_DEF(Material);

@@ -16,8 +16,8 @@ namespace Birdy3d::render {
         Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
         ~Mesh();
         void render(const Shader& shader, const Material& material) const;
-        void render_depth() const;
-        void render_wireframe() const;
+        void render_depth(bool use_tesselation) const;
+        void render_wireframe(bool use_tesselation) const;
         glm::vec3 find_furthest_point(const glm::vec3 direction) const;
 
     private:

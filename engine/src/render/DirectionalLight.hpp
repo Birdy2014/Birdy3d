@@ -27,7 +27,7 @@ namespace Birdy3d::render {
         float m_cam_offset = 1000.0f;
         std::vector<float> m_shadow_cascade_levels;
         std::vector<glm::mat4> m_light_space_transforms;
-        core::ResourceHandle<Shader> m_depth_shader;
+        core::ResourceHandle<Shader> m_depth_shader, m_depth_tesselation_shader;
         GLuint m_shadow_map_fbo, m_shadow_map;
         bool m_shadow_map_updated = false;
 
