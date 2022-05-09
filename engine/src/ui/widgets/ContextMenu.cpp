@@ -184,16 +184,18 @@ namespace Birdy3d::ui {
         return false;
     }
 
-    void ContextMenu::on_click(const events::InputClickEvent& event) {
+    bool ContextMenu::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
-            return;
+            return false;
 
         if (!handle_context_item_children_click(root_item, true))
             options.hidden = true;
+        return false;
     }
 
-    void ContextMenu::on_key(const events::InputKeyEvent&) {
+    bool ContextMenu::on_key(const events::InputKeyEvent&) {
         options.hidden = true;
+        return false;
     }
 
     void ContextMenu::on_focus_lost() {
@@ -233,24 +235,25 @@ namespace Birdy3d::ui {
         }
     }
 
-    void MenuBar::on_click(const events::InputClickEvent& event) {
+    bool MenuBar::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
-            return;
+            return false;
         int curosr_x = core::Input::cursor_pos().x - m_actual_pos.x;
         int x = 0;
         for (auto& menu : m_menus) {
             x += menu->root_item.text->size().x;
             if (curosr_x < x) {
                 if (menu->was_last_focused())
-                    return;
+                    return false;
                 glm::vec2 open_pos = m_actual_pos + glm::vec2(x - menu->root_item.text->size().x, m_actual_size.y);
                 menu->open(open_pos);
-                return;
+                return false;
             }
             x += m_menu_gap;
             if (curosr_x < x)
-                return;
+                return false;
         }
+        return false;
     }
 
 }

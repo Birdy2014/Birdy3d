@@ -59,7 +59,7 @@ namespace Birdy3d::ui {
         TreeItem* m_selected_item = nullptr;
 
         virtual void on_update() override;
-        virtual void on_click(const events::InputClickEvent& event) override;
+        virtual bool on_click(const events::InputClickEvent& event) override;
 
         void update_flat_tree_list();
         void update_flat_tree_list(TreeItem& item, int indent);

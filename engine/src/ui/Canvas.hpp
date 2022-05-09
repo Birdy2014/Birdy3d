@@ -57,12 +57,12 @@ namespace Birdy3d::ui {
             }
 
             if (m_focused_widget)
-                m_focused_widget->on_focus_lost();
+                m_focused_widget->notify_event(Widget::EventType::FOCUS_LOST, nullptr);
             m_last_focused_widget = m_focused_widget;
             m_focused_widget = widget;
             m_cursor_grabbed = false;
             if (widget)
-                widget->on_focus();
+                widget->notify_event(Widget::EventType::FOCUS, nullptr);
         }
 
         void set_hovering(Widget* widget) {
@@ -70,10 +70,10 @@ namespace Birdy3d::ui {
                 return;
 
             if (m_hovering_widget)
-                m_hovering_widget->on_mouse_leave();
+                m_hovering_widget->notify_event(Widget::EventType::MOUSE_LEAVE, nullptr);
             m_hovering_widget = widget;
             if (widget)
-                widget->on_mouse_enter();
+                widget->notify_event(Widget::EventType::MOUSE_ENTER, nullptr);
         }
 
         void set_cursor_grabbed(Widget* widget, bool grabbed) {
@@ -107,9 +107,9 @@ namespace Birdy3d::ui {
         void on_scroll_raw(const events::InputScrollEvent& event) {
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
-                    m_focused_widget->on_scroll(event);
+                    m_focused_widget->notify_event(Widget::EventType::SCROLL, &event);
             } else if (m_hovering_widget && m_hovering_widget != this) {
-                m_hovering_widget->on_scroll(event);
+                m_hovering_widget->notify_event(Widget::EventType::SCROLL, &event);
             }
         }
 
@@ -127,22 +127,22 @@ namespace Birdy3d::ui {
 
             if (m_cursor_grabbed) {
                 if (m_focused_widget && m_focused_widget != this)
-                    m_focused_widget->on_click(event);
+                    m_focused_widget->notify_event(Widget::EventType::CLICK, &event);
             } else if (m_hovering_widget && m_hovering_widget != this) {
                 if (event.action == GLFW_PRESS)
                     m_hovering_widget->focus();
-                m_hovering_widget->on_click(event);
+                m_hovering_widget->notify_event(Widget::EventType::CLICK, &event);
             }
         }
 
         void on_key_raw(const events::InputKeyEvent& event) {
             if (m_focused_widget && m_focused_widget != this)
-                m_focused_widget->on_key(event);
+                m_focused_widget->notify_event(Widget::EventType::KEY, &event);
         }
 
         void on_char_raw(const events::InputCharEvent& event) {
             if (m_focused_widget && m_focused_widget != this)
-                m_focused_widget->on_char(event);
+                m_focused_widget->notify_event(Widget::EventType::CHAR, &event);
         }
     };
 

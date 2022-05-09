@@ -51,9 +51,10 @@ private:
         Birdy3d::core::ResourceIdentifier m_resource_id;
         Birdy3d::ui::Text* m_label;
 
-        void on_click(const Birdy3d::events::InputClickEvent& event) override {
+        bool on_click(const Birdy3d::events::InputClickEvent& event) override {
             if (event.button == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_PRESS)
                 canvas->start_drag(m_resource_id);
+            return false;
         }
     };
 

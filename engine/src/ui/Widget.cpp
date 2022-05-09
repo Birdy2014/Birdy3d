@@ -48,6 +48,63 @@ namespace Birdy3d::ui {
         return ptr;
     }
 
+    void Widget::notify_event(EventType type, events::Event const* event) {
+        bool bubbles = false;
+        switch (type) {
+        case EventType::SCROLL: {
+            auto casted_event = *static_cast<events::InputScrollEvent const*>(event);
+            bubbles = on_scroll(casted_event);
+            execute_callbacks("on_scroll", casted_event);
+            break;
+        }
+        case EventType::CLICK: {
+            auto casted_event = *static_cast<events::InputClickEvent const*>(event);
+            bubbles = on_click(casted_event);
+            execute_callbacks("on_click", casted_event);
+            break;
+        }
+        case EventType::KEY: {
+            auto casted_event = *static_cast<events::InputKeyEvent const*>(event);
+            bubbles = on_key(casted_event);
+            execute_callbacks("on_key", casted_event);
+            break;
+        }
+        case EventType::CHAR: {
+            auto casted_event = *static_cast<events::InputCharEvent const*>(event);
+            bubbles = on_char(casted_event);
+            execute_callbacks("on_char", casted_event);
+            break;
+        }
+        case EventType::MOUSE_ENTER: {
+            on_mouse_enter();
+            execute_callbacks("on_mouse_enter");
+            break;
+        }
+        case EventType::MOUSE_LEAVE: {
+            on_mouse_leave();
+            execute_callbacks("on_mouse_leave");
+            break;
+        }
+        case EventType::FOCUS: {
+            on_focus();
+            execute_callbacks("on_focus");
+            break;
+        }
+        case EventType::FOCUS_LOST: {
+            on_focus_lost();
+            execute_callbacks("on_focus_lost");
+            break;
+        }
+        case EventType::RESIZE: {
+            on_resize();
+            execute_callbacks("on_resize");
+            break;
+        }
+        }
+        if (bubbles && parent)
+            parent->notify_event(type, event);
+    }
+
     void Widget::external_draw() {
         if (options.hidden)
             return;
@@ -229,24 +286,20 @@ namespace Birdy3d::ui {
         m_children.splice(m_children.end(), m_children, element);
     }
 
-    void Widget::on_scroll(const events::InputScrollEvent& event) {
-        if (parent)
-            parent->on_scroll(event);
+    bool Widget::on_scroll(const events::InputScrollEvent&) {
+        return true;
     }
 
-    void Widget::on_click(const events::InputClickEvent& event) {
-        if (parent)
-            parent->on_click(event);
+    bool Widget::on_click(const events::InputClickEvent&) {
+        return true;
     }
 
-    void Widget::on_key(const events::InputKeyEvent& event) {
-        if (parent)
-            parent->on_key(event);
+    bool Widget::on_key(const events::InputKeyEvent&) {
+        return true;
     }
 
-    void Widget::on_char(const events::InputCharEvent& event) {
-        if (parent)
-            parent->on_char(event);
+    bool Widget::on_char(const events::InputCharEvent&) {
+        return true;
     }
 
     void Widget::add_callback(const std::string& name, CallbackType callback) {

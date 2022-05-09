@@ -75,9 +75,9 @@ namespace Birdy3d::ui {
         }
     }
 
-    void TreeView::on_click(const events::InputClickEvent& event) {
+    bool TreeView::on_click(const events::InputClickEvent& event) {
         if (event.action != GLFW_PRESS)
-            return;
+            return false;
 
         glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
         int offset_y = 0;
@@ -96,9 +96,10 @@ namespace Birdy3d::ui {
                     item.second.collapsed = !item.second.collapsed;
                     update_flat_tree_list();
                 }
-                return;
+                return false;
             }
         }
+        return false;
     }
 
     void TreeView::update_flat_tree_list() {

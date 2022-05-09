@@ -28,10 +28,11 @@ namespace Birdy3d::ui {
         std::function<void(const events::InputClickEvent&)> callback_click;
 
     protected:
-        void on_click(const events::InputClickEvent& event) override {
+        bool on_click(const events::InputClickEvent& event) override {
             if (callback_click && event.action == GLFW_PRESS) {
                 callback_click(event);
             }
+            return false;
         }
 
         void on_mouse_enter() override {
