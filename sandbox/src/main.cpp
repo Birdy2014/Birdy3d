@@ -328,6 +328,21 @@ int main() {
             core::Application::selected_entity->transform.position.z = input_position_z->value();
     });
 
+    input_position_x->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_position_x->value(core::Application::selected_entity->transform.position.x);
+    });
+
+    input_position_y->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_position_y->value(core::Application::selected_entity->transform.position.y);
+    });
+
+    input_position_z->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_position_z->value(core::Application::selected_entity->transform.position.z);
+    });
+
     auto scale_label = transform_box->add_child<ui::Label>({ .placement = ui::Placement::CENTER_LEFT, .column = 0, .row = 1 }, "scale");
 
     auto scale_box = transform_box->add_child<ui::Container>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 1 });
@@ -355,6 +370,21 @@ int main() {
             core::Application::selected_entity->transform.scale.z = input_scale_z->value();
     });
 
+    input_scale_x->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_scale_x->value(core::Application::selected_entity->transform.scale.x);
+    });
+
+    input_scale_y->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_scale_y->value(core::Application::selected_entity->transform.scale.y);
+    });
+
+    input_scale_z->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_scale_z->value(core::Application::selected_entity->transform.scale.z);
+    });
+
     auto orientation_label = transform_box->add_child<ui::Label>({ .placement = ui::Placement::CENTER_LEFT, .column = 0, .row = 2 }, "orientation");
 
     auto orientation_box = transform_box->add_child<ui::Container>({ .size = ui::UIVector(100_p, 0_px), .column = 1, .row = 2 });
@@ -378,18 +408,42 @@ int main() {
             core::Application::selected_entity->transform.orientation.z = input_orientation_z->value();
     });
 
+    input_orientation_x->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_orientation_x->value(core::Application::selected_entity->transform.orientation.x);
+    });
+
+    input_orientation_y->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_orientation_y->value(core::Application::selected_entity->transform.orientation.y);
+    });
+
+    input_orientation_z->add_callback("on_focus_lost", [&](std::any) {
+        if (core::Application::selected_entity)
+            input_orientation_z->value(core::Application::selected_entity->transform.orientation.z);
+    });
+
     core::Application::event_bus->subscribe<events::TransformChangedEvent>([&](const events::TransformChangedEvent& event) {
         if (event.entity != core::Application::selected_entity)
             return;
-        input_position_x->value(event.entity->transform.position.x);
-        input_position_y->value(event.entity->transform.position.y);
-        input_position_z->value(event.entity->transform.position.z);
-        input_scale_x->value(event.entity->transform.scale.x);
-        input_scale_y->value(event.entity->transform.scale.y);
-        input_scale_z->value(event.entity->transform.scale.z);
-        input_orientation_x->value(event.entity->transform.orientation.x);
-        input_orientation_y->value(event.entity->transform.orientation.y);
-        input_orientation_z->value(event.entity->transform.orientation.z);
+        if (!input_position_x->is_focused())
+            input_position_x->value(event.entity->transform.position.x);
+        if (!input_position_y->is_focused())
+            input_position_y->value(event.entity->transform.position.y);
+        if (!input_position_z->is_focused())
+            input_position_z->value(event.entity->transform.position.z);
+        if (!input_scale_x->is_focused())
+            input_scale_x->value(event.entity->transform.scale.x);
+        if (!input_scale_y->is_focused())
+            input_scale_y->value(event.entity->transform.scale.y);
+        if (!input_scale_z->is_focused())
+            input_scale_z->value(event.entity->transform.scale.z);
+        if (!input_orientation_x->is_focused())
+            input_orientation_x->value(event.entity->transform.orientation.x);
+        if (!input_orientation_y->is_focused())
+            input_orientation_y->value(event.entity->transform.orientation.y);
+        if (!input_orientation_z->is_focused())
+            input_orientation_z->value(event.entity->transform.orientation.z);
     });
 
     inspector_component_container = inspector_scroll_view->add_child<ui::Container>({ .size = ui::UIVector(100_p, 0_px) });
