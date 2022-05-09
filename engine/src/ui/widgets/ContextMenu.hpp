@@ -48,8 +48,8 @@ namespace Birdy3d::ui {
         bool handle_context_item_children_click(ContextItem&, bool click);
         bool context_item_contains(const ContextItem&, glm::vec2) const;
 
-        void on_click(const events::InputClickEvent& event) override;
-        void on_key(const events::InputKeyEvent& event) override;
+        bool on_click(const events::InputClickEvent& event) override;
+        bool on_key(const events::InputKeyEvent& event) override;
         void on_focus_lost() override;
     };
 
@@ -64,7 +64,7 @@ namespace Birdy3d::ui {
         std::vector<std::unique_ptr<ContextMenu>> m_menus;
         int m_menu_gap = 20;
 
-        void on_click(const events::InputClickEvent& event) override;
+        bool on_click(const events::InputClickEvent& event) override;
     };
 
 }

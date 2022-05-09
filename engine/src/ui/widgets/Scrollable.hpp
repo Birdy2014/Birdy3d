@@ -20,8 +20,8 @@ namespace Birdy3d::ui {
         glm::vec2 m_max_scroll_offset;
 
         void draw() override;
-        void on_scroll(const events::InputScrollEvent& event) override;
-        void on_click(const events::InputClickEvent& event) override;
+        bool on_scroll(const events::InputScrollEvent& event) override;
+        bool on_click(const events::InputClickEvent& event) override;
         void on_update() override;
         void on_resize() override;
 

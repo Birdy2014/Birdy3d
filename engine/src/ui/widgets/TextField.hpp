@@ -29,9 +29,9 @@ namespace Birdy3d::ui {
 
         // Events
         virtual void on_update() override;
-        virtual void on_click(const events::InputClickEvent& event) override;
-        virtual void on_key(const events::InputKeyEvent& event) override;
-        virtual void on_char(const events::InputCharEvent& event) override;
+        virtual bool on_click(const events::InputClickEvent& event) override;
+        virtual bool on_key(const events::InputKeyEvent& event) override;
+        virtual bool on_char(const events::InputCharEvent& event) override;
         virtual void on_mouse_enter() override;
         virtual void on_mouse_leave() override;
         virtual void on_focus_lost() override;

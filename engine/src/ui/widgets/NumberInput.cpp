@@ -37,7 +37,7 @@ namespace Birdy3d::ui {
         TextField::on_update();
     }
 
-    void NumberInput::on_scroll(const events::InputScrollEvent& event) {
+    bool NumberInput::on_scroll(const events::InputScrollEvent& event) {
         float change = event.yoffset;
         if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
             change *= 0.1f;
@@ -45,9 +45,10 @@ namespace Birdy3d::ui {
             change *= 0.01f;
 
         value(m_value + change);
+        return false;
     }
 
-    void NumberInput::on_click(const events::InputClickEvent& event) {
+    bool NumberInput::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_RIGHT)
             return TextField::on_click(event);
 
@@ -58,18 +59,21 @@ namespace Birdy3d::ui {
             ungrab_cursor();
             m_dragging = false;
         }
+        return false;
     }
 
-    void NumberInput::on_key(const events::InputKeyEvent& event) {
+    bool NumberInput::on_key(const events::InputKeyEvent& event) {
         TextField::on_key(event);
         value(std::stof(text()));
+        return false;
     }
 
-    void NumberInput::on_char(const events::InputCharEvent& event) {
+    bool NumberInput::on_char(const events::InputCharEvent& event) {
         if (event.codepoint < '0' || event.codepoint > '9')
-            return;
+            return false;
         TextField::on_char(event);
         value(std::stof(text()));
+        return false;
     }
 
     void NumberInput::on_focus_lost() {

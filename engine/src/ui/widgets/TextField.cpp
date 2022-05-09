@@ -63,12 +63,12 @@ namespace Birdy3d::ui {
         }
     }
 
-    void TextField::on_click(const events::InputClickEvent& event) {
+    bool TextField::on_click(const events::InputClickEvent& event) {
         if (multiline)
             Scrollable::on_click(event);
 
         if (readonly || event.button != GLFW_MOUSE_BUTTON_LEFT)
-            return;
+            return false;
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
@@ -90,17 +90,19 @@ namespace Birdy3d::ui {
         }
     }
 
-    void TextField::on_key(const events::InputKeyEvent& event) {
+    bool TextField::on_key(const events::InputKeyEvent& event) {
         if (readonly || (event.action != GLFW_PRESS && event.action != GLFW_REPEAT))
-            return;
+            return false;
 
-        if (event.key == GLFW_KEY_ENTER && has_callbacks("accept"))
-            return execute_callbacks("accept");
+        if (event.key == GLFW_KEY_ENTER && has_callbacks("accept")) {
+            execute_callbacks("accept");
+            return false;
+        }
 
         if (m_text->highlight_visible) {
             if (event.key == GLFW_KEY_DELETE || event.key == GLFW_KEY_BACKSPACE)
                 clear_selection();
-            return;
+            return false;
         }
 
         if (m_text->cursor_visible) {
@@ -153,14 +155,14 @@ namespace Birdy3d::ui {
             Scrollable::draw();
     }
 
-    void TextField::on_char(const events::InputCharEvent& event) {
+    bool TextField::on_char(const events::InputCharEvent& event) {
         if (readonly)
-            return;
+            return false;
 
         clear_selection();
 
         if (!m_text->cursor_visible || m_text->cursor_pos > m_text->length())
-            return;
+            return false;
 
         char32_t c[2];
         c[0] = event.codepoint;

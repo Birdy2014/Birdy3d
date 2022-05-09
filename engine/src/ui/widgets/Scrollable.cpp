@@ -110,34 +110,36 @@ namespace Birdy3d::ui {
         m_scrollbar_horizontal.draw(move);
     }
 
-    void Scrollable::on_scroll(const events::InputScrollEvent& event) {
+    bool Scrollable::on_scroll(const events::InputScrollEvent& event) {
         float speed = 10.0f;
         m_scroll_offset.x += event.xoffset * speed;
         m_scroll_offset.y += event.yoffset * speed;
 
         check_scroll_bounds();
+        return false;
     }
 
-    void Scrollable::on_click(const events::InputClickEvent& event) {
+    bool Scrollable::on_click(const events::InputClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
-            return;
+            return false;
 
         if (event.action == GLFW_PRESS) {
             if (m_scrollbar_vertical.contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_vertical_grabbed = true;
                 grab_cursor();
-                return;
+                return false;
             }
             if (m_scrollbar_horizontal.contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_horizontal_grabbed = true;
                 grab_cursor();
-                return;
+                return false;
             }
         }
 
         m_scrollbar_horizontal_grabbed = false;
         m_scrollbar_vertical_grabbed = false;
         ungrab_cursor();
+        return false;
     }
 
     void Scrollable::on_update() {

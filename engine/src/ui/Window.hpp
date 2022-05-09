@@ -28,7 +28,7 @@ namespace Birdy3d::ui {
 
     protected:
         void on_update() override;
-        void on_click(const events::InputClickEvent& event) override;
+        bool on_click(const events::InputClickEvent& event) override;
         void on_mouse_leave() override;
 
     private:

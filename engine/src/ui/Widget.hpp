@@ -37,6 +37,18 @@ namespace Birdy3d::ui {
             int row = 0; ///< Row in GridLayout
         };
 
+        enum class EventType {
+            SCROLL,
+            CLICK,
+            KEY,
+            CHAR,
+            MOUSE_ENTER,
+            MOUSE_LEAVE,
+            FOCUS,
+            FOCUS_LOST,
+            RESIZE,
+        };
+
         Widget* parent = nullptr;
         Canvas* canvas = nullptr;
         Options options;
@@ -68,6 +80,7 @@ namespace Birdy3d::ui {
         glm::vec2 actual_size() { return m_actual_size; }
 
         // External Event calls
+        void notify_event(EventType, events::Event const*);
         void external_draw();
         bool update_hover(bool hover);
         void update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right);
@@ -108,10 +121,10 @@ namespace Birdy3d::ui {
         bool has_callbacks(const std::string& name);
 
         // Events
-        virtual void on_scroll(const events::InputScrollEvent& event);
-        virtual void on_click(const events::InputClickEvent& event);
-        virtual void on_key(const events::InputKeyEvent& event);
-        virtual void on_char(const events::InputCharEvent& event);
+        virtual bool on_scroll(const events::InputScrollEvent&);
+        virtual bool on_click(const events::InputClickEvent&);
+        virtual bool on_key(const events::InputKeyEvent&);
+        virtual bool on_char(const events::InputCharEvent&);
         virtual void on_mouse_enter() { }
         virtual void on_mouse_leave() { }
         virtual void on_focus() { }
