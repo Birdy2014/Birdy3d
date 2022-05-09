@@ -64,21 +64,30 @@ namespace Birdy3d::ui {
 
     bool NumberInput::on_key(const events::InputKeyEvent& event) {
         TextField::on_key(event);
-        value(std::stof(text()));
+        set_text_value();
         return false;
     }
 
     bool NumberInput::on_char(const events::InputCharEvent& event) {
-        if (event.codepoint < '0' || event.codepoint > '9')
+        if ((event.codepoint < '0' || event.codepoint > '9') && event.codepoint != '.')
             return false;
         TextField::on_char(event);
-        value(std::stof(text()));
+        set_text_value();
         return false;
     }
 
     void NumberInput::on_focus_lost() {
         TextField::on_focus_lost();
         m_dragging = false;
+    }
+
+    void NumberInput::set_text_value() {
+        auto t = text();
+        if (t.empty() || std::count(t.begin(), t.end(), '.') > 1)
+            return;
+        try {
+            m_value = std::clamp(std::stof(t), min_value, max_value);
+        } catch (std::invalid_argument) { }
     }
 
 }

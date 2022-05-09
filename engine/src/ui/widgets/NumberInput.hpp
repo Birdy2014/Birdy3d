@@ -24,6 +24,8 @@ namespace Birdy3d::ui {
         bool on_key(const events::InputKeyEvent& event) override;
         bool on_char(const events::InputCharEvent& event) override;
         void on_focus_lost() override;
+
+        void set_text_value();
     };
 
 }
