@@ -182,6 +182,9 @@ glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>actual_pos</b> (
 <tr class="memitem:a7412fa0fa95e93c3d490ac9dbad7e846 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a7412fa0fa95e93c3d490ac9dbad7e846" name="a7412fa0fa95e93c3d490ac9dbad7e846"></a>
 glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>actual_size</b> ()</td></tr>
 <tr class="separator:a7412fa0fa95e93c3d490ac9dbad7e846 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbbeca9efff58c5328f4260812d85f71 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="abbbeca9efff58c5328f4260812d85f71" name="abbbeca9efff58c5328f4260812d85f71"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>notify_event</b> (EventType, <a class="el" href="classBirdy3d_1_1events_1_1Event.html">events::Event</a> const *)</td></tr>
+<tr class="separator:abbbeca9efff58c5328f4260812d85f71 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4056a6836737e8e1aaca11cbae47332 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="ad4056a6836737e8e1aaca11cbae47332" name="ad4056a6836737e8e1aaca11cbae47332"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>external_draw</b> ()</td></tr>
 <tr class="separator:ad4056a6836737e8e1aaca11cbae47332 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -224,6 +227,21 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>multiline</b> = false
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
+<tr class="memitem:aa13b0a1021a08d00680ed357541fc015 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="aa13b0a1021a08d00680ed357541fc015" name="aa13b0a1021a08d00680ed357541fc015"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>EventType</b> { <br />
+&#160;&#160;<b>SCROLL</b>
+, <b>CLICK</b>
+, <b>KEY</b>
+, <b>CHAR</b>
+, <br />
+&#160;&#160;<b>MOUSE_ENTER</b>
+, <b>MOUSE_LEAVE</b>
+, <b>FOCUS</b>
+, <b>FOCUS_LOST</b>
+, <br />
+&#160;&#160;<b>RESIZE</b>
+<br />
+ }</td></tr>
+<tr class="separator:aa13b0a1021a08d00680ed357541fc015 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb8a27c865be05d4a88e8bff7c4d4063 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="acb8a27c865be05d4a88e8bff7c4d4063" name="acb8a27c865be05d4a88e8bff7c4d4063"></a>
 typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
 <tr class="separator:acb8a27c865be05d4a88e8bff7c4d4063 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,8 +262,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_selection</b> (
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scroll_if_needed</b> (std::size_t cursor_pos)</td></tr>
 <tr class="separator:a3807b9da0ae40bca35577413ae6cbe74 inherit pro_methods_classBirdy3d_1_1ui_1_1TextField"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Scrollable')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html">Birdy3d::ui::Scrollable</a></td></tr>
-<tr class="memitem:ad182885d6990aa96fe588f30d75dd8b0 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#ad182885d6990aa96fe588f30d75dd8b0">on_scroll</a> (const <a class="el" href="classBirdy3d_1_1events_1_1InputScrollEvent.html">events::InputScrollEvent</a> &amp;event) override</td></tr>
-<tr class="separator:ad182885d6990aa96fe588f30d75dd8b0 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecff63193506a1ca3890c6b5dabdb28e inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#aecff63193506a1ca3890c6b5dabdb28e">on_scroll</a> (const <a class="el" href="classBirdy3d_1_1events_1_1InputScrollEvent.html">events::InputScrollEvent</a> &amp;event) override</td></tr>
+<tr class="separator:aecff63193506a1ca3890c6b5dabdb28e inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3db4d9fbfc836cdb1e7415adc98bce6 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#aa3db4d9fbfc836cdb1e7415adc98bce6">on_resize</a> () override</td></tr>
 <tr class="separator:aa3db4d9fbfc836cdb1e7415adc98bce6 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
