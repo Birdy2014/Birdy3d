@@ -49,6 +49,7 @@ namespace Birdy3d::ui {
         GLuint m_texture_atlas;
         glm::vec2 m_texture_atlas_size;
         glm::ivec2 m_texture_atlas_current_pos;
+        int m_texture_atlas_current_line_height { 0 };
 
         bool add_char(char32_t c);
         utils::Color::Name parse_color_escape(char32_t);

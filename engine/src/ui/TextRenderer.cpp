@@ -63,7 +63,8 @@ namespace Birdy3d::ui {
                 return false;
             }
             m_texture_atlas_current_pos.x = 0;
-            m_texture_atlas_current_pos.y += m_font_size;
+            m_texture_atlas_current_pos.y += m_texture_atlas_current_line_height;
+            m_texture_atlas_current_line_height = 0;
         }
         // generate texture
         glBindTexture(GL_TEXTURE_2D, m_texture_atlas);
@@ -78,6 +79,8 @@ namespace Birdy3d::ui {
         };
         m_chars.insert(std::pair<char, Character>(c, character));
         m_texture_atlas_current_pos.x += (*m_face)->glyph->bitmap.width + 1;
+        if (m_texture_atlas_current_line_height < character.size.y)
+            m_texture_atlas_current_line_height = character.size.y;
         return true;
     }
 
