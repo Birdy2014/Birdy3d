@@ -88,6 +88,7 @@ namespace Birdy3d::ui {
             ungrab_cursor();
             m_selecting = false;
         }
+        return false;
     }
 
     bool TextField::on_key(const events::InputKeyEvent& event) {
@@ -148,6 +149,7 @@ namespace Birdy3d::ui {
             }
         }
         scroll_if_needed(m_text->cursor_pos);
+        return false;
     }
 
     void TextField::draw() {
@@ -171,6 +173,7 @@ namespace Birdy3d::ui {
         m_text->cursor_pos++;
         m_changed = true;
         scroll_if_needed(m_text->cursor_pos);
+        return false;
     }
 
     void TextField::on_mouse_enter() {
