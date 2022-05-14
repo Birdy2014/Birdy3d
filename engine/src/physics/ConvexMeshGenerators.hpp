@@ -5,9 +5,6 @@
 
 namespace Birdy3d::physics {
 
-    class render::Mesh;
-    class render::Model;
-
     enum class GenerationMode {
         NONE,
         COPY,
