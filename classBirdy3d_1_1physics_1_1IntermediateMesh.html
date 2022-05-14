@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Birdy3d: engine/src/physics/Forward.hpp Source File</title>
+<title>Birdy3d: Birdy3d::physics::IntermediateMesh Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -66,7 +66,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('physics_2Forward_8hpp_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classBirdy3d_1_1physics_1_1IntermediateMesh.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -85,28 +85,38 @@ $(document).ready(function(){initNavTree('physics_2Forward_8hpp_source.html','')
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Forward.hpp</div></div>
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classBirdy3d_1_1physics_1_1IntermediateMesh-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Birdy3d::physics::IntermediateMesh Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">namespace </span>Birdy3d::physics {</div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>    <span class="keyword">class </span>Collider;</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <span class="keyword">class </span>Collision;</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <span class="keyword">class </span>CollisionPoints;</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">class </span>ConvexMeshGenerators;</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keyword">struct </span>Triangle;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">class </span>IntermediateMesh;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keyword">class </span>PhysicsWorld;</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>}</div>
-</div><!-- fragment --></div><!-- contents -->
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a3b267a6d3728aa2900d30b3d3cf7c9eb"><td class="memItemLeft" align="right" valign="top"><a id="a3b267a6d3728aa2900d30b3d3cf7c9eb" name="a3b267a6d3728aa2900d30b3d3cf7c9eb"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateMesh</b> (glm::vec3, glm::vec3, glm::vec3, glm::vec3)</td></tr>
+<tr class="separator:a3b267a6d3728aa2900d30b3d3cf7c9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51e588f47b81e54e45caddba94b283ae"><td class="memItemLeft" align="right" valign="top"><a id="a51e588f47b81e54e45caddba94b283ae" name="a51e588f47b81e54e45caddba94b283ae"></a>
+std::list&lt; <a class="el" href="structBirdy3d_1_1physics_1_1Triangle.html">Triangle</a> &gt; const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>triangles</b> () const</td></tr>
+<tr class="separator:a51e588f47b81e54e45caddba94b283ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb726f2782b7fae69d3eddac2599f5ed"><td class="memItemLeft" align="right" valign="top"><a id="abb726f2782b7fae69d3eddac2599f5ed" name="abb726f2782b7fae69d3eddac2599f5ed"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>expand</b> (glm::vec3 point)</td></tr>
+<tr class="separator:abb726f2782b7fae69d3eddac2599f5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a584045227aa4d72715717bfb699f4a2f"><td class="memItemLeft" align="right" valign="top"><a id="a584045227aa4d72715717bfb699f4a2f" name="a584045227aa4d72715717bfb699f4a2f"></a>
+std::unique_ptr&lt; <a class="el" href="classBirdy3d_1_1render_1_1Mesh.html">render::Mesh</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>to_mesh</b> () const</td></tr>
+<tr class="separator:a584045227aa4d72715717bfb699f4a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>engine/src/physics/<a class="el" href="IntermediateMesh_8hpp_source.html">IntermediateMesh.hpp</a></li>
+<li>engine/src/physics/IntermediateMesh.cpp</li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_3d9126aa00c041bc0b8f859d1965a0f4.html">src</a></li><li class="navelem"><a class="el" href="dir_1196fceec8cdf035bd6eb95fe8dddeb4.html">physics</a></li><li class="navelem"><b>Forward.hpp</b></li>
+    <li class="navelem"><b>Birdy3d</b></li><li class="navelem"><b>physics</b></li><li class="navelem"><a class="el" href="classBirdy3d_1_1physics_1_1IntermediateMesh.html">IntermediateMesh</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>

@@ -96,12 +96,9 @@ $(document).ready(function(){initNavTree('structBirdy3d_1_1physics_1_1Triangle.h
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a1c0db60c9d6cc58b3ab1760111646955"><td class="memItemLeft" align="right" valign="top"><a id="a1c0db60c9d6cc58b3ab1760111646955" name="a1c0db60c9d6cc58b3ab1760111646955"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Edge</b> { <b>NONE</b>
-, <b>AB</b>
-, <b>BC</b>
-, <b>CA</b>
- }</td></tr>
-<tr class="separator:a1c0db60c9d6cc58b3ab1760111646955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853eb8b48eb89a32770d7541a80791aa"><td class="memItemLeft" align="right" valign="top"><a id="a853eb8b48eb89a32770d7541a80791aa" name="a853eb8b48eb89a32770d7541a80791aa"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Edge</b> = std::pair&lt; glm::vec3, glm::vec3 &gt;</td></tr>
+<tr class="separator:a853eb8b48eb89a32770d7541a80791aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -111,12 +108,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4c3151c1060b8e849bb68533046a7bfa"><td class="memItemLeft" align="right" valign="top"><a id="a4c3151c1060b8e849bb68533046a7bfa" name="a4c3151c1060b8e849bb68533046a7bfa"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>normal</b> () const</td></tr>
 <tr class="separator:a4c3151c1060b8e849bb68533046a7bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4518733acbc8ca0be76780ce54d23b9a"><td class="memItemLeft" align="right" valign="top"><a id="a4518733acbc8ca0be76780ce54d23b9a" name="a4518733acbc8ca0be76780ce54d23b9a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>outside</b> (const glm::vec3 &amp;point) const</td></tr>
+<tr class="memitem:a4518733acbc8ca0be76780ce54d23b9a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBirdy3d_1_1physics_1_1Triangle.html#a4518733acbc8ca0be76780ce54d23b9a">outside</a> (const glm::vec3 &amp;point) const</td></tr>
 <tr class="separator:a4518733acbc8ca0be76780ce54d23b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afae69b6c9b8991b1263a5216df486ed5"><td class="memItemLeft" align="right" valign="top"><a id="afae69b6c9b8991b1263a5216df486ed5" name="afae69b6c9b8991b1263a5216df486ed5"></a>
-Edge&#160;</td><td class="memItemRight" valign="bottom"><b>get_edge</b> (const glm::vec3 &amp;other_a, const glm::vec3 &amp;other_b) const</td></tr>
-<tr class="separator:afae69b6c9b8991b1263a5216df486ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ee1368b1b99d5eb4062b0d075591b75"><td class="memItemLeft" align="right" valign="top"><a id="a0ee1368b1b99d5eb4062b0d075591b75" name="a0ee1368b1b99d5eb4062b0d075591b75"></a>
+std::optional&lt; Edge &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_common_edge</b> (<a class="el" href="structBirdy3d_1_1physics_1_1Triangle.html">Triangle</a> const &amp;) const</td></tr>
+<tr class="separator:a0ee1368b1b99d5eb4062b0d075591b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -129,18 +125,30 @@ glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>b</b></td></tr>
 <tr class="memitem:afd1fc9136a408404773cf389fe267c3f"><td class="memItemLeft" align="right" valign="top"><a id="afd1fc9136a408404773cf389fe267c3f" name="afd1fc9136a408404773cf389fe267c3f"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>c</b></td></tr>
 <tr class="separator:afd1fc9136a408404773cf389fe267c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a31a6cb38461ee19a4f2d60076694b8"><td class="memItemLeft" align="right" valign="top"><a id="a1a31a6cb38461ee19a4f2d60076694b8" name="a1a31a6cb38461ee19a4f2d60076694b8"></a>
-<a class="el" href="structBirdy3d_1_1physics_1_1Triangle.html">Triangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>tab</b> = nullptr</td></tr>
-<tr class="separator:a1a31a6cb38461ee19a4f2d60076694b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ce70a11d3f3281d05127be6ff82a2ea"><td class="memItemLeft" align="right" valign="top"><a id="a0ce70a11d3f3281d05127be6ff82a2ea" name="a0ce70a11d3f3281d05127be6ff82a2ea"></a>
-<a class="el" href="structBirdy3d_1_1physics_1_1Triangle.html">Triangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>tbc</b> = nullptr</td></tr>
-<tr class="separator:a0ce70a11d3f3281d05127be6ff82a2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e9d4749d76e9cb25175e148de1448b2"><td class="memItemLeft" align="right" valign="top"><a id="a1e9d4749d76e9cb25175e148de1448b2" name="a1e9d4749d76e9cb25175e148de1448b2"></a>
-<a class="el" href="structBirdy3d_1_1physics_1_1Triangle.html">Triangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>tca</b> = nullptr</td></tr>
-<tr class="separator:a1e9d4749d76e9cb25175e148de1448b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>engine/src/physics/ConvexMeshGenerators.cpp</li>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4518733acbc8ca0be76780ce54d23b9a" name="a4518733acbc8ca0be76780ce54d23b9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4518733acbc8ca0be76780ce54d23b9a">&#9670;&nbsp;</a></span>outside()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Birdy3d::physics::Triangle::outside </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>point</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Returns true if the point is outside of the triangle. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following files:<ul>
+<li>engine/src/physics/<a class="el" href="IntermediateMesh_8hpp_source.html">IntermediateMesh.hpp</a></li>
+<li>engine/src/physics/IntermediateMesh.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -34,8 +34,9 @@ var annotated_dup =
         [ "Collision", "classBirdy3d_1_1physics_1_1Collision.html", null ],
         [ "CollisionPoints", "classBirdy3d_1_1physics_1_1CollisionPoints.html", null ],
         [ "ConvexMeshGenerators", "classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html", null ],
+        [ "IntermediateMesh", "classBirdy3d_1_1physics_1_1IntermediateMesh.html", null ],
         [ "PhysicsWorld", "classBirdy3d_1_1physics_1_1PhysicsWorld.html", null ],
-        [ "Triangle", "structBirdy3d_1_1physics_1_1Triangle.html", null ]
+        [ "Triangle", "structBirdy3d_1_1physics_1_1Triangle.html", "structBirdy3d_1_1physics_1_1Triangle" ]
       ] ],
       [ "render", null, [
         [ "Camera", "classBirdy3d_1_1render_1_1Camera.html", null ],

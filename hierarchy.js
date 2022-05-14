@@ -47,6 +47,7 @@ var hierarchy =
       [ "Birdy3d::events::MemberFunctionHandler< T, EventType >", "classBirdy3d_1_1events_1_1MemberFunctionHandler.html", null ]
     ] ],
     [ "Birdy3d::core::Input", "classBirdy3d_1_1core_1_1Input.html", null ],
+    [ "Birdy3d::physics::IntermediateMesh", "classBirdy3d_1_1physics_1_1IntermediateMesh.html", null ],
     [ "Birdy3d::ui::Layout", "classBirdy3d_1_1ui_1_1Layout.html", [
       [ "Birdy3d::ui::AbsoluteLayout", "classBirdy3d_1_1ui_1_1AbsoluteLayout.html", null ],
       [ "Birdy3d::ui::DirectionalLayout", "classBirdy3d_1_1ui_1_1DirectionalLayout.html", null ],
