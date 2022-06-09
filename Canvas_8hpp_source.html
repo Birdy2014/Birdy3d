@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('Canvas_8hpp_source.html',''); initResi
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                Widget::arrange(glm::vec2(0), viewport);</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                Widget::update_visible_area(glm::vec2(0), viewport);</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                <span class="keywordflow">if</span> (!m_cursor_grabbed)</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                    Widget::update_hover(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                    Widget::update_hover();</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                Widget::on_update();</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                Widget::late_update();</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            }</div>
@@ -208,7 +208,7 @@ $(document).ready(function(){initNavTree('Canvas_8hpp_source.html',''); initResi
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                <span class="keywordflow">if</span> (event.action == GLFW_RELEASE) {</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                    m_cursor_grabbed = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                    m_dragging = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    Widget::update_hover(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    Widget::update_hover();</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                    m_hovering_widget-&gt;on_drop(m_dragging_value);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                    core::Input::set_cursor(core::Input::CURSOR_DEFAULT);</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                }</div>
