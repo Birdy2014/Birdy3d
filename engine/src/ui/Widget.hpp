@@ -82,7 +82,7 @@ namespace Birdy3d::ui {
         // External Event calls
         void notify_event(EventType, events::Event const*);
         void external_draw();
-        bool update_hover(bool hover);
+        bool update_hover();
         void update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right);
         virtual void late_update();
         virtual void on_update();

@@ -7,6 +7,7 @@
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 #include "ui/Triangle.hpp"
+#include <algorithm>
 
 namespace Birdy3d::ui {
 
@@ -210,39 +211,37 @@ namespace Birdy3d::ui {
     }
 
     bool Widget::contains(glm::vec2 point) const {
-        return point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y;
+        auto local_point = point - m_actual_pos;
+        return (point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y)
+            && (std::ranges::find_if(m_shapes, [&local_point](auto const& shape) { return shape->contains(local_point); }) != m_shapes.end());
     }
 
-    bool Widget::update_hover(bool hover) {
-        bool success = false;
+    bool Widget::update_hover() {
         if (options.hidden)
-            hover = false;
+            return false;
 
         // foreground shapes
-        if (hover) {
-            for (const auto& shape : m_shapes) {
-                if (shape->in_foreground && shape->contains(core::Input::cursor_pos() - m_actual_pos)) {
-                    canvas->set_hovering(this);
-                    return true;
-                }
-            }
-        }
-
-        for (auto it = m_children.rbegin(); it != m_children.rend(); it++) {
-            if ((*it)->update_hover(hover && m_children_visible) && m_children_visible) {
-                hover = false;
-                success = true;
-            }
-        }
-
-        if (hover) {
-            if (contains(core::Input::cursor_pos())) {
+        for (const auto& shape : m_shapes) {
+            if (shape->in_foreground && shape->contains(core::Input::cursor_pos() - m_actual_pos)) {
                 canvas->set_hovering(this);
                 return true;
             }
         }
 
-        return success;
+        if (m_children_visible) {
+            for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+                if ((*it)->update_hover()) {
+                    return true;
+                }
+            }
+        }
+
+        if (canvas == this || contains(core::Input::cursor_pos())) {
+            canvas->set_hovering(this);
+            return true;
+        }
+
+        return false;
     }
 
     void Widget::update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right) {
