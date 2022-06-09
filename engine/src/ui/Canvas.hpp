@@ -28,7 +28,7 @@ namespace Birdy3d::ui {
                 Widget::arrange(glm::vec2(0), viewport);
                 Widget::update_visible_area(glm::vec2(0), viewport);
                 if (!m_cursor_grabbed)
-                    Widget::update_hover(true);
+                    Widget::update_hover();
                 Widget::on_update();
                 Widget::late_update();
             }
@@ -118,7 +118,7 @@ namespace Birdy3d::ui {
                 if (event.action == GLFW_RELEASE) {
                     m_cursor_grabbed = false;
                     m_dragging = false;
-                    Widget::update_hover(true);
+                    Widget::update_hover();
                     m_hovering_widget->on_drop(m_dragging_value);
                     core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
                 }
