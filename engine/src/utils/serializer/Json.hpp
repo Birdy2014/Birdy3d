@@ -7,17 +7,17 @@ namespace Birdy3d::serializer {
     class JsonParser : public Parser {
     public:
         using Parser::Parser;
-        std::optional<Value> parse() override;
+        Value parse() override;
 
     private:
         // Parse Types
-        std::optional<Value> parse_value();
-        std::optional<String> parse_string();
-        std::optional<Number> parse_number();
-        std::optional<Bool> parse_bool();
-        std::optional<Null> parse_null();
-        std::optional<Array> parse_array();
-        std::optional<Object> parse_object();
+        [[nodiscard]] Value parse_value();
+        [[nodiscard]] String parse_string();
+        [[nodiscard]] Number parse_number();
+        [[nodiscard]] Bool parse_bool();
+        [[nodiscard]] Null parse_null();
+        [[nodiscard]] Array parse_array();
+        [[nodiscard]] Object parse_object();
 
         // Utils
         void forward();

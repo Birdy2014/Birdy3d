@@ -57,31 +57,31 @@ namespace Birdy3d::serializer {
         }
 
         static void deserialize(std::string text, std::string name, auto& value) {
-            serializer::JsonParser parser(text);
-            auto parsed = parser.parse();
-            if (!parsed) {
-                core::Logger::critical("Invalid JSON");
-                exit(1);
+            try {
+                serializer::JsonParser parser(text);
+                auto parsed = parser.parse();
+                auto object = std::get_if<Object>(&parsed);
+                if (!object) {
+                    core::Logger::critical("Invalid Object");
+                    exit(1);
+                }
+                serializer::Adapter adapter(object, Adapter::Mode::LOAD);
+                adapter(name, value);
+                serializer::PointerRegistry::clear();
+            } catch (ParseError& error) {
+                core::Logger::critical("{}", error.what());
             }
-            auto object = std::get_if<Object>(&*parsed);
-            if (!object) {
-                core::Logger::critical("Invalid Object");
-                exit(1);
-            }
-            serializer::Adapter adapter(object, Adapter::Mode::LOAD);
-            adapter(name, value);
-            serializer::PointerRegistry::clear();
         }
 
         static void deserialize(std::string text, auto& value) {
-            serializer::JsonParser parser(text);
-            auto parsed = parser.parse();
-            if (!parsed) {
-                core::Logger::critical("Invalid JSON");
-                exit(1);
+            try {
+                serializer::JsonParser parser(text);
+                auto parsed = parser.parse();
+                adapter_load(&parsed, value);
+                serializer::PointerRegistry::clear();
+            } catch (ParseError& error) {
+                core::Logger::critical("{}", error.what());
             }
-            adapter_load(&*parsed, value);
-            serializer::PointerRegistry::clear();
         }
     };
 

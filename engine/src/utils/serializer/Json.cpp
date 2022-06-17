@@ -2,11 +2,11 @@
 
 namespace Birdy3d::serializer {
 
-    std::optional<Value> JsonParser::parse() {
+    Value JsonParser::parse() {
         return parse_value();
     }
 
-    std::optional<Value> JsonParser::parse_value() {
+    Value JsonParser::parse_value() {
         forward();
         char c = current_char();
         if (c == '"' || c == '\'')
@@ -21,36 +21,38 @@ namespace Birdy3d::serializer {
             return parse_array();
         if (c == '{')
             return parse_object();
-        return {};
+        throw ParseError { m_pos, m_pos + 1, "Expected value", m_content };
     }
 
-    std::optional<String> JsonParser::parse_string() {
+    String JsonParser::parse_string() {
+        auto start = m_pos;
         char c = consume_char();
         if (c != '"' && c != '\'')
-            return {};
+            throw ParseError { start, m_pos, "Expected string", m_content };
         std::string s = consume_until(c);
         if (current_char() == '\0')
-            return {};
+            throw ParseError { start, m_pos, "Expected string", m_content };
         m_pos++;
         return String(s);
     }
 
-    std::optional<Number> JsonParser::parse_number() {
+    Number JsonParser::parse_number() {
+        auto start = m_pos;
         bool dot = false;
         bool e = false;
         std::string num;
         char c = consume_char();
         if (!((c >= '0' && c <= '9') || c == '.' || c == '-'))
-            return {};
+            throw ParseError { start, m_pos, "Expected number", m_content };
         while ((c >= '0' && c <= '9') || c == '.' || c == '-' || c == 'e') {
             if (c == '.') {
                 if (dot)
-                    return {};
+                    throw ParseError { start, m_pos, "Too many dots in number", m_content };
                 dot = true;
             }
             if (c == 'e') {
                 if (e)
-                    return {};
+                    throw ParseError { start, m_pos, "Too many e in number", m_content };
                 e = true;
             }
             num += c;
@@ -60,23 +62,23 @@ namespace Birdy3d::serializer {
         return Number(std::atof(num.c_str()));
     }
 
-    std::optional<Bool> JsonParser::parse_bool() {
+    Bool JsonParser::parse_bool() {
         if (match("true"))
             return Bool(true);
         if (match("false"))
             return Bool(false);
-        return {};
+        throw ParseError { m_pos, m_pos + 1, "Expected boolean", m_content };
     }
 
-    std::optional<Null> JsonParser::parse_null() {
+    Null JsonParser::parse_null() {
         if (match("null"))
             return Null();
-        return {};
+        throw ParseError { m_pos, m_pos + 1, "Expected null", m_content };
     }
 
-    std::optional<Array> JsonParser::parse_array() {
+    Array JsonParser::parse_array() {
         if (consume_char() != '[')
-            return {};
+            throw ParseError { m_pos - 1, m_pos, "Expected array start", m_content };
         auto array = Array();
         do {
             forward();
@@ -85,22 +87,18 @@ namespace Birdy3d::serializer {
                 break;
             }
 
-            if (auto value = parse_value()) {
-                array.value.push_back(*value);
-                continue;
-            }
-            return {};
+            array.value.push_back(parse_value());
         } while (consume_char() == ',');
         m_pos--;
         forward();
         if (consume_char() != ']')
-            return {};
+            throw ParseError { m_pos - 1, m_pos, "Expected array end", m_content };
         return array;
     }
 
-    std::optional<Object> JsonParser::parse_object() {
+    Object JsonParser::parse_object() {
         if (consume_char() != '{')
-            return {};
+            throw ParseError { m_pos - 1, m_pos, "Expected object start", m_content };
         auto object = Object();
         do {
             forward();
@@ -109,22 +107,17 @@ namespace Birdy3d::serializer {
                 break;
             }
             auto key = parse_string();
-            if (!key)
-                return {};
             forward();
             if (consume_char() != ':')
-                return {};
+                throw ParseError { m_pos - 1, m_pos, "Expected ':'", m_content };
             forward();
-            if (auto value = parse_value()) {
-                object.value[key->value] = *value;
-                continue;
-            }
-            return {};
+            auto value = parse_value();
+            object.value[key.value] = value;
         } while (consume_char() == ',');
         m_pos--;
         forward();
-        if (char c = consume_char() != '}')
-            return {};
+        if (consume_char() != '}')
+            throw ParseError { m_pos - 1, m_pos, "Expected object end", m_content };
         return object;
     }
 
