@@ -1,6 +1,8 @@
 #pragma once
 
 #include "utils/serializer/TypeRegistry.hpp"
+#include <exception>
+#include <fmt/format.h>
 #include <map>
 #include <optional>
 #include <ostream>
@@ -56,14 +58,51 @@ namespace Birdy3d::serializer {
         }
     };
 
-    // Parser
+    class ParseError : public std::exception {
+    public:
+        ParseError(std::size_t start, std::size_t end, std::string_view message, std::string_view file) {
+            std::size_t line_begin = 0;
+            std::size_t line_end = 0;
+            std::size_t line_nr = 0;
+
+            for (std::size_t i = 0; i < file.length(); ++i) {
+                if (file[i] == '\n') {
+                    ++line_nr;
+                    if (i < start) {
+                        line_begin = i + 1;
+                    } else {
+                        line_end = i;
+                        break;
+                    }
+                }
+            }
+
+            m_message = fmt::format("--------------------\n{red}Error{reset} in line {}:\n{}{red}{}{reset}{}\n{}^- {}",
+                line_nr,
+                file.substr(line_begin, start - line_begin),
+                file.substr(start, end - start),
+                file.substr(end, line_end - end),
+                std::string(start - line_begin, ' '),
+                message,
+                fmt::arg("red", "\033[31m"),
+                fmt::arg("reset", "\033[0m"));
+        }
+
+        const char* what() const noexcept override {
+            return m_message.c_str();
+        }
+
+    private:
+        std::string m_message;
+    };
+
     class Parser {
     public:
         Parser(std::string content)
             : m_content(content)
             , m_pos(0) { }
         virtual ~Parser() = default;
-        virtual std::optional<Value> parse() = 0;
+        virtual Value parse() = 0;
 
     protected:
         std::string m_content;
@@ -112,7 +151,6 @@ namespace Birdy3d::serializer {
         }
     };
 
-    // Generator
     class Generator {
     public:
         Generator(std::ostream& stream)
