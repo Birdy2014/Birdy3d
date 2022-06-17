@@ -97,17 +97,17 @@ $(document).ready(function(){initNavTree('Json_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1serializer_1_1JsonParser.html">    7</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1serializer_1_1JsonParser.html">JsonParser</a> : <span class="keyword">public</span> <a class="code hl_class" href="classBirdy3d_1_1serializer_1_1Parser.html">Parser</a> {</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        <span class="keyword">using</span> Parser::Parser;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        std::optional&lt;Value&gt; parse() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        Value parse() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="comment">// Parse Types</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        std::optional&lt;Value&gt; parse_value();</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        std::optional&lt;String&gt; parse_string();</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        std::optional&lt;Number&gt; parse_number();</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        std::optional&lt;Bool&gt; parse_bool();</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        std::optional&lt;Null&gt; parse_null();</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        std::optional&lt;Array&gt; parse_array();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        std::optional&lt;Object&gt; parse_object();</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        [[nodiscard]] Value parse_value();</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        [[nodiscard]] <a class="code hl_struct" href="structBirdy3d_1_1serializer_1_1String.html">String</a> parse_string();</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        [[nodiscard]] <a class="code hl_struct" href="structBirdy3d_1_1serializer_1_1Number.html">Number</a> parse_number();</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        [[nodiscard]] <a class="code hl_struct" href="structBirdy3d_1_1serializer_1_1Bool.html">Bool</a> parse_bool();</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        [[nodiscard]] <a class="code hl_struct" href="structBirdy3d_1_1serializer_1_1Null.html">Null</a> parse_null();</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        [[nodiscard]] <a class="code hl_struct" href="structBirdy3d_1_1serializer_1_1Array.html">Array</a> parse_array();</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        [[nodiscard]] <a class="code hl_struct" href="structBirdy3d_1_1serializer_1_1Object.html">Object</a> parse_object();</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="comment">// Utils</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordtype">void</span> forward();</div>
@@ -146,17 +146,17 @@ $(document).ready(function(){initNavTree('Json_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    };</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
-<div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Generator_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Generator.html">Birdy3d::serializer::Generator</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:116</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Generator_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Generator.html">Birdy3d::serializer::Generator</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:154</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1JsonParser_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1JsonParser.html">Birdy3d::serializer::JsonParser</a></div><div class="ttdef"><b>Definition:</b> Json.hpp:7</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1MinimalJsonGenerator_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1MinimalJsonGenerator.html">Birdy3d::serializer::MinimalJsonGenerator</a></div><div class="ttdef"><b>Definition:</b> Json.hpp:26</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Parser_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Parser.html">Birdy3d::serializer::Parser</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:60</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Parser_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Parser.html">Birdy3d::serializer::Parser</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:99</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1PrettyJsonGenerator_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1PrettyJsonGenerator.html">Birdy3d::serializer::PrettyJsonGenerator</a></div><div class="ttdef"><b>Definition:</b> Json.hpp:40</div></div>
-<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Array_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Array.html">Birdy3d::serializer::Array</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:43</div></div>
-<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Bool_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Bool.html">Birdy3d::serializer::Bool</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:37</div></div>
-<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Null_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Null.html">Birdy3d::serializer::Null</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:23</div></div>
-<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Number_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Number.html">Birdy3d::serializer::Number</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:31</div></div>
-<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Object_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Object.html">Birdy3d::serializer::Object</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:51</div></div>
-<div class="ttc" id="astructBirdy3d_1_1serializer_1_1String_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1String.html">Birdy3d::serializer::String</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:25</div></div>
+<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Array_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Array.html">Birdy3d::serializer::Array</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:45</div></div>
+<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Bool_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Bool.html">Birdy3d::serializer::Bool</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:39</div></div>
+<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Null_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Null.html">Birdy3d::serializer::Null</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:25</div></div>
+<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Number_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Number.html">Birdy3d::serializer::Number</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:33</div></div>
+<div class="ttc" id="astructBirdy3d_1_1serializer_1_1Object_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1Object.html">Birdy3d::serializer::Object</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:53</div></div>
+<div class="ttc" id="astructBirdy3d_1_1serializer_1_1String_html"><div class="ttname"><a href="structBirdy3d_1_1serializer_1_1String.html">Birdy3d::serializer::String</a></div><div class="ttdef"><b>Definition:</b> Types.hpp:27</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
