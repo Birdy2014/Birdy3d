@@ -41,6 +41,7 @@ namespace Birdy3d::ui {
 
         TreeView(Options);
         virtual void draw() override;
+        virtual bool contains(glm::vec2) const override;
         virtual glm::vec2 minimal_size() override;
         TreeItem& root_item() { return m_root_item; }
         void sync_scene_tree(ecs::Scene*);
