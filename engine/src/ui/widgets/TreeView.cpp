@@ -56,6 +56,10 @@ namespace Birdy3d::ui {
         }
     }
 
+    bool TreeView::contains(glm::vec2 point) const {
+        return point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y;
+    }
+
     glm::vec2 TreeView::minimal_size() {
         float max_width = 0;
         for (const auto& row : m_flat_tree_list) {
