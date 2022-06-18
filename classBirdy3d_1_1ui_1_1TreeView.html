@@ -118,6 +118,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4c6b0617872ff8461c93cc1b37c2313f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TreeView.html#a4c6b0617872ff8461c93cc1b37c2313f">draw</a> () override</td></tr>
 <tr class="memdesc:a4c6b0617872ff8461c93cc1b37c2313f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom drawing.  <a href="classBirdy3d_1_1ui_1_1TreeView.html#a4c6b0617872ff8461c93cc1b37c2313f">More...</a><br /></td></tr>
 <tr class="separator:a4c6b0617872ff8461c93cc1b37c2313f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae33d7284abf3658cea17fafff13e8865"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TreeView.html#ae33d7284abf3658cea17fafff13e8865">contains</a> (glm::vec2) const override</td></tr>
+<tr class="separator:ae33d7284abf3658cea17fafff13e8865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa138d0d69bc97e47580b1a3273c3d2"><td class="memItemLeft" align="right" valign="top">virtual glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TreeView.html#a6aa138d0d69bc97e47580b1a3273c3d2">minimal_size</a> () override</td></tr>
 <tr class="separator:a6aa138d0d69bc97e47580b1a3273c3d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6adc739cbe81dbaa3576a7528eeeb7f"><td class="memItemLeft" align="right" valign="top"><a id="ab6adc739cbe81dbaa3576a7528eeeb7f" name="ab6adc739cbe81dbaa3576a7528eeeb7f"></a>
@@ -220,9 +222,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>update_flat_tree_list
 void&#160;</td><td class="memItemRight" valign="bottom"><b>update_flat_tree_list</b> (<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> &amp;item, int indent)</td></tr>
 <tr class="separator:a05f8e117f47ef1c07abc34d2e97ccb76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
-<tr class="memitem:a3e6f1a5013e02e9cf8c20b4753122688 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a3e6f1a5013e02e9cf8c20b4753122688" name="a3e6f1a5013e02e9cf8c20b4753122688"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (glm::vec2) const</td></tr>
-<tr class="separator:a3e6f1a5013e02e9cf8c20b4753122688 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ebe2edf54bae3584a82c9e92ff6d9d6 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a9ebe2edf54bae3584a82c9e92ff6d9d6" name="a9ebe2edf54bae3584a82c9e92ff6d9d6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name, std::any={})</td></tr>
 <tr class="separator:a9ebe2edf54bae3584a82c9e92ff6d9d6 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -390,6 +389,34 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
 <li>select_secundary: Fires when an item has been selected with the right mouse button. Passes a pointer to the selected <a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a>. This can be used to open a <a class="el" href="classBirdy3d_1_1ui_1_1ContextMenu.html">ContextMenu</a>. </li>
 </ul>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae33d7284abf3658cea17fafff13e8865" name="ae33d7284abf3658cea17fafff13e8865"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae33d7284abf3658cea17fafff13e8865">&#9670;&nbsp;</a></span>contains()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Birdy3d::ui::TreeView::contains </td>
+          <td>(</td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>point</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a>.</p>
+
+</div>
+</div>
 <a id="a4c6b0617872ff8461c93cc1b37c2313f" name="a4c6b0617872ff8461c93cc1b37c2313f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c6b0617872ff8461c93cc1b37c2313f">&#9670;&nbsp;</a></span>draw()</h2>
 
