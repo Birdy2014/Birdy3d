@@ -9,24 +9,24 @@ namespace Birdy3d::physics {
 
     std::shared_ptr<render::Model> ConvexMeshGenerators::generate_model(GenerationMode mode, const render::Model& model) {
         if (mode == GenerationMode::COPY || mode == GenerationMode::HULL_MESHES || mode == GenerationMode::DECOMPOSITION_MESHES) {
-            std::vector<std::unique_ptr<render::Mesh>> meshes;
+            std::vector<render::Mesh> meshes;
             for (const auto& m : model.get_meshes()) {
-                std::unique_ptr<render::Mesh> out_mesh;
+                std::optional<render::Mesh> out_mesh;
                 switch (mode) {
                 case GenerationMode::COPY:
-                    out_mesh = copy(*m);
+                    out_mesh = copy(m);
                     break;
                 case GenerationMode::HULL_MESHES:
-                    out_mesh = hull(*m);
+                    out_mesh = hull(m);
                     break;
                 case GenerationMode::DECOMPOSITION_MESHES:
-                    out_mesh = decomposition(*m);
+                    out_mesh = decomposition(m);
                     break;
                 default:
                     return nullptr;
                 }
-                if (out_mesh)
-                    meshes.push_back(std::move(out_mesh));
+                if (out_mesh.has_value())
+                    meshes.push_back(std::move(out_mesh.value()));
             }
             if (meshes.size() == 0)
                 return nullptr;
@@ -36,14 +36,14 @@ namespace Birdy3d::physics {
             std::vector<unsigned int> indices;
             unsigned int previous_sizes = 0;
             for (const auto& m : model.get_meshes()) {
-                for (const auto& vertex : m->vertices)
+                for (const auto& vertex : m.vertices)
                     vertices.push_back(vertex);
-                for (const auto& index : m->indices)
+                for (const auto& index : m.indices)
                     indices.push_back(previous_sizes + index);
-                previous_sizes += m->indices.size();
+                previous_sizes += m.indices.size();
             }
             render::Mesh in_mesh(vertices, indices);
-            std::unique_ptr<render::Mesh> out_mesh;
+            std::optional<render::Mesh> out_mesh;
             switch (mode) {
             case GenerationMode::HULL_MODEL:
                 out_mesh = hull(in_mesh);
@@ -54,19 +54,19 @@ namespace Birdy3d::physics {
             default:
                 return nullptr;
             }
-            if (!out_mesh)
+            if (!out_mesh.has_value())
                 return nullptr;
-            return std::make_shared<render::Model>(std::move(out_mesh));
+            return std::make_shared<render::Model>(std::move(out_mesh.value()));
         }
     }
 
-    std::unique_ptr<render::Mesh> ConvexMeshGenerators::copy(const render::Mesh& mesh) {
+    std::optional<render::Mesh> ConvexMeshGenerators::copy(const render::Mesh& mesh) {
         std::vector<render::Vertex> vertices = mesh.vertices;
         std::vector<unsigned int> indices = mesh.indices;
-        return std::make_unique<render::Mesh>(vertices, indices);
+        return render::Mesh { vertices, indices };
     }
 
-    std::unique_ptr<render::Mesh> ConvexMeshGenerators::hull(const render::Mesh& mesh) {
+    std::optional<render::Mesh> ConvexMeshGenerators::hull(const render::Mesh& mesh) {
         std::vector<glm::vec3> visited;
 
         // Create first tetrahedron
@@ -80,7 +80,7 @@ namespace Birdy3d::physics {
         }
         if (point_max == point_min) {
             core::Logger::warn("ConvexMeshGenerators::hull failed, because the render::Mesh is not 3D.");
-            return nullptr;
+            return {};
         }
         // Get furthest point from line
         glm::vec3 furthest_point_line = point_max;
@@ -95,7 +95,7 @@ namespace Birdy3d::physics {
         }
         if (furthest_distance == 0) {
             core::Logger::warn("ConvexMeshGenerators::hull failed, because the render::Mesh is 1D.");
-            return nullptr;
+            return {};
         }
         // Get furthest point from plane
         glm::vec3 furthest_point_plane = point_max;
@@ -112,7 +112,7 @@ namespace Birdy3d::physics {
         }
         if (furthest_distance == 0) {
             core::Logger::warn("ConvexMeshGenerators::hull failed, because the render::Mesh is 2D.");
-            return nullptr;
+            return {};
         }
 
         visited.push_back(point_min);
@@ -142,10 +142,10 @@ namespace Birdy3d::physics {
         return intermediate.to_mesh();
     }
 
-    std::unique_ptr<render::Mesh> ConvexMeshGenerators::decomposition(const render::Mesh&) {
+    std::optional<render::Mesh> ConvexMeshGenerators::decomposition(const render::Mesh&) {
         // TODO: Convex decomposition
         BIRDY3D_TODO
-        return nullptr;
+        return {};
     }
 
 }

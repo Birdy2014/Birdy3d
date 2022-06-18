@@ -83,7 +83,7 @@ namespace Birdy3d::physics {
         m_triangles.splice(m_triangles.cend(), new_triangles);
     }
 
-    std::unique_ptr<render::Mesh> IntermediateMesh::to_mesh() const {
+    render::Mesh IntermediateMesh::to_mesh() const {
         std::vector<render::Vertex> vertices;
         std::vector<unsigned int> indices;
         std::size_t current_index = 0;
@@ -96,7 +96,7 @@ namespace Birdy3d::physics {
             vertices.emplace_back<render::Vertex>({ triangle.b, normal, glm::vec3 {}, glm::vec3 {} });
             vertices.emplace_back<render::Vertex>({ triangle.c, normal, glm::vec3 {}, glm::vec3 {} });
         }
-        return std::make_unique<render::Mesh>(vertices, indices);
+        return render::Mesh { vertices, indices };
     }
 
 }

@@ -33,7 +33,7 @@ namespace Birdy3d::physics {
         std::list<Triangle> const& triangles() const { return m_triangles; }
 
         void expand(glm::vec3 point);
-        std::unique_ptr<render::Mesh> to_mesh() const;
+        render::Mesh to_mesh() const;
 
     private:
         std::list<Triangle> m_triangles;

@@ -44,7 +44,7 @@ namespace Birdy3d::utils {
             indices.push_back(v + resolution + 1);
         }
 
-        std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
+        auto mesh = render::Mesh { vertices, indices };
         return std::make_shared<render::Model>(std::move(mesh));
     }
 
@@ -102,7 +102,7 @@ namespace Birdy3d::utils {
         };
         // clang-format on
 
-        std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
+        auto mesh = render::Mesh { vertices, indices };
         return std::make_shared<render::Model>(std::move(mesh));
     }
 
@@ -172,7 +172,7 @@ namespace Birdy3d::utils {
             indices.push_back(v + 1);
         }
 
-        std::unique_ptr<render::Mesh> mesh = std::make_unique<render::Mesh>(vertices, indices);
+        auto mesh = render::Mesh { vertices, indices };
         return std::make_shared<render::Model>(std::move(mesh));
     }
 

@@ -19,12 +19,12 @@ namespace Birdy3d::render {
         compute_bounding_box();
     }
 
-    Model::Model(std::unique_ptr<Mesh> mesh) {
+    Model::Model(Mesh mesh) {
         m_meshes.push_back(std::move(mesh));
         compute_bounding_box();
     }
 
-    Model::Model(std::vector<std::unique_ptr<Mesh>>& meshes) {
+    Model::Model(std::vector<Mesh>& meshes) {
         for (auto& mesh : meshes)
             m_meshes.push_back(std::move(mesh));
     }
@@ -36,7 +36,7 @@ namespace Birdy3d::render {
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
             if (transparent == material->transparent())
-                m->render(shader, *material);
+                m.render(shader, *material);
         }
     }
 
@@ -45,7 +45,7 @@ namespace Birdy3d::render {
         shader.use();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
-            m->render_depth();
+            m.render_depth();
         }
     }
 
@@ -54,11 +54,11 @@ namespace Birdy3d::render {
         shader.use();
         shader.set_mat4("model", model);
         for (const auto& m : m_meshes) {
-            m->render_wireframe();
+            m.render_wireframe();
         }
     }
 
-    const std::vector<std::unique_ptr<Mesh>>& Model::get_meshes() const {
+    const std::vector<Mesh>& Model::get_meshes() const {
         return m_meshes;
     }
 
@@ -87,7 +87,7 @@ namespace Birdy3d::render {
         }
     }
 
-    std::unique_ptr<Mesh> Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
+    Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture*> textures;
@@ -153,14 +153,14 @@ namespace Birdy3d::render {
             m_embedded_material.emissive_map_enabled = true;
         }
 
-        return std::make_unique<Mesh>(vertices, indices);
+        return Mesh { vertices, indices };
     }
 
     void Model::compute_bounding_box() {
         glm::vec3 low(std::numeric_limits<float>::infinity());
         glm::vec3 high(-std::numeric_limits<float>::infinity());
         for (const auto& mesh : m_meshes) {
-            for (Vertex vertex : mesh->vertices) {
+            for (Vertex vertex : mesh.vertices) {
                 if (vertex.position.x < low.x)
                     low.x = vertex.position.x;
                 if (vertex.position.y < low.y)

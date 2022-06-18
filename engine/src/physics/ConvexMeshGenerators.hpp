@@ -2,6 +2,7 @@
 
 #include "core/Base.hpp"
 #include "render/Forward.hpp"
+#include <optional>
 
 namespace Birdy3d::physics {
 
@@ -19,9 +20,9 @@ namespace Birdy3d::physics {
         static std::shared_ptr<render::Model> generate_model(GenerationMode, const render::Model&);
 
     private:
-        static std::unique_ptr<render::Mesh> copy(const render::Mesh&);
-        static std::unique_ptr<render::Mesh> hull(const render::Mesh&);
-        static std::unique_ptr<render::Mesh> decomposition(const render::Mesh&);
+        static std::optional<render::Mesh> copy(const render::Mesh&);
+        static std::optional<render::Mesh> hull(const render::Mesh&);
+        static std::optional<render::Mesh> decomposition(const render::Mesh&);
     };
 
 }
