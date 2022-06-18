@@ -68,7 +68,7 @@ namespace Birdy3d::physics {
             return points;
         for (const auto& own_mesh : m_model->get_meshes()) {
             for (const auto& other_mesh : collider.m_model->get_meshes()) {
-                if (collides(*own_mesh.get(), *other_mesh.get(), entity->transform.global_matrix(), collider.entity->transform.global_matrix())) {
+                if (collides(own_mesh, other_mesh, entity->transform.global_matrix(), collider.entity->transform.global_matrix())) {
                     points.hasCollision = true;
                     break;
                 }

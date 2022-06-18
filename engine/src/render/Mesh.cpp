@@ -14,9 +14,7 @@ namespace Birdy3d::render {
     }
 
     Mesh::~Mesh() {
-        glDeleteBuffers(1, &m_vbo);
-        glDeleteBuffers(1, &m_ebo);
-        glDeleteVertexArrays(1, &m_vao);
+        release();
     }
 
     void Mesh::setup() {
@@ -50,6 +48,21 @@ namespace Birdy3d::render {
         glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
 
         glBindVertexArray(0);
+    }
+
+    void Mesh::release() {
+        if (m_vao != 0) {
+            glDeleteVertexArrays(1, &m_vao);
+            m_vao = 0;
+        }
+        if (m_vbo != 0) {
+            glDeleteBuffers(1, &m_vbo);
+            m_vbo = 0;
+        }
+        if (m_ebo != 0) {
+            glDeleteBuffers(1, &m_ebo);
+            m_ebo = 0;
+        }
     }
 
     void Mesh::render(const Shader& shader, const Material& material) const {
