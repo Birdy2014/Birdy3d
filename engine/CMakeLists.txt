@@ -3,13 +3,6 @@ add_library(Birdy3d_engine STATIC)
 add_subdirectory(src)
 add_subdirectory(vendor)
 
-# TODO: Store this in a variable, if linux, etc.
-if(WIN32)
-    target_link_libraries(Birdy3d_engine glfw opengl32 assimp freetype fmt)
-else()
-    target_link_libraries(Birdy3d_engine glfw GL X11 pthread Xrandr Xi dl assimp freetype fmt)
-endif()
-
 add_custom_target(
     Birdy3d_copy_shaders
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/out

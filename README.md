@@ -9,26 +9,20 @@ This documentation will be expanded in the future.
 
 Birdy3d supports both Linux and Windows.
 
-On Linux you need the following dependencies:
-- GCC >= 10 or Clang >= 10
+Dependencies:
 - CMake
-- Make
-- Xorg (Wayland is not supported yet)
-- assimp (optional)
-- glm (optional)
-- freetype2 (optional)
+- assimp
+- glm
+- freetype2
+
+Compiling on Linux using GCC >= 10 or Clang >= 10 and Make:
 
 ```
 cmake -B build -DCMAKE_BUILD_TYPE=Release -G Make
 cmake --build build -- -j4
 ```
 
-On Windows, you need:
-- Visual Studio 2019 (or newer)
-- CMake
-- assimp (optional)
-- glm (optional)
-- freetype2 (optional)
+Windows with Visual Studio 2019 (or newer):
 
 ```
 cmake -B build -G 'Visual Studio 16 2019'
