@@ -94,24 +94,16 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 Building</h1>
 <p ><a href="https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml"><img src="https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml/badge.svg" alt="Build" style="pointer-events: none;" class="inline"/></a></p>
 <p >Birdy3d supports both Linux and Windows.</p>
-<p >On Linux you need the following dependencies:</p><ul>
-<li>GCC &gt;= 10 or Clang &gt;= 10</li>
+<p >Dependencies:</p><ul>
 <li>CMake</li>
-<li>Make</li>
-<li>Xorg (Wayland is not supported yet)</li>
-<li>assimp (optional)</li>
-<li>glm (optional)</li>
-<li>freetype2 (optional)</li>
+<li>assimp</li>
+<li>glm</li>
+<li>freetype2</li>
 </ul>
+<p >Compiling on Linux using GCC &gt;= 10 or Clang &gt;= 10 and Make:</p>
 <div class="fragment"><div class="line">cmake -B build -DCMAKE_BUILD_TYPE=Release -G Make</div>
 <div class="line">cmake --build build -- -j4</div>
-</div><!-- fragment --><p >On Windows, you need:</p><ul>
-<li>Visual Studio 2019 (or newer)</li>
-<li>CMake</li>
-<li>assimp (optional)</li>
-<li>glm (optional)</li>
-<li>freetype2 (optional)</li>
-</ul>
+</div><!-- fragment --><p >Windows with Visual Studio 2019 (or newer):</p>
 <div class="fragment"><div class="line">cmake -B build -G &#39;Visual Studio 16 2019&#39;</div>
 <div class="line">cmake --build build --config Release</div>
 </div><!-- fragment --><p >The Executable can then be found under <em>build/out/bin</em>. </p>
