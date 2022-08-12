@@ -25,8 +25,18 @@ namespace Birdy3d::core {
     std::unordered_map<BoolOption, bool> Application::m_options_bool;
     std::unordered_map<IntOption, int> Application::m_options_int;
 
+    void glfw_error_callback([[maybe_unused]] int error, const char* description) {
+        core::Logger::error("GLFW Error: {}", description);
+    }
+
     bool Application::init(const char* window_name, int width, int height, const std::string& theme_name) {
+        // make wayland default instead of X11
+        if (std::getenv("WAYLAND_DISPLAY")[0] != '\0') {
+            glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_WAYLAND);
+        }
+
         glfwInit();
+        glfwSetErrorCallback(glfw_error_callback);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

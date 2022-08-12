@@ -7,6 +7,9 @@ target_include_directories(Birdy3d_engine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/stb_image
 )
 
+find_package(OpenGL REQUIRED)
+target_link_libraries(Birdy3d_engine OpenGL::GL)
+
 include(FetchContent)
 
 find_package(Freetype)
@@ -22,6 +25,7 @@ else()
 
     FetchContent_MakeAvailable(freetype)
 endif()
+target_link_libraries(Birdy3d_engine freetype)
 
 find_path(LIBRARY_GLM glm)
 if(LIBRARY_GLM STREQUAL "LIBRARY_GLM-NOTFOUND")
@@ -37,20 +41,23 @@ else()
     target_include_directories(Birdy3d_engine PUBLIC ${LIBRARY_GLM})
 endif()
 
-# TODO: uncomment find_library and change GIT_TAG once new-cursors-on-3.3-stable gets merged
+# TODO: uncomment find_library and change GIT_TAG once GLFW 3.4 is released
 #find_library(LIBRARY_GLFW glfw)
 #if (NOT LIBRARY_GLFW)
-    set(GLFW_BUILD_EXAMPLES OFF)
-    set(GLFW_BUILD_TESTS OFF)
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_WAYLAND ON CACHE BOOL "" FORCE)
 
     FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw
-        GIT_TAG        new-cursors-on-3.3-stable
+        GIT_TAG        master
     )
 
     FetchContent_MakeAvailable(glfw)
 #endif()
+target_link_libraries(Birdy3d_engine glfw)
 
 find_library(LIBRARY_ASSIMP assimp)
 if (NOT LIBRARY_ASSIMP)
@@ -66,6 +73,7 @@ if (NOT LIBRARY_ASSIMP)
 
     FetchContent_MakeAvailable(assimp)
 endif()
+target_link_libraries(Birdy3d_engine assimp)
 
 find_library(LIBRARY_FMT fmt)
 if(NOT LIBRARY_FMT)
@@ -75,3 +83,4 @@ if(NOT LIBRARY_FMT)
     )
     FetchContent_MakeAvailable(fmt)
 endif()
+target_link_libraries(Birdy3d_engine fmt)
