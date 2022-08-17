@@ -94,6 +94,18 @@ var hierarchy =
     [ "Birdy3d::ecs::Transform3d", "classBirdy3d_1_1ecs_1_1Transform3d.html", null ],
     [ "Birdy3d::ui::TreeItem", "classBirdy3d_1_1ui_1_1TreeItem.html", null ],
     [ "Birdy3d::physics::Triangle", "structBirdy3d_1_1physics_1_1Triangle.html", null ],
+    [ "Birdy3d::ui::UIEvent", "classBirdy3d_1_1ui_1_1UIEvent.html", [
+      [ "Birdy3d::ui::CharEvent", "classBirdy3d_1_1ui_1_1CharEvent.html", null ],
+      [ "Birdy3d::ui::ClickEvent", "classBirdy3d_1_1ui_1_1ClickEvent.html", null ],
+      [ "Birdy3d::ui::DropEvent", "classBirdy3d_1_1ui_1_1DropEvent.html", null ],
+      [ "Birdy3d::ui::FocusEvent", "classBirdy3d_1_1ui_1_1FocusEvent.html", null ],
+      [ "Birdy3d::ui::FocusLostEvent", "classBirdy3d_1_1ui_1_1FocusLostEvent.html", null ],
+      [ "Birdy3d::ui::KeyEvent", "classBirdy3d_1_1ui_1_1KeyEvent.html", null ],
+      [ "Birdy3d::ui::MouseEnterEvent", "classBirdy3d_1_1ui_1_1MouseEnterEvent.html", null ],
+      [ "Birdy3d::ui::MouseLeaveEvent", "classBirdy3d_1_1ui_1_1MouseLeaveEvent.html", null ],
+      [ "Birdy3d::ui::ResizeEvent", "classBirdy3d_1_1ui_1_1ResizeEvent.html", null ],
+      [ "Birdy3d::ui::ScrollEvent", "classBirdy3d_1_1ui_1_1ScrollEvent.html", null ]
+    ] ],
     [ "Birdy3d::ui::UIVector", "classBirdy3d_1_1ui_1_1UIVector.html", null ],
     [ "Birdy3d::utils::Unicode", "classBirdy3d_1_1utils_1_1Unicode.html", null ],
     [ "Birdy3d::ui::Unit", "classBirdy3d_1_1ui_1_1Unit.html", null ],

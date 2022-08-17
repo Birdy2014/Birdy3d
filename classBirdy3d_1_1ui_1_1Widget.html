@@ -123,24 +123,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aa13b0a1021a08d00680ed357541fc015"><td class="memItemLeft" align="right" valign="top"><a id="aa13b0a1021a08d00680ed357541fc015" name="aa13b0a1021a08d00680ed357541fc015"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>EventType</b> { <br />
-&#160;&#160;<b>SCROLL</b>
-, <b>CLICK</b>
-, <b>KEY</b>
-, <b>CHAR</b>
-, <br />
-&#160;&#160;<b>MOUSE_ENTER</b>
-, <b>MOUSE_LEAVE</b>
-, <b>FOCUS</b>
-, <b>FOCUS_LOST</b>
-, <br />
-&#160;&#160;<b>RESIZE</b>
-<br />
- }</td></tr>
-<tr class="separator:aa13b0a1021a08d00680ed357541fc015"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb8a27c865be05d4a88e8bff7c4d4063"><td class="memItemLeft" align="right" valign="top"><a id="acb8a27c865be05d4a88e8bff7c4d4063" name="acb8a27c865be05d4a88e8bff7c4d4063"></a>
-typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
-<tr class="separator:acb8a27c865be05d4a88e8bff7c4d4063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a035650c4cc096459738ad838d38c6baf"><td class="memItemLeft" align="right" valign="top"><a id="a035650c4cc096459738ad838d38c6baf" name="a035650c4cc096459738ad838d38c6baf"></a>
+typedef std::function&lt; void(<a class="el" href="classBirdy3d_1_1ui_1_1UIEvent.html">UIEvent</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
+<tr class="separator:a035650c4cc096459738ad838d38c6baf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -189,9 +174,9 @@ glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>actual_pos</b> (
 <tr class="memitem:a7412fa0fa95e93c3d490ac9dbad7e846"><td class="memItemLeft" align="right" valign="top"><a id="a7412fa0fa95e93c3d490ac9dbad7e846" name="a7412fa0fa95e93c3d490ac9dbad7e846"></a>
 glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>actual_size</b> ()</td></tr>
 <tr class="separator:a7412fa0fa95e93c3d490ac9dbad7e846"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbbeca9efff58c5328f4260812d85f71"><td class="memItemLeft" align="right" valign="top"><a id="abbbeca9efff58c5328f4260812d85f71" name="abbbeca9efff58c5328f4260812d85f71"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>notify_event</b> (EventType, <a class="el" href="classBirdy3d_1_1events_1_1Event.html">events::Event</a> const *)</td></tr>
-<tr class="separator:abbbeca9efff58c5328f4260812d85f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a787cacaf9d78d4664b41d712f9e39e8a"><td class="memItemLeft" align="right" valign="top"><a id="a787cacaf9d78d4664b41d712f9e39e8a" name="a787cacaf9d78d4664b41d712f9e39e8a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>notify_event</b> (<a class="el" href="classBirdy3d_1_1ui_1_1UIEvent.html">UIEvent</a> &amp;)</td></tr>
+<tr class="separator:a787cacaf9d78d4664b41d712f9e39e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4056a6836737e8e1aaca11cbae47332"><td class="memItemLeft" align="right" valign="top"><a id="ad4056a6836737e8e1aaca11cbae47332" name="ad4056a6836737e8e1aaca11cbae47332"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>external_draw</b> ()</td></tr>
 <tr class="separator:ad4056a6836737e8e1aaca11cbae47332"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,42 +216,42 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a3e6f1a5013e02e9cf8c20b4753122688"><td class="memItemLeft" align="right" valign="top"><a id="a3e6f1a5013e02e9cf8c20b4753122688" name="a3e6f1a5013e02e9cf8c20b4753122688"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (glm::vec2) const</td></tr>
 <tr class="separator:a3e6f1a5013e02e9cf8c20b4753122688"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ebe2edf54bae3584a82c9e92ff6d9d6"><td class="memItemLeft" align="right" valign="top"><a id="a9ebe2edf54bae3584a82c9e92ff6d9d6" name="a9ebe2edf54bae3584a82c9e92ff6d9d6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name, std::any={})</td></tr>
-<tr class="separator:a9ebe2edf54bae3584a82c9e92ff6d9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6211203eb20051d89456555e69c8d65"><td class="memItemLeft" align="right" valign="top"><a id="ab6211203eb20051d89456555e69c8d65" name="ab6211203eb20051d89456555e69c8d65"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name, <a class="el" href="classBirdy3d_1_1ui_1_1UIEvent.html">UIEvent</a> &amp;event)</td></tr>
+<tr class="separator:ab6211203eb20051d89456555e69c8d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a6aebdc268562fdf4be39e1188dfbbb"><td class="memItemLeft" align="right" valign="top"><a id="a8a6aebdc268562fdf4be39e1188dfbbb" name="a8a6aebdc268562fdf4be39e1188dfbbb"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_callbacks</b> (const std::string &amp;name)</td></tr>
 <tr class="separator:a8a6aebdc268562fdf4be39e1188dfbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22262c5a0afb1aeeb35fb09f7c1596c8"><td class="memItemLeft" align="right" valign="top"><a id="a22262c5a0afb1aeeb35fb09f7c1596c8" name="a22262c5a0afb1aeeb35fb09f7c1596c8"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>on_scroll</b> (const <a class="el" href="classBirdy3d_1_1events_1_1InputScrollEvent.html">events::InputScrollEvent</a> &amp;)</td></tr>
-<tr class="separator:a22262c5a0afb1aeeb35fb09f7c1596c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7bffaae29738fe206b57c01c18689e8"><td class="memItemLeft" align="right" valign="top"><a id="af7bffaae29738fe206b57c01c18689e8" name="af7bffaae29738fe206b57c01c18689e8"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>on_click</b> (const <a class="el" href="classBirdy3d_1_1events_1_1InputClickEvent.html">events::InputClickEvent</a> &amp;)</td></tr>
-<tr class="separator:af7bffaae29738fe206b57c01c18689e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af07332943f3f8801af6506f287f7cf12"><td class="memItemLeft" align="right" valign="top"><a id="af07332943f3f8801af6506f287f7cf12" name="af07332943f3f8801af6506f287f7cf12"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>on_key</b> (const <a class="el" href="classBirdy3d_1_1events_1_1InputKeyEvent.html">events::InputKeyEvent</a> &amp;)</td></tr>
-<tr class="separator:af07332943f3f8801af6506f287f7cf12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72998e82511003118ecf4ed88ed83b2e"><td class="memItemLeft" align="right" valign="top"><a id="a72998e82511003118ecf4ed88ed83b2e" name="a72998e82511003118ecf4ed88ed83b2e"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>on_char</b> (const <a class="el" href="classBirdy3d_1_1events_1_1InputCharEvent.html">events::InputCharEvent</a> &amp;)</td></tr>
-<tr class="separator:a72998e82511003118ecf4ed88ed83b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7358ca71031d0e353b92c10c55aa2a1"><td class="memItemLeft" align="right" valign="top"><a id="ac7358ca71031d0e353b92c10c55aa2a1" name="ac7358ca71031d0e353b92c10c55aa2a1"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_mouse_enter</b> ()</td></tr>
-<tr class="separator:ac7358ca71031d0e353b92c10c55aa2a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae27ed4ca54d9c66bf84776c53d60b542"><td class="memItemLeft" align="right" valign="top"><a id="ae27ed4ca54d9c66bf84776c53d60b542" name="ae27ed4ca54d9c66bf84776c53d60b542"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_mouse_leave</b> ()</td></tr>
-<tr class="separator:ae27ed4ca54d9c66bf84776c53d60b542"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11948a7f4d210706175707a790f58fc4"><td class="memItemLeft" align="right" valign="top"><a id="a11948a7f4d210706175707a790f58fc4" name="a11948a7f4d210706175707a790f58fc4"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus</b> ()</td></tr>
-<tr class="separator:a11948a7f4d210706175707a790f58fc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0be27670e64fee7b5a9b31a5ace65388"><td class="memItemLeft" align="right" valign="top"><a id="a0be27670e64fee7b5a9b31a5ace65388" name="a0be27670e64fee7b5a9b31a5ace65388"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus_lost</b> ()</td></tr>
-<tr class="separator:a0be27670e64fee7b5a9b31a5ace65388"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84a60e1d95880336cd816f61cabf395e"><td class="memItemLeft" align="right" valign="top"><a id="a84a60e1d95880336cd816f61cabf395e" name="a84a60e1d95880336cd816f61cabf395e"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_resize</b> ()</td></tr>
-<tr class="separator:a84a60e1d95880336cd816f61cabf395e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6999943a54669e2a890f8002032e33fc"><td class="memItemLeft" align="right" valign="top"><a id="a6999943a54669e2a890f8002032e33fc" name="a6999943a54669e2a890f8002032e33fc"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_drop</b> (const std::any &amp;)</td></tr>
-<tr class="separator:a6999943a54669e2a890f8002032e33fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d83d0b837cfd6c13ab95dae6b4f8d77"><td class="memItemLeft" align="right" valign="top"><a id="a1d83d0b837cfd6c13ab95dae6b4f8d77" name="a1d83d0b837cfd6c13ab95dae6b4f8d77"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_scroll</b> (<a class="el" href="classBirdy3d_1_1ui_1_1ScrollEvent.html">ScrollEvent</a> &amp;)</td></tr>
+<tr class="separator:a1d83d0b837cfd6c13ab95dae6b4f8d77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9366191471466085c390652e00f1a109"><td class="memItemLeft" align="right" valign="top"><a id="a9366191471466085c390652e00f1a109" name="a9366191471466085c390652e00f1a109"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_click</b> (<a class="el" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a> &amp;)</td></tr>
+<tr class="separator:a9366191471466085c390652e00f1a109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69e5daa4ecc21457881a16f4d63187b1"><td class="memItemLeft" align="right" valign="top"><a id="a69e5daa4ecc21457881a16f4d63187b1" name="a69e5daa4ecc21457881a16f4d63187b1"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_key</b> (<a class="el" href="classBirdy3d_1_1ui_1_1KeyEvent.html">KeyEvent</a> &amp;)</td></tr>
+<tr class="separator:a69e5daa4ecc21457881a16f4d63187b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a325c166d24690909e1cc60e3a5ee716d"><td class="memItemLeft" align="right" valign="top"><a id="a325c166d24690909e1cc60e3a5ee716d" name="a325c166d24690909e1cc60e3a5ee716d"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_char</b> (<a class="el" href="classBirdy3d_1_1ui_1_1CharEvent.html">CharEvent</a> &amp;)</td></tr>
+<tr class="separator:a325c166d24690909e1cc60e3a5ee716d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43c38e194cf685dde904a2a3d8539ae0"><td class="memItemLeft" align="right" valign="top"><a id="a43c38e194cf685dde904a2a3d8539ae0" name="a43c38e194cf685dde904a2a3d8539ae0"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_mouse_enter</b> (<a class="el" href="classBirdy3d_1_1ui_1_1MouseEnterEvent.html">MouseEnterEvent</a> &amp;)</td></tr>
+<tr class="separator:a43c38e194cf685dde904a2a3d8539ae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dfda18bf4719777c11d26656c7e33a5"><td class="memItemLeft" align="right" valign="top"><a id="a0dfda18bf4719777c11d26656c7e33a5" name="a0dfda18bf4719777c11d26656c7e33a5"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_mouse_leave</b> (<a class="el" href="classBirdy3d_1_1ui_1_1MouseLeaveEvent.html">MouseLeaveEvent</a> &amp;)</td></tr>
+<tr class="separator:a0dfda18bf4719777c11d26656c7e33a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5892ed9e1e6ef3f941b00c25df8a85eb"><td class="memItemLeft" align="right" valign="top"><a id="a5892ed9e1e6ef3f941b00c25df8a85eb" name="a5892ed9e1e6ef3f941b00c25df8a85eb"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus</b> (<a class="el" href="classBirdy3d_1_1ui_1_1FocusEvent.html">FocusEvent</a> &amp;)</td></tr>
+<tr class="separator:a5892ed9e1e6ef3f941b00c25df8a85eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a257a08b647543fedc1f4c2e5772e5360"><td class="memItemLeft" align="right" valign="top"><a id="a257a08b647543fedc1f4c2e5772e5360" name="a257a08b647543fedc1f4c2e5772e5360"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus_lost</b> (<a class="el" href="classBirdy3d_1_1ui_1_1FocusLostEvent.html">FocusLostEvent</a> &amp;)</td></tr>
+<tr class="separator:a257a08b647543fedc1f4c2e5772e5360"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfeeadfdf3a120def6d909dad92f055e"><td class="memItemLeft" align="right" valign="top"><a id="acfeeadfdf3a120def6d909dad92f055e" name="acfeeadfdf3a120def6d909dad92f055e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_resize</b> (<a class="el" href="classBirdy3d_1_1ui_1_1ResizeEvent.html">ResizeEvent</a> &amp;)</td></tr>
+<tr class="separator:acfeeadfdf3a120def6d909dad92f055e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac35ef83bad75119c738ae90a5a1dd223"><td class="memItemLeft" align="right" valign="top"><a id="ac35ef83bad75119c738ae90a5a1dd223" name="ac35ef83bad75119c738ae90a5a1dd223"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_drop</b> (<a class="el" href="classBirdy3d_1_1ui_1_1DropEvent.html">DropEvent</a> &amp;)</td></tr>
+<tr class="separator:ac35ef83bad75119c738ae90a5a1dd223"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf295ba3c947f277b0f312aa73c874be"><td class="memItemLeft" align="right" valign="top"><a id="adf295ba3c947f277b0f312aa73c874be" name="adf295ba3c947f277b0f312aa73c874be"></a>
 <a class="el" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>add_rectangle</b> (<a class="el" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> pos, <a class="el" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> size, utils::Color::Name, Placement=Placement::TOP_LEFT)</td></tr>
 <tr class="separator:adf295ba3c947f277b0f312aa73c874be"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -174,9 +174,9 @@ glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>actual_pos</b> (
 <tr class="memitem:a7412fa0fa95e93c3d490ac9dbad7e846 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a7412fa0fa95e93c3d490ac9dbad7e846" name="a7412fa0fa95e93c3d490ac9dbad7e846"></a>
 glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>actual_size</b> ()</td></tr>
 <tr class="separator:a7412fa0fa95e93c3d490ac9dbad7e846 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbbeca9efff58c5328f4260812d85f71 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="abbbeca9efff58c5328f4260812d85f71" name="abbbeca9efff58c5328f4260812d85f71"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>notify_event</b> (EventType, <a class="el" href="classBirdy3d_1_1events_1_1Event.html">events::Event</a> const *)</td></tr>
-<tr class="separator:abbbeca9efff58c5328f4260812d85f71 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a787cacaf9d78d4664b41d712f9e39e8a inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a787cacaf9d78d4664b41d712f9e39e8a" name="a787cacaf9d78d4664b41d712f9e39e8a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>notify_event</b> (<a class="el" href="classBirdy3d_1_1ui_1_1UIEvent.html">UIEvent</a> &amp;)</td></tr>
+<tr class="separator:a787cacaf9d78d4664b41d712f9e39e8a inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4056a6836737e8e1aaca11cbae47332 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="ad4056a6836737e8e1aaca11cbae47332" name="ad4056a6836737e8e1aaca11cbae47332"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>external_draw</b> ()</td></tr>
 <tr class="separator:ad4056a6836737e8e1aaca11cbae47332 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,6 +198,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> = false<
 <tr class="memitem:a0fddde34cfcf2e835d48f74acd716a91"><td class="memItemLeft" align="right" valign="top"><a id="a0fddde34cfcf2e835d48f74acd716a91" name="a0fddde34cfcf2e835d48f74acd716a91"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>multiline</b> = false</td></tr>
 <tr class="separator:a0fddde34cfcf2e835d48f74acd716a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8910bd834ac6f6af1d4504e1e6888e87"><td class="memItemLeft" align="right" valign="top"><a id="a8910bd834ac6f6af1d4504e1e6888e87" name="a8910bd834ac6f6af1d4504e1e6888e87"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>on_change</b></td></tr>
+<tr class="separator:a8910bd834ac6f6af1d4504e1e6888e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a578bb62af0b96c3434c83139513d4f"><td class="memItemLeft" align="right" valign="top"><a id="a3a578bb62af0b96c3434c83139513d4f" name="a3a578bb62af0b96c3434c83139513d4f"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>on_accept</b></td></tr>
+<tr class="separator:a3a578bb62af0b96c3434c83139513d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
 <tr class="memitem:a611934db388e2874a446a1603daeed80 inherit pub_attribs_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a611934db388e2874a446a1603daeed80" name="a611934db388e2874a446a1603daeed80"></a>
 <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parent</b> = nullptr</td></tr>
@@ -216,18 +222,18 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:aaeb3c324335a1566c849cec7b2595751"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7b9aeb83e5616ec0198086e79d6bd6c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#ac7b9aeb83e5616ec0198086e79d6bd6c">on_update</a> () override</td></tr>
 <tr class="separator:ac7b9aeb83e5616ec0198086e79d6bd6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d4d3b13b7a3dc6cca3d978aa37de055"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a2d4d3b13b7a3dc6cca3d978aa37de055">on_click</a> (const <a class="el" href="classBirdy3d_1_1events_1_1InputClickEvent.html">events::InputClickEvent</a> &amp;event) override</td></tr>
-<tr class="separator:a2d4d3b13b7a3dc6cca3d978aa37de055"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af36ad437bbe6d9aaaa3f348f3917386f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#af36ad437bbe6d9aaaa3f348f3917386f">on_key</a> (const <a class="el" href="classBirdy3d_1_1events_1_1InputKeyEvent.html">events::InputKeyEvent</a> &amp;event) override</td></tr>
-<tr class="separator:af36ad437bbe6d9aaaa3f348f3917386f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a613c5b65a00dc9a78f304a7ec9378633"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a613c5b65a00dc9a78f304a7ec9378633">on_char</a> (const <a class="el" href="classBirdy3d_1_1events_1_1InputCharEvent.html">events::InputCharEvent</a> &amp;event) override</td></tr>
-<tr class="separator:a613c5b65a00dc9a78f304a7ec9378633"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9956bfd3b08b05451e3e239e82aacf68"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a9956bfd3b08b05451e3e239e82aacf68">on_mouse_enter</a> () override</td></tr>
-<tr class="separator:a9956bfd3b08b05451e3e239e82aacf68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1960c8a5b4fc26094c51381a77b44783"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a1960c8a5b4fc26094c51381a77b44783">on_mouse_leave</a> () override</td></tr>
-<tr class="separator:a1960c8a5b4fc26094c51381a77b44783"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec6a6cb721ff7d49147fc2e75c3bf4a4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#aec6a6cb721ff7d49147fc2e75c3bf4a4">on_focus_lost</a> () override</td></tr>
-<tr class="separator:aec6a6cb721ff7d49147fc2e75c3bf4a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f634893eb47a4ee6444069980b23219"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a2f634893eb47a4ee6444069980b23219">on_click</a> (<a class="el" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a> &amp;event) override</td></tr>
+<tr class="separator:a2f634893eb47a4ee6444069980b23219"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c6b26059761e0caeb4f28528727d7fa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a2c6b26059761e0caeb4f28528727d7fa">on_key</a> (<a class="el" href="classBirdy3d_1_1ui_1_1KeyEvent.html">KeyEvent</a> &amp;event) override</td></tr>
+<tr class="separator:a2c6b26059761e0caeb4f28528727d7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec2d7379e1fe7c2a0d9929fa0041b3b5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#aec2d7379e1fe7c2a0d9929fa0041b3b5">on_char</a> (<a class="el" href="classBirdy3d_1_1ui_1_1CharEvent.html">CharEvent</a> &amp;event) override</td></tr>
+<tr class="separator:aec2d7379e1fe7c2a0d9929fa0041b3b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6b9f8058584e7c5d0711472dfac37db"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#af6b9f8058584e7c5d0711472dfac37db">on_mouse_enter</a> (<a class="el" href="classBirdy3d_1_1ui_1_1MouseEnterEvent.html">MouseEnterEvent</a> &amp;) override</td></tr>
+<tr class="separator:af6b9f8058584e7c5d0711472dfac37db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4873de3c838d2e286a53e0214a828874"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a4873de3c838d2e286a53e0214a828874">on_mouse_leave</a> (<a class="el" href="classBirdy3d_1_1ui_1_1MouseLeaveEvent.html">MouseLeaveEvent</a> &amp;) override</td></tr>
+<tr class="separator:a4873de3c838d2e286a53e0214a828874"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac390e121795f5abde0c8a48af89393cb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#ac390e121795f5abde0c8a48af89393cb">on_focus_lost</a> (<a class="el" href="classBirdy3d_1_1ui_1_1FocusLostEvent.html">FocusLostEvent</a> &amp;) override</td></tr>
+<tr class="separator:ac390e121795f5abde0c8a48af89393cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5bfa664157a19dbb2f1fadef40d916a"><td class="memItemLeft" align="right" valign="top"><a id="af5bfa664157a19dbb2f1fadef40d916a" name="af5bfa664157a19dbb2f1fadef40d916a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_selection</b> ()</td></tr>
 <tr class="separator:af5bfa664157a19dbb2f1fadef40d916a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,26 +243,26 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_selection</b> (
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scroll_if_needed</b> (std::size_t cursor_pos)</td></tr>
 <tr class="separator:a3807b9da0ae40bca35577413ae6cbe74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Scrollable')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html">Birdy3d::ui::Scrollable</a></td></tr>
-<tr class="memitem:aecff63193506a1ca3890c6b5dabdb28e inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#aecff63193506a1ca3890c6b5dabdb28e">on_scroll</a> (const <a class="el" href="classBirdy3d_1_1events_1_1InputScrollEvent.html">events::InputScrollEvent</a> &amp;event) override</td></tr>
-<tr class="separator:aecff63193506a1ca3890c6b5dabdb28e inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3db4d9fbfc836cdb1e7415adc98bce6 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#aa3db4d9fbfc836cdb1e7415adc98bce6">on_resize</a> () override</td></tr>
-<tr class="separator:aa3db4d9fbfc836cdb1e7415adc98bce6 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12a641cbb6dcb04d0a13ccfc0d754f24 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#a12a641cbb6dcb04d0a13ccfc0d754f24">on_scroll</a> (<a class="el" href="classBirdy3d_1_1ui_1_1ScrollEvent.html">ScrollEvent</a> &amp;) override</td></tr>
+<tr class="separator:a12a641cbb6dcb04d0a13ccfc0d754f24 inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47235a28650a01d87d50fe2ed589df8a inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html#a47235a28650a01d87d50fe2ed589df8a">on_resize</a> (<a class="el" href="classBirdy3d_1_1ui_1_1ResizeEvent.html">ResizeEvent</a> &amp;) override</td></tr>
+<tr class="separator:a47235a28650a01d87d50fe2ed589df8a inherit pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
 <tr class="memitem:a3e6f1a5013e02e9cf8c20b4753122688 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a3e6f1a5013e02e9cf8c20b4753122688" name="a3e6f1a5013e02e9cf8c20b4753122688"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (glm::vec2) const</td></tr>
 <tr class="separator:a3e6f1a5013e02e9cf8c20b4753122688 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ebe2edf54bae3584a82c9e92ff6d9d6 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a9ebe2edf54bae3584a82c9e92ff6d9d6" name="a9ebe2edf54bae3584a82c9e92ff6d9d6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name, std::any={})</td></tr>
-<tr class="separator:a9ebe2edf54bae3584a82c9e92ff6d9d6 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6211203eb20051d89456555e69c8d65 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="ab6211203eb20051d89456555e69c8d65" name="ab6211203eb20051d89456555e69c8d65"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name, <a class="el" href="classBirdy3d_1_1ui_1_1UIEvent.html">UIEvent</a> &amp;event)</td></tr>
+<tr class="separator:ab6211203eb20051d89456555e69c8d65 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a6aebdc268562fdf4be39e1188dfbbb inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a8a6aebdc268562fdf4be39e1188dfbbb" name="a8a6aebdc268562fdf4be39e1188dfbbb"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_callbacks</b> (const std::string &amp;name)</td></tr>
 <tr class="separator:a8a6aebdc268562fdf4be39e1188dfbbb inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11948a7f4d210706175707a790f58fc4 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a11948a7f4d210706175707a790f58fc4" name="a11948a7f4d210706175707a790f58fc4"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus</b> ()</td></tr>
-<tr class="separator:a11948a7f4d210706175707a790f58fc4 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6999943a54669e2a890f8002032e33fc inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a6999943a54669e2a890f8002032e33fc" name="a6999943a54669e2a890f8002032e33fc"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_drop</b> (const std::any &amp;)</td></tr>
-<tr class="separator:a6999943a54669e2a890f8002032e33fc inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5892ed9e1e6ef3f941b00c25df8a85eb inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a5892ed9e1e6ef3f941b00c25df8a85eb" name="a5892ed9e1e6ef3f941b00c25df8a85eb"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_focus</b> (<a class="el" href="classBirdy3d_1_1ui_1_1FocusEvent.html">FocusEvent</a> &amp;)</td></tr>
+<tr class="separator:a5892ed9e1e6ef3f941b00c25df8a85eb inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac35ef83bad75119c738ae90a5a1dd223 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="ac35ef83bad75119c738ae90a5a1dd223" name="ac35ef83bad75119c738ae90a5a1dd223"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_drop</b> (<a class="el" href="classBirdy3d_1_1ui_1_1DropEvent.html">DropEvent</a> &amp;)</td></tr>
+<tr class="separator:ac35ef83bad75119c738ae90a5a1dd223 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf295ba3c947f277b0f312aa73c874be inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="adf295ba3c947f277b0f312aa73c874be" name="adf295ba3c947f277b0f312aa73c874be"></a>
 <a class="el" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>add_rectangle</b> (<a class="el" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> pos, <a class="el" href="classBirdy3d_1_1ui_1_1UIVector.html">UIVector</a> size, utils::Color::Name, Placement=Placement::TOP_LEFT)</td></tr>
 <tr class="separator:adf295ba3c947f277b0f312aa73c874be inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -363,24 +369,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_shapes_visible</b> 
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
-<tr class="memitem:aa13b0a1021a08d00680ed357541fc015 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="aa13b0a1021a08d00680ed357541fc015" name="aa13b0a1021a08d00680ed357541fc015"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>EventType</b> { <br />
-&#160;&#160;<b>SCROLL</b>
-, <b>CLICK</b>
-, <b>KEY</b>
-, <b>CHAR</b>
-, <br />
-&#160;&#160;<b>MOUSE_ENTER</b>
-, <b>MOUSE_LEAVE</b>
-, <b>FOCUS</b>
-, <b>FOCUS_LOST</b>
-, <br />
-&#160;&#160;<b>RESIZE</b>
-<br />
- }</td></tr>
-<tr class="separator:aa13b0a1021a08d00680ed357541fc015 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb8a27c865be05d4a88e8bff7c4d4063 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="acb8a27c865be05d4a88e8bff7c4d4063" name="acb8a27c865be05d4a88e8bff7c4d4063"></a>
-typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
-<tr class="separator:acb8a27c865be05d4a88e8bff7c4d4063 inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a035650c4cc096459738ad838d38c6baf inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a035650c4cc096459738ad838d38c6baf" name="a035650c4cc096459738ad838d38c6baf"></a>
+typedef std::function&lt; void(<a class="el" href="classBirdy3d_1_1ui_1_1UIEvent.html">UIEvent</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackType</b></td></tr>
+<tr class="separator:a035650c4cc096459738ad838d38c6baf inherit pub_types_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="aaeb3c324335a1566c849cec7b2595751" name="aaeb3c324335a1566c849cec7b2595751"></a>
@@ -467,8 +458,8 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
-<a id="a613c5b65a00dc9a78f304a7ec9378633" name="a613c5b65a00dc9a78f304a7ec9378633"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a613c5b65a00dc9a78f304a7ec9378633">&#9670;&nbsp;</a></span>on_char()</h2>
+<a id="aec2d7379e1fe7c2a0d9929fa0041b3b5" name="aec2d7379e1fe7c2a0d9929fa0041b3b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec2d7379e1fe7c2a0d9929fa0041b3b5">&#9670;&nbsp;</a></span>on_char()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -477,9 +468,9 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Birdy3d::ui::TextField::on_char </td>
+          <td class="memname">void Birdy3d::ui::TextField::on_char </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classBirdy3d_1_1events_1_1InputCharEvent.html">events::InputCharEvent</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classBirdy3d_1_1ui_1_1CharEvent.html">CharEvent</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
           <td></td>
         </tr>
@@ -495,8 +486,8 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
-<a id="a2d4d3b13b7a3dc6cca3d978aa37de055" name="a2d4d3b13b7a3dc6cca3d978aa37de055"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d4d3b13b7a3dc6cca3d978aa37de055">&#9670;&nbsp;</a></span>on_click()</h2>
+<a id="a2f634893eb47a4ee6444069980b23219" name="a2f634893eb47a4ee6444069980b23219"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f634893eb47a4ee6444069980b23219">&#9670;&nbsp;</a></span>on_click()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -505,9 +496,9 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Birdy3d::ui::TextField::on_click </td>
+          <td class="memname">void Birdy3d::ui::TextField::on_click </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classBirdy3d_1_1events_1_1InputClickEvent.html">events::InputClickEvent</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
           <td></td>
         </tr>
@@ -523,8 +514,8 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
-<a id="aec6a6cb721ff7d49147fc2e75c3bf4a4" name="aec6a6cb721ff7d49147fc2e75c3bf4a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec6a6cb721ff7d49147fc2e75c3bf4a4">&#9670;&nbsp;</a></span>on_focus_lost()</h2>
+<a id="ac390e121795f5abde0c8a48af89393cb" name="ac390e121795f5abde0c8a48af89393cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac390e121795f5abde0c8a48af89393cb">&#9670;&nbsp;</a></span>on_focus_lost()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -535,6 +526,7 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
         <tr>
           <td class="memname">void Birdy3d::ui::TextField::on_focus_lost </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="classBirdy3d_1_1ui_1_1FocusLostEvent.html">FocusLostEvent</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -550,8 +542,8 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
-<a id="af36ad437bbe6d9aaaa3f348f3917386f" name="af36ad437bbe6d9aaaa3f348f3917386f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af36ad437bbe6d9aaaa3f348f3917386f">&#9670;&nbsp;</a></span>on_key()</h2>
+<a id="a2c6b26059761e0caeb4f28528727d7fa" name="a2c6b26059761e0caeb4f28528727d7fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c6b26059761e0caeb4f28528727d7fa">&#9670;&nbsp;</a></span>on_key()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -560,9 +552,9 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Birdy3d::ui::TextField::on_key </td>
+          <td class="memname">void Birdy3d::ui::TextField::on_key </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classBirdy3d_1_1events_1_1InputKeyEvent.html">events::InputKeyEvent</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classBirdy3d_1_1ui_1_1KeyEvent.html">KeyEvent</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
           <td></td>
         </tr>
@@ -578,8 +570,8 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
-<a id="a9956bfd3b08b05451e3e239e82aacf68" name="a9956bfd3b08b05451e3e239e82aacf68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9956bfd3b08b05451e3e239e82aacf68">&#9670;&nbsp;</a></span>on_mouse_enter()</h2>
+<a id="af6b9f8058584e7c5d0711472dfac37db" name="af6b9f8058584e7c5d0711472dfac37db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6b9f8058584e7c5d0711472dfac37db">&#9670;&nbsp;</a></span>on_mouse_enter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -590,6 +582,7 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
         <tr>
           <td class="memname">void Birdy3d::ui::TextField::on_mouse_enter </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="classBirdy3d_1_1ui_1_1MouseEnterEvent.html">MouseEnterEvent</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -605,8 +598,8 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
-<a id="a1960c8a5b4fc26094c51381a77b44783" name="a1960c8a5b4fc26094c51381a77b44783"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1960c8a5b4fc26094c51381a77b44783">&#9670;&nbsp;</a></span>on_mouse_leave()</h2>
+<a id="a4873de3c838d2e286a53e0214a828874" name="a4873de3c838d2e286a53e0214a828874"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4873de3c838d2e286a53e0214a828874">&#9670;&nbsp;</a></span>on_mouse_leave()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -617,6 +610,7 @@ typedef std::function&lt; void(std::any)&gt;&#160;</td><td class="memItemRight" 
         <tr>
           <td class="memname">void Birdy3d::ui::TextField::on_mouse_leave </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="classBirdy3d_1_1ui_1_1MouseLeaveEvent.html">MouseLeaveEvent</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>

@@ -13,6 +13,7 @@ var dir_4157e6b4bacb470a599887dcc1e90291 =
     [ "TextRenderer.hpp", "TextRenderer_8hpp_source.html", null ],
     [ "Theme.hpp", "Theme_8hpp_source.html", null ],
     [ "Triangle.hpp", "Triangle_8hpp_source.html", null ],
+    [ "UIEvent.hpp", "UIEvent_8hpp_source.html", null ],
     [ "Units.hpp", "Units_8hpp_source.html", null ],
     [ "Widget.hpp", "Widget_8hpp_source.html", null ],
     [ "Window.hpp", "Window_8hpp_source.html", null ]

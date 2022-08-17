@@ -1,12 +1,15 @@
 var searchData=
 [
-  ['scene_0',['Scene',['../classBirdy3d_1_1ecs_1_1Scene.html',1,'Birdy3d::ecs']]],
-  ['scrollable_1',['Scrollable',['../classBirdy3d_1_1ui_1_1Scrollable.html',1,'Birdy3d::ui']]],
-  ['scrollcontainer_2',['ScrollContainer',['../classBirdy3d_1_1ui_1_1ScrollContainer.html',1,'Birdy3d::ui']]],
-  ['serializer_3',['Serializer',['../classBirdy3d_1_1serializer_1_1Serializer.html',1,'Birdy3d::serializer']]],
-  ['shader_4',['Shader',['../classBirdy3d_1_1render_1_1Shader.html',1,'Birdy3d::render']]],
-  ['shape_5',['Shape',['../classBirdy3d_1_1ui_1_1Shape.html',1,'Birdy3d::ui']]],
-  ['spotlight_6',['Spotlight',['../classBirdy3d_1_1render_1_1Spotlight.html',1,'Birdy3d::render']]],
-  ['staticgridlayout_7',['StaticGridLayout',['../classBirdy3d_1_1ui_1_1StaticGridLayout.html',1,'Birdy3d::ui']]],
-  ['string_8',['String',['../structBirdy3d_1_1serializer_1_1String.html',1,'Birdy3d::serializer']]]
+  ['read_5ffile_0',['read_file',['../classBirdy3d_1_1core_1_1ResourceManager.html#a40d43c76ca3d4f679ba11477832777d3',1,'Birdy3d::core::ResourceManager']]],
+  ['rectangle_1',['Rectangle',['../classBirdy3d_1_1ui_1_1Rectangle.html',1,'Birdy3d::ui']]],
+  ['reflectclass_2',['ReflectClass',['../classBirdy3d_1_1serializer_1_1ReflectClass.html',1,'Birdy3d::serializer']]],
+  ['reflectmember_3',['ReflectMember',['../structBirdy3d_1_1serializer_1_1ReflectMember.html',1,'Birdy3d::serializer']]],
+  ['reflector_4',['Reflector',['../classBirdy3d_1_1serializer_1_1Reflector.html',1,'Birdy3d::serializer']]],
+  ['register_5fcommand_5',['register_command',['../classBirdy3d_1_1ui_1_1Console.html#aa5ecc4e042fb0ec5f383b16c2d644ea4',1,'Birdy3d::ui::Console']]],
+  ['rendertarget_6',['Rendertarget',['../classBirdy3d_1_1render_1_1Rendertarget.html',1,'Birdy3d::render']]],
+  ['resizeevent_7',['ResizeEvent',['../classBirdy3d_1_1ui_1_1ResizeEvent.html',1,'Birdy3d::ui']]],
+  ['resourcehandle_8',['ResourceHandle',['../classBirdy3d_1_1core_1_1ResourceHandle.html',1,'Birdy3d::core']]],
+  ['resourceidentifier_9',['ResourceIdentifier',['../classBirdy3d_1_1core_1_1ResourceIdentifier.html',1,'Birdy3d::core']]],
+  ['resourcemanager_10',['ResourceManager',['../classBirdy3d_1_1core_1_1ResourceManager.html',1,'Birdy3d::core']]],
+  ['row_11',['row',['../structBirdy3d_1_1ui_1_1Widget_1_1Options.html#a33a7842432766b56a39e92478380d55e',1,'Birdy3d::ui::Widget::Options']]]
 ];

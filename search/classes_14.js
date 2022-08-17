@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['widget_0',['Widget',['../classBirdy3d_1_1ui_1_1Widget.html',1,'Birdy3d::ui']]],
-  ['window_1',['Window',['../classBirdy3d_1_1ui_1_1Window.html',1,'Birdy3d::ui']]],
-  ['windowresizeevent_2',['WindowResizeEvent',['../classBirdy3d_1_1events_1_1WindowResizeEvent.html',1,'Birdy3d::events']]],
-  ['windowsnaparea_3',['WindowSnapArea',['../classBirdy3d_1_1ui_1_1WindowSnapArea.html',1,'Birdy3d::ui']]]
+  ['vertex_0',['Vertex',['../structBirdy3d_1_1render_1_1Vertex.html',1,'Birdy3d::render']]]
 ];
