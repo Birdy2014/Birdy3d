@@ -25,21 +25,20 @@ namespace Birdy3d::ui {
             return glm::max(min_size, Widget::minimal_size());
         }
 
-        std::function<void(const events::InputClickEvent&)> callback_click;
+        std::function<void()> callback_click;
 
     protected:
-        bool on_click(const events::InputClickEvent& event) override {
+        void on_click(ClickEvent& event) override {
             if (callback_click && event.action == GLFW_PRESS) {
-                callback_click(event);
+                callback_click();
             }
-            return false;
         }
 
-        void on_mouse_enter() override {
+        void on_mouse_enter(MouseEnterEvent&) override {
             core::Input::set_cursor(core::Input::CURSOR_HAND);
         }
 
-        void on_mouse_leave() override {
+        void on_mouse_leave(MouseLeaveEvent&) override {
             core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
         }
     };

@@ -48,9 +48,9 @@ namespace Birdy3d::ui {
         bool handle_context_item_children_click(ContextItem&, bool click);
         bool context_item_contains(const ContextItem&, glm::vec2) const;
 
-        bool on_click(const events::InputClickEvent& event) override;
-        bool on_key(const events::InputKeyEvent& event) override;
-        void on_focus_lost() override;
+        void on_click(ClickEvent&) override;
+        void on_key(KeyEvent&) override;
+        void on_focus_lost(FocusLostEvent&) override;
     };
 
     class MenuBar : public Widget {
@@ -64,7 +64,7 @@ namespace Birdy3d::ui {
         std::vector<std::unique_ptr<ContextMenu>> m_menus;
         int m_menu_gap = 20;
 
-        bool on_click(const events::InputClickEvent& event) override;
+        void on_click(ClickEvent&) override;
     };
 
 }

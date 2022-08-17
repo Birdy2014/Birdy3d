@@ -136,7 +136,7 @@ int main() {
     menu->set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 10);
 
     auto close_button = menu->add_child<ui::Button>({ .placement = ui::Placement::BOTTOM_LEFT }, "Close");
-    close_button->callback_click = [](const events::InputClickEvent&) {
+    close_button->callback_click = []() {
         glfwSetWindowShouldClose(core::Application::get_window(), true);
     };
 
@@ -159,15 +159,11 @@ int main() {
     tree_scroll_view->set_layout<ui::MaxLayout>();
 
     auto tree = tree_scroll_view->add_child<ui::TreeView>({ .size = 100_p, .placement = ui::Placement::TOP_LEFT });
-    tree->add_callback("select", [&](std::any value) {
-        if (value.type() != typeid(ui::TreeItem*))
-            return;
-        auto item = std::any_cast<ui::TreeItem*>(value);
-
-        if (item->data.type() != typeid(ecs::Entity*))
+    tree->on_select = [&](ui::TreeItem& item) {
+        if (item.data.type() != typeid(ecs::Entity*))
             return;
 
-        core::Application::selected_entity = std::any_cast<ecs::Entity*>(item->data);
+        core::Application::selected_entity = std::any_cast<ecs::Entity*>(item.data);
         input_position_x->value(core::Application::selected_entity->transform.position.x);
         input_position_y->value(core::Application::selected_entity->transform.position.y);
         input_position_z->value(core::Application::selected_entity->transform.position.z);
@@ -191,33 +187,33 @@ int main() {
                 if (member.type == typeid(std::string)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
                     text_field.lock()->text(*(std::string*)member.value);
-                    text_field.lock()->add_callback("change", [text_field, member](std::any) {
+                    text_field.lock()->on_change = [text_field, member]() {
                         *(std::string*)member.value = text_field.lock()->text();
-                    });
+                    };
                 } else if (member.type == typeid(utils::Color)) {
                     std::weak_ptr<ui::TextField> text_field = box->add_child<ui::TextField>(widget_options);
                     text_field.lock()->text(reinterpret_cast<utils::Color*>(member.value)->to_string());
-                    text_field.lock()->add_callback("change", [text_field, member](std::any) {
+                    text_field.lock()->on_change = [text_field, member]() {
                         *(utils::Color*)member.value = text_field.lock()->text();
-                    });
+                    };
                 } else if (member.type == typeid(bool)) {
                     std::weak_ptr<ui::CheckBox> checkbox = box->add_child<ui::CheckBox>(widget_options, member.name);
                     checkbox.lock()->checked = *(bool*)member.value;
-                    checkbox.lock()->add_callback("change", [checkbox, member](std::any) {
+                    checkbox.lock()->on_change = [checkbox, member]() {
                         *(bool*)member.value = checkbox.lock()->checked;
-                    });
+                    };
                 } else if (member.type == typeid(int)) {
                     std::weak_ptr<ui::NumberInput> number_input = box->add_child<ui::NumberInput>(widget_options);
                     number_input.lock()->value(*(int*)member.value);
-                    number_input.lock()->add_callback("change", [number_input, member](std::any) {
+                    number_input.lock()->on_change = [number_input, member]() {
                         *(int*)member.value = number_input.lock()->value();
-                    });
+                    };
                 } else if (member.type == typeid(float)) {
                     std::weak_ptr<ui::NumberInput> number_input = box->add_child<ui::NumberInput>(widget_options);
                     number_input.lock()->value(*(float*)member.value);
-                    number_input.lock()->add_callback("change", [number_input, member](std::any) {
+                    number_input.lock()->on_change = [number_input, member]() {
                         *(float*)member.value = number_input.lock()->value();
-                    });
+                    };
                 } else if (member.type == typeid(core::ResourceHandle<render::Shader>)) {
                     box->add_child<ResourceInput<render::Shader>>(widget_options, static_cast<core::ResourceHandle<render::Shader>*>(member.value));
                 } else if (member.type == typeid(core::ResourceHandle<ui::Theme>)) {
@@ -232,11 +228,11 @@ int main() {
                 ++current_row;
             }
         }
-    });
+    };
 
-    tree->add_callback("select_secundary", [&scene_context_menu](std::any) {
+    tree->on_select_secundary = [&scene_context_menu](ui::TreeItem&) {
         scene_context_menu->open();
-    });
+    };
 
     auto& scene_new_menu = scene_context_menu->root_item.add_child("New");
     scene_new_menu.add_child("Empty Entity", [&]() {
@@ -295,7 +291,7 @@ int main() {
         inspector_window->options.hidden = !inspector_window->options.hidden;
     };
 
-    test_button->callback_click = [&inspector_window](const events::InputClickEvent&) {
+    test_button->callback_click = [&inspector_window]() {
         inspector_window->options.hidden = !inspector_window->options.hidden;
     };
 
@@ -313,32 +309,32 @@ int main() {
     input_position_y = position_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
     input_position_z = position_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
 
-    input_position_x->add_callback("change", [&](std::any) {
+    input_position_x->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.position.x = input_position_x->value();
-    });
+    };
 
-    input_position_y->add_callback("change", [&](std::any) {
+    input_position_y->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.position.y = input_position_y->value();
-    });
+    };
 
-    input_position_z->add_callback("change", [&](std::any) {
+    input_position_z->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.position.z = input_position_z->value();
-    });
+    };
 
-    input_position_x->add_callback("on_focus_lost", [&](std::any) {
+    input_position_x->add_callback("on_focus_lost", [&](ui::UIEvent&) {
         if (core::Application::selected_entity)
             input_position_x->value(core::Application::selected_entity->transform.position.x);
     });
 
-    input_position_y->add_callback("on_focus_lost", [&](std::any) {
+    input_position_y->add_callback("on_focus_lost", [&](ui::UIEvent&) {
         if (core::Application::selected_entity)
             input_position_y->value(core::Application::selected_entity->transform.position.y);
     });
 
-    input_position_z->add_callback("on_focus_lost", [&](std::any) {
+    input_position_z->add_callback("on_focus_lost", [&](ui::UIEvent&) {
         if (core::Application::selected_entity)
             input_position_z->value(core::Application::selected_entity->transform.position.z);
     });
@@ -355,32 +351,32 @@ int main() {
     input_scale_y->min_value = 0;
     input_scale_z->min_value = 0;
 
-    input_scale_x->add_callback("change", [&](std::any) {
+    input_scale_x->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.scale.x = input_scale_x->value();
-    });
+    };
 
-    input_scale_y->add_callback("change", [&](std::any) {
+    input_scale_y->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.scale.y = input_scale_y->value();
-    });
+    };
 
-    input_scale_z->add_callback("change", [&](std::any) {
+    input_scale_z->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.scale.z = input_scale_z->value();
-    });
+    };
 
-    input_scale_x->add_callback("on_focus_lost", [&](std::any) {
+    input_scale_x->add_callback("on_focus_lost", [&](ui::UIEvent&) {
         if (core::Application::selected_entity)
             input_scale_x->value(core::Application::selected_entity->transform.scale.x);
     });
 
-    input_scale_y->add_callback("on_focus_lost", [&](std::any) {
+    input_scale_y->add_callback("on_focus_lost", [&](ui::UIEvent&) {
         if (core::Application::selected_entity)
             input_scale_y->value(core::Application::selected_entity->transform.scale.y);
     });
 
-    input_scale_z->add_callback("on_focus_lost", [&](std::any) {
+    input_scale_z->add_callback("on_focus_lost", [&](ui::UIEvent&) {
         if (core::Application::selected_entity)
             input_scale_z->value(core::Application::selected_entity->transform.scale.z);
     });
@@ -393,20 +389,20 @@ int main() {
     input_orientation_y = orientation_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
     input_orientation_z = orientation_box->add_child<ui::NumberInput>({ .size = ui::UIVector(100_p, 25_px), .placement = ui::Placement::BOTTOM_LEFT }, 0);
 
-    input_orientation_x->add_callback("change", [&](std::any) {
+    input_orientation_x->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.orientation.x = input_orientation_x->value();
-    });
+    };
 
-    input_orientation_y->add_callback("change", [&](std::any) {
+    input_orientation_y->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.orientation.y = input_orientation_y->value();
-    });
+    };
 
-    input_orientation_z->add_callback("change", [&](std::any) {
+    input_orientation_z->on_change = [&]() {
         if (core::Application::selected_entity)
             core::Application::selected_entity->transform.orientation.z = input_orientation_z->value();
-    });
+    };
 
     input_orientation_x->add_callback("on_focus_lost", [&](std::any) {
         if (core::Application::selected_entity)

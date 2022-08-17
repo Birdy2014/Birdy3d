@@ -7,6 +7,7 @@ namespace Birdy3d::ui {
     class CheckBox : public Widget {
     public:
         bool checked = false;
+        std::function<void()> on_change;
 
         CheckBox(Options, std::string text);
         void draw() override;
@@ -17,7 +18,7 @@ namespace Birdy3d::ui {
         Text* m_text_shape;
         Rectangle* m_check_shape;
 
-        bool on_click(const events::InputClickEvent&) override;
+        void on_click(ClickEvent&) override;
     };
 
 }

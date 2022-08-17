@@ -2,6 +2,7 @@
 
 #include "ui/Triangle.hpp"
 #include "ui/Widget.hpp"
+#include <functional>
 
 namespace Birdy3d::ui {
 
@@ -30,14 +31,16 @@ namespace Birdy3d::ui {
     /**
      * @brief Widget that displays a Tree.
      *
-     * The following callbacks can be added using the Widget::add_callback function:
-     * - select: Fires when an item has been selected with any mouse button. Passes a pointer to the selected TreeItem.
-     * - select_secundary: Fires when an item has been selected with the right mouse button. Passes a pointer to the selected TreeItem.
+     * The following callbacks can be added:
+     * - on_select: Fires when an item has been selected with any mouse button. Passes a pointer to the selected TreeItem.
+     * - on_select_secundary: Fires when an item has been selected with the right mouse button. Passes a pointer to the selected TreeItem.
      *   This can be used to open a ContextMenu.
      */
     class TreeView : public Widget {
     public:
         bool show_root_item = true;
+        std::function<void(TreeItem&)> on_select;
+        std::function<void(TreeItem&)> on_select_secundary;
 
         TreeView(Options);
         virtual void draw() override;
@@ -60,7 +63,7 @@ namespace Birdy3d::ui {
         TreeItem* m_selected_item = nullptr;
 
         virtual void on_update() override;
-        virtual bool on_click(const events::InputClickEvent& event) override;
+        virtual void on_click(ClickEvent&) override;
 
         void update_flat_tree_list();
         void update_flat_tree_list(TreeItem& item, int indent);

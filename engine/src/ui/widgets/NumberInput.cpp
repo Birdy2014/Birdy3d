@@ -1,8 +1,6 @@
 #include "ui/widgets/NumberInput.hpp"
 
 #include "core/Input.hpp"
-#include "ui/TextRenderer.hpp"
-#include "ui/Theme.hpp"
 #include <iomanip>
 #include <sstream>
 
@@ -37,7 +35,7 @@ namespace Birdy3d::ui {
         TextField::on_update();
     }
 
-    bool NumberInput::on_scroll(const events::InputScrollEvent& event) {
+    void NumberInput::on_scroll(ScrollEvent& event) {
         float change = event.yoffset;
         if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
             change *= 0.1f;
@@ -45,12 +43,11 @@ namespace Birdy3d::ui {
             change *= 0.01f;
 
         value(m_value + change);
-        return false;
     }
 
-    bool NumberInput::on_click(const events::InputClickEvent& event) {
+    void NumberInput::on_click(ClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_RIGHT)
-            return TextField::on_click(event);
+            TextField::on_click(event);
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
@@ -59,25 +56,22 @@ namespace Birdy3d::ui {
             ungrab_cursor();
             m_dragging = false;
         }
-        return false;
     }
 
-    bool NumberInput::on_key(const events::InputKeyEvent& event) {
+    void NumberInput::on_key(KeyEvent& event) {
         TextField::on_key(event);
         set_text_value();
-        return false;
     }
 
-    bool NumberInput::on_char(const events::InputCharEvent& event) {
+    void NumberInput::on_char(CharEvent& event) {
         if ((event.codepoint < '0' || event.codepoint > '9') && event.codepoint != '.')
-            return false;
+            return;
         TextField::on_char(event);
         set_text_value();
-        return false;
     }
 
-    void NumberInput::on_focus_lost() {
-        TextField::on_focus_lost();
+    void NumberInput::on_focus_lost(FocusLostEvent& event) {
+        TextField::on_focus_lost(event);
         m_dragging = false;
     }
 

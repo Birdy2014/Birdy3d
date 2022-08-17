@@ -132,9 +132,9 @@ namespace Birdy3d::ui {
         m_actual_size = glm::vec2(std::max(options.size.x.to_pixels(), minimal_size().x), std::max(options.size.y.to_pixels(), minimal_size().y));
     }
 
-    bool Window::on_click(const events::InputClickEvent& event) {
+    void Window::on_click(ClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
-            return false;
+            return;
 
         if (event.action == GLFW_PRESS)
             to_foreground();
@@ -149,13 +149,13 @@ namespace Birdy3d::ui {
             m_resize_y_top = false;
             m_resize_y_bottom = false;
             options.size = m_actual_size;
-            return false;
+            return;
         }
 
         if (m_close_button->contains(local_cursor_pos)) {
             if (callback_close)
                 callback_close();
-            return false;
+            return;
         }
 
         grab_cursor();
@@ -163,7 +163,7 @@ namespace Birdy3d::ui {
         // Moving
         if (m_hover_drag) {
             m_dragging = true;
-            return false;
+            return;
         }
 
         // Resizing
@@ -175,10 +175,10 @@ namespace Birdy3d::ui {
             m_resize_y_top = true;
         if (m_hover_resize_y_bottom)
             m_resize_y_bottom = true;
-        return false;
+        return;
     }
 
-    void Window::on_mouse_leave() {
+    void Window::on_mouse_leave(MouseLeaveEvent&) {
         core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
     }
 

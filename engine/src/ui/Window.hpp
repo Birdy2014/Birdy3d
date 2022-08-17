@@ -28,8 +28,8 @@ namespace Birdy3d::ui {
 
     protected:
         void on_update() override;
-        bool on_click(const events::InputClickEvent& event) override;
-        void on_mouse_leave() override;
+        void on_click(ClickEvent&) override;
+        void on_mouse_leave(MouseLeaveEvent&) override;
 
     private:
         Rectangle* m_close_button;

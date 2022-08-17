@@ -19,11 +19,11 @@ namespace Birdy3d::ui {
         bool m_dragging = false;
 
         void on_update() override;
-        bool on_scroll(const events::InputScrollEvent& event) override;
-        bool on_click(const events::InputClickEvent& event) override;
-        bool on_key(const events::InputKeyEvent& event) override;
-        bool on_char(const events::InputCharEvent& event) override;
-        void on_focus_lost() override;
+        void on_scroll(ScrollEvent&) override;
+        void on_click(ClickEvent&) override;
+        void on_key(KeyEvent&) override;
+        void on_char(CharEvent&) override;
+        void on_focus_lost(FocusLostEvent&) override;
 
         void set_text_value();
     };

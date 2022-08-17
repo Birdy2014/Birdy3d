@@ -1,9 +1,8 @@
 #pragma once
 
-#include "core/Application.hpp"
-#include "events/InputEvents.hpp"
 #include "ui/Layout.hpp"
 #include "ui/Shape.hpp"
+#include "ui/UIEvent.hpp"
 #include "ui/Units.hpp"
 #include "utils/Color.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -37,18 +36,6 @@ namespace Birdy3d::ui {
             int row = 0; ///< Row in GridLayout
         };
 
-        enum class EventType {
-            SCROLL,
-            CLICK,
-            KEY,
-            CHAR,
-            MOUSE_ENTER,
-            MOUSE_LEAVE,
-            FOCUS,
-            FOCUS_LOST,
-            RESIZE,
-        };
-
         Widget* parent = nullptr;
         Canvas* canvas = nullptr;
         Options options;
@@ -80,7 +67,7 @@ namespace Birdy3d::ui {
         glm::vec2 actual_size() { return m_actual_size; }
 
         // External Event calls
-        void notify_event(EventType, events::Event const*);
+        void notify_event(UIEvent&);
         void external_draw();
         bool update_hover();
         void update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right);
@@ -88,7 +75,7 @@ namespace Birdy3d::ui {
         virtual void on_update();
 
         // Callbacks
-        typedef std::function<void(std::any)> CallbackType;
+        typedef std::function<void(UIEvent&)> CallbackType;
 
         void add_callback(const std::string& name, CallbackType callback);
 
@@ -117,20 +104,21 @@ namespace Birdy3d::ui {
         virtual bool contains(glm::vec2) const;
 
         // Callbacks
-        void execute_callbacks(const std::string& name, std::any = {});
+        void execute_callbacks(const std::string& name, UIEvent& event);
+
         bool has_callbacks(const std::string& name);
 
         // Events
-        virtual bool on_scroll(const events::InputScrollEvent&);
-        virtual bool on_click(const events::InputClickEvent&);
-        virtual bool on_key(const events::InputKeyEvent&);
-        virtual bool on_char(const events::InputCharEvent&);
-        virtual void on_mouse_enter() { }
-        virtual void on_mouse_leave() { }
-        virtual void on_focus() { }
-        virtual void on_focus_lost() { }
-        virtual void on_resize() { }
-        virtual void on_drop(const std::any&) { }
+        virtual void on_scroll(ScrollEvent&);
+        virtual void on_click(ClickEvent&);
+        virtual void on_key(KeyEvent&);
+        virtual void on_char(CharEvent&);
+        virtual void on_mouse_enter(MouseEnterEvent&) { }
+        virtual void on_mouse_leave(MouseLeaveEvent&) { }
+        virtual void on_focus(FocusEvent&) { }
+        virtual void on_focus_lost(FocusLostEvent&) { }
+        virtual void on_resize(ResizeEvent&) { }
+        virtual void on_drop(DropEvent&) { }
 
         // Shapes
         Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);

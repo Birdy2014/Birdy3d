@@ -7,7 +7,6 @@
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 #include "ui/Triangle.hpp"
-#include "ui/widgets/ContextMenu.hpp"
 
 namespace Birdy3d::ui {
 
@@ -79,9 +78,9 @@ namespace Birdy3d::ui {
         }
     }
 
-    bool TreeView::on_click(const events::InputClickEvent& event) {
+    void TreeView::on_click(ClickEvent& event) {
         if (event.action != GLFW_PRESS)
-            return false;
+            return;
 
         glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
         int offset_y = 0;
@@ -92,18 +91,19 @@ namespace Birdy3d::ui {
                     // Select
                     m_item_highlight_rect->hidden(false);
                     m_selected_item = &item.second;
-                    execute_callbacks("select", &item.second);
-                    if (event.button == GLFW_MOUSE_BUTTON_RIGHT)
-                        execute_callbacks("select_secundary", &item.second);
+                    // execute_callbacks("select", &item.second);
+                    if (on_select)
+                        std::invoke(on_select, item.second);
+                    if (event.button == GLFW_MOUSE_BUTTON_RIGHT && on_select_secundary)
+                        std::invoke(on_select_secundary, item.second);
                 } else if (local_pos.x > m_offset_x_left + (item.first - 1) * m_indent_size) {
                     // Toggle children
                     item.second.collapsed = !item.second.collapsed;
                     update_flat_tree_list();
                 }
-                return false;
+                return;
             }
         }
-        return false;
     }
 
     void TreeView::update_flat_tree_list() {

@@ -19,10 +19,10 @@ private:
     Birdy3d::ui::Text* m_text;
     Birdy3d::core::ResourceHandle<T>* m_target;
 
-    void on_drop(const std::any& value) override {
-        if (value.type() != typeid(Birdy3d::core::ResourceIdentifier))
+    void on_drop(Birdy3d::ui::DropEvent& event) override {
+        if (event.data.type() != typeid(Birdy3d::core::ResourceIdentifier))
             return;
-        auto id = std::any_cast<Birdy3d::core::ResourceIdentifier>(value);
+        auto id = std::any_cast<Birdy3d::core::ResourceIdentifier>(event.data);
         *m_target = id;
         *m_text = static_cast<std::string>(id);
     }

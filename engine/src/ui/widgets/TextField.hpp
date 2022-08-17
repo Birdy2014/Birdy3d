@@ -2,6 +2,7 @@
 
 #include "ui/Widget.hpp"
 #include "ui/widgets/Scrollable.hpp"
+#include <functional>
 #include <string>
 
 namespace Birdy3d::ui {
@@ -10,6 +11,8 @@ namespace Birdy3d::ui {
     public:
         bool readonly = false;
         bool multiline = false;
+        std::function<void()> on_change;
+        std::function<void()> on_accept;
 
         TextField(Options);
         glm::vec2 minimal_size() override;
@@ -29,12 +32,12 @@ namespace Birdy3d::ui {
 
         // Events
         virtual void on_update() override;
-        virtual bool on_click(const events::InputClickEvent& event) override;
-        virtual bool on_key(const events::InputKeyEvent& event) override;
-        virtual bool on_char(const events::InputCharEvent& event) override;
-        virtual void on_mouse_enter() override;
-        virtual void on_mouse_leave() override;
-        virtual void on_focus_lost() override;
+        virtual void on_click(ClickEvent& event) override;
+        virtual void on_key(KeyEvent& event) override;
+        virtual void on_char(CharEvent& event) override;
+        virtual void on_mouse_enter(MouseEnterEvent&) override;
+        virtual void on_mouse_leave(MouseLeaveEvent&) override;
+        virtual void on_focus_lost(FocusLostEvent&) override;
 
         void clear_selection();
         void late_update() override;
