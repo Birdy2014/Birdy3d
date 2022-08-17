@@ -63,12 +63,12 @@ namespace Birdy3d::ui {
         }
     }
 
-    bool TextField::on_click(const events::InputClickEvent& event) {
+    void TextField::on_click(ClickEvent& event) {
         if (multiline)
             Scrollable::on_click(event);
 
         if (readonly || event.button != GLFW_MOUSE_BUTTON_LEFT)
-            return false;
+            return;
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
@@ -88,22 +88,22 @@ namespace Birdy3d::ui {
             ungrab_cursor();
             m_selecting = false;
         }
-        return false;
     }
 
-    bool TextField::on_key(const events::InputKeyEvent& event) {
+    void TextField::on_key(KeyEvent& event) {
         if (readonly || (event.action != GLFW_PRESS && event.action != GLFW_REPEAT))
-            return false;
+            return;
 
-        if (event.key == GLFW_KEY_ENTER && has_callbacks("accept")) {
-            execute_callbacks("accept");
-            return false;
+        if (event.key == GLFW_KEY_ENTER) {
+            if (on_accept)
+                std::invoke(on_accept);
+            return;
         }
 
         if (m_text->highlight_visible) {
             if (event.key == GLFW_KEY_DELETE || event.key == GLFW_KEY_BACKSPACE)
                 clear_selection();
-            return false;
+            return;
         }
 
         if (m_text->cursor_visible) {
@@ -149,7 +149,6 @@ namespace Birdy3d::ui {
             }
         }
         scroll_if_needed(m_text->cursor_pos);
-        return false;
     }
 
     void TextField::draw() {
@@ -157,14 +156,14 @@ namespace Birdy3d::ui {
             Scrollable::draw();
     }
 
-    bool TextField::on_char(const events::InputCharEvent& event) {
+    void TextField::on_char(CharEvent& event) {
         if (readonly)
-            return false;
+            return;
 
         clear_selection();
 
         if (!m_text->cursor_visible || m_text->cursor_pos > m_text->length())
-            return false;
+            return;
 
         char32_t c[2];
         c[0] = event.codepoint;
@@ -173,20 +172,19 @@ namespace Birdy3d::ui {
         m_text->cursor_pos++;
         m_changed = true;
         scroll_if_needed(m_text->cursor_pos);
-        return false;
     }
 
-    void TextField::on_mouse_enter() {
+    void TextField::on_mouse_enter(MouseEnterEvent&) {
         if (!readonly)
             core::Input::set_cursor(core::Input::CURSOR_TEXT);
     }
 
-    void TextField::on_mouse_leave() {
+    void TextField::on_mouse_leave(MouseLeaveEvent&) {
         if (!readonly)
             core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
     }
 
-    void TextField::on_focus_lost() {
+    void TextField::on_focus_lost(FocusLostEvent&) {
         m_text->cursor_visible = false;
     }
 
@@ -209,7 +207,8 @@ namespace Birdy3d::ui {
     void TextField::late_update() {
         Widget::late_update();
         if (m_changed) {
-            execute_callbacks("change");
+            if (on_change)
+                std::invoke(on_change);
             m_changed = false;
         }
     }

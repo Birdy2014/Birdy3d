@@ -32,14 +32,13 @@ namespace Birdy3d::ui {
         Triangle* m_arrow;
         Text* m_title;
 
-        bool on_click(const events::InputClickEvent& event) override {
+        void on_click(ClickEvent& event) override {
             if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
-                return false;
+                return;
             auto local_cursor_pos = core::Input::cursor_pos() - m_actual_pos;
             if (local_cursor_pos.y > core::Application::theme().line_height())
-                return false;
+                return;
             toggle_collapsed();
-            return false;
         }
     };
 

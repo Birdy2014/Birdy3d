@@ -5,9 +5,10 @@
 #include "ui/Layout.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
-#include "ui/Theme.hpp"
 #include "ui/Triangle.hpp"
+#include "ui/UIEvent.hpp"
 #include <algorithm>
+#include <cassert>
 
 namespace Birdy3d::ui {
 
@@ -49,61 +50,72 @@ namespace Birdy3d::ui {
         return ptr;
     }
 
-    void Widget::notify_event(EventType type, events::Event const* event) {
-        bool bubbles = false;
-        switch (type) {
-        case EventType::SCROLL: {
-            auto casted_event = *static_cast<events::InputScrollEvent const*>(event);
-            bubbles = on_scroll(casted_event);
+    void Widget::notify_event(UIEvent& event) {
+        switch (event.type) {
+        case UIEvent::SCROLL: {
+            auto& casted_event = static_cast<ScrollEvent&>(event);
+            on_scroll(casted_event);
             execute_callbacks("on_scroll", casted_event);
             break;
         }
-        case EventType::CLICK: {
-            auto casted_event = *static_cast<events::InputClickEvent const*>(event);
-            bubbles = on_click(casted_event);
+        case UIEvent::CLICK: {
+            auto& casted_event = static_cast<ClickEvent&>(event);
+            on_click(casted_event);
             execute_callbacks("on_click", casted_event);
             break;
         }
-        case EventType::KEY: {
-            auto casted_event = *static_cast<events::InputKeyEvent const*>(event);
-            bubbles = on_key(casted_event);
+        case UIEvent::KEY: {
+            auto& casted_event = static_cast<KeyEvent&>(event);
+            on_key(casted_event);
             execute_callbacks("on_key", casted_event);
             break;
         }
-        case EventType::CHAR: {
-            auto casted_event = *static_cast<events::InputCharEvent const*>(event);
-            bubbles = on_char(casted_event);
+        case UIEvent::CHAR: {
+            auto& casted_event = static_cast<CharEvent&>(event);
+            on_char(casted_event);
             execute_callbacks("on_char", casted_event);
             break;
         }
-        case EventType::MOUSE_ENTER: {
-            on_mouse_enter();
-            execute_callbacks("on_mouse_enter");
+        case UIEvent::MOUSE_ENTER: {
+            auto& casted_event = static_cast<MouseEnterEvent&>(event);
+            on_mouse_enter(casted_event);
+            execute_callbacks("on_mouse_enter", casted_event);
             break;
         }
-        case EventType::MOUSE_LEAVE: {
-            on_mouse_leave();
-            execute_callbacks("on_mouse_leave");
+        case UIEvent::MOUSE_LEAVE: {
+            auto& casted_event = static_cast<MouseLeaveEvent&>(event);
+            on_mouse_leave(casted_event);
+            execute_callbacks("on_mouse_leave", casted_event);
             break;
         }
-        case EventType::FOCUS: {
-            on_focus();
-            execute_callbacks("on_focus");
+        case UIEvent::FOCUS: {
+            auto& casted_event = static_cast<FocusEvent&>(event);
+            on_focus(casted_event);
+            execute_callbacks("on_focus", casted_event);
             break;
         }
-        case EventType::FOCUS_LOST: {
-            on_focus_lost();
-            execute_callbacks("on_focus_lost");
+        case UIEvent::FOCUS_LOST: {
+            auto& casted_event = static_cast<FocusLostEvent&>(event);
+            on_focus_lost(casted_event);
+            execute_callbacks("on_focus_lost", casted_event);
             break;
         }
-        case EventType::RESIZE: {
-            on_resize();
-            execute_callbacks("on_resize");
+        case UIEvent::RESIZE: {
+            auto& casted_event = static_cast<ResizeEvent&>(event);
+            on_resize(casted_event);
+            execute_callbacks("on_resize", casted_event);
             break;
         }
+        case UIEvent::DROP: {
+            auto& casted_event = static_cast<DropEvent&>(event);
+            on_drop(casted_event);
+            execute_callbacks("on_drop", casted_event);
         }
-        if (bubbles && parent)
-            parent->notify_event(type, event);
+        default:
+            assert(false);
+        }
+        if (event.bubbles() && parent)
+            parent->notify_event(event);
     }
 
     void Widget::external_draw() {
@@ -176,8 +188,10 @@ namespace Birdy3d::ui {
         if (m_layout && m_children_visible)
             m_layout->arrange(m_children, pos + glm::vec2(m_padding[0], m_padding[2]), size - glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]));
 
-        if (resized)
-            on_resize();
+        if (resized) {
+            auto event = ResizeEvent {};
+            notify_event(event);
+        }
     }
 
     void Widget::set_canvas(Canvas* c) {
@@ -285,29 +299,21 @@ namespace Birdy3d::ui {
         m_children.splice(m_children.end(), m_children, element);
     }
 
-    bool Widget::on_scroll(const events::InputScrollEvent&) {
-        return true;
-    }
+    void Widget::on_scroll(ScrollEvent&) { }
 
-    bool Widget::on_click(const events::InputClickEvent&) {
-        return true;
-    }
+    void Widget::on_click(ClickEvent&) { }
 
-    bool Widget::on_key(const events::InputKeyEvent&) {
-        return true;
-    }
+    void Widget::on_key(KeyEvent&) { }
 
-    bool Widget::on_char(const events::InputCharEvent&) {
-        return true;
-    }
+    void Widget::on_char(CharEvent&) { }
 
     void Widget::add_callback(const std::string& name, CallbackType callback) {
         m_callbacks[name].push_back(callback);
     }
 
-    void Widget::execute_callbacks(const std::string& name, std::any value) {
+    void Widget::execute_callbacks(const std::string& name, UIEvent& event) {
         for (auto& callback : m_callbacks[name])
-            std::invoke(callback, value);
+            std::invoke(callback, event);
     }
 
     bool Widget::has_callbacks(const std::string& name) {

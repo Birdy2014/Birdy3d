@@ -100,8 +100,10 @@ namespace Birdy3d::ui {
         if (m_layout && m_children_visible)
             m_layout->arrange(m_children, pos + glm::vec2(m_padding[0], m_padding[2]) + m_scroll_offset, m_content_size - glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]));
 
-        if (resized)
-            on_resize();
+        if (resized) {
+            auto resize_event = ResizeEvent {};
+            notify_event(resize_event);
+        }
     }
 
     void Scrollable::draw() {
@@ -110,36 +112,34 @@ namespace Birdy3d::ui {
         m_scrollbar_horizontal.draw(move);
     }
 
-    bool Scrollable::on_scroll(const events::InputScrollEvent& event) {
+    void Scrollable::on_scroll(ScrollEvent& event) {
         float speed = 10.0f;
         m_scroll_offset.x += event.xoffset * speed;
         m_scroll_offset.y += event.yoffset * speed;
 
         check_scroll_bounds();
-        return false;
     }
 
-    bool Scrollable::on_click(const events::InputClickEvent& event) {
+    void Scrollable::on_click(ClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
-            return false;
+            return;
 
         if (event.action == GLFW_PRESS) {
             if (m_scrollbar_vertical.contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_vertical_grabbed = true;
                 grab_cursor();
-                return false;
+                return;
             }
             if (m_scrollbar_horizontal.contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_horizontal_grabbed = true;
                 grab_cursor();
-                return false;
+                return;
             }
         }
 
         m_scrollbar_horizontal_grabbed = false;
         m_scrollbar_vertical_grabbed = false;
         ungrab_cursor();
-        return false;
     }
 
     void Scrollable::on_update() {
@@ -154,7 +154,7 @@ namespace Birdy3d::ui {
         Widget::on_update();
     }
 
-    void Scrollable::on_resize() {
+    void Scrollable::on_resize(ResizeEvent&) {
         check_scroll_bounds();
     }
 

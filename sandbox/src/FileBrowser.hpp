@@ -11,8 +11,10 @@ public:
         , m_current_directory(root_directory) {
         using namespace Birdy3d::ui::literals;
         set_layout<Birdy3d::ui::DirectionalLayout>(Birdy3d::ui::DirectionalLayout::Direction::RIGHT, 10);
+
         auto tree_scroll_container = add_child<Birdy3d::ui::ScrollContainer>({ .size = { 50_px, 100_p }, .weight = 0.4 });
         tree_scroll_container->set_layout<Birdy3d::ui::MaxLayout>();
+
         m_tree = tree_scroll_container->add_child<Birdy3d::ui::TreeView>({});
         m_tree->show_root_item = false;
         auto& builtin_root = m_tree->root_item().add_child("builtin");
@@ -20,18 +22,17 @@ public:
         auto& builtin_models = builtin_root.add_child("models");
         builtin_models.data = std::filesystem::path("_builtin_models");
         m_root_directory_item = &m_tree->root_item().add_child("");
+
         m_file_container = add_child<Birdy3d::ui::ScrollContainer>({});
         m_file_container->m_horizontal_scroll_enabled = false;
         m_file_container->set_layout<Birdy3d::ui::DynamicGridLayout>(5);
-        m_tree->add_callback("select", [this](std::any data) {
-            if (data.type() != typeid(Birdy3d::ui::TreeItem*))
+
+        m_tree->on_select = [this](Birdy3d::ui::TreeItem& item) {
+            if (item.data.type() != typeid(std::filesystem::path))
                 return;
-            auto item = std::any_cast<Birdy3d::ui::TreeItem*>(data);
-            if (item->data.type() != typeid(std::filesystem::path))
-                return;
-            m_current_directory = std::any_cast<std::filesystem::path>(item->data);
+            m_current_directory = std::any_cast<std::filesystem::path>(item.data);
             sync();
-        });
+        };
         sync();
     }
 
@@ -51,10 +52,9 @@ private:
         Birdy3d::core::ResourceIdentifier m_resource_id;
         Birdy3d::ui::Text* m_label;
 
-        bool on_click(const Birdy3d::events::InputClickEvent& event) override {
+        void on_click(Birdy3d::ui::ClickEvent& event) override {
             if (event.button == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_PRESS)
                 canvas->start_drag(m_resource_id);
-            return false;
         }
     };
 
