@@ -14,6 +14,7 @@ Dependencies:
 - assimp
 - glm
 - freetype2
+- Wayland or Xorg (Linux)
 
 Compiling on Linux using GCC >= 10 or Clang >= 10 and Make:
 

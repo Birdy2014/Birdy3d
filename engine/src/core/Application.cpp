@@ -30,16 +30,20 @@ namespace Birdy3d::core {
     }
 
     bool Application::init(const char* window_name, int width, int height, const std::string& theme_name) {
+#ifdef _GLFW_WAYLAND
         // make wayland default instead of X11
         if (std::getenv("WAYLAND_DISPLAY")[0] != '\0') {
             glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_WAYLAND);
         }
+#endif
 
         glfwInit();
         glfwSetErrorCallback(glfw_error_callback);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHintString(GLFW_X11_CLASS_NAME, "Birdy3d");
+        glfwWindowHintString(GLFW_WAYLAND_APP_ID, "Birdy3d");
 
         // Create Window
         Application::m_window = glfwCreateWindow(width, height, window_name, nullptr, nullptr);
