@@ -82,6 +82,8 @@ namespace Birdy3d::ui {
         if (event.action != GLFW_PRESS)
             return;
 
+        event.handled();
+
         glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
         int offset_y = 0;
         for (auto& item : m_flat_tree_list) {

@@ -187,11 +187,16 @@ namespace Birdy3d::ui {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
             return;
 
-        if (!handle_context_item_children_click(root_item, true))
+        if (handle_context_item_children_click(root_item, true)) {
+            event.handled();
+        } else {
             options.hidden = true;
+        }
     }
 
-    void ContextMenu::on_key(KeyEvent&) {
+    void ContextMenu::on_key(KeyEvent& event) {
+        event.handled();
+
         options.hidden = true;
     }
 

@@ -1,6 +1,7 @@
 #include "ui/Widget.hpp"
 
 #include "core/Input.hpp"
+#include "core/Logger.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Layout.hpp"
 #include "ui/Rectangle.hpp"
@@ -110,8 +111,10 @@ namespace Birdy3d::ui {
             auto& casted_event = static_cast<DropEvent&>(event);
             on_drop(casted_event);
             execute_callbacks("on_drop", casted_event);
+            break;
         }
         default:
+            birdy3d_dbgln("Invalid event type: {}", event.type);
             assert(false);
         }
         if (event.bubbles() && parent)

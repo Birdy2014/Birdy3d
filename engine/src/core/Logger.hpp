@@ -43,6 +43,16 @@ namespace Birdy3d::core {
                 Logger::critical("Assert not null failed: {}", message);
         }
 
+        template <typename Arg>
+        static void print(const std::string_view file, const int line, const Arg& arg) {
+            std::cerr << file << ':' << line << ": " << fmt::vformat("{}", fmt::make_format_args(arg)) << '\n';
+        }
+
+        template <typename... Args>
+        static void print(const std::string_view file, const int line, const std::string_view format_string, const Args&... args) {
+            std::cerr << file << ':' << line << ": " << fmt::vformat(format_string, fmt::make_format_args(args...)) << '\n';
+        }
+
     private:
         enum class Type {
             DEBUG,
@@ -71,3 +81,5 @@ struct fmt::formatter<glm::vec<L, T>> {
 };
 
 #define BIRDY3D_TODO ::Birdy3d::core::Logger::critical("Not implemented: {}", __PRETTY_FUNCTION__);
+
+#define birdy3d_dbgln(...) ::Birdy3d::core::Logger::print(__FILE__, __LINE__, __VA_ARGS__);

@@ -113,6 +113,8 @@ namespace Birdy3d::ui {
     }
 
     void Scrollable::on_scroll(ScrollEvent& event) {
+        event.handled();
+
         float speed = 10.0f;
         m_scroll_offset.x += event.xoffset * speed;
         m_scroll_offset.y += event.yoffset * speed;
@@ -123,6 +125,8 @@ namespace Birdy3d::ui {
     void Scrollable::on_click(ClickEvent& event) {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
+
+        event.handled();
 
         if (event.action == GLFW_PRESS) {
             if (m_scrollbar_vertical.contains(core::Input::cursor_pos() - m_actual_pos)) {

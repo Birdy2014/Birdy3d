@@ -70,6 +70,8 @@ namespace Birdy3d::ui {
         if (readonly || event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
+        event.handled();
+
         if (event.action == GLFW_PRESS) {
             grab_cursor();
             glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
