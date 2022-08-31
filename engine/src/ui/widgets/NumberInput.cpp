@@ -46,6 +46,8 @@ namespace Birdy3d::ui {
     }
 
     void NumberInput::on_click(ClickEvent& event) {
+        event.handled();
+
         if (event.button != GLFW_MOUSE_BUTTON_RIGHT)
             TextField::on_click(event);
 

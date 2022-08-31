@@ -38,6 +38,7 @@ namespace Birdy3d::ui {
             auto local_cursor_pos = core::Input::cursor_pos() - m_actual_pos;
             if (local_cursor_pos.y > core::Application::theme().line_height())
                 return;
+            event.handled();
             toggle_collapsed();
         }
     };

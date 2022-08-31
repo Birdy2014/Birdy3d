@@ -23,6 +23,8 @@ namespace Birdy3d::ui {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
             return;
 
+        event.handled();
+
         checked = !checked;
         if (on_change)
             std::invoke(on_change);

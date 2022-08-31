@@ -30,6 +30,7 @@ namespace Birdy3d::ui {
     protected:
         void on_click(ClickEvent& event) override {
             if (callback_click && event.action == GLFW_PRESS) {
+                event.handled();
                 callback_click();
             }
         }

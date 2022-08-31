@@ -136,6 +136,8 @@ namespace Birdy3d::ui {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
+        event.handled();
+
         if (event.action == GLFW_PRESS)
             to_foreground();
 

@@ -36,12 +36,12 @@ namespace Birdy3d::ui {
         m_console_output->readonly = true;
 
         m_console_input = m_console_window->add_child<TextField>({ .size = UIVector(100_p, 20_px), .weight = 0 });
-        m_console_input->add_callback("accept", input_callback);
+        m_console_input->on_accept = input_callback;
 
         m_created = true;
     }
 
-    void Console::input_callback(std::any) {
+    void Console::input_callback() {
         std::string input = m_console_input->text();
         m_console_input->clear();
         exec(input);
