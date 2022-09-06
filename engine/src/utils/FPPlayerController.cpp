@@ -5,10 +5,8 @@
 #include "ecs/Entity.hpp"
 #include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
-#include "events/WindowResizeEvent.hpp"
 #include "render/Camera.hpp"
 #include "ui/Canvas.hpp"
-#include "ui/Layout.hpp"
 
 namespace Birdy3d::utils {
 
@@ -21,7 +19,7 @@ namespace Birdy3d::utils {
         core::Input::set_cursor_hidden(true);
 
         if (auto menu_ptr = m_menu.lock())
-            menu_ptr->options.hidden = true;
+            menu_ptr->hidden = true;
 
         core::Application::event_bus->subscribe(this, &FPPlayerController::on_key);
     }
@@ -78,8 +76,8 @@ namespace Birdy3d::utils {
         case GLFW_KEY_ESCAPE: {
             core::Input::toggle_cursor_hidden();
             if (auto menu_ptr = m_menu.lock()) {
-                menu_ptr->options.hidden = !menu_ptr->options.hidden;
-                if (menu_ptr->options.hidden)
+                menu_ptr->hidden = !menu_ptr->hidden;
+                if (menu_ptr->hidden)
                     menu_ptr->canvas->unfocus();
             }
             break;

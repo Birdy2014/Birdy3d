@@ -34,7 +34,7 @@ namespace Birdy3d::ui {
         m_background_rect = add_filled_rectangle(0_px, 0_px, utils::Color::Name::BG, Placement::TOP_LEFT);
         m_border_rect = add_rectangle(0_px, 0_px, utils::Color::Name::BORDER, Placement::TOP_LEFT);
         m_submenu_triangle = add_filled_triangle(0_px, Unit(m_arrow_size), utils::Color::Name::FG);
-        this->options.hidden = true;
+        this->hidden = true;
         m_children_visible = false;
         m_shapes_visible = false;
     }
@@ -47,9 +47,9 @@ namespace Birdy3d::ui {
     }
 
     void ContextMenu::open(glm::vec2 open_pos) {
-        options.pos = open_pos;
-        m_actual_pos = options.pos;
-        options.hidden = false;
+        position = open_pos;
+        m_actual_pos = position;
+        hidden = false;
         focus();
         canvas->to_foreground(this);
         for (auto& child_item : root_item.children)
@@ -60,18 +60,18 @@ namespace Birdy3d::ui {
         glm::vec2 open_pos = core::Input::cursor_pos();
         glm::vec2 viewport = core::Application::get_viewport_size();
         if (open_pos.x + root_item.m_child_rect_size.x > viewport.x)
-            options.pos.x = open_pos.x - root_item.m_child_rect_size.x; // Left
+            position.x = open_pos.x - root_item.m_child_rect_size.x; // Left
         else
-            options.pos.x = open_pos.x; // Right
+            position.x = open_pos.x; // Right
         if (open_pos.y + root_item.m_child_rect_size.y > viewport.y)
-            options.pos.y = open_pos.y - root_item.m_child_rect_size.y; // Up
+            position.y = open_pos.y - root_item.m_child_rect_size.y; // Up
         else
-            options.pos.y = open_pos.y; // Down
-        open(options.pos);
+            position.y = open_pos.y; // Down
+        open(position);
     }
 
     void ContextMenu::on_update() {
-        if (options.hidden)
+        if (hidden)
             return;
 
         handle_context_item_children_click(root_item, false);
@@ -133,7 +133,7 @@ namespace Birdy3d::ui {
                     if (click && child_item.children.empty()) {
                         if (child_item.callback_click)
                             child_item.callback_click();
-                        options.hidden = true;
+                        hidden = true;
                         return true;
                     }
                     if (!child_item.children.empty()) {
@@ -190,18 +190,18 @@ namespace Birdy3d::ui {
         if (handle_context_item_children_click(root_item, true)) {
             event.handled();
         } else {
-            options.hidden = true;
+            hidden = true;
         }
     }
 
     void ContextMenu::on_key(KeyEvent& event) {
         event.handled();
 
-        options.hidden = true;
+        hidden = true;
     }
 
     void ContextMenu::on_focus_lost(FocusLostEvent&) {
-        options.hidden = true;
+        hidden = true;
     }
 
     MenuBar::MenuBar(Options options)
@@ -231,7 +231,7 @@ namespace Birdy3d::ui {
             menu->root_item.text->position(UIVector(x, 0));
             menu->root_item.text->draw(m_move);
             // menu->external_draw() would reset glScissor, but menu->draw() doesn't check for hidden.
-            if (!menu->options.hidden)
+            if (!menu->hidden)
                 menu->draw();
             x += menu->root_item.text->size().x + m_menu_gap;
         }

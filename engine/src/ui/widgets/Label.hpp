@@ -7,9 +7,14 @@ namespace Birdy3d::ui {
 
     class Label : public Widget {
     public:
-        Label(Options options, std::string text)
+        struct Options {
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
+            std::string text;
+        };
+
+        Label(Options options)
             : Widget(options) {
-            m_text = add_text(UIVector(0_px), text, utils::Color::Name::FG, Placement::CENTER_LEFT);
+            m_text = add_text(UIVector(0_px), options.text, utils::Color::Name::FG, Placement::CENTER_LEFT);
         };
 
         glm::vec2 minimal_size() override {

@@ -6,9 +6,9 @@
 
 namespace Birdy3d::ui {
 
-    NumberInput::NumberInput(Options options, float val)
+    NumberInput::NumberInput(Options options)
         : TextField(options) {
-        value(val);
+        value(options.value);
     }
 
     float NumberInput::value() {

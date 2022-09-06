@@ -94,42 +94,42 @@ namespace Birdy3d::ui {
 
         // Move and resize
         if (m_dragging) {
-            options.pos = options.pos + core::Input::cursor_pos_offset();
+            position = position + core::Input::cursor_pos_offset();
             m_dragged = true;
         }
         glm::vec2 minsize = m_layout->minimal_size(m_children) + glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
         if (m_resize_x_left) {
-            float diffold = options.size.x - minsize.x;
-            options.size.x -= core::Input::cursor_pos_offset().x;
-            float diffnew = options.size.x - minsize.x;
+            float diffold = size.x - minsize.x;
+            size.x -= core::Input::cursor_pos_offset().x;
+            float diffnew = size.x - minsize.x;
             if (diffold >= 0 && diffnew >= 0) {
-                options.pos.x += core::Input::cursor_pos_offset().x;
+                position.x += core::Input::cursor_pos_offset().x;
             } else if (diffold >= 0 && diffnew < 0) {
-                options.pos.x += diffold;
+                position.x += diffold;
             } else if (diffold < 0 && diffnew >= 0) {
-                options.pos.x -= diffnew;
+                position.x -= diffnew;
             }
         }
         if (m_resize_x_right) {
-            options.size.x += core::Input::cursor_pos_offset().x;
+            size.x += core::Input::cursor_pos_offset().x;
         }
         if (m_resize_y_top) {
-            float diffold = options.size.y - minsize.y;
-            options.size.y -= core::Input::cursor_pos_offset().y;
-            float diffnew = options.size.y - minsize.y;
+            float diffold = size.y - minsize.y;
+            size.y -= core::Input::cursor_pos_offset().y;
+            float diffnew = size.y - minsize.y;
             if (diffold >= 0 && diffnew >= 0) {
-                options.pos.y += core::Input::cursor_pos_offset().y;
+                position.y += core::Input::cursor_pos_offset().y;
             } else if (diffold >= 0 && diffnew < 0) {
-                options.pos.y += diffold;
+                position.y += diffold;
             } else if (diffold < 0 && diffnew >= 0) {
-                options.pos.y -= diffnew;
+                position.y -= diffnew;
             }
         }
         if (m_resize_y_bottom) {
-            options.size.y += core::Input::cursor_pos_offset().y;
+            size.y += core::Input::cursor_pos_offset().y;
         }
-        m_actual_pos = options.pos;
-        m_actual_size = glm::vec2(std::max(options.size.x.to_pixels(), minimal_size().x), std::max(options.size.y.to_pixels(), minimal_size().y));
+        m_actual_pos = position;
+        m_actual_size = glm::vec2(std::max(size.x.to_pixels(), minimal_size().x), std::max(size.y.to_pixels(), minimal_size().y));
     }
 
     void Window::on_click(ClickEvent& event) {
@@ -150,7 +150,7 @@ namespace Birdy3d::ui {
             m_resize_x_right = false;
             m_resize_y_top = false;
             m_resize_y_bottom = false;
-            options.size = m_actual_size;
+            size = m_actual_size;
             return;
         }
 

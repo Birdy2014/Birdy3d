@@ -8,7 +8,15 @@ namespace Birdy3d::ui {
 
     class Scrollable : public Widget {
     public:
-        Scrollable(Options);
+        Scrollable(is_widget_options auto options)
+            : Widget(options)
+            , m_scrollbar_vertical(0_px, UIVector(10_px, 100_p), utils::Color::Name::FG, Shape::Type::FILLED, Placement::TOP_RIGHT)
+            , m_scrollbar_horizontal(0_px, UIVector(100_p, 10_px), utils::Color::Name::FG, Shape::Type::FILLED, Placement::BOTTOM_LEFT) {
+            m_scrollbar_vertical.in_foreground = true;
+            m_scrollbar_horizontal.in_foreground = true;
+            m_padding = glm::vec4(0, 10, 0, 10);
+        }
+
         glm::vec2 minimal_size() override;
         void arrange(glm::vec2 pos, glm::vec2 size) override;
 

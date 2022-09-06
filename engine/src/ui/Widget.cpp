@@ -13,9 +13,6 @@
 
 namespace Birdy3d::ui {
 
-    Widget::Widget(Options options)
-        : options(options) { }
-
     Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::OUTLINE, placement);
         Rectangle* ptr = rectangle.get();
@@ -122,7 +119,7 @@ namespace Birdy3d::ui {
     }
 
     void Widget::external_draw() {
-        if (options.hidden)
+        if (hidden)
             return;
 
         // Transform to OpenGL coordinates
@@ -162,18 +159,18 @@ namespace Birdy3d::ui {
     void Widget::draw() { }
 
     glm::vec2 Widget::preferred_position(glm::vec2 parentSize, glm::vec2 size) {
-        return UIVector::get_relative_position(options.pos, size, parentSize, options.placement);
+        return UIVector::get_relative_position(position, size, parentSize, placement);
     }
 
     glm::vec2 Widget::minimal_size() {
         glm::vec2 children_minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
         if (m_layout && m_children_visible)
             children_minsize += m_layout->minimal_size(m_children);
-        return glm::vec2(std::max(children_minsize.x, options.size.x.to_pixels()), std::max(children_minsize.y, options.size.y.to_pixels()));
+        return glm::vec2(std::max(children_minsize.x, size.x.to_pixels()), std::max(children_minsize.y, size.y.to_pixels()));
     }
 
     glm::vec2 Widget::preferred_size(glm::vec2 parentSize) {
-        return glm::max(options.size.to_pixels(parentSize), minimal_size());
+        return glm::max(size.to_pixels(parentSize), minimal_size());
     }
 
     void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
@@ -234,7 +231,7 @@ namespace Birdy3d::ui {
     }
 
     bool Widget::update_hover() {
-        if (options.hidden)
+        if (hidden)
             return false;
 
         // foreground shapes
@@ -262,7 +259,7 @@ namespace Birdy3d::ui {
     }
 
     void Widget::update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right) {
-        if (options.hidden)
+        if (hidden)
             return;
         m_visible_pos = glm::vec2(std::max(parent_visible_top_left.x, m_actual_pos.x), std::max(parent_visible_top_left.y, m_actual_pos.y));
         glm::vec2 actual_pos2 = m_actual_pos + m_actual_size;

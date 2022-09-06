@@ -14,7 +14,12 @@ namespace Birdy3d::ui {
         std::function<void()> on_change;
         std::function<void()> on_accept;
 
-        TextField(Options);
+        TextField(is_widget_options auto options)
+            : Scrollable(options) {
+            add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG_INPUT);
+            m_text = add_text(0_px, std::string(), utils::Color::Name::FG);
+        }
+
         glm::vec2 minimal_size() override;
         std::string text();
         void text(std::string);
