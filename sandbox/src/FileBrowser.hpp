@@ -5,10 +5,15 @@
 
 class FileBrowser : public Birdy3d::ui::Widget {
 public:
-    FileBrowser(Birdy3d::ui::Widget::Options options, std::filesystem::path root_directory)
+    struct Options {
+        BIRDY3D_WIDGET_OPTIONS_STRUCT
+        std::filesystem::path root_directory;
+    };
+
+    FileBrowser(Options options)
         : Birdy3d::ui::Widget(options)
-        , m_root_directory(root_directory)
-        , m_current_directory(root_directory) {
+        , m_root_directory(options.root_directory)
+        , m_current_directory(options.root_directory) {
         using namespace Birdy3d::ui::literals;
         set_layout<Birdy3d::ui::DirectionalLayout>(Birdy3d::ui::DirectionalLayout::Direction::RIGHT, 10);
 
@@ -39,13 +44,18 @@ public:
 private:
     class FileItem : public Birdy3d::ui::Widget {
     public:
-        FileItem(Birdy3d::ui::Widget::Options options, Birdy3d::core::ResourceIdentifier id)
+        struct Options {
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
+            Birdy3d::core::ResourceIdentifier id;
+        };
+
+        FileItem(Options options)
             : Birdy3d::ui::Widget(options)
-            , m_resource_id(id) {
+            , m_resource_id(options.id) {
             using namespace Birdy3d::ui::literals;
             add_filled_rectangle(0_px, 100_p, Birdy3d::utils::Color::Name::BG_INPUT);
-            m_label = add_text(0_px, std::filesystem::path(id.name).filename().string(), Birdy3d::utils::Color::Name::FG, Birdy3d::ui::Placement::BOTTOM_LEFT);
-            this->options.size = { 100 };
+            m_label = add_text(0_px, std::filesystem::path(options.id.name).filename().string(), Birdy3d::utils::Color::Name::FG, Birdy3d::ui::Placement::BOTTOM_LEFT);
+            this->size = { 100 };
         }
 
     private:
@@ -75,9 +85,9 @@ private:
 
         if (m_current_directory.string().starts_with("_builtin")) {
             if (m_current_directory.string() == "_builtin_models") {
-                m_file_container->add_child<FileItem>({}, "primitive::plane");
-                m_file_container->add_child<FileItem>({}, "primitive::cube");
-                m_file_container->add_child<FileItem>({}, "primitive::uv_sphere:resolution=20");
+                m_file_container->add_child<FileItem>({ .id = "primitive::plane" });
+                m_file_container->add_child<FileItem>({ .id = "primitive::cube" });
+                m_file_container->add_child<FileItem>({ .id = "primitive::uv_sphere:resolution=20" });
             }
             return;
         }
@@ -85,7 +95,7 @@ private:
         for (const auto& entry : std::filesystem::directory_iterator { m_current_directory }) {
             if (entry.is_directory())
                 continue;
-            m_file_container->add_child<FileItem>({}, "file::" + entry.path().string());
+            m_file_container->add_child<FileItem>({ .id = "file::" + entry.path().string() });
         }
     }
 

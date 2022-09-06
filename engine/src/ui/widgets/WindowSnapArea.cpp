@@ -9,9 +9,9 @@
 
 namespace Birdy3d::ui {
 
-    WindowSnapArea::WindowSnapArea(Options options, Mode mode)
+    WindowSnapArea::WindowSnapArea(Options options)
         : Widget(options)
-        , mode(mode) {
+        , mode(options.mode) {
         core::Application::event_bus->subscribe(this, &WindowSnapArea::on_click_raw);
         core::Application::event_bus->subscribe(this, &WindowSnapArea::on_resize_raw);
         m_background_rect = add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG);
@@ -49,11 +49,11 @@ namespace Birdy3d::ui {
                             break;
                     }
                     m_windows.insert(it, focused_window);
-                    focused_window->options.size.x = m_actual_size.x / m_windows.size();
+                    focused_window->size.x = m_actual_size.x / m_windows.size();
                     for (Window* window : m_windows) {
                         if (window == focused_window)
                             continue;
-                        window->options.size.x -= focused_window->options.size.x / m_windows.size();
+                        window->size.x -= focused_window->size.x / m_windows.size();
                         break;
                     }
                 } else {
@@ -72,11 +72,11 @@ namespace Birdy3d::ui {
                             break;
                     }
                     m_windows.insert(it, focused_window);
-                    focused_window->options.size.y = m_actual_size.y / m_windows.size();
+                    focused_window->size.y = m_actual_size.y / m_windows.size();
                     for (Window* window : m_windows) {
                         if (window == focused_window)
                             continue;
-                        window->options.size.y -= focused_window->options.size.y / m_windows.size();
+                        window->size.y -= focused_window->size.y / m_windows.size();
                         break;
                     }
                 } else {
@@ -109,7 +109,7 @@ namespace Birdy3d::ui {
 
         if (mode != Mode::STACKING) {
             for (Window* window : m_windows)
-                size_sum += glm::max(window->minimal_size(), window->options.size.to_pixels());
+                size_sum += glm::max(window->minimal_size(), window->size.to_pixels());
         }
 
         Widget* focused_widget = canvas->focused_widget();
@@ -121,8 +121,8 @@ namespace Birdy3d::ui {
             Window* window = m_windows[i];
             switch (mode) {
             case Mode::STACKING:
-                window->options.pos = m_actual_pos;
-                window->options.size = new_size;
+                window->position = m_actual_pos;
+                window->size = new_size;
                 new_size.y -= core::Application::theme().line_height();
                 break;
             case Mode::HORIZONTAL: {
@@ -131,26 +131,26 @@ namespace Birdy3d::ui {
                     if (window == focused_window) {
                         if (focused_window->resizing_left()) {
                             if (i == 0) {
-                                focused_window->options.size.x += m_actual_size.x - size_sum.x;
-                                focused_window->options.pos = m_actual_pos;
+                                focused_window->size.x += m_actual_size.x - size_sum.x;
+                                focused_window->position = m_actual_pos;
                             } else {
-                                m_windows[i - 1]->options.size.x += m_actual_size.x - size_sum.x;
+                                m_windows[i - 1]->size.x += m_actual_size.x - size_sum.x;
                                 new_pos.x += m_actual_size.x - size_sum.x;
                             }
                         } else {
                             if (i == m_windows.size() - 1)
-                                focused_window->options.size.x += m_actual_size.x - size_sum.x;
+                                focused_window->size.x += m_actual_size.x - size_sum.x;
                             else
-                                m_windows[i + 1]->options.size.x += m_actual_size.x - size_sum.x;
+                                m_windows[i + 1]->size.x += m_actual_size.x - size_sum.x;
                         }
                     }
                 } else {
                     size_diff = (m_actual_size.x - size_sum.x) / m_windows.size();
                 }
-                window->options.pos = new_pos;
-                window->options.size.y = m_actual_size.y;
-                window->options.size.x += size_diff;
-                new_pos.x += std::max(window->minimal_size().x, window->options.size.x.to_pixels());
+                window->position = new_pos;
+                window->size.y = m_actual_size.y;
+                window->size.x += size_diff;
+                new_pos.x += std::max(window->minimal_size().x, window->size.x.to_pixels());
                 break;
             }
             case Mode::VERTICAL:
@@ -159,16 +159,16 @@ namespace Birdy3d::ui {
                     if (window == focused_window) {
                         if (focused_window->resizing_top()) {
                             if (i == m_windows.size() - 1) {
-                                focused_window->options.pos = m_actual_pos;
+                                focused_window->position = m_actual_pos;
                             } else {
-                                m_windows[i + 1]->options.size.y += m_actual_size.y - size_sum.y;
+                                m_windows[i + 1]->size.y += m_actual_size.y - size_sum.y;
                             }
                         } else {
                             if (i == 0) {
-                                focused_window->options.size.y += m_actual_size.y - size_sum.y;
-                                focused_window->options.pos = m_actual_pos;
+                                focused_window->size.y += m_actual_size.y - size_sum.y;
+                                focused_window->position = m_actual_pos;
                             } else {
-                                m_windows[i - 1]->options.size.y += m_actual_size.y - size_sum.y;
+                                m_windows[i - 1]->size.y += m_actual_size.y - size_sum.y;
                                 new_pos.y += m_actual_size.y - size_sum.y;
                             }
                         }
@@ -176,10 +176,10 @@ namespace Birdy3d::ui {
                 } else {
                     size_diff = (m_actual_size.y - size_sum.y) / m_windows.size();
                 }
-                window->options.pos = new_pos;
-                window->options.size.x = m_actual_size.x;
-                window->options.size.y += size_diff;
-                new_pos.y += std::max(window->minimal_size().y, window->options.size.y.to_pixels());
+                window->position = new_pos;
+                window->size.x = m_actual_size.x;
+                window->size.y += size_diff;
+                new_pos.y += std::max(window->minimal_size().y, window->size.y.to_pixels());
                 break;
             }
         }

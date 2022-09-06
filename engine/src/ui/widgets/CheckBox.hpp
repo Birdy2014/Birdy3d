@@ -6,10 +6,15 @@ namespace Birdy3d::ui {
 
     class CheckBox : public Widget {
     public:
+        struct Options {
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
+            std::string text;
+        };
+
         bool checked = false;
         std::function<void()> on_change;
 
-        CheckBox(Options, std::string text);
+        CheckBox(Options);
         void draw() override;
         std::string text();
         void text(std::string text);

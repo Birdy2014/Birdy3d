@@ -11,13 +11,18 @@ namespace Birdy3d::ui {
 
     class Button : public Widget {
     public:
+        struct Options {
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
+            std::string text;
+        };
+
         Text* button_text;
 
-        Button(Options options, std::string text)
+        Button(is_widget_options auto options)
             : Widget(options) {
             add_filled_rectangle(UIVector(0_px), UIVector(100_p), utils::Color::Name::BG, Placement::BOTTOM_LEFT);
             add_rectangle(UIVector(0_px), UIVector(100_p), utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
-            button_text = add_text(UIVector(0_px), text, utils::Color::Name::FG, Placement::CENTER);
+            button_text = add_text(UIVector(0_px), options.text, utils::Color::Name::FG, Placement::CENTER);
         };
 
         glm::vec2 minimal_size() override {

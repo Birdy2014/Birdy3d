@@ -10,13 +10,18 @@ namespace Birdy3d::ui {
 
     class CollapsibleContainer : public Container {
     public:
-        CollapsibleContainer(Options options, std::string title)
+        struct Options {
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
+            std::string title;
+        };
+
+        CollapsibleContainer(Options options)
             : Container(options) {
             m_padding = glm::vec4(4, 4, core::Application::theme().line_height(), 0);
             add_filled_rectangle(0_px, UIVector(100_p, 100_p - core::Application::theme().line_height()), utils::Color::Name::BG, Placement::BOTTOM_LEFT);
             add_filled_rectangle(0_px, UIVector(100_p, core::Application::theme().line_height()), utils::Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);
             m_arrow = add_filled_triangle(-4_px, 14_px, utils::Color::Name::FG, Placement::TOP_RIGHT);
-            m_title = add_text(UIVector(10_px, 0_px), title, utils::Color::Name::FG, Placement::TOP_LEFT);
+            m_title = add_text(UIVector(10_px, 0_px), options.title, utils::Color::Name::FG, Placement::TOP_LEFT);
         }
 
         void title(std::string text) {

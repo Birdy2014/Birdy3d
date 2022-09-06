@@ -7,12 +7,17 @@
 template <class T>
 class ResourceInput : public Birdy3d::ui::Widget {
 public:
-    ResourceInput(Birdy3d::ui::Widget::Options options, Birdy3d::core::ResourceHandle<T>* target)
+    struct Options {
+        BIRDY3D_WIDGET_OPTIONS_STRUCT
+        Birdy3d::core::ResourceHandle<T>* target;
+    };
+
+    ResourceInput(Options options)
         : Widget(options)
-        , m_target(target) {
+        , m_target(options.target) {
         using namespace Birdy3d::ui::literals;
         add_filled_rectangle(0_px, 100_p, Birdy3d::utils::Color::Name::BG_INPUT);
-        m_text = add_text(0_px, static_cast<std::string>(*target), Birdy3d::utils::Color::Name::FG);
+        m_text = add_text(0_px, static_cast<std::string>(*options.target), Birdy3d::utils::Color::Name::FG);
     }
 
 private:

@@ -16,9 +16,14 @@ namespace Birdy3d::ui {
             VERTICAL
         };
 
+        struct Options {
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
+            Mode mode;
+        };
+
         Mode mode;
 
-        WindowSnapArea(Options, Mode);
+        WindowSnapArea(Options);
         void on_update() override;
 
     private:

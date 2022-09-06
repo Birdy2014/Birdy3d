@@ -28,7 +28,7 @@ namespace Birdy3d::ui {
         m_console_window->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 5, false);
         m_console_window->title("Console");
         m_console_window->callback_close = []() {
-            m_console_window->options.hidden = true;
+            m_console_window->hidden = true;
         };
 
         m_console_output = m_console_window->add_child<TextField>({ .size = UIVector(100_p, 0_px), .placement = Placement::TOP_LEFT });

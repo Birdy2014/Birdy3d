@@ -7,10 +7,15 @@ namespace Birdy3d::ui {
 
     class NumberInput : public TextField {
     public:
+        struct Options {
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
+            float value { 0 };
+        };
+
         float max_value = std::numeric_limits<float>::infinity();
         float min_value = -std::numeric_limits<float>::infinity();
 
-        NumberInput(Options, float val = 0);
+        NumberInput(Options);
         float value();
         void value(float value);
 

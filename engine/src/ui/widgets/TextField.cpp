@@ -7,12 +7,6 @@
 
 namespace Birdy3d::ui {
 
-    TextField::TextField(Options options)
-        : Scrollable(options) {
-        add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG_INPUT);
-        m_text = add_text(0_px, std::string(), utils::Color::Name::FG);
-    }
-
     glm::vec2 TextField::minimal_size() {
         return { 1.0f, core::Application::theme().line_height() };
     }

@@ -8,6 +8,27 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
+#define BIRDY3D_WIDGET_OPTIONS_STRUCT                                        \
+    ::Birdy3d::ui::UIVector position = { 0 };                                \
+    ::Birdy3d::ui::UIVector size = { 0 };                                    \
+    ::Birdy3d::ui::Placement placement = ::Birdy3d::ui::Placement::TOP_LEFT; \
+    bool hidden = false;                                                     \
+    std::string name = {};                                                   \
+    float weight = 1;                                                        \
+    int column = 0;                                                          \
+    int row = 0;                                                             \
+    Options& merge_widget_options(::Birdy3d::ui::Widget::Options o) {        \
+        position = o.position;                                               \
+        size = o.size;                                                       \
+        placement = o.placement;                                             \
+        hidden = o.hidden;                                                   \
+        name = o.name;                                                       \
+        weight = o.weight;                                                   \
+        column = o.column;                                                   \
+        row = o.row;                                                         \
+        return *this;                                                        \
+    }
+
 namespace Birdy3d::ui {
 
     class Canvas;
@@ -18,29 +39,56 @@ namespace Birdy3d::ui {
 
     template <class T>
     concept is_widget = std::is_base_of_v<Widget, T>;
+
+    // Is there a better way to implement this?
+    template <class T>
+    concept is_specialized_widget = std::is_base_of_v<Widget, T> && !std::is_base_of_v<T, Widget>;
+
     template <class T>
     concept is_layout = std::is_base_of_v<Layout, T>;
+
+    template <class T>
+    concept is_widget_options = requires(T t) {
+        { t.position } -> std::same_as<UIVector&>;
+        { t.size } -> std::same_as<UIVector&>;
+        { t.placement } -> std::same_as<Placement&>;
+        { t.hidden } -> std::same_as<bool&>;
+        { t.name } -> std::same_as<std::string&>;
+        { t.weight } -> std::same_as<float&>;
+        { t.column } -> std::same_as<int&>;
+        { t.row } -> std::same_as<int&>;
+    };
 
     class Widget {
     public:
         struct Options {
-            UIVector pos = { 0 };
-            UIVector size = { 0 };
-            Placement placement = Placement::TOP_LEFT;
-            bool hidden = false;
-            std::string name = {};
-
-            // Layout specific options
-            float weight = 1; ///< Size ratio in DirectionalLayout. 0 means stay on minimum size
-            int column = 0; ///< Column in GridLayout
-            int row = 0; ///< Row in GridLayout
+            BIRDY3D_WIDGET_OPTIONS_STRUCT
         };
 
         Widget* parent = nullptr;
         Canvas* canvas = nullptr;
-        Options options;
 
-        Widget(Options);
+        UIVector position = { 0 };
+        UIVector size = { 0 };
+        Placement placement = Placement::TOP_LEFT;
+        bool hidden = false;
+        std::string name = {};
+
+        // Layout specific options
+        float weight = 1; ///< Size ratio in DirectionalLayout. 0 means stay on minimum size
+        int column = 0; ///< Column in GridLayout
+        int row = 0; ///< Row in GridLayout
+
+        Widget(is_widget_options auto options)
+            : position(options.position)
+            , size(options.size)
+            , placement(options.placement)
+            , hidden(options.hidden)
+            , name(options.name)
+            , weight(options.weight)
+            , column(options.column)
+            , row(options.row) { }
+
         virtual ~Widget() = default;
 
         void to_foreground(Widget* w);
@@ -138,20 +186,25 @@ namespace Birdy3d::ui {
         void add_child(std::shared_ptr<Widget>);
         void clear_children();
 
-        template <is_widget T, typename... Args>
-        std::shared_ptr<T> add_child(Options options, Args... args) {
-            auto widget = std::make_shared<T>(options, args...);
+        template <is_widget T>
+        std::shared_ptr<T> add_child(typename T::Options options) {
+            auto widget = std::make_shared<T>(options);
             add_child(widget);
             return std::static_pointer_cast<T>(widget);
         }
 
+        template <is_specialized_widget T>
+        std::shared_ptr<T> add_child(Options widget_options, typename T::Options specialized_options) {
+            return add_child<T>(specialized_options.merge_widget_options(widget_options));
+        }
+
         template <is_widget T = Widget>
         std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
-            if (this->options.hidden && !hidden)
+            if (this->hidden && !hidden)
                 return nullptr;
             for (const auto& child : m_children) {
                 std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(child);
-                if (casted && child->options.name == name) {
+                if (casted && child->name == name) {
                     return casted;
                 }
                 std::shared_ptr<T> result = child->get_widget<T>(name, hidden);

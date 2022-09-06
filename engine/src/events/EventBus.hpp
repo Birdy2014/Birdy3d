@@ -11,6 +11,7 @@
 #include <queue>
 #include <string>
 #include <typeindex>
+#include <utility>
 
 namespace Birdy3d::events {
 
