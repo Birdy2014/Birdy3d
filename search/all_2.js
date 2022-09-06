@@ -12,7 +12,7 @@ var searchData=
   ['collisionevent_9',['CollisionEvent',['../classBirdy3d_1_1events_1_1CollisionEvent.html',1,'Birdy3d::events']]],
   ['collisionpoints_10',['CollisionPoints',['../classBirdy3d_1_1physics_1_1CollisionPoints.html',1,'Birdy3d::physics']]],
   ['color_11',['Color',['../classBirdy3d_1_1utils_1_1Color.html',1,'Birdy3d::utils']]],
-  ['column_12',['column',['../structBirdy3d_1_1ui_1_1Widget_1_1Options.html#aa667727b33485783fd31555a75ead80e',1,'Birdy3d::ui::Widget::Options']]],
+  ['column_12',['column',['../classBirdy3d_1_1ui_1_1Widget.html#aaac396132b3a26ac35d685076de44299',1,'Birdy3d::ui::Widget']]],
   ['component_13',['Component',['../classBirdy3d_1_1ecs_1_1Component.html',1,'Birdy3d::ecs']]],
   ['console_14',['Console',['../classBirdy3d_1_1ui_1_1Console.html',1,'Birdy3d::ui']]],
   ['consolecommands_15',['ConsoleCommands',['../classBirdy3d_1_1ui_1_1ConsoleCommands.html',1,'Birdy3d::ui']]],

@@ -44,7 +44,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"Adapter_8hpp_source.html"
+"Adapter_8hpp_source.html",
+"structBirdy3d_1_1ui_1_1WindowSnapArea_1_1Options.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

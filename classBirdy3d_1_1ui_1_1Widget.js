@@ -1,6 +1,9 @@
 var classBirdy3d_1_1ui_1_1Widget =
 [
-    [ "Options", "structBirdy3d_1_1ui_1_1Widget_1_1Options.html", "structBirdy3d_1_1ui_1_1Widget_1_1Options" ],
+    [ "Options", "structBirdy3d_1_1ui_1_1Widget_1_1Options.html", null ],
     [ "draw", "classBirdy3d_1_1ui_1_1Widget.html#a78aea295dee05e6a0130836ba7321878", null ],
-    [ "m_padding", "classBirdy3d_1_1ui_1_1Widget.html#ac802f692aba1281eaf2066b4a0a3fa7a", null ]
+    [ "column", "classBirdy3d_1_1ui_1_1Widget.html#aaac396132b3a26ac35d685076de44299", null ],
+    [ "m_padding", "classBirdy3d_1_1ui_1_1Widget.html#ac802f692aba1281eaf2066b4a0a3fa7a", null ],
+    [ "row", "classBirdy3d_1_1ui_1_1Widget.html#abe5c72204afcdbf3abbfc0e87fd90153", null ],
+    [ "weight", "classBirdy3d_1_1ui_1_1Widget.html#a85e26a936fc6f583d77ebce52a72b009", null ]
 ];
