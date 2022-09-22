@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ecs/Component.hpp"
-#include "ecs/Entity.hpp"
 #include "events/Event.hpp"
 #include <any>
 #include <functional>
@@ -73,7 +71,7 @@ namespace Birdy3d::events {
         HandlerFunction m_function;
     };
 
-    typedef std::list<HandlerFunctionBase*> HandlerList;
+    typedef std::list<std::unique_ptr<HandlerFunctionBase>> HandlerList;
 
     class EventBus {
     public:
@@ -98,7 +96,7 @@ namespace Birdy3d::events {
                 m_subscribers[typeid(EventType)] = std::move(handler_list);
             }
 
-            handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction, options));
+            handlers->push_back(std::make_unique<MemberFunctionHandler<T, EventType>>(instance, memberFunction, options));
         }
 
         template <class EventType>
@@ -111,7 +109,7 @@ namespace Birdy3d::events {
                 m_subscribers[typeid(EventType)] = std::move(handler_list);
             }
 
-            handlers->push_back(new FunctionHandler<EventType>(func, options));
+            handlers->push_back(std::make_unique<FunctionHandler<EventType>>(func, options));
         }
 
         template <class T, class EventType>
@@ -121,18 +119,16 @@ namespace Birdy3d::events {
             if (handlers == nullptr)
                 return;
 
-            for (HandlerFunctionBase* handler : *handlers) {
-                MemberFunctionHandler<T, EventType>* casted = dynamic_cast<MemberFunctionHandler<T, EventType>*>(handler);
+            handlers->remove_if([&](std::unique_ptr<HandlerFunctionBase>& handler) {
+                auto casted = dynamic_cast<MemberFunctionHandler<T, EventType>*>(handler.get());
                 if (!casted)
-                    continue;
+                    return false;
                 if (casted->m_instance != instance || casted->m_member_function != memberFunction)
-                    continue;
+                    return false;
                 if (options.has_value() && !any_equals(casted->m_options, options))
-                    continue;
-                handlers->remove(handler);
-                delete handler;
-                return;
-            }
+                    return false;
+                return true;
+            });
         }
 
         template <class EventType>
@@ -142,18 +138,16 @@ namespace Birdy3d::events {
             if (handlers == nullptr)
                 return;
 
-            for (HandlerFunctionBase* handler : *handlers) {
-                FunctionHandler<EventType>* casted = dynamic_cast<FunctionHandler<EventType>*>(handler);
+            handlers->remove_if([&](std::unique_ptr<HandlerFunctionBase>& handler) {
+                FunctionHandler<EventType>* casted = dynamic_cast<FunctionHandler<EventType>*>(handler.get());
                 if (!casted)
-                    continue;
+                    return false;
                 if (casted->m_function != func)
-                    continue;
+                    return false;
                 if (options.has_value() && !any_equals(casted->m_options, options))
-                    continue;
-                handlers->remove(handler);
-                delete handler;
-                return;
-            }
+                    return false;
+                return true;
+            });
         }
 
     private:
