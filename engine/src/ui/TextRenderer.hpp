@@ -99,11 +99,12 @@ namespace Birdy3d::ui {
         static std::unique_ptr<Rectangle> m_cursor_rect;
 
         // Buffer size is smaller than text_length if the text contains escape characters.
-        std::size_t m_text_length = 0;
+        std::size_t m_buffer_char_capacity = 0;
         std::size_t m_escaped_text_length = 0;
 
         void create_buffers();
         void delete_buffers();
+        void resize_buffers_if_needed();
         void update_buffers();
         void draw_cursor(glm::mat4 move);
         void draw_highlight(glm::mat4 move);
