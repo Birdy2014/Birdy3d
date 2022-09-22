@@ -128,6 +128,7 @@ namespace Birdy3d::ui {
         auto visible_pos_bottom_moved_origin = viewport_y - visible_pos_bottom;
 
         // Background
+        assert(m_visible_size.x >= 0 && m_visible_size.y >= 0);
         glScissor(m_visible_pos.x, visible_pos_bottom_moved_origin - 1, m_visible_size.x + 2, m_visible_size.y + 2);
 
         if (m_shapes_visible) {
@@ -259,15 +260,19 @@ namespace Birdy3d::ui {
     }
 
     void Widget::update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right) {
+        assert(parent_visible_top_left.x <= parent_visible_bottom_right.x && parent_visible_top_left.y <= parent_visible_bottom_right.y);
+        assert(m_actual_size.x >= 0 && m_actual_size.y >= 0);
+
         if (hidden)
             return;
+
         m_visible_pos = glm::vec2(std::max(parent_visible_top_left.x, m_actual_pos.x), std::max(parent_visible_top_left.y, m_actual_pos.y));
-        glm::vec2 actual_pos2 = m_actual_pos + m_actual_size;
-        glm::vec2 visible_pos2 = glm::vec2(std::min(parent_visible_bottom_right.x, actual_pos2.x), std::min(parent_visible_bottom_right.y, actual_pos2.y));
-        m_visible_size = visible_pos2 - m_visible_pos;
+        glm::vec2 actual_bottom_right = m_actual_pos + m_actual_size;
+        glm::vec2 visible_bottom_right = glm::vec2(std::min(parent_visible_bottom_right.x, actual_bottom_right.x), std::min(parent_visible_bottom_right.y, actual_bottom_right.y));
+        m_visible_size = glm::vec2(std::max(visible_bottom_right.x - m_visible_pos.x, 0.0f), std::max(visible_bottom_right.y - m_visible_pos.y, 0.0f));
 
         for (const auto& child : m_children)
-            child->update_visible_area(m_visible_pos, visible_pos2);
+            child->update_visible_area(m_visible_pos, visible_bottom_right);
     }
 
     void Widget::on_update() {
