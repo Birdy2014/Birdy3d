@@ -308,15 +308,15 @@ namespace Birdy3d::ui {
 
     void Text::create_buffers() {
         // Create buffers
-        glGenVertexArrays(1, &m_vao);
-        glGenBuffers(1, &m_vbo);
-        glGenBuffers(1, &m_ebo);
+        glCreateVertexArrays(1, &m_vao);
+        glCreateBuffers(1, &m_vbo);
+        glCreateBuffers(1, &m_ebo);
         // Allocate buffers
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(TextVertex) * m_escaped_text_length * 4, 0, GL_STATIC_DRAW);
+        glNamedBufferData(m_vbo, sizeof(TextVertex) * m_buffer_char_capacity * 4, 0, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_escaped_text_length * 6, 0, GL_STATIC_DRAW);
+        glNamedBufferData(m_ebo, sizeof(GLuint) * m_buffer_char_capacity * 6, 0, GL_DYNAMIC_DRAW);
         // vertex positions
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)0);
@@ -333,23 +333,29 @@ namespace Birdy3d::ui {
         glDeleteVertexArrays(1, &m_vao);
     }
 
-    void Text::update_buffers() {
-        // Resize buffers
-        if (m_text.size() != m_text_length) {
-            m_text_length = m_text.size();
-            m_escaped_text_length = TextRenderer::text_length(m_text);
+    void Text::resize_buffers_if_needed() {
+        auto const increase_size = 10;
+
+        auto const new_text_length = TextRenderer::text_length(m_text);
+        m_escaped_text_length = new_text_length;
+
+        if (new_text_length > m_buffer_char_capacity) {
+            m_buffer_char_capacity = new_text_length + increase_size;
             glBindVertexArray(m_vao);
-            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(TextVertex) * m_escaped_text_length * 4, 0, GL_STATIC_DRAW);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_escaped_text_length * 6, 0, GL_STATIC_DRAW);
+            glNamedBufferData(m_vbo, sizeof(TextVertex) * m_buffer_char_capacity * 4, 0, GL_DYNAMIC_DRAW);
+            glNamedBufferData(m_ebo, sizeof(GLuint) * m_buffer_char_capacity * 6, 0, GL_DYNAMIC_DRAW);
         }
+    }
+
+    void Text::update_buffers() {
+        resize_buffers_if_needed();
+
         // Create data
         TextRenderer& renderer = core::Application::theme().text_renderer();
         std::vector<TextVertex> vertices;
         std::vector<GLuint> indices;
-        vertices.reserve(4 * m_escaped_text_length);
-        indices.reserve(6 * m_escaped_text_length);
+        vertices.reserve(4 * m_buffer_char_capacity);
+        indices.reserve(6 * m_buffer_char_capacity);
         if (font_size == 0)
             font_size = renderer.m_font_size;
         float scale = (font_size / renderer.m_font_size);
@@ -411,10 +417,8 @@ namespace Birdy3d::ui {
         m_size = glm::vec2(max_x, renderer.m_theme.line_height() + y);
         // Write to buffers
         glBindVertexArray(m_vao);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TextVertex) * vertices.size(), vertices.data());
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * indices.size(), indices.data());
+        glNamedBufferSubData(m_vbo, 0, sizeof(TextVertex) * vertices.size(), vertices.data());
+        glNamedBufferSubData(m_ebo, 0, sizeof(GLuint) * indices.size(), indices.data());
     }
 
     void Text::draw_cursor(glm::mat4 move) {
