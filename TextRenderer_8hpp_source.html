@@ -189,17 +189,18 @@ $(document).ready(function(){initNavTree('TextRenderer_8hpp_source.html',''); in
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keyword">static</span> std::unique_ptr&lt;Rectangle&gt; m_cursor_rect;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="comment">// Buffer size is smaller than text_length if the text contains escape characters.</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        std::size_t m_text_length = 0;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        std::size_t m_buffer_char_capacity = 0;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        std::size_t m_escaped_text_length = 0;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordtype">void</span> create_buffers();</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keywordtype">void</span> delete_buffers();</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordtype">void</span> update_buffers();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordtype">void</span> draw_cursor(glm::mat4 move);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keywordtype">void</span> draw_highlight(glm::mat4 move);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    };</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordtype">void</span> resize_buffers_if_needed();</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordtype">void</span> update_buffers();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keywordtype">void</span> draw_cursor(glm::mat4 move);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keywordtype">void</span> draw_highlight(glm::mat4 move);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    };</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1core_1_1ResourceHandle_html"><div class="ttname"><a href="classBirdy3d_1_1core_1_1ResourceHandle.html">Birdy3d::core::ResourceHandle</a></div><div class="ttdef"><b>Definition:</b> ResourceHandle.hpp:33</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Shape_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Shape.html">Birdy3d::ui::Shape</a></div><div class="ttdef"><b>Definition:</b> Shape.hpp:13</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1TextRenderer_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1TextRenderer.html">Birdy3d::ui::TextRenderer</a></div><div class="ttdef"><b>Definition:</b> TextRenderer.hpp:28</div></div>

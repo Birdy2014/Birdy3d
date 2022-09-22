@@ -132,6 +132,7 @@ var annotated_dup =
       ] ]
     ] ],
     [ "fmt", null, [
+      [ "formatter< EventType >", "structfmt_1_1formatter_3_01EventType_01_4.html", null ],
       [ "formatter< glm::vec< L, T > >", "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html", null ]
     ] ]
 ];

@@ -40,6 +40,7 @@ var hierarchy =
     [ "std::exception", null, [
       [ "Birdy3d::serializer::ParseError", "classBirdy3d_1_1serializer_1_1ParseError.html", null ]
     ] ],
+    [ "fmt::formatter< EventType >", "structfmt_1_1formatter_3_01EventType_01_4.html", null ],
     [ "fmt::formatter< glm::vec< L, T > >", "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html", null ],
     [ "Birdy3d::serializer::Generator", "classBirdy3d_1_1serializer_1_1Generator.html", [
       [ "Birdy3d::serializer::MinimalJsonGenerator", "classBirdy3d_1_1serializer_1_1MinimalJsonGenerator.html", null ],
