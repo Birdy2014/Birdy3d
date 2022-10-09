@@ -159,11 +159,10 @@ int main() {
     tree_scroll_view->set_layout<ui::MaxLayout>();
 
     auto tree = tree_scroll_view->add_child<ui::TreeView>({ .size = 100_p, .placement = ui::Placement::TOP_LEFT });
-    tree->on_select = [&](ui::TreeItem& item) {
-        if (item.data.type() != typeid(ecs::Entity*))
-            return;
-
-        core::Application::selected_entity = std::any_cast<ecs::Entity*>(item.data);
+    tree->m_model = std::make_unique<ui::EntityTreeModel>();
+    auto tree_model = static_cast<ui::EntityTreeModel*>(tree->m_model.get());
+    tree_model->select_callback = [&](ecs::Entity& entity) {
+        core::Application::selected_entity = &entity;
         input_position_x->value(core::Application::selected_entity->transform.position.x);
         input_position_y->value(core::Application::selected_entity->transform.position.y);
         input_position_z->value(core::Application::selected_entity->transform.position.z);
@@ -230,32 +229,29 @@ int main() {
         }
     };
 
-    tree->on_select_secundary = [&scene_context_menu](ui::TreeItem&) {
+    tree_model->select_secundary_callback = [&scene_context_menu](ecs::Entity&) {
         scene_context_menu->open();
     };
 
     auto& scene_new_menu = scene_context_menu->root_item.add_child("New");
     scene_new_menu.add_child("Empty Entity", [&]() {
-        std::shared_ptr<ecs::Scene> scene_ptr;
-        if (core::Application::selected_entity && (scene_ptr = core::Application::scene.lock())) {
+        if (core::Application::selected_entity) {
             core::Application::selected_entity->add_child();
-            tree->sync_scene_tree(scene_ptr.get());
+            tree->update_cache();
         }
     });
     scene_new_menu.add_child("Plane", [&]() {
-        std::shared_ptr<ecs::Scene> scene_ptr;
-        if (core::Application::selected_entity && (scene_ptr = core::Application::scene.lock())) {
+        if (core::Application::selected_entity) {
             auto new_entity = core::Application::selected_entity->add_child("Plane");
             new_entity->add_component<render::ModelComponent>("primitive::plane");
-            tree->sync_scene_tree(scene_ptr.get());
+            tree->update_cache();
         }
     });
     scene_new_menu.add_child("Cube", [&]() {
-        std::shared_ptr<ecs::Scene> scene_ptr;
-        if (core::Application::selected_entity && (scene_ptr = core::Application::scene.lock())) {
+        if (core::Application::selected_entity) {
             auto new_entity = core::Application::selected_entity->add_child("Cube");
             new_entity->add_component<render::ModelComponent>("primitive::cube");
-            tree->sync_scene_tree(scene_ptr.get());
+            tree->update_cache();
         }
     });
 
@@ -267,8 +263,8 @@ int main() {
             core::Application::selected_entity->parent->add_child(cloned_entity);
             core::Application::selected_entity = cloned_entity.get();
             cloned_entity->start();
-            tree->selected_item(nullptr);
-            tree->sync_scene_tree(scene_ptr.get());
+            tree->unselect();
+            tree->update_cache();
         }
     });
 
@@ -278,8 +274,8 @@ int main() {
         if (auto scene_ptr = core::Application::scene.lock()) {
             core::Application::selected_entity->remove();
             core::Application::selected_entity = nullptr;
-            tree->selected_item(nullptr);
-            tree->sync_scene_tree(scene_ptr.get());
+            tree->unselect();
+            tree->update_cache();
         }
     });
 
@@ -520,7 +516,7 @@ int main() {
         new_material->diffuse_color = glm::vec4(random(0, 1), random(0, 1), random(0, 1), 1.0f);
         auto new_cube = scene->add_child("New Cube", glm::vec3(x, y, z));
         new_cube->add_component<render::ModelComponent>("primitive::cube", new_material);
-        tree->sync_scene_tree(scene.get());
+        tree->update_cache();
         core::Logger::debug("Created cube at ({} {} {})", x, y, z);
     },
         GLFW_KEY_N);
@@ -537,7 +533,8 @@ int main() {
 
     scene->start();
 
-    tree->sync_scene_tree(scene.get());
+    tree_model->root_entity = scene;
+    tree->update_cache();
 
     // Mainloop
     core::Application::mainloop();
