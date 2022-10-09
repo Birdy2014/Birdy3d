@@ -13,6 +13,6 @@ namespace Birdy3d::render {
     class Shader;
     class Spotlight;
     class Texture;
-    class Vertex;
+    struct Vertex;
 
 }
