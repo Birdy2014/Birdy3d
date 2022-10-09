@@ -16,7 +16,7 @@
 namespace Birdy3d::core {
 
     ResourceHandle<ui::Theme> Application::m_theme;
-    events::EventBus* Application::event_bus = nullptr;
+    std::unique_ptr<events::EventBus> Application::event_bus = {};
     float Application::delta_time = 0;
     std::weak_ptr<ecs::Scene> Application::scene;
     std::weak_ptr<ui::Canvas> Application::canvas;
@@ -78,8 +78,7 @@ namespace Birdy3d::core {
         glDebugMessageCallback(gl_message_callback, 0);
 
         // Init variables
-        ResourceManager::init();
-        event_bus = new events::EventBus();
+        event_bus = std::make_unique<events::EventBus>();
         if (!theme(theme_name))
             Logger::critical("Invalid Theme '{}'", theme_name);
         ui::ConsoleCommands::register_all();
