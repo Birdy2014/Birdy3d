@@ -92,9 +92,8 @@ std::optional<ui::TreeItem> FileBrowserTreeModel::item(ui::TreeItem const* paren
     return {};
 }
 
-void FileBrowserTreeModel::move_item(ui::TreeItem const& source, ui::TreeItem const& target_parent, std::size_t target_index) {
-    // TODO: Implement move_item for FileBrowserTreeModel
-    assert(false);
+void FileBrowserTreeModel::move_item([[maybe_unused]] ui::TreeItem const& source, [[maybe_unused]] ui::TreeItem const& target_parent, [[maybe_unused]] std::size_t target_index) {
+    return;
 }
 
 void FileBrowserTreeModel::on_select(int button, ui::TreeItem const& item) {
