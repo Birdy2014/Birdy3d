@@ -149,7 +149,7 @@ int main() {
     auto file_browser_window = canvas->add_child<ui::Window>({ .size = ui::UIVector { 500_px, 200_px } });
     file_browser_window->set_layout<ui::MaxLayout>();
     file_browser_window->title("FileBrowser");
-    file_browser_window->add_child<FileBrowser>({ .root_directory = "./" });
+    file_browser_window->add_child<FileBrowser>({ .root_directory = core::ResourceManager::get_resource_dir() });
 
     auto tree_window = canvas->add_child<ui::Window>({ .size = ui::UIVector(200_px, 300_px) });
     tree_window->set_layout<ui::MaxLayout>();
@@ -443,9 +443,10 @@ int main() {
 
     // Entities
     std::shared_ptr<ecs::Scene> scene;
-    if (std::filesystem::exists("scene.json")) {
-        serializer::JsonParser parser(core::ResourceManager::read_file("scene.json"));
-        serializer::Serializer::deserialize(core::ResourceManager::read_file("scene.json"), "scene", scene);
+    auto scene_path = core::ResourceManager::get_resource_dir() + "scene.json";
+    if (std::filesystem::exists(scene_path)) {
+        serializer::JsonParser parser(core::ResourceManager::read_file(scene_path));
+        serializer::Serializer::deserialize(core::ResourceManager::read_file(scene_path), "scene", scene);
         core::Application::scene = scene;
     } else {
         scene = std::make_shared<ecs::Scene>("Scene");
@@ -543,7 +544,7 @@ int main() {
     core::Application::cleanup();
 
     std::fstream filestream;
-    filestream.open("scene.json", std::fstream::out);
+    filestream.open(scene_path, std::fstream::out);
     serializer::Serializer::serialize(serializer::GeneratorType::JSON_PRETTY, "scene", scene, filestream);
     filestream.close();
 

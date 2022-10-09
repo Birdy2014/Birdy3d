@@ -109,11 +109,6 @@ namespace Birdy3d::core {
     std::unordered_map<std::string, std::shared_ptr<render::Model>> ResourceManager::m_models;
     std::unordered_map<std::string, std::shared_ptr<render::Texture>> ResourceManager::m_textures;
 
-    void ResourceManager::init() {
-        std::string base_path = get_executable_dir() + "../resources/";
-        std::filesystem::current_path(base_path);
-    }
-
     ResourceHandle<render::Shader> ResourceManager::get_shader(const std::string& name) {
         return ResourceHandle<render::Shader>(name);
     }
@@ -247,9 +242,6 @@ namespace Birdy3d::core {
 
         std::replace(name.begin(), name.end(), '\\', '/');
 
-        if (name.front() == '/')
-            name.erase(0, 1);
-
         std::string default_dir;
         std::string subdir;
         switch (type) {
@@ -273,12 +265,17 @@ namespace Birdy3d::core {
             return {};
         }
 
-        if (std::filesystem::is_regular_file(name))
-            return name;
-        if (std::filesystem::is_regular_file(subdir + name))
-            return subdir + name;
-        if (!default_dir.empty() && std::filesystem::is_regular_file(default_dir + name))
-            return default_dir + name;
+        auto possible_paths = {
+            name,
+            get_resource_dir() + name,
+            get_resource_dir() + subdir + name,
+            get_resource_dir() + default_dir + name
+        };
+
+        for (auto path : possible_paths) {
+            if (std::filesystem::is_regular_file(path))
+                return path;
+        }
 
         Logger::error("can't find resource '{}'", name);
         return {};
@@ -294,6 +291,11 @@ namespace Birdy3d::core {
         std::string exec = std::string(result, GetModuleFileName(NULL, result, MAX_PATH));
 #endif
         return exec.substr(0, exec.find_last_of("/\\") + 1);
+    }
+
+    std::string ResourceManager::get_resource_dir() {
+        static auto const resource_dir = get_executable_dir() + "../resources/";
+        return resource_dir;
     }
 
     std::string ResourceManager::read_file(const std::string& path, bool convert_eol) {

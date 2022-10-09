@@ -32,7 +32,7 @@ namespace Birdy3d::core {
          */
         static std::string read_file(const std::string& path, bool convert_eol = true);
 
-        static void init();
+        static std::string get_resource_dir();
 
     private:
         friend class ResourceHandle<render::Shader>;
