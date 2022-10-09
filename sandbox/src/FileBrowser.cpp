@@ -83,7 +83,7 @@ std::optional<ui::TreeItem> FileBrowserTreeModel::item(ui::TreeItem const* paren
                 .data = std::make_any<core::ResourceIdentifier>(id),
                 .local_index = local_index,
                 .is_leaf = is_leaf,
-                .hash = std::hash<std::filesystem::path> {}(entry.path())
+                .hash = std::filesystem::hash_value(entry.path())
             };
         }
     }

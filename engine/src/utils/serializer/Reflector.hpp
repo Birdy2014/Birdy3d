@@ -13,6 +13,11 @@ namespace Birdy3d::serializer {
         std::string name;
         std::type_index type;
         void* value;
+
+        ReflectMember(std::string name, std::type_index type, void* value)
+            : name(name)
+            , type(type)
+            , value(value) { }
     };
 
     class ReflectClass {
