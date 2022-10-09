@@ -19,7 +19,7 @@ namespace Birdy3d::core {
 
     class Application {
     public:
-        static events::EventBus* event_bus;
+        static std::unique_ptr<events::EventBus> event_bus;
         static float delta_time;
         static std::weak_ptr<ecs::Scene> scene;
         static std::weak_ptr<ui::Canvas> canvas;
