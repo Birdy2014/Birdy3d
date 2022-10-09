@@ -30,6 +30,14 @@ namespace Birdy3d::ecs {
         m_children.push_back(std::move(c));
     }
 
+    void Entity::add_child_at(std::size_t index, std::shared_ptr<Entity> child) {
+        assert(index <= m_children.size());
+        child->parent = this;
+        child->set_scene(scene);
+        child->transform.update(true);
+        m_children.insert(std::begin(m_children) + index, child);
+    }
+
     void Entity::add_component(std::shared_ptr<Component> c) {
         c->entity = this;
         m_components.push_back(std::move(c));
@@ -50,6 +58,17 @@ namespace Birdy3d::ecs {
     void Entity::remove() {
         if (parent)
             parent->remove_child(this);
+    }
+
+    std::shared_ptr<Entity> Entity::move_child_out(Entity* to_move) {
+        auto child_iterator = std::find_if(m_children.begin(), m_children.end(), [&](std::shared_ptr<Entity> entity) { return entity.get() == to_move; });
+        if (child_iterator == m_children.end())
+            return {};
+
+        auto child = *child_iterator;
+
+        m_children.erase(std::remove_if(m_children.begin(), m_children.end(), [&](std::shared_ptr<Entity> child) { return child.get() == to_move; }), m_children.end());
+        return child;
     }
 
     void Entity::start() {
@@ -115,6 +134,14 @@ namespace Birdy3d::ecs {
         for (const auto& c : m_children) {
             c->set_scene(scene);
         }
+    }
+
+    bool Entity::is_descendant_of(Entity const& other) const {
+        for (auto current_entity = parent; current_entity; current_entity = current_entity->parent) {
+            if (current_entity == &other)
+                return true;
+        }
+        return false;
     }
 
     void Entity::serialize(serializer::Adapter& adapter) {

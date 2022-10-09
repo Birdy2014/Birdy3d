@@ -18,6 +18,12 @@ namespace Birdy3d::ui {
         std::size_t hash;
     };
 
+    struct TreeItemPosition {
+        TreeItem& item;
+        TreeItem& parent;
+        std::size_t local_index;
+    };
+
     class TreeModel {
     public:
         virtual ~TreeModel() = default;
@@ -56,6 +62,9 @@ namespace Birdy3d::ui {
         std::unique_ptr<Triangle> m_collapse_button;
         std::unique_ptr<Text> m_text_shape;
 
+        TreeItem* get_item_at_local_position(glm::vec2);
+        TreeItem* get_item_from_cache(std::size_t hash);
+        std::optional<TreeItemPosition> get_position_from_cache(std::size_t hash);
         virtual void on_update() override;
         virtual void on_click(ClickEvent&) override;
     };

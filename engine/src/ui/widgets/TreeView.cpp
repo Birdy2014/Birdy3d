@@ -60,29 +60,91 @@ namespace Birdy3d::ui {
         }
     }
 
+    TreeItem* TreeView::get_item_at_local_position(glm::vec2 local_pos) {
+        int offset_y = 0;
+        for (auto& item : m_item_cache) {
+            offset_y += core::Application::theme().line_height();
+            if (local_pos.y < offset_y)
+                return &item;
+        }
+        return {};
+    }
+
+    TreeItem* TreeView::get_item_from_cache(std::size_t hash) {
+        for (auto& item : m_item_cache) {
+            if (item.hash == hash)
+                return &item;
+        }
+        return nullptr;
+    }
+
+    std::optional<TreeItemPosition> TreeView::get_position_from_cache(std::size_t hash) {
+        TreeItem* found_item = nullptr;
+        std::size_t depth;
+        for (auto it = std::rbegin(m_item_cache); it != std::rend(m_item_cache); ++it) {
+            if (it->hash == hash) {
+                found_item = &*it;
+                depth = it->depth;
+            }
+
+            if (found_item && it->depth < depth) {
+                return TreeItemPosition {
+                    .item = *found_item,
+                    .parent = *it,
+                    .local_index = found_item->local_index
+                };
+            }
+        }
+
+        return {};
+    }
+
     void TreeView::on_click(ClickEvent& event) {
+        if (event.action == GLFW_RELEASE) {
+            ungrab_cursor();
+
+            // Handle move
+            auto item = get_item_at_local_position(core::Input::cursor_pos() - m_actual_pos);
+            if (!item || !m_selected_item.has_value())
+                return;
+
+            auto source_item = get_item_from_cache(m_selected_item.value());
+
+            if (!source_item || item == source_item)
+                return;
+
+            auto target_position = get_position_from_cache(item->hash);
+            if (!target_position.has_value())
+                return;
+
+            m_model->move_item(*source_item, target_position->parent, target_position->local_index);
+
+            update_cache();
+            return;
+        }
+
         if (event.action != GLFW_PRESS)
             return;
 
         event.handled();
 
+        // FIXME: Grab cursor and change cursor shape on cursor move if key is pressed down
+        grab_cursor();
+
         glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
-        int offset_y = 0;
-        for (auto& item : m_item_cache) {
-            offset_y += core::Application::theme().line_height();
-            if (local_pos.y < offset_y) {
-                if (local_pos.x > m_offset_x_left + item.depth * m_indent_size) {
-                    // Select
-                    m_item_highlight_rect->hidden(false);
-                    m_selected_item = item.hash;
-                    m_model->on_select(event.button, item);
-                } else if (local_pos.x > m_offset_x_left + (static_cast<int>(item.depth) - 1) * m_indent_size) {
-                    // Toggle children
-                    m_item_collapsed[item.hash] = !m_item_collapsed[item.hash];
-                    update_cache();
-                }
-                return;
-            }
+        auto item = get_item_at_local_position(local_pos);
+        if (!item)
+            return;
+
+        if (local_pos.x > m_offset_x_left + item->depth * m_indent_size) {
+            // Select
+            m_item_highlight_rect->hidden(false);
+            m_selected_item = item->hash;
+            m_model->on_select(event.button, *item);
+        } else if (local_pos.x > m_offset_x_left + (static_cast<int>(item->depth) - 1) * m_indent_size) {
+            // Toggle children
+            m_item_collapsed[item->hash] = !m_item_collapsed[item->hash];
+            update_cache();
         }
     }
 
@@ -162,8 +224,17 @@ namespace Birdy3d::ui {
     }
 
     void EntityTreeModel::move_item(TreeItem const& source, TreeItem const& target_parent, std::size_t target_index) {
-        // TODO: Implement move_item for EntityTreeModel
-        assert(false);
+        auto source_entity = std::any_cast<ecs::Entity*>(source.data);
+        auto target_parent_entity = std::any_cast<ecs::Entity*>(target_parent.data);
+
+        if (target_parent_entity->is_descendant_of(*source_entity) || !source_entity->parent)
+            return;
+
+        auto moved_child = source_entity->parent->move_child_out(source_entity);
+        if (!moved_child)
+            return;
+
+        target_parent_entity->add_child_at(target_index, moved_child);
     }
 
     void EntityTreeModel::on_select(int button, TreeItem const& item) {

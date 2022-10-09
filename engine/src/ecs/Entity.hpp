@@ -22,6 +22,8 @@ namespace Birdy3d::ecs {
 
         const std::vector<std::shared_ptr<Entity>>& children() const { return m_children; }
         void add_child(std::shared_ptr<Entity>);
+        void add_child_at(std::size_t, std::shared_ptr<Entity>);
+
         template <class T = Entity, typename... Args>
         std::shared_ptr<T> add_child(Args... args) {
             static_assert(std::is_base_of<Entity, T>::value);
@@ -100,6 +102,9 @@ namespace Birdy3d::ecs {
 
         void remove();
         virtual void serialize(serializer::Adapter&);
+
+        bool is_descendant_of(Entity const&) const;
+        [[nodiscard]] std::shared_ptr<Entity> move_child_out(Entity*);
 
     private:
         friend void Component::remove();
