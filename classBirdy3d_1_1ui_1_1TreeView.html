@@ -90,7 +90,6 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1ui_1_1TreeView.html','
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="#friends">Friends</a> &#124;
 <a href="classBirdy3d_1_1ui_1_1TreeView-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Birdy3d::ui::TreeView Class Reference</div></div>
 </div><!--header-->
@@ -122,15 +121,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae33d7284abf3658cea17fafff13e8865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa138d0d69bc97e47580b1a3273c3d2"><td class="memItemLeft" align="right" valign="top">virtual glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TreeView.html#a6aa138d0d69bc97e47580b1a3273c3d2">minimal_size</a> () override</td></tr>
 <tr class="separator:a6aa138d0d69bc97e47580b1a3273c3d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6adc739cbe81dbaa3576a7528eeeb7f"><td class="memItemLeft" align="right" valign="top"><a id="ab6adc739cbe81dbaa3576a7528eeeb7f" name="ab6adc739cbe81dbaa3576a7528eeeb7f"></a>
-<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>root_item</b> ()</td></tr>
-<tr class="separator:ab6adc739cbe81dbaa3576a7528eeeb7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7750e30136a0c520492f27de7ebfcaf5"><td class="memItemLeft" align="right" valign="top"><a id="a7750e30136a0c520492f27de7ebfcaf5" name="a7750e30136a0c520492f27de7ebfcaf5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>sync_scene_tree</b> (<a class="el" href="classBirdy3d_1_1ecs_1_1Scene.html">ecs::Scene</a> *)</td></tr>
-<tr class="separator:a7750e30136a0c520492f27de7ebfcaf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac064139ea52c5788beadc7bf03e6014a"><td class="memItemLeft" align="right" valign="top"><a id="ac064139ea52c5788beadc7bf03e6014a" name="ac064139ea52c5788beadc7bf03e6014a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>selected_item</b> (<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> *item)</td></tr>
-<tr class="separator:ac064139ea52c5788beadc7bf03e6014a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc6264834b36431e80774ab45f072cec"><td class="memItemLeft" align="right" valign="top"><a id="acc6264834b36431e80774ab45f072cec" name="acc6264834b36431e80774ab45f072cec"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>unselect</b> ()</td></tr>
+<tr class="separator:acc6264834b36431e80774ab45f072cec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a591147609ffcd6ba1aff458108710dc9"><td class="memItemLeft" align="right" valign="top"><a id="a591147609ffcd6ba1aff458108710dc9" name="a591147609ffcd6ba1aff458108710dc9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update_cache</b> ()</td></tr>
+<tr class="separator:a591147609ffcd6ba1aff458108710dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
 <tr class="memitem:a38d4757e09869c7a3c1c656327c46077 inherit pub_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a38d4757e09869c7a3c1c656327c46077" name="a38d4757e09869c7a3c1c656327c46077"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Widget</b> (is_widget_options auto options)</td></tr>
@@ -195,15 +191,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>add_callback</b> (con
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ac36bbf7ea237baec202cf41561ef5bae"><td class="memItemLeft" align="right" valign="top"><a id="ac36bbf7ea237baec202cf41561ef5bae" name="ac36bbf7ea237baec202cf41561ef5bae"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>show_root_item</b> = true</td></tr>
-<tr class="separator:ac36bbf7ea237baec202cf41561ef5bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6311e87994d4c8fb51d349116a6b0419"><td class="memItemLeft" align="right" valign="top"><a id="a6311e87994d4c8fb51d349116a6b0419" name="a6311e87994d4c8fb51d349116a6b0419"></a>
-std::function&lt; void(<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>on_select</b></td></tr>
-<tr class="separator:a6311e87994d4c8fb51d349116a6b0419"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16770efdee028642cda32ebb4c1205d9"><td class="memItemLeft" align="right" valign="top"><a id="a16770efdee028642cda32ebb4c1205d9" name="a16770efdee028642cda32ebb4c1205d9"></a>
-std::function&lt; void(<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>on_select_secundary</b></td></tr>
-<tr class="separator:a16770efdee028642cda32ebb4c1205d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b97668beff3e1ef5d30da61f51cc04d"><td class="memItemLeft" align="right" valign="top"><a id="a0b97668beff3e1ef5d30da61f51cc04d" name="a0b97668beff3e1ef5d30da61f51cc04d"></a>
+std::unique_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1TreeModel.html">TreeModel</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_model</b></td></tr>
+<tr class="separator:a0b97668beff3e1ef5d30da61f51cc04d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
 <tr class="memitem:a611934db388e2874a446a1603daeed80 inherit pub_attribs_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a611934db388e2874a446a1603daeed80" name="a611934db388e2874a446a1603daeed80"></a>
 <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parent</b> = nullptr</td></tr>
@@ -241,16 +231,19 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>row</b> = 0</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a358fd58d3bf3478d437fd88d498efac3"><td class="memItemLeft" align="right" valign="top"><a id="a358fd58d3bf3478d437fd88d498efac3" name="a358fd58d3bf3478d437fd88d498efac3"></a>
+<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_item_at_local_position</b> (glm::vec2)</td></tr>
+<tr class="separator:a358fd58d3bf3478d437fd88d498efac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6d7304127b17f600e76d9ed7a497f1a"><td class="memItemLeft" align="right" valign="top"><a id="af6d7304127b17f600e76d9ed7a497f1a" name="af6d7304127b17f600e76d9ed7a497f1a"></a>
+<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_item_from_cache</b> (std::size_t hash)</td></tr>
+<tr class="separator:af6d7304127b17f600e76d9ed7a497f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a787e9998cc62ea5f1fc85f8bec58e065"><td class="memItemLeft" align="right" valign="top"><a id="a787e9998cc62ea5f1fc85f8bec58e065" name="a787e9998cc62ea5f1fc85f8bec58e065"></a>
+std::optional&lt; <a class="el" href="structBirdy3d_1_1ui_1_1TreeItemPosition.html">TreeItemPosition</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_position_from_cache</b> (std::size_t hash)</td></tr>
+<tr class="separator:a787e9998cc62ea5f1fc85f8bec58e065"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87853e14666037f7df5674759caf4203"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TreeView.html#a87853e14666037f7df5674759caf4203">on_update</a> () override</td></tr>
 <tr class="separator:a87853e14666037f7df5674759caf4203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5d5e2fd8bb227a5c769def9f7fe3596"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TreeView.html#ad5d5e2fd8bb227a5c769def9f7fe3596">on_click</a> (<a class="el" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a> &amp;) override</td></tr>
 <tr class="separator:ad5d5e2fd8bb227a5c769def9f7fe3596"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca0f5af6d81c201b5e2217bec61dd8cd"><td class="memItemLeft" align="right" valign="top"><a id="aca0f5af6d81c201b5e2217bec61dd8cd" name="aca0f5af6d81c201b5e2217bec61dd8cd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update_flat_tree_list</b> ()</td></tr>
-<tr class="separator:aca0f5af6d81c201b5e2217bec61dd8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05f8e117f47ef1c07abc34d2e97ccb76"><td class="memItemLeft" align="right" valign="top"><a id="a05f8e117f47ef1c07abc34d2e97ccb76" name="a05f8e117f47ef1c07abc34d2e97ccb76"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update_flat_tree_list</b> (<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> &amp;item, int indent)</td></tr>
-<tr class="separator:a05f8e117f47ef1c07abc34d2e97ccb76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
 <tr class="memitem:ab6211203eb20051d89456555e69c8d65 inherit pro_methods_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="ab6211203eb20051d89456555e69c8d65" name="ab6211203eb20051d89456555e69c8d65"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_callbacks</b> (const std::string &amp;name, <a class="el" href="classBirdy3d_1_1ui_1_1UIEvent.html">UIEvent</a> &amp;event)</td></tr>
@@ -337,21 +330,27 @@ const int&#160;</td><td class="memItemRight" valign="bottom"><b>m_offset_x_butto
 <tr class="memitem:a67908db063da79e055271612c5be539a"><td class="memItemLeft" align="right" valign="top"><a id="a67908db063da79e055271612c5be539a" name="a67908db063da79e055271612c5be539a"></a>
 const int&#160;</td><td class="memItemRight" valign="bottom"><b>m_offset_x_left</b> = 15</td></tr>
 <tr class="separator:a67908db063da79e055271612c5be539a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a88671e18f4da82d713b6f186a752b5"><td class="memItemLeft" align="right" valign="top"><a id="a0a88671e18f4da82d713b6f186a752b5" name="a0a88671e18f4da82d713b6f186a752b5"></a>
-<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_root_item</b></td></tr>
-<tr class="separator:a0a88671e18f4da82d713b6f186a752b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6485fa366c58409c5b3165f52ad188eb"><td class="memItemLeft" align="right" valign="top"><a id="a6485fa366c58409c5b3165f52ad188eb" name="a6485fa366c58409c5b3165f52ad188eb"></a>
-std::list&lt; std::pair&lt; int, <a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> &amp; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_flat_tree_list</b></td></tr>
-<tr class="separator:a6485fa366c58409c5b3165f52ad188eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8666cc76e27ce14c971c6d90ecc01e0e"><td class="memItemLeft" align="right" valign="top"><a id="a8666cc76e27ce14c971c6d90ecc01e0e" name="a8666cc76e27ce14c971c6d90ecc01e0e"></a>
+std::list&lt; <a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_item_cache</b></td></tr>
+<tr class="separator:a8666cc76e27ce14c971c6d90ecc01e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ed1c6a9f93fb4859dd1984a57b2c914"><td class="memItemLeft" align="right" valign="top"><a id="a7ed1c6a9f93fb4859dd1984a57b2c914" name="a7ed1c6a9f93fb4859dd1984a57b2c914"></a>
+std::map&lt; std::size_t, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_item_collapsed</b></td></tr>
+<tr class="separator:a7ed1c6a9f93fb4859dd1984a57b2c914"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6f16c66b575680a18ecd8eef1fd5715"><td class="memItemLeft" align="right" valign="top"><a id="ae6f16c66b575680a18ecd8eef1fd5715" name="ae6f16c66b575680a18ecd8eef1fd5715"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_items_changed</b> = true</td></tr>
 <tr class="separator:ae6f16c66b575680a18ecd8eef1fd5715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98b11fcdf7e7f1c7b27c108d59103082"><td class="memItemLeft" align="right" valign="top"><a id="a98b11fcdf7e7f1c7b27c108d59103082" name="a98b11fcdf7e7f1c7b27c108d59103082"></a>
 <a class="el" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_item_highlight_rect</b></td></tr>
 <tr class="separator:a98b11fcdf7e7f1c7b27c108d59103082"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ef422258f105b9da691ff088c6a9c0c"><td class="memItemLeft" align="right" valign="top"><a id="a3ef422258f105b9da691ff088c6a9c0c" name="a3ef422258f105b9da691ff088c6a9c0c"></a>
-<a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_selected_item</b> = nullptr</td></tr>
-<tr class="separator:a3ef422258f105b9da691ff088c6a9c0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a277cbec1197b7d53b8b512189fbc53fd"><td class="memItemLeft" align="right" valign="top"><a id="a277cbec1197b7d53b8b512189fbc53fd" name="a277cbec1197b7d53b8b512189fbc53fd"></a>
+std::optional&lt; std::size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_selected_item</b></td></tr>
+<tr class="separator:a277cbec1197b7d53b8b512189fbc53fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8194103ceb0a9a9b1c3b1185bddf7b50"><td class="memItemLeft" align="right" valign="top"><a id="a8194103ceb0a9a9b1c3b1185bddf7b50" name="a8194103ceb0a9a9b1c3b1185bddf7b50"></a>
+std::unique_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Triangle.html">Triangle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_collapse_button</b></td></tr>
+<tr class="separator:a8194103ceb0a9a9b1c3b1185bddf7b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6171ae10b242246cc4b4037f0bbe47f"><td class="memItemLeft" align="right" valign="top"><a id="ac6171ae10b242246cc4b4037f0bbe47f" name="ac6171ae10b242246cc4b4037f0bbe47f"></a>
+std::unique_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Text.html">Text</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_text_shape</b></td></tr>
+<tr class="separator:ac6171ae10b242246cc4b4037f0bbe47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
 <tr class="memitem:a7820572be35f744c85e01b70825466c5 inherit pro_attribs_classBirdy3d_1_1ui_1_1Widget"><td class="memItemLeft" align="right" valign="top"><a id="a7820572be35f744c85e01b70825466c5" name="a7820572be35f744c85e01b70825466c5"></a>
 std::vector&lt; std::unique_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Shape.html">Shape</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_shapes</b></td></tr>
@@ -388,12 +387,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_children_visible</b
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_shapes_visible</b> = true</td></tr>
 <tr class="separator:a6393357923a8fff6184a6c25fabe0898 inherit pro_attribs_classBirdy3d_1_1ui_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
-Friends</h2></td></tr>
-<tr class="memitem:a657c7cb97946830fba78631b85f165bd"><td class="memItemLeft" align="right" valign="top"><a id="a657c7cb97946830fba78631b85f165bd" name="a657c7cb97946830fba78631b85f165bd"></a>
-class&#160;</td><td class="memItemRight" valign="bottom"><b>TreeItem</b></td></tr>
-<tr class="separator:a657c7cb97946830fba78631b85f165bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classBirdy3d_1_1ui_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classBirdy3d_1_1ui_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></td></tr>
@@ -403,10 +396,6 @@ typedef std::function&lt; void(<a class="el" href="classBirdy3d_1_1ui_1_1UIEvent
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> that displays a Tree. </p>
-<p >The following callbacks can be added:</p><ul>
-<li>on_select: Fires when an item has been selected with any mouse button. Passes a pointer to the selected <a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a>.</li>
-<li>on_select_secundary: Fires when an item has been selected with the right mouse button. Passes a pointer to the selected <a class="el" href="classBirdy3d_1_1ui_1_1TreeItem.html">TreeItem</a>. This can be used to open a <a class="el" href="classBirdy3d_1_1ui_1_1ContextMenu.html">ContextMenu</a>. </li>
-</ul>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ae33d7284abf3658cea17fafff13e8865" name="ae33d7284abf3658cea17fafff13e8865"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae33d7284abf3658cea17fafff13e8865">&#9670;&nbsp;</a></span>contains()</h2>

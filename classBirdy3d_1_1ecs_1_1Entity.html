@@ -117,6 +117,9 @@ const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ec
 <tr class="memitem:aa4ef1925346532b06821d81e0ab23b6a"><td class="memItemLeft" align="right" valign="top"><a id="aa4ef1925346532b06821d81e0ab23b6a" name="aa4ef1925346532b06821d81e0ab23b6a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>add_child</b> (std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a> &gt;)</td></tr>
 <tr class="separator:aa4ef1925346532b06821d81e0ab23b6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc8542ec338bbe3404ea6402b1b3782a"><td class="memItemLeft" align="right" valign="top"><a id="acc8542ec338bbe3404ea6402b1b3782a" name="acc8542ec338bbe3404ea6402b1b3782a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add_child_at</b> (std::size_t, std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a> &gt;)</td></tr>
+<tr class="separator:acc8542ec338bbe3404ea6402b1b3782a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4cf118a5eb8b75a479f0a6e55a1f56a"><td class="memTemplParams" colspan="2"><a id="aa4cf118a5eb8b75a479f0a6e55a1f56a" name="aa4cf118a5eb8b75a479f0a6e55a1f56a"></a>
 template&lt;class T  = Entity, typename... Args&gt; </td></tr>
 <tr class="memitem:aa4cf118a5eb8b75a479f0a6e55a1f56a"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_child</b> (Args... args)</td></tr>
@@ -173,6 +176,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> ()</td></t
 <tr class="memitem:a9b579d9e41fc55833fa36678f17e8288"><td class="memItemLeft" align="right" valign="top"><a id="a9b579d9e41fc55833fa36678f17e8288" name="a9b579d9e41fc55833fa36678f17e8288"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>serialize</b> (<a class="el" href="classBirdy3d_1_1serializer_1_1Adapter.html">serializer::Adapter</a> &amp;)</td></tr>
 <tr class="separator:a9b579d9e41fc55833fa36678f17e8288"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9a8f36bd32c4fdb10a6963be0a71c9f"><td class="memItemLeft" align="right" valign="top"><a id="ae9a8f36bd32c4fdb10a6963be0a71c9f" name="ae9a8f36bd32c4fdb10a6963be0a71c9f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_descendant_of</b> (<a class="el" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a> const &amp;) const</td></tr>
+<tr class="separator:ae9a8f36bd32c4fdb10a6963be0a71c9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71716243209c61d20127c03c70c30fb6"><td class="memItemLeft" align="right" valign="top"><a id="a71716243209c61d20127c03c70c30fb6" name="a71716243209c61d20127c03c70c30fb6"></a>
+std::shared_ptr&lt; <a class="el" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>move_child_out</b> (<a class="el" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a> *)</td></tr>
+<tr class="separator:a71716243209c61d20127c03c70c30fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>

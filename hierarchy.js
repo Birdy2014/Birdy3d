@@ -100,6 +100,10 @@ var hierarchy =
     [ "Birdy3d::ui::Theme", "classBirdy3d_1_1ui_1_1Theme.html", null ],
     [ "Birdy3d::ecs::Transform3d", "classBirdy3d_1_1ecs_1_1Transform3d.html", null ],
     [ "Birdy3d::ui::TreeItem", "classBirdy3d_1_1ui_1_1TreeItem.html", null ],
+    [ "Birdy3d::ui::TreeItemPosition", "structBirdy3d_1_1ui_1_1TreeItemPosition.html", null ],
+    [ "Birdy3d::ui::TreeModel", "classBirdy3d_1_1ui_1_1TreeModel.html", [
+      [ "Birdy3d::ui::EntityTreeModel", "classBirdy3d_1_1ui_1_1EntityTreeModel.html", null ]
+    ] ],
     [ "Birdy3d::physics::Triangle", "structBirdy3d_1_1physics_1_1Triangle.html", null ],
     [ "Birdy3d::ui::UIEvent", "classBirdy3d_1_1ui_1_1UIEvent.html", [
       [ "Birdy3d::ui::CharEvent", "classBirdy3d_1_1ui_1_1CharEvent.html", null ],
