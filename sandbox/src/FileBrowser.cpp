@@ -1,5 +1,4 @@
 #include "FileBrowser.hpp"
-#include <bits/ranges_util.h>
 
 std::optional<ui::TreeItem> FileBrowserTreeModel::item(ui::TreeItem const* parent, std::size_t local_index) {
     // Root level
