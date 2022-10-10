@@ -46,8 +46,8 @@ namespace Birdy3d::ui {
         }
         m_content_size = glm::vec2(glm::max(minsize.x, size.x), glm::max(minsize.y, size.y));
 
-        m_scrollbar_vertical.parent_size(m_actual_size);
-        m_scrollbar_horizontal.parent_size(m_actual_size);
+        m_scrollbar_vertical->parent_size(m_actual_size);
+        m_scrollbar_horizontal->parent_size(m_actual_size);
 
         for (const auto& shape : m_shapes) {
             auto shape_pos = shape->position().to_pixels(m_actual_size);
@@ -59,33 +59,37 @@ namespace Birdy3d::ui {
         }
 
         for (const auto& shape : m_shapes) {
-            shape->parent_size(m_content_size);
+            if (shape.get() == m_scrollbar_horizontal || shape.get() == m_scrollbar_vertical)
+                shape->parent_size(m_actual_size);
+            else
+                shape->parent_size(m_content_size);
         }
 
         m_max_scroll_offset.x = std::min(m_actual_size.x - m_content_size.x, 0.0f);
         m_max_scroll_offset.y = std::min(m_actual_size.y - m_content_size.y, 0.0f);
 
+        // HACK: The content (widgets and shapes) should be scrolled but the scrollbars must stay fixed, so this sets the move matrix for the content
         m_move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
         m_move = glm::translate(m_move, glm::vec3(m_scroll_offset, 0.0f));
 
         // Vertical scollbar
-        m_scrollbar_vertical.hidden(!m_vertical_scroll_enabled);
+        m_scrollbar_vertical->hidden(!m_vertical_scroll_enabled);
         if (m_vertical_scroll_enabled) {
             float scrollbar_height_percentage = (m_actual_size.y / m_content_size.y) * 100;
             float scrollbar_y_offset_percentage = (m_scroll_offset.y / m_max_scroll_offset.y) * 100;
             scrollbar_y_offset_percentage = (scrollbar_y_offset_percentage / 100) * (100 - scrollbar_height_percentage);
-            m_scrollbar_vertical.size(UIVector(m_scrollbar_vertical.size().x, Unit(0, scrollbar_height_percentage)));
-            m_scrollbar_vertical.position(UIVector(m_scrollbar_vertical.position().x, Unit(0, scrollbar_y_offset_percentage)));
+            m_scrollbar_vertical->size(UIVector(m_scrollbar_vertical->size().x, Unit(0, scrollbar_height_percentage)));
+            m_scrollbar_vertical->position(UIVector(0, Unit(0, scrollbar_y_offset_percentage)));
         }
 
         // Horizontal scollbar
-        m_scrollbar_horizontal.hidden(!m_horizontal_scroll_enabled);
+        m_scrollbar_horizontal->hidden(!m_horizontal_scroll_enabled);
         if (m_horizontal_scroll_enabled) {
             float scrollbar_width_percentage = (m_actual_size.x / m_content_size.x) * 100;
             float scrollbar_x_offset_percentage = (m_scroll_offset.x / m_max_scroll_offset.x) * 100;
             scrollbar_x_offset_percentage = (scrollbar_x_offset_percentage / 100) * (100 - scrollbar_width_percentage);
-            m_scrollbar_horizontal.size(UIVector(Unit(0, scrollbar_width_percentage), m_scrollbar_horizontal.size().y));
-            m_scrollbar_horizontal.position(UIVector(Unit(0, scrollbar_x_offset_percentage), m_scrollbar_horizontal.position().y));
+            m_scrollbar_horizontal->size(UIVector(Unit(0, scrollbar_width_percentage), m_scrollbar_horizontal->size().y));
+            m_scrollbar_horizontal->position(UIVector(Unit(0, scrollbar_x_offset_percentage), m_scrollbar_horizontal->position().y));
         }
 
         if (m_layout && m_children_visible)
@@ -98,9 +102,14 @@ namespace Birdy3d::ui {
     }
 
     void Scrollable::draw() {
+        // HACK: Because the m_move matrix scrolls the content, this ugly code draws the scrollbars with the correct matrix
         auto move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
-        m_scrollbar_vertical.draw(move);
-        m_scrollbar_horizontal.draw(move);
+        m_scrollbar_vertical->color(utils::Color::Name::FG);
+        m_scrollbar_horizontal->color(utils::Color::Name::FG);
+        m_scrollbar_vertical->draw(move);
+        m_scrollbar_horizontal->draw(move);
+        m_scrollbar_vertical->color(utils::Color::Name::NONE);
+        m_scrollbar_horizontal->color(utils::Color::Name::NONE);
     }
 
     void Scrollable::on_scroll(ScrollEvent& event) {
@@ -120,12 +129,12 @@ namespace Birdy3d::ui {
         event.handled();
 
         if (event.action == GLFW_PRESS) {
-            if (m_scrollbar_vertical.contains(core::Input::cursor_pos() - m_actual_pos)) {
+            if (m_scrollbar_vertical->contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_vertical_grabbed = true;
                 grab_cursor();
                 return;
             }
-            if (m_scrollbar_horizontal.contains(core::Input::cursor_pos() - m_actual_pos)) {
+            if (m_scrollbar_horizontal->contains(core::Input::cursor_pos() - m_actual_pos)) {
                 m_scrollbar_horizontal_grabbed = true;
                 grab_cursor();
                 return;
