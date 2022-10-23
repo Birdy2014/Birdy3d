@@ -7,7 +7,8 @@ var searchData=
   ['serializer_4',['Serializer',['../classBirdy3d_1_1serializer_1_1Serializer.html',1,'Birdy3d::serializer']]],
   ['shader_5',['Shader',['../classBirdy3d_1_1render_1_1Shader.html',1,'Birdy3d::render']]],
   ['shape_6',['Shape',['../classBirdy3d_1_1ui_1_1Shape.html',1,'Birdy3d::ui']]],
-  ['spotlight_7',['Spotlight',['../classBirdy3d_1_1render_1_1Spotlight.html',1,'Birdy3d::render']]],
-  ['staticgridlayout_8',['StaticGridLayout',['../classBirdy3d_1_1ui_1_1StaticGridLayout.html',1,'Birdy3d::ui']]],
-  ['string_9',['String',['../structBirdy3d_1_1serializer_1_1String.html',1,'Birdy3d::serializer']]]
+  ['size_7',['Size',['../classBirdy3d_1_1ui_1_1Size.html',1,'Birdy3d::ui']]],
+  ['spotlight_8',['Spotlight',['../classBirdy3d_1_1render_1_1Spotlight.html',1,'Birdy3d::render']]],
+  ['staticgridlayout_9',['StaticGridLayout',['../classBirdy3d_1_1ui_1_1StaticGridLayout.html',1,'Birdy3d::ui']]],
+  ['string_10',['String',['../structBirdy3d_1_1serializer_1_1String.html',1,'Birdy3d::serializer']]]
 ];
