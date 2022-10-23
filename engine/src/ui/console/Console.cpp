@@ -31,11 +31,11 @@ namespace Birdy3d::ui {
             m_console_window->hidden = true;
         };
 
-        m_console_output = m_console_window->add_child<TextField>({ .size = UIVector(100_p, 0_px), .placement = Placement::TOP_LEFT });
+        m_console_output = m_console_window->add_child<TextField>({ .size = Size(100_pc, 0_px), .placement = Placement::TOP_LEFT });
         m_console_output->multiline = true;
         m_console_output->readonly = true;
 
-        m_console_input = m_console_window->add_child<TextField>({ .size = UIVector(100_p, 20_px), .weight = 0 });
+        m_console_input = m_console_window->add_child<TextField>({ .size = Size(100_pc, 20_px), .weight = 0 });
         m_console_input->on_accept = input_callback;
 
         m_created = true;

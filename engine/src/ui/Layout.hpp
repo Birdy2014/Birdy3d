@@ -22,14 +22,14 @@ namespace Birdy3d::ui {
          *
          * The size of the widgets is set so that they match the size given in the size parameter.
          * The size parameter can never exceed the value returned by minimal_size().
-         * An overloaded function should call Widget::arrange(glm::vec2, glm::vec2) on each child widget.
+         * An overloaded function should call Widget::arrange(glm::ivec2, glm::ivec2) on each child widget.
          */
-        virtual void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const = 0;
+        virtual void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const = 0;
 
         /**
          * @brief Computes the minimal size that the widgets can fit in with the current layout.
          */
-        virtual glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const = 0;
+        virtual glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const = 0;
 
         /**
          * @brief Like minimal_size(const std::list<std::shared_ptr<Widget>>&) const, but with a suggested size in one dimension.
@@ -37,7 +37,7 @@ namespace Birdy3d::ui {
          * This is useful for Layouts that place child widgets
          * differently depending on the width or height.
          */
-        virtual glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children, float suggested_size, Direction) const;
+        virtual glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children, float suggested_size, Direction) const;
 
         /**
          * @brief Get minimal size in a direction if the other dimension is arbitrary.
@@ -53,8 +53,8 @@ namespace Birdy3d::ui {
      */
     class MaxLayout : public Layout {
     public:
-        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const override;
-        glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override;
+        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const override;
+        glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override;
     };
 
     /**
@@ -63,8 +63,8 @@ namespace Birdy3d::ui {
      */
     class AbsoluteLayout : public Layout {
     public:
-        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::vec2 pos, glm::vec2 size) const override;
-        glm::vec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children [[maybe_unused]]) const override;
+        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const override;
+        glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children [[maybe_unused]]) const override;
     };
 
 }

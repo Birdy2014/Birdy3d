@@ -13,35 +13,35 @@
 
 namespace Birdy3d::ui {
 
-    Rectangle* Widget::add_rectangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
+    Rectangle* Widget::add_rectangle(Position pos, Size size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::OUTLINE, placement);
         Rectangle* ptr = rectangle.get();
         m_shapes.push_back(std::move(rectangle));
         return ptr;
     }
 
-    Rectangle* Widget::add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
+    Rectangle* Widget::add_filled_rectangle(Position pos, Size size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::FILLED, placement);
         Rectangle* ptr = rectangle.get();
         m_shapes.push_back(std::move(rectangle));
         return ptr;
     }
 
-    Triangle* Widget::add_triangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
+    Triangle* Widget::add_triangle(Position pos, Size size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::OUTLINE, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
     }
 
-    Triangle* Widget::add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name color, Placement placement) {
+    Triangle* Widget::add_filled_triangle(Position pos, Size size, utils::Color::Name color, Placement placement) {
         std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::FILLED, placement);
         Triangle* ptr = triangle.get();
         m_shapes.push_back(std::move(triangle));
         return ptr;
     }
 
-    Text* Widget::add_text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size) {
+    Text* Widget::add_text(Position pos, std::string text, utils::Color::Name color, Placement placement, int font_size) {
         std::unique_ptr<Text> shape = std::make_unique<Text>(pos, text, color, placement, font_size);
         Text* ptr = shape.get();
         m_shapes.push_back(std::move(shape));
@@ -159,22 +159,22 @@ namespace Birdy3d::ui {
 
     void Widget::draw() { }
 
-    glm::vec2 Widget::preferred_position(glm::vec2 parentSize, glm::vec2 size) {
-        return UIVector::get_relative_position(position, size, parentSize, placement);
+    glm::ivec2 Widget::preferred_position(glm::ivec2 parentSize, glm::ivec2 size) {
+        return Position::get_relative_position(position, Size::make_pixels(size), parentSize, placement);
     }
 
-    glm::vec2 Widget::minimal_size() {
-        glm::vec2 children_minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
+    glm::ivec2 Widget::minimal_size() {
+        glm::ivec2 children_minsize(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels());
         if (m_layout && m_children_visible)
             children_minsize += m_layout->minimal_size(m_children);
-        return glm::vec2(std::max(children_minsize.x, size.x.to_pixels()), std::max(children_minsize.y, size.y.to_pixels()));
+        return glm::ivec2(std::max(children_minsize.x, size.x.to_pixels()), std::max(children_minsize.y, size.y.to_pixels()));
     }
 
-    glm::vec2 Widget::preferred_size(glm::vec2 parentSize) {
+    glm::ivec2 Widget::preferred_size(glm::ivec2 parentSize) {
         return glm::max(size.to_pixels(parentSize), minimal_size());
     }
 
-    void Widget::arrange(glm::vec2 pos, glm::vec2 size) {
+    void Widget::arrange(glm::ivec2 pos, glm::ivec2 size) {
         bool resized = false;
         if (size != m_actual_size)
             resized = true;
@@ -187,7 +187,7 @@ namespace Birdy3d::ui {
         }
 
         if (m_layout && m_children_visible)
-            m_layout->arrange(m_children, pos + glm::vec2(m_padding[0], m_padding[2]), size - glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]));
+            m_layout->arrange(m_children, pos + glm::ivec2(m_padding.left.to_pixels(), m_padding.top.to_pixels()), size - glm::ivec2(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels()));
 
         if (resized) {
             auto event = ResizeEvent {};
@@ -225,7 +225,7 @@ namespace Birdy3d::ui {
         canvas->set_cursor_grabbed(this, false);
     }
 
-    bool Widget::contains(glm::vec2 point) const {
+    bool Widget::contains(glm::ivec2 point) const {
         auto local_point = point - m_actual_pos;
         return (point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y)
             && (std::ranges::find_if(m_shapes, [&local_point](auto const& shape) { return shape->contains(local_point); }) != m_shapes.end());
@@ -237,7 +237,7 @@ namespace Birdy3d::ui {
 
         // foreground shapes
         for (const auto& shape : m_shapes) {
-            if (shape->in_foreground && shape->contains(core::Input::cursor_pos() - m_actual_pos)) {
+            if (shape->in_foreground && shape->contains(core::Input::cursor_pos_int() - m_actual_pos)) {
                 canvas->set_hovering(this);
                 return true;
             }
@@ -259,17 +259,17 @@ namespace Birdy3d::ui {
         return false;
     }
 
-    void Widget::update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right) {
+    void Widget::update_visible_area(glm::ivec2 parent_visible_top_left, glm::ivec2 parent_visible_bottom_right) {
         assert(parent_visible_top_left.x <= parent_visible_bottom_right.x && parent_visible_top_left.y <= parent_visible_bottom_right.y);
         assert(m_actual_size.x >= 0 && m_actual_size.y >= 0);
 
         if (hidden)
             return;
 
-        m_visible_pos = glm::vec2(std::max(parent_visible_top_left.x, m_actual_pos.x), std::max(parent_visible_top_left.y, m_actual_pos.y));
-        glm::vec2 actual_bottom_right = m_actual_pos + m_actual_size;
-        glm::vec2 visible_bottom_right = glm::vec2(std::min(parent_visible_bottom_right.x, actual_bottom_right.x), std::min(parent_visible_bottom_right.y, actual_bottom_right.y));
-        m_visible_size = glm::vec2(std::max(visible_bottom_right.x - m_visible_pos.x, 0.0f), std::max(visible_bottom_right.y - m_visible_pos.y, 0.0f));
+        m_visible_pos = glm::ivec2(std::max(parent_visible_top_left.x, m_actual_pos.x), std::max(parent_visible_top_left.y, m_actual_pos.y));
+        glm::ivec2 actual_bottom_right = m_actual_pos + m_actual_size;
+        glm::ivec2 visible_bottom_right = glm::ivec2(std::min(parent_visible_bottom_right.x, actual_bottom_right.x), std::min(parent_visible_bottom_right.y, actual_bottom_right.y));
+        m_visible_size = glm::ivec2(std::max(visible_bottom_right.x - m_visible_pos.x, 0), std::max(visible_bottom_right.y - m_visible_pos.y, 0));
 
         for (const auto& child : m_children)
             child->update_visible_area(m_visible_pos, visible_bottom_right);

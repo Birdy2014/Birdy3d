@@ -29,11 +29,11 @@ namespace Birdy3d::ui {
     public:
         TextRenderer(Theme&);
         ~TextRenderer();
-        void render_text(std::string text, float x, float y, float font_size, utils::Color::Name color = utils::Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, utils::Color::Name hlcolor = utils::Color::Name::TEXT_HIGHLIGHT);
-        void render_text(std::u32string text, float x, float y, float font_size, utils::Color::Name color = utils::Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, utils::Color::Name hlcolor = utils::Color::Name::TEXT_HIGHLIGHT);
-        UIVector text_size(std::string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
-        UIVector text_size(std::u32string text, float font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
-        float char_width(char32_t c, float font_size = 0);
+        void render_text(std::string text, int x, int y, int font_size, utils::Color::Name color = utils::Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, utils::Color::Name hlcolor = utils::Color::Name::TEXT_HIGHLIGHT);
+        void render_text(std::u32string text, int x, int y, int font_size, utils::Color::Name color = utils::Color::Name::FG, glm::mat4 move = glm::mat4(1), bool cursor = false, std::size_t cursorpos = 0, bool highlight = false, std::size_t hlstart = -1, std::size_t hlend = -1, utils::Color::Name hlcolor = utils::Color::Name::TEXT_HIGHLIGHT);
+        Size text_size(std::string text, int font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
+        Size text_size(std::u32string text, int font_size = 0, std::size_t n = std::numeric_limits<std::size_t>::max());
+        float char_width(char32_t c, int font_size = 0);
         static std::size_t text_length(std::u32string);
 
     private:
@@ -64,7 +64,7 @@ namespace Birdy3d::ui {
         std::size_t highlight_start = 0;
         std::size_t highlight_end = 0;
 
-        Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size = 0);
+        Text(Position pos, std::string text, utils::Color::Name color, Placement placement, float font_size = 0);
         ~Text();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;

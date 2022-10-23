@@ -1,161 +1,134 @@
 #include "ui/Units.hpp"
 
+#include "core/Application.hpp"
+#include "ui/Theme.hpp"
+
 namespace Birdy3d::ui {
 
-    Unit::Unit(float pixels, float percent)
-        : pixels(pixels)
-        , percent(percent) { }
+    // Dimension
 
-    void Unit::operator=(float value) {
-        this->pixels = value;
-    }
-
-    Unit::operator float() {
-        return pixels;
-    }
-
-    float Unit::to_pixels(float parentSize) {
-        return (percent / 100) * parentSize + pixels;
-    }
-
-    bool Unit::operator==(const Unit& other) const {
-        return pixels == other.pixels && percent == other.percent;
-    }
-
-    Unit Unit::operator+(const Unit& other) {
-        return Unit(pixels + other.pixels, percent + other.percent);
-    }
-
-    Unit& Unit::operator+=(const Unit& other) {
+    Dimension& Dimension::operator+=(const Dimension& other) {
         pixels += other.pixels;
         percent += other.percent;
+        em += other.em;
         return *this;
     }
 
-    Unit Unit::operator-() {
-        return Unit(-pixels, -percent);
-    }
-
-    Unit Unit::operator-(const Unit& other) {
-        return Unit(pixels - other.pixels, percent - other.percent);
-    }
-
-    Unit& Unit::operator-=(const Unit& other) {
+    Dimension& Dimension::operator-=(const Dimension& other) {
         pixels -= other.pixels;
         percent -= other.percent;
+        em -= other.em;
         return *this;
     }
 
-    UIVector::UIVector()
-        : x(0, 0)
-        , y(0, 0) { }
+    int Dimension::to_pixels(int parent_size) const {
+        return pixels + (percent / 100) * parent_size + em * core::Application::theme().line_height();
+    }
 
-    UIVector::UIVector(const UIVector& v)
-        : x(v.x)
-        , y(v.y) { }
+    // Position
 
-    UIVector::UIVector(const glm::vec2& v)
-        : x(v.x, 0)
-        , y(v.y, 0) { }
-
-    UIVector::UIVector(Unit x)
-        : x(x)
-        , y(x) { }
-
-    UIVector::UIVector(Unit x, Unit y)
-        : x(x)
-        , y(y) { }
-
-    UIVector& UIVector::operator=(const UIVector& other) {
+    Position& Position::operator=(const Position& other) {
         x = other.x;
         y = other.y;
         return *this;
     }
 
-    bool UIVector::operator==(const UIVector& other) const {
-        return x == other.x && y == other.y;
-    }
-
-    UIVector UIVector::operator+(const UIVector& other) {
-        return UIVector(x + other.x, y + other.y);
-    }
-
-    UIVector UIVector::operator+(const float other) {
-        return UIVector(x + other, y + other);
-    }
-
-    UIVector UIVector::operator-() {
-        return UIVector(-x, -y);
-    }
-
-    UIVector UIVector::operator-(const UIVector& other) {
-        return UIVector(x - other.x, y - other.y);
-    }
-
-    UIVector UIVector::operator+=(const UIVector& other) {
+    Position& Position::operator+=(const Position& other) {
         x += other.x;
         y += other.y;
-        return UIVector(x, y);
+        return *this;
     }
 
-    UIVector UIVector::operator+=(const float other) {
-        x += other;
-        y += other;
-        return UIVector(x, y);
-    }
-
-    UIVector UIVector::operator-=(const UIVector& other) {
+    Position& Position::operator-=(const Position& other) {
         x -= other.x;
         y -= other.y;
-        return UIVector(x, y);
+        return *this;
     }
 
-    glm::vec2 UIVector::to_pixels(glm::vec2 parentSize) {
-        return glm::vec2(x.to_pixels(parentSize.x), y.to_pixels(parentSize.y));
+    Position Position::operator+(const Size& other) const {
+        return Position(x + other.x, y + other.y);
     }
 
-    UIVector::operator glm::vec2() {
-        return glm::vec2(x, y);
+    Position Position::operator-(const Size& other) const {
+        return Position(x - other.x, y - other.y);
     }
 
-    glm::vec2 UIVector::get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement) {
-        glm::vec2 p = pos.to_pixels(parentSize);
-        glm::vec2 s = size.to_pixels(parentSize);
-        glm::vec2 out;
+    Position& Position::operator+=(const Size& other) {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+
+    Position& Position::operator-=(const Size& other) {
+        x -= other.x;
+        y -= other.y;
+        return *this;
+    }
+
+    glm::ivec2 Position::get_relative_position(Position pos, Size size, glm::ivec2 parent_size, Placement placement) {
+        glm::ivec2 p = pos.to_pixels(parent_size);
+        glm::ivec2 s = size.to_pixels(parent_size);
+        glm::ivec2 out;
 
         if (placement == Placement::TOP_LEFT || placement == Placement::BOTTOM_LEFT || placement == Placement::CENTER_LEFT) {
             out.x = p.x;
         } else if (placement == Placement::TOP_RIGHT || placement == Placement::BOTTOM_RIGHT || placement == Placement::CENTER_RIGHT) {
-            out.x = parentSize.x + p.x - s.x;
+            out.x = parent_size.x + p.x - s.x;
         } else if (placement == Placement::TOP_CENTER || placement == Placement::BOTTOM_CENTER || placement == Placement::CENTER) {
-            out.x = parentSize.x / 2 - s.x / 2 + p.x;
+            out.x = parent_size.x / 2 - s.x / 2 + p.x;
         }
         if (placement == Placement::TOP_LEFT || placement == Placement::TOP_RIGHT || placement == Placement::TOP_CENTER) {
             out.y = p.y;
         } else if (placement == Placement::BOTTOM_LEFT || placement == Placement::BOTTOM_RIGHT || placement == Placement::BOTTOM_CENTER) {
-            out.y = parentSize.y + p.y - s.y;
+            out.y = parent_size.y + p.y - s.y;
         } else if (placement == Placement::CENTER_LEFT || placement == Placement::CENTER_RIGHT || placement == Placement::CENTER) {
-            out.y = parentSize.y / 2 - s.y / 2 + p.y;
+            out.y = parent_size.y / 2 - s.y / 2 + p.y;
         }
         return out;
     }
 
+    // Size
+
+    Size& Size::operator=(const Size& other) {
+        x = other.x;
+        y = other.y;
+        return *this;
+    }
+
+    Size& Size::operator+=(const Size& other) {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+
+    Size& Size::operator-=(const Size& other) {
+        x -= other.x;
+        y -= other.y;
+        return *this;
+    }
+
+    // literals
+
     inline namespace literals {
 
-        Unit operator"" _px(long double value) {
-            return Unit(value, 0);
+        Dimension operator"" _px(unsigned long long value) {
+            return Dimension::make_pixels(value);
         }
 
-        Unit operator"" _px(unsigned long long value) {
-            return Unit(value, 0);
+        Dimension operator"" _pc(long double value) {
+            return Dimension::make_percent(value);
         }
 
-        Unit operator"" _p(long double value) {
-            return Unit(0, value);
+        Dimension operator"" _pc(unsigned long long value) {
+            return Dimension::make_percent(value);
         }
 
-        Unit operator"" _p(unsigned long long value) {
-            return Unit(0, value);
+        Dimension operator"" _em(long double value) {
+            return Dimension::make_em(value);
+        }
+
+        Dimension operator"" _em(unsigned long long value) {
+            return Dimension::make_em(value);
         }
 
     }

@@ -44,6 +44,10 @@ namespace Birdy3d::core {
         return Input::current_cursor_pos - last_cursor_pos;
     }
 
+    glm::ivec2 Input::cursor_pos_int() {
+        return current_cursor_pos;
+    }
+
     bool Input::button_pressed(int button) {
         return glfwGetMouseButton(Application::get_window(), button) == GLFW_PRESS;
     }

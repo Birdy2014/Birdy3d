@@ -33,7 +33,7 @@ public:
         using namespace ui::literals;
         set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 10);
 
-        auto tree_scroll_container = add_child<ui::ScrollContainer>({ .size = { 50_px, 100_p }, .weight = 0.4 });
+        auto tree_scroll_container = add_child<ui::ScrollContainer>({ .size = { 50_px, 100_pc }, .weight = 0.4 });
         tree_scroll_container->set_layout<ui::MaxLayout>();
 
         m_tree = tree_scroll_container->add_child<ui::TreeView>({});
@@ -68,9 +68,9 @@ private:
             : ui::Widget(options)
             , m_resource_id(options.id) {
             using namespace ui::literals;
-            add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG_INPUT);
+            add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG_INPUT);
             m_label = add_text(0_px, std::filesystem::path(options.id.name).filename().string(), utils::Color::Name::FG, ui::Placement::BOTTOM_LEFT);
-            this->size = { 100 };
+            this->size = 100_px;
         }
 
     private:

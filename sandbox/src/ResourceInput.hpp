@@ -16,7 +16,7 @@ public:
         : Widget(options)
         , m_target(options.target) {
         using namespace Birdy3d::ui::literals;
-        add_filled_rectangle(0_px, 100_p, Birdy3d::utils::Color::Name::BG_INPUT);
+        add_filled_rectangle(0_px, 100_pc, Birdy3d::utils::Color::Name::BG_INPUT);
         m_text = add_text(0_px, static_cast<std::string>(*options.target), Birdy3d::utils::Color::Name::FG);
     }
 

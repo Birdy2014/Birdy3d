@@ -13,8 +13,9 @@ namespace Birdy3d::ui {
     class Text;
     class Theme;
     class Triangle;
-    class Unit;
-    class UIVector;
+    class Dimension;
+    class Position;
+    class Size;
     class Widget;
     class Window;
     class Console;

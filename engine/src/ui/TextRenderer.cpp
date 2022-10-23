@@ -31,7 +31,7 @@ namespace Birdy3d::ui {
         if (FT_New_Face(*m_ft, path.c_str(), 0, m_face))
             throw std::runtime_error("freetype: Failed to load font");
         FT_Set_Pixel_Sizes(*m_face, 0, m_font_size);
-        m_rect = std::make_unique<Rectangle>(UIVector(0), UIVector(0), utils::Color::Name::FG, Rectangle::Type::FILLED);
+        m_rect = std::make_unique<Rectangle>(Position::make_zero(), Size::make_zero(), utils::Color::Name::FG, Rectangle::Type::FILLED);
         m_text = std::make_unique<Text>(0_px, "", utils::Color::Name::FG, Placement::TOP_LEFT, m_font_size);
 
         // Setup texture atlas
@@ -84,15 +84,15 @@ namespace Birdy3d::ui {
         return true;
     }
 
-    void TextRenderer::render_text(std::string text, float x, float y, float font_size, utils::Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, utils::Color::Name hlcolor) {
+    void TextRenderer::render_text(std::string text, int x, int y, int font_size, utils::Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, utils::Color::Name hlcolor) {
         std::u32string converted = utils::Unicode::utf8_to_utf32(text);
         render_text(converted, x, y, font_size, color, move, cursor, cursorpos, highlight, hlstart, hlend, hlcolor);
     }
 
-    void TextRenderer::render_text(std::u32string text, float x, float y, float font_size, utils::Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, utils::Color::Name hlcolor) {
+    void TextRenderer::render_text(std::u32string text, int x, int y, int font_size, utils::Color::Name color, glm::mat4 move, bool cursor, std::size_t cursorpos, bool highlight, std::size_t hlstart, std::size_t hlend, utils::Color::Name hlcolor) {
         // Render text
         m_text->text_u32(text);
-        m_text->position(UIVector(x, y));
+        m_text->position(Position::make_pixels(x, y));
         m_text->font_size = font_size;
         m_text->color(color);
         m_text->draw(move);
@@ -100,12 +100,12 @@ namespace Birdy3d::ui {
         // Render cursor
         if (cursor && cursorpos <= text.length()) {
             auto size = text_size(text, font_size, cursorpos);
-            float xpos = x + size.x - 1;
-            float ypos = y + size.y - m_theme.line_height();
+            int xpos = x + size.x.to_pixels() - 1;
+            int ypos = y + size.y.to_pixels() - m_theme.line_height();
 
             m_rect->type = Rectangle::FILLED;
-            m_rect->position(UIVector(xpos, ypos));
-            m_rect->size(UIVector(2, font_size));
+            m_rect->position(Position::make_pixels(xpos, ypos));
+            m_rect->size(Size::make_pixels(2, font_size));
             m_rect->color(color);
             m_rect->draw(move);
         }
@@ -121,34 +121,34 @@ namespace Birdy3d::ui {
                 hlend--;
             }
 
-            glm::vec2 pos = { x, y };
-            auto hlstart_pos = pos + (glm::vec2)text_size(text, font_size, hlstart) * glm::vec2(1, -1) + glm::vec2(0, m_theme.line_height());
-            auto hlend_pos = pos + (glm::vec2)text_size(text, font_size, hlend + 1) * glm::vec2(1, -1) + glm::vec2(0, m_theme.line_height());
+            glm::ivec2 pos = { x, y };
+            auto hlstart_pos = pos + text_size(text, font_size, hlstart).to_pixels() * glm::ivec2(1, -1) + glm::ivec2(0, m_theme.line_height());
+            auto hlend_pos = pos + text_size(text, font_size, hlend + 1).to_pixels() * glm::ivec2(1, -1) + glm::ivec2(0, m_theme.line_height());
 
             m_rect->type = Rectangle::FILLED;
-            m_rect->position(UIVector(hlstart_pos.x, y));
-            m_rect->size(UIVector(hlend_pos.x - hlstart_pos.x, font_size));
+            m_rect->position(Position::make_pixels(hlstart_pos.x, y));
+            m_rect->size(Size::make_pixels(hlend_pos.x - hlstart_pos.x, font_size));
             m_rect->color(hlcolor);
             m_rect->draw(move);
         }
     }
 
-    UIVector TextRenderer::text_size(std::string text, float font_size, std::size_t n) {
+    Size TextRenderer::text_size(std::string text, int font_size, std::size_t n) {
         std::u32string converted = utils::Unicode::utf8_to_utf32(text);
         return text_size(converted, font_size, n);
     }
 
-    UIVector TextRenderer::text_size(std::u32string text, float font_size, std::size_t n) {
+    Size TextRenderer::text_size(std::u32string text, int font_size, std::size_t n) {
         if (!font_size)
             font_size = m_font_size;
         float scale = (font_size / m_font_size);
-        UIVector size(0_px, font_size);
-        float current_x = 0;
+        auto size = Size::make_pixels(0, font_size);
+        int current_x = 0;
         for (std::size_t i = 0; i < text.length() && i < n; i++) {
             char32_t c = text[i];
             if (c == '\n') {
-                size.x = std::max(size.x.to_pixels(), current_x);
-                size.y += m_theme.line_height();
+                size.x = Dimension::make_pixels(std::max(size.x.to_pixels(), current_x));
+                size.y += Dimension::make_pixels(m_theme.line_height());
                 current_x = 0;
                 continue;
             }
@@ -163,11 +163,11 @@ namespace Birdy3d::ui {
             Character ch = m_chars[c];
             current_x += (ch.advance >> 6) * scale;
         }
-        size.x = std::max(size.x.to_pixels(), current_x);
+        size.x = Dimension::make_pixels(std::max(size.x.to_pixels(), current_x));
         return size;
     }
 
-    float TextRenderer::char_width(char32_t c, float font_size) {
+    float TextRenderer::char_width(char32_t c, int font_size) {
         if (!font_size)
             font_size = m_font_size;
         if (m_chars.count(c) == 0)
@@ -204,7 +204,7 @@ namespace Birdy3d::ui {
         glm::vec2 texcoords;
         glm::vec4 color;
 
-        TextVertex(glm::vec2 position, glm::vec2 texcoords, glm::vec4 color)
+        TextVertex(glm::ivec2 position, glm::vec2 texcoords, glm::vec4 color)
             : position(position)
             , texcoords(texcoords)
             , color(color) { }
@@ -212,8 +212,8 @@ namespace Birdy3d::ui {
 
     std::unique_ptr<Rectangle> Text::m_cursor_rect;
 
-    Text::Text(UIVector pos, std::string text, utils::Color::Name color, Placement placement, float font_size)
-        : Shape(pos, 0_px, color, placement)
+    Text::Text(Position position, std::string text, utils::Color::Name color, Placement placement, float font_size)
+        : Shape(position, 0_px, color, placement)
         , font_size(font_size)
         , m_shader(core::ResourceManager::get_shader("text.glsl")) {
         if (!m_cursor_rect)
@@ -239,7 +239,7 @@ namespace Birdy3d::ui {
 
         if (m_dirty) {
             update_buffers();
-            glm::vec2 pos = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+            auto pos = Position::get_relative_position(m_position, m_size, m_parentSize, m_placement);
             m_move_self = glm::mat4(1);
             m_move_self = glm::translate(m_move_self, glm::vec3(pos, 0.0f));
             if (m_rotation != 0)
@@ -414,7 +414,7 @@ namespace Birdy3d::ui {
         }
         if (max_x < x)
             max_x = x;
-        m_size = glm::vec2(max_x, renderer.m_theme.line_height() + y);
+        m_size = Size::make_pixels(max_x, renderer.m_theme.line_height() + y);
         // Write to buffers
         glBindVertexArray(m_vao);
         glNamedBufferSubData(m_vbo, 0, sizeof(TextVertex) * vertices.size(), vertices.data());
@@ -426,7 +426,7 @@ namespace Birdy3d::ui {
         TextRenderer& renderer = theme.text_renderer();
 
         float scale = font_size > 0 ? font_size / theme.text_renderer().m_font_size : 1;
-        glm::vec2 cursor_pixel_pos(0, font_size);
+        glm::ivec2 cursor_pixel_pos(0, font_size);
         for (std::size_t i = 0; i < m_text.length() && i < cursor_pos; i++) {
             char32_t c = m_text[i];
             if (c == '\n') {
@@ -446,12 +446,12 @@ namespace Birdy3d::ui {
             cursor_pixel_pos.x += (ch.advance >> 6) * scale;
         }
 
-        float xpos = m_position.x + cursor_pixel_pos.x - 1;
-        float ypos = m_position.y + cursor_pixel_pos.y - theme.line_height();
+        int xpos = m_position.x.to_pixels() + cursor_pixel_pos.x - 1;
+        int ypos = m_position.y.to_pixels() + cursor_pixel_pos.y - theme.line_height();
 
         m_cursor_rect->type = Rectangle::FILLED;
-        m_cursor_rect->position(UIVector(xpos, ypos));
-        m_cursor_rect->size(UIVector(2, font_size));
+        m_cursor_rect->position(Position::make_pixels(xpos, ypos));
+        m_cursor_rect->size(Size::make_pixels(2, font_size));
         m_cursor_rect->color(m_color);
         m_cursor_rect->draw(move);
     }
@@ -466,8 +466,8 @@ namespace Birdy3d::ui {
 
         Theme& theme = core::Application::theme();
         float scale = font_size > 0 ? font_size / theme.text_renderer().m_font_size : 1;
-        glm::vec2 current_pos = m_position;
-        glm::vec2 start_pos;
+        Position current_pos = m_position;
+        Position start_pos;
         bool started_highlight = false;
         std::size_t index_escaped = 0;
         for (auto it = m_text.cbegin(); it != m_text.cend(); it++, index_escaped++) {
@@ -491,14 +491,14 @@ namespace Birdy3d::ui {
                 if (started_highlight) {
                     m_cursor_rect->type = Rectangle::FILLED;
                     m_cursor_rect->position(start_pos);
-                    m_cursor_rect->size(UIVector(current_pos.x - start_pos.x, font_size));
+                    m_cursor_rect->size({ current_pos.x - start_pos.x, Dimension::make_pixels(font_size) });
                     m_cursor_rect->color(utils::Color::Name::TEXT_HIGHLIGHT);
                     m_cursor_rect->draw(move);
                 }
                 if (index_escaped >= hl_end)
                     return;
-                current_pos.x = 0;
-                current_pos.y += theme.line_height();
+                current_pos.x = 0_px;
+                current_pos.y += Dimension::make_pixels(theme.line_height());
                 start_pos = current_pos;
                 continue;
             }
@@ -506,13 +506,13 @@ namespace Birdy3d::ui {
             if (theme.text_renderer().m_chars.count(*it) == 0)
                 theme.text_renderer().add_char(*it);
             Character ch = theme.text_renderer().m_chars[*it];
-            current_pos.x += (ch.advance >> 6) * scale;
+            current_pos.x += Dimension::make_pixels((ch.advance >> 6) * scale);
         }
 
         if (started_highlight) {
             m_cursor_rect->type = Rectangle::FILLED;
             m_cursor_rect->position(start_pos);
-            m_cursor_rect->size(UIVector(current_pos.x - start_pos.x, font_size));
+            m_cursor_rect->size({ current_pos.x - start_pos.x, Dimension::make_pixels(font_size) });
             m_cursor_rect->color(utils::Color::Name::TEXT_HIGHLIGHT);
             m_cursor_rect->draw(move);
         }

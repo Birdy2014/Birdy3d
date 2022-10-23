@@ -14,7 +14,7 @@ namespace Birdy3d::ui {
 
         Window(Options);
         void to_foreground();
-        glm::vec2 minimal_size() override;
+        glm::ivec2 minimal_size() override;
 
         std::string title() { return m_title->text(); }
         void title(std::string title) { m_title->text(title); }
@@ -30,6 +30,7 @@ namespace Birdy3d::ui {
         void on_update() override;
         void on_click(ClickEvent&) override;
         void on_mouse_leave(MouseLeaveEvent&) override;
+        glm::ivec2 minimal_window_size();
 
     private:
         Rectangle* m_close_button;
@@ -45,6 +46,7 @@ namespace Birdy3d::ui {
         bool m_resize_y_top = false;
         bool m_resize_y_bottom = false;
         bool m_dragged = false;
+        glm::vec2 m_cursor_down_local_pos;
     };
 
 }
