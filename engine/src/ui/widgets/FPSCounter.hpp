@@ -20,8 +20,8 @@ namespace Birdy3d::ui {
             text->text("FPS: " + std::to_string(fps));
         }
 
-        glm::vec2 minimal_size() override {
-            return text->size();
+        glm::ivec2 minimal_size() override {
+            return text->size().to_pixels();
         }
     };
 

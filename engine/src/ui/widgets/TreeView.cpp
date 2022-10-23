@@ -12,9 +12,9 @@ namespace Birdy3d::ui {
 
     TreeView::TreeView(Options options)
         : Widget(options)
-        , m_collapse_button(std::make_unique<Triangle>(0_px, UIVector(core::Application::theme().font_size() / 2), utils::Color::Name::FG))
+        , m_collapse_button(std::make_unique<Triangle>(0_px, Size(0.5_em), utils::Color::Name::FG))
         , m_text_shape(std::make_unique<Text>(0_px, "", utils::Color::Name::FG, Placement::TOP_LEFT)) {
-        m_item_highlight_rect = add_filled_rectangle(0_px, UIVector(100_p, core::Application::theme().line_height()), utils::Color::Name::BG_SELECTED, Placement::TOP_LEFT);
+        m_item_highlight_rect = add_filled_rectangle(0_px, Size(100_pc, 1_em), utils::Color::Name::BG_SELECTED, Placement::TOP_LEFT);
         m_item_highlight_rect->hidden(true);
     }
 
@@ -22,34 +22,34 @@ namespace Birdy3d::ui {
         int offset_y = 0;
         for (const auto& item : m_item_cache) {
             if (m_selected_item.has_value() && m_selected_item.value() == item.hash) {
-                m_item_highlight_rect->position(UIVector(0_px, offset_y));
+                m_item_highlight_rect->position(Position::make_pixels(0, offset_y));
                 m_item_highlight_rect->draw(m_move);
             }
             if (!item.is_leaf) {
-                m_collapse_button->position(glm::vec2(item.depth * m_indent_size + m_offset_x_left + m_offset_x_button, offset_y + (core::Application::theme().line_height() - m_collapse_button->size().x) / 2.0f));
+                m_collapse_button->position(Position(Dimension::make_pixels(item.depth * m_indent_size + m_offset_x_left + m_offset_x_button), Dimension::make_pixels(offset_y) + 0.5_em - Dimension::make_pixels(m_collapse_button->size().x.to_pixels() / 2.0f)));
                 m_collapse_button->rotation(glm::radians(m_item_collapsed[item.hash] ? 30.0f : 0.0f));
                 m_collapse_button->draw(m_move);
             }
-            m_text_shape->position(UIVector(item.depth * m_indent_size + m_offset_x_left, offset_y));
+            m_text_shape->position(Position::make_pixels(item.depth * m_indent_size + m_offset_x_left, offset_y));
             m_text_shape->text(item.text);
             m_text_shape->draw(m_move);
             offset_y += core::Application::theme().line_height();
         }
     }
 
-    bool TreeView::contains(glm::vec2 point) const {
+    bool TreeView::contains(glm::ivec2 point) const {
         return point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y;
     }
 
-    glm::vec2 TreeView::minimal_size() {
+    glm::ivec2 TreeView::minimal_size() {
         float max_width = 0;
         for (auto const& item : m_item_cache) {
-            auto width = core::Application::theme().text_renderer().text_size(item.text, core::Application::theme().font_size()).x;
+            auto width = core::Application::theme().text_renderer().text_size(item.text, core::Application::theme().font_size()).x.to_pixels();
             width += item.depth * m_indent_size + m_offset_x_left;
             if (width > max_width)
                 max_width = width;
         }
-        return glm::vec2(max_width, m_item_cache.size() * core::Application::theme().line_height());
+        return glm::ivec2(max_width, m_item_cache.size() * core::Application::theme().line_height());
     }
 
     void TreeView::on_update() {
@@ -60,7 +60,7 @@ namespace Birdy3d::ui {
         }
     }
 
-    TreeItem* TreeView::get_item_at_local_position(glm::vec2 local_pos) {
+    TreeItem* TreeView::get_item_at_local_position(glm::ivec2 local_pos) {
         int offset_y = 0;
         for (auto& item : m_item_cache) {
             offset_y += core::Application::theme().line_height();
@@ -104,7 +104,7 @@ namespace Birdy3d::ui {
             ungrab_cursor();
 
             // Handle move
-            auto item = get_item_at_local_position(core::Input::cursor_pos() - m_actual_pos);
+            auto item = get_item_at_local_position(core::Input::cursor_pos_int() - m_actual_pos);
             if (!item || !m_selected_item.has_value())
                 return;
 
@@ -131,12 +131,12 @@ namespace Birdy3d::ui {
         // FIXME: Grab cursor and change cursor shape on cursor move if key is pressed down
         grab_cursor();
 
-        glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
+        auto local_pos = core::Input::cursor_pos_int() - m_actual_pos;
         auto item = get_item_at_local_position(local_pos);
         if (!item)
             return;
 
-        if (local_pos.x > m_offset_x_left + item->depth * m_indent_size) {
+        if (local_pos.x > m_offset_x_left + static_cast<int>(item->depth) * m_indent_size) {
             // Select
             m_item_highlight_rect->hidden(false);
             m_selected_item = item->hash;

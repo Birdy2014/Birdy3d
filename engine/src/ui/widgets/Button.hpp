@@ -20,13 +20,13 @@ namespace Birdy3d::ui {
 
         Button(is_widget_options auto options)
             : Widget(options) {
-            add_filled_rectangle(UIVector(0_px), UIVector(100_p), utils::Color::Name::BG, Placement::BOTTOM_LEFT);
-            add_rectangle(UIVector(0_px), UIVector(100_p), utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
-            button_text = add_text(UIVector(0_px), options.text, utils::Color::Name::FG, Placement::CENTER);
+            add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG, Placement::BOTTOM_LEFT);
+            add_rectangle(0_px, 100_pc, utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
+            button_text = add_text(0_px, options.text, utils::Color::Name::FG, Placement::CENTER);
         };
 
-        glm::vec2 minimal_size() override {
-            glm::vec2 min_size = core::Application::theme().text_renderer().text_size(button_text->text(), button_text->font_size) + 2.0f;
+        glm::ivec2 minimal_size() override {
+            auto min_size = core::Application::theme().text_renderer().text_size(button_text->text(), button_text->font_size).to_pixels() + glm::ivec2(2);
             return glm::max(min_size, Widget::minimal_size());
         }
 

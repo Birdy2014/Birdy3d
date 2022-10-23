@@ -8,8 +8,8 @@
 
 namespace Birdy3d::ui {
 
-    Rectangle::Rectangle(UIVector pos, UIVector size, utils::Color::Name color, Type type, Placement placement)
-        : Shape(pos, size, color, placement) {
+    Rectangle::Rectangle(Position position, Size size, utils::Color::Name color, Type type, Placement placement)
+        : Shape(position, size, color, placement) {
         this->type = type;
     }
 
@@ -50,7 +50,7 @@ namespace Birdy3d::ui {
     }
 
     bool Rectangle::contains(glm::vec2 point) {
-        glm::vec2 bottom_left = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 bottom_left = Position::get_relative_position(m_position, m_size, m_parentSize, m_placement);
         glm::vec2 size = m_size.to_pixels(m_parentSize);
         glm::vec2 top_right = bottom_left + size;
         return point.x > bottom_left.x && point.x < top_right.x && point.y > bottom_left.y && point.y < top_right.y;
@@ -76,7 +76,7 @@ namespace Birdy3d::ui {
     void Rectangle::update_values() {
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glm::vec2 pos = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 pos = Position::get_relative_position(m_position, m_size, m_parentSize, m_placement);
         glm::vec2 size = m_size.to_pixels(m_parentSize);
         m_move_self = glm::mat4(1);
         m_move_self = glm::translate(m_move_self, glm::vec3(pos + glm::vec2(size.x / 2, size.y / 2), 0.0f));

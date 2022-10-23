@@ -24,7 +24,7 @@ namespace Birdy3d::ui {
 
     void NumberInput::on_update() {
         if (m_dragging) {
-            glm::vec2 offsets = core::Input::cursor_pos_offset();
+            auto offsets = core::Input::cursor_pos_offset();
             float change = offsets.x + offsets.y;
             if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
                 change *= 0.1f;
@@ -83,7 +83,7 @@ namespace Birdy3d::ui {
             return;
         try {
             m_value = std::clamp(std::stof(t), min_value, max_value);
-        } catch (std::invalid_argument) { }
+        } catch (std::invalid_argument&) { }
     }
 
 }

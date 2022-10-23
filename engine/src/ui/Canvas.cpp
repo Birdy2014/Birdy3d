@@ -8,7 +8,7 @@
 namespace Birdy3d::ui {
 
     Canvas::Canvas()
-        : Container(Widget::Options { .size = 100_p }) {
+        : Container(Widget::Options { .size = 100_pc }) {
         canvas = this;
         core::Application::event_bus->subscribe(this, &Canvas::on_scroll_raw);
         core::Application::event_bus->subscribe(this, &Canvas::on_click_raw);

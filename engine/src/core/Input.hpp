@@ -27,6 +27,7 @@ namespace Birdy3d::core {
         static bool key_pressed(int key);
         static glm::vec2 cursor_pos();
         static glm::vec2 cursor_pos_offset();
+        static glm::ivec2 cursor_pos_int();
         static bool button_pressed(int button);
         static void set_cursor_hidden(bool hidden);
         static void toggle_cursor_hidden();

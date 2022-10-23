@@ -4,32 +4,32 @@
 
 namespace Birdy3d::ui {
 
-    glm::vec2 Scrollable::minimal_size() {
+    glm::ivec2 Scrollable::minimal_size() {
         if (!m_horizontal_scroll_enabled && !m_vertical_scroll_enabled)
             return Widget::minimal_size();
         if (m_horizontal_scroll_enabled && !m_vertical_scroll_enabled) {
-            float minsize_horizontal = m_padding[0] + m_padding[1];
+            auto minsize_horizontal = m_padding.left.to_pixels() + m_padding.right.to_pixels();
             if (m_layout && m_children_visible)
                 minsize_horizontal += m_layout->minimal_size(m_children, Layout::Direction::VERTICAL);
-            return { minsize_horizontal, 1.0f };
+            return { minsize_horizontal, 1 };
         }
         if (!m_horizontal_scroll_enabled && m_vertical_scroll_enabled) {
-            float minsize_vertical = m_padding[2] + m_padding[3];
+            auto minsize_vertical = m_padding.top.to_pixels() + m_padding.bottom.to_pixels();
             if (m_layout && m_children_visible)
                 minsize_vertical += m_layout->minimal_size(m_children, Layout::Direction::HORIZONTAL);
-            return { 1.0f, minsize_vertical };
+            return { 1, minsize_vertical };
         }
-        return glm::vec2(1.0f);
+        return glm::ivec2(1);
     }
 
-    void Scrollable::arrange(glm::vec2 pos, glm::vec2 size) {
+    void Scrollable::arrange(glm::ivec2 pos, glm::ivec2 size) {
         bool resized = false;
         if (size != m_actual_size)
             resized = true;
         m_actual_pos = pos;
         m_actual_size = size;
 
-        glm::vec2 minsize(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]);
+        glm::ivec2 minsize(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels());
         if (m_layout && m_children_visible) {
             if (!m_horizontal_scroll_enabled && !m_vertical_scroll_enabled) {
                 minsize = m_actual_size;
@@ -44,7 +44,7 @@ namespace Birdy3d::ui {
                 minsize += m_layout->minimal_size(m_children);
             }
         }
-        m_content_size = glm::vec2(glm::max(minsize.x, size.x), glm::max(minsize.y, size.y));
+        m_content_size = glm::ivec2(glm::max(minsize.x, size.x), glm::max(minsize.y, size.y));
 
         m_scrollbar_vertical->parent_size(m_actual_size);
         m_scrollbar_horizontal->parent_size(m_actual_size);
@@ -65,8 +65,8 @@ namespace Birdy3d::ui {
                 shape->parent_size(m_content_size);
         }
 
-        m_max_scroll_offset.x = std::min(m_actual_size.x - m_content_size.x, 0.0f);
-        m_max_scroll_offset.y = std::min(m_actual_size.y - m_content_size.y, 0.0f);
+        m_max_scroll_offset.x = std::min(m_actual_size.x - m_content_size.x, 0);
+        m_max_scroll_offset.y = std::min(m_actual_size.y - m_content_size.y, 0);
 
         // HACK: The content (widgets and shapes) should be scrolled but the scrollbars must stay fixed, so this sets the move matrix for the content
         m_move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
@@ -75,25 +75,25 @@ namespace Birdy3d::ui {
         // Vertical scollbar
         m_scrollbar_vertical->hidden(!m_vertical_scroll_enabled);
         if (m_vertical_scroll_enabled) {
-            float scrollbar_height_percentage = (m_actual_size.y / m_content_size.y) * 100;
-            float scrollbar_y_offset_percentage = (m_scroll_offset.y / m_max_scroll_offset.y) * 100;
-            scrollbar_y_offset_percentage = (scrollbar_y_offset_percentage / 100) * (100 - scrollbar_height_percentage);
-            m_scrollbar_vertical->size(UIVector(m_scrollbar_vertical->size().x, Unit(0, scrollbar_height_percentage)));
-            m_scrollbar_vertical->position(UIVector(0, Unit(0, scrollbar_y_offset_percentage)));
+            auto scrollbar_height_percentage = (static_cast<float>(m_actual_size.y) / static_cast<float>(m_content_size.y)) * 100.0f;
+            auto scrollbar_y_offset_percentage = (static_cast<float>(m_scroll_offset.y) / static_cast<float>(m_max_scroll_offset.y)) * 100.0f;
+            scrollbar_y_offset_percentage = (scrollbar_y_offset_percentage / 100.0f) * (100.0f - scrollbar_height_percentage);
+            m_scrollbar_vertical->size(Size(m_scrollbar_vertical->size().x, Dimension::make_percent(scrollbar_height_percentage)));
+            m_scrollbar_vertical->position(Position(0_px, Dimension::make_percent(scrollbar_y_offset_percentage)));
         }
 
         // Horizontal scollbar
         m_scrollbar_horizontal->hidden(!m_horizontal_scroll_enabled);
         if (m_horizontal_scroll_enabled) {
-            float scrollbar_width_percentage = (m_actual_size.x / m_content_size.x) * 100;
-            float scrollbar_x_offset_percentage = (m_scroll_offset.x / m_max_scroll_offset.x) * 100;
+            auto scrollbar_width_percentage = (static_cast<float>(m_actual_size.x) / static_cast<float>(m_content_size.x)) * 100.0f;
+            auto scrollbar_x_offset_percentage = (static_cast<float>(m_scroll_offset.x) / static_cast<float>(m_max_scroll_offset.x)) * 100.0f;
             scrollbar_x_offset_percentage = (scrollbar_x_offset_percentage / 100) * (100 - scrollbar_width_percentage);
-            m_scrollbar_horizontal->size(UIVector(Unit(0, scrollbar_width_percentage), m_scrollbar_horizontal->size().y));
-            m_scrollbar_horizontal->position(UIVector(Unit(0, scrollbar_x_offset_percentage), m_scrollbar_horizontal->position().y));
+            m_scrollbar_horizontal->size(Size(Dimension::make_percent(scrollbar_width_percentage), m_scrollbar_horizontal->size().y));
+            m_scrollbar_horizontal->position(Position(Dimension::make_percent(scrollbar_x_offset_percentage), m_scrollbar_horizontal->position().y));
         }
 
         if (m_layout && m_children_visible)
-            m_layout->arrange(m_children, pos + glm::vec2(m_padding[0], m_padding[2]) + m_scroll_offset, m_content_size - glm::vec2(m_padding[0] + m_padding[1], m_padding[2] + m_padding[3]));
+            m_layout->arrange(m_children, pos + glm::ivec2(m_padding.left.to_pixels(), m_padding.top.to_pixels()) + m_scroll_offset, m_content_size - glm::ivec2(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels()));
 
         if (resized) {
             auto resize_event = ResizeEvent {};
@@ -129,12 +129,12 @@ namespace Birdy3d::ui {
         event.handled();
 
         if (event.action == GLFW_PRESS) {
-            if (m_scrollbar_vertical->contains(core::Input::cursor_pos() - m_actual_pos)) {
+            if (m_scrollbar_vertical->contains(core::Input::cursor_pos_int() - m_actual_pos)) {
                 m_scrollbar_vertical_grabbed = true;
                 grab_cursor();
                 return;
             }
-            if (m_scrollbar_horizontal->contains(core::Input::cursor_pos() - m_actual_pos)) {
+            if (m_scrollbar_horizontal->contains(core::Input::cursor_pos_int() - m_actual_pos)) {
                 m_scrollbar_horizontal_grabbed = true;
                 grab_cursor();
                 return;

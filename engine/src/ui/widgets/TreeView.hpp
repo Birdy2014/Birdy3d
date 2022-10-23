@@ -43,8 +43,8 @@ namespace Birdy3d::ui {
 
         TreeView(Options);
         virtual void draw() override;
-        virtual bool contains(glm::vec2) const override;
-        virtual glm::vec2 minimal_size() override;
+        virtual bool contains(glm::ivec2) const override;
+        virtual glm::ivec2 minimal_size() override;
         void unselect() { m_selected_item = {}; }
 
         void update_cache();
@@ -62,7 +62,7 @@ namespace Birdy3d::ui {
         std::unique_ptr<Triangle> m_collapse_button;
         std::unique_ptr<Text> m_text_shape;
 
-        TreeItem* get_item_at_local_position(glm::vec2);
+        TreeItem* get_item_at_local_position(glm::ivec2);
         TreeItem* get_item_from_cache(std::size_t hash);
         std::optional<TreeItemPosition> get_position_from_cache(std::size_t hash);
         virtual void on_update() override;

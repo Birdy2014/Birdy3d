@@ -24,7 +24,7 @@ namespace Birdy3d::ui {
         /// Controls whether the shape is behind or before the child widgets.
         bool in_foreground = false;
 
-        Shape(UIVector position, UIVector size, utils::Color::Name color = utils::Color::Name::WHITE, Placement placement = Placement::TOP_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
+        Shape(Position position, Size size, utils::Color::Name color = utils::Color::Name::WHITE, Placement placement = Placement::TOP_LEFT, glm::vec2 texCoordA = glm::vec2(0), glm::vec2 texCoordB = glm::vec2(1), std::string name = "")
             : name(name)
             , m_shader(core::ResourceManager::get_shader("ui.glsl"))
             , m_position(position)
@@ -37,8 +37,8 @@ namespace Birdy3d::ui {
         virtual ~Shape() = default;
         bool hidden() { return m_hidden; }
         bool hidden(bool hidden) { return m_hidden = hidden; }
-        UIVector position() { return m_position; }
-        void position(UIVector position) {
+        Position position() { return m_position; }
+        void position(Position position) {
             if (m_position == position)
                 return;
             m_dirty = true;
@@ -51,8 +51,8 @@ namespace Birdy3d::ui {
             m_dirty = true;
             m_rotation = rotation;
         }
-        UIVector size() { return m_size; }
-        void size(UIVector size) {
+        Size size() { return m_size; }
+        void size(Size size) {
             if (m_size == size)
                 return;
             m_dirty = true;
@@ -91,9 +91,9 @@ namespace Birdy3d::ui {
         unsigned int m_vbo = 0;
         bool m_dirty = true;
         bool m_hidden = false;
-        UIVector m_position;
+        Position m_position;
         float m_rotation;
-        UIVector m_size;
+        Size m_size;
         glm::mat4 m_move_self;
         utils::Color::Name m_color;
         Placement m_placement;

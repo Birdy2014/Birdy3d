@@ -9,12 +9,12 @@
 #include <vector>
 
 #define BIRDY3D_WIDGET_OPTIONS_STRUCT                                        \
-    ::Birdy3d::ui::UIVector position = { 0 };                                \
-    ::Birdy3d::ui::UIVector size = { 0 };                                    \
+    ::Birdy3d::ui::Position position = {};                                   \
+    ::Birdy3d::ui::Size size = {};                                           \
     ::Birdy3d::ui::Placement placement = ::Birdy3d::ui::Placement::TOP_LEFT; \
     bool hidden = false;                                                     \
     std::string name = {};                                                   \
-    float weight = 1;                                                        \
+    float weight = 1.0f;                                                     \
     int column = 0;                                                          \
     int row = 0;                                                             \
     Options& merge_widget_options(::Birdy3d::ui::Widget::Options o) {        \
@@ -49,8 +49,8 @@ namespace Birdy3d::ui {
 
     template <class T>
     concept is_widget_options = requires(T t) {
-        { t.position } -> std::same_as<UIVector&>;
-        { t.size } -> std::same_as<UIVector&>;
+        { t.position } -> std::same_as<Position&>;
+        { t.size } -> std::same_as<Size&>;
         { t.placement } -> std::same_as<Placement&>;
         { t.hidden } -> std::same_as<bool&>;
         { t.name } -> std::same_as<std::string&>;
@@ -68,8 +68,8 @@ namespace Birdy3d::ui {
         Widget* parent = nullptr;
         Canvas* canvas = nullptr;
 
-        UIVector position = { 0 };
-        UIVector size = { 0 };
+        Position position = {};
+        Size size = {};
         Placement placement = Placement::TOP_LEFT;
         bool hidden = false;
         std::string name = {};
@@ -94,13 +94,13 @@ namespace Birdy3d::ui {
         void to_foreground(Widget* w);
 
         // Returns the position relative to the parent's origin in pixels
-        glm::vec2 preferred_position(glm::vec2 parentSize, glm::vec2 size);
+        glm::ivec2 preferred_position(glm::ivec2 parentSize, glm::ivec2 size);
 
         // Returns the size in pixels
-        virtual glm::vec2 minimal_size();
-        glm::vec2 preferred_size(glm::vec2 parentSize);
+        virtual glm::ivec2 minimal_size();
+        glm::ivec2 preferred_size(glm::ivec2 parentSize);
 
-        virtual void arrange(glm::vec2 pos, glm::vec2 size);
+        virtual void arrange(glm::ivec2 pos, glm::ivec2 size);
         void set_canvas(Canvas*);
 
         bool is_hovering();
@@ -111,14 +111,14 @@ namespace Birdy3d::ui {
         void ungrab_cursor();
 
         // Getters
-        glm::vec2 actual_pos() { return m_actual_pos; }
-        glm::vec2 actual_size() { return m_actual_size; }
+        glm::ivec2 actual_pos() { return m_actual_pos; }
+        glm::ivec2 actual_size() { return m_actual_size; }
 
         // External Event calls
         void notify_event(UIEvent&);
         void external_draw();
         bool update_hover();
-        void update_visible_area(glm::vec2 parent_visible_top_left, glm::vec2 parent_visible_bottom_right);
+        void update_visible_area(glm::ivec2 parent_visible_top_left, glm::ivec2 parent_visible_bottom_right);
         virtual void late_update();
         virtual void on_update();
 
@@ -130,15 +130,22 @@ namespace Birdy3d::ui {
     protected:
         friend class Canvas;
 
+        struct Padding {
+            Dimension left;
+            Dimension right;
+            Dimension top;
+            Dimension bottom;
+        };
+
         std::vector<std::unique_ptr<Shape>> m_shapes;
         std::list<std::shared_ptr<Widget>> m_children;
         std::unique_ptr<Layout> m_layout = nullptr;
-        glm::vec2 m_actual_size = glm::vec2(1);
-        glm::vec2 m_actual_pos = glm::vec2(1);
-        glm::vec2 m_visible_size = glm::vec2(1);
-        glm::vec2 m_visible_pos = glm::vec2(1);
+        glm::ivec2 m_actual_size = glm::ivec2(1);
+        glm::ivec2 m_actual_pos = glm::ivec2(1);
+        glm::ivec2 m_visible_size = glm::ivec2(1);
+        glm::ivec2 m_visible_pos = glm::ivec2(1);
         glm::mat4 m_move = glm::mat4(1);
-        glm::vec4 m_padding = glm::vec4(0); ///< left, right, up, down
+        Padding m_padding;
         bool m_children_visible = true;
         bool m_shapes_visible = true;
 
@@ -149,7 +156,7 @@ namespace Birdy3d::ui {
          */
         virtual void draw();
 
-        virtual bool contains(glm::vec2) const;
+        virtual bool contains(glm::ivec2) const;
 
         // Callbacks
         void execute_callbacks(const std::string& name, UIEvent& event);
@@ -169,11 +176,11 @@ namespace Birdy3d::ui {
         virtual void on_drop(DropEvent&) { }
 
         // Shapes
-        Rectangle* add_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Rectangle* add_filled_rectangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Triangle* add_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Triangle* add_filled_triangle(UIVector pos, UIVector size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Text* add_text(UIVector pos, std::string text, utils::Color::Name, Placement = Placement::TOP_LEFT, float font_size = 0);
+        Rectangle* add_rectangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Rectangle* add_filled_rectangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Triangle* add_triangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Triangle* add_filled_triangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
+        Text* add_text(Position pos, std::string text, utils::Color::Name, Placement = Placement::TOP_LEFT, int font_size = 0);
 
         // Layout
         template <is_layout T, typename... Args>

@@ -21,9 +21,9 @@ namespace Birdy3d::ui {
         friend class ContextMenu;
         friend class MenuBar;
 
-        int m_padding = 10;
-        glm::vec2 m_child_rect_pos;
-        glm::vec2 m_child_rect_size;
+        Dimension m_padding = 10_px;
+        Position m_child_rect_pos;
+        Size m_child_rect_size;
     };
 
     class ContextMenu : public Widget {
@@ -32,7 +32,7 @@ namespace Birdy3d::ui {
 
         ContextMenu(Options);
         void draw() override;
-        void open(glm::vec2);
+        void open(glm::ivec2);
         void open();
         void on_update() override;
 
@@ -42,11 +42,11 @@ namespace Birdy3d::ui {
         Rectangle* m_border_rect;
         Triangle* m_submenu_triangle;
 
-        bool contains(glm::vec2) const override;
+        bool contains(glm::ivec2) const override;
 
         void draw_context_item_children(ContextItem&);
         bool handle_context_item_children_click(ContextItem&, bool click);
-        bool context_item_contains(const ContextItem&, glm::vec2) const;
+        bool context_item_contains(const ContextItem&, Position) const;
 
         void on_click(ClickEvent&) override;
         void on_key(KeyEvent&) override;

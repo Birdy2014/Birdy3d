@@ -7,7 +7,7 @@
 
 namespace Birdy3d::ui {
 
-    glm::vec2 TextField::minimal_size() {
+    glm::ivec2 TextField::minimal_size() {
         return { 1.0f, core::Application::theme().line_height() };
     }
 
@@ -44,9 +44,9 @@ namespace Birdy3d::ui {
     void TextField::on_update() {
         Scrollable::on_update();
         if (m_selecting) {
-            glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
-            glm::vec2 scrolled_text_local_pos = local_pos - m_scroll_offset;
-            auto char_pos = char_index(glm::vec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
+            auto local_pos = core::Input::cursor_pos_int() - m_actual_pos;
+            auto scrolled_text_local_pos = local_pos - m_scroll_offset;
+            auto char_pos = char_index(glm::ivec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
             if (m_text->highlight_start == char_pos) {
                 m_text->highlight_visible = false;
             } else {
@@ -68,9 +68,9 @@ namespace Birdy3d::ui {
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
-            glm::vec2 local_pos = core::Input::cursor_pos() - m_actual_pos;
-            glm::vec2 scrolled_text_local_pos = local_pos - m_scroll_offset;
-            auto char_pos = char_index(glm::vec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
+            auto local_pos = core::Input::cursor_pos_int() - m_actual_pos;
+            auto scrolled_text_local_pos = local_pos - m_scroll_offset;
+            auto char_pos = char_index(glm::ivec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
             m_selecting = true;
             m_text->highlight_start = char_pos;
             m_text->cursor_visible = false;
@@ -226,7 +226,7 @@ namespace Birdy3d::ui {
             m_scroll_offset.y -= cursor_pixel_pos.y - m_actual_size.y;
     }
 
-    std::size_t TextField::char_index(glm::vec2 pos) {
+    std::size_t TextField::char_index(glm::ivec2 pos) {
         float width = 0;
         float height = core::Application::theme().line_height();
         float current_char_width;
@@ -251,9 +251,9 @@ namespace Birdy3d::ui {
         return m_text->length();
     }
 
-    glm::vec2 TextField::coordinate_of_index(std::size_t index) {
+    glm::ivec2 TextField::coordinate_of_index(std::size_t index) {
         const auto line_height = core::Application::theme().line_height();
-        glm::vec2 pos = { 0.0f, line_height };
+        glm::ivec2 pos = { 0.0f, line_height };
         for (std::size_t i = 0; i < m_text->length() && i < index; ++i) {
             if (m_text->text()[i] == '\x1B') {
                 i++; // Go to color

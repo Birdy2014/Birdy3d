@@ -16,75 +16,126 @@ namespace Birdy3d::ui {
         CENTER
     };
 
-    class Unit {
+    class Dimension {
     public:
-        float pixels;
-        float percent;
+        int pixels { 0 };
+        float percent { 0 };
+        float em { 0 };
 
-        Unit(float pixels, float percent = 0.0f);
-        void operator=(float value);
-        operator float();
-        float to_pixels(float parentSize = 0);
-        bool operator==(const Unit& other) const;
-        Unit operator+(const Unit& other);
-        Unit& operator+=(const Unit& other);
-        Unit operator-();
-        Unit operator-(const Unit& other);
-        Unit& operator-=(const Unit& other);
+        static Dimension make_zero() { return Dimension { 0, 0.0f, 0.0f }; }
+        static Dimension make_pixels(int pixels) { return Dimension { pixels, 0.0f, 0.0f }; }
+        static Dimension make_percent(float percent) { return Dimension { 0, percent, 0.0f }; }
+        static Dimension make_em(float em) { return Dimension { 0, 0.0f, em }; }
 
-        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
-        Unit operator+(const T& other) {
-            return Unit(pixels + other, percent);
-        }
+        Dimension() = default;
 
-        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
-        Unit& operator+=(const T& other) {
-            pixels += other;
-            return *this;
-        }
+        bool operator==(const Dimension& other) const { return pixels == other.pixels && percent == other.percent && em == other.em; }
+        bool operator<(const Dimension& other) const { return to_pixels() < other.to_pixels(); }
+        bool operator<=(const Dimension& other) const { return to_pixels() <= other.to_pixels(); }
+        bool operator>(const Dimension& other) const { return to_pixels() > other.to_pixels(); }
+        bool operator>=(const Dimension& other) const { return to_pixels() >= other.to_pixels(); }
 
-        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
-        Unit operator-(const T& other) {
-            return Unit(pixels - other, percent);
-        }
+        Dimension operator+(const Dimension& other) const { return Dimension(pixels + other.pixels, percent + other.percent, em + other.em); }
+        Dimension operator-() const { return Dimension(-pixels, -percent, -em); }
+        Dimension operator-(const Dimension& other) const { return Dimension(pixels - other.pixels, percent - other.percent, em - other.em); }
+        Dimension operator*(int other) const { return Dimension(pixels * other, percent * other, em * other); }
+        Dimension& operator+=(const Dimension& other);
+        Dimension& operator-=(const Dimension& other);
 
-        template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, T>>
-        Unit& operator-=(const T& other) {
-            pixels -= other;
-            return *this;
+        int to_pixels(int parent_size = 0) const;
+
+    private:
+        Dimension(int pixels, float percent, float em)
+            : pixels(pixels)
+            , percent(percent)
+            , em(em) { }
+    };
+
+    class Size;
+
+    class Position {
+    public:
+        Dimension x;
+        Dimension y;
+
+        static Position make_zero() { return Position {}; }
+        static Position make_pixels(int x, int y) { return Position { Dimension::make_pixels(x), Dimension::make_pixels(y) }; }
+        static Position make_pixels(glm::ivec2 vector) { return Position { Dimension::make_pixels(vector.x), Dimension::make_pixels(vector.y) }; }
+        static Position make_percent(float x, float y) { return Position { Dimension::make_percent(x), Dimension::make_percent(y) }; }
+        static Position make_percent(glm::vec2 vector) { return Position { Dimension::make_percent(vector.x), Dimension::make_percent(vector.y) }; }
+        static glm::ivec2 get_relative_position(Position pos, Size size, glm::ivec2 parent_size, Placement placement);
+
+        Position() = default;
+        Position(Position const&) = default;
+
+        Position(Dimension both)
+            : x(both)
+            , y(both) {};
+
+        Position(Dimension x, Dimension y)
+            : x(x)
+            , y(y) {};
+
+        Position& operator=(const Position& other);
+        bool operator==(const Position& other) const { return x == other.x && y == other.y; }
+        Position operator+(const Position& other) const { return Position(x + other.x, y + other.y); }
+        Position operator-() const { return Position(-x, -y); }
+        Position operator-(const Position& other) const { return Position(x - other.x, y - other.y); }
+        Position& operator+=(const Position& other);
+        Position& operator-=(const Position& other);
+
+        Position operator+(const Size& other) const;
+        Position operator-(const Size& other) const;
+        Position& operator+=(const Size& other);
+        Position& operator-=(const Size& other);
+
+        glm::ivec2 to_pixels(glm::ivec2 parent_size = glm::ivec2 { 0 }) const {
+            return glm::ivec2(x.to_pixels(parent_size.x), y.to_pixels(parent_size.y));
         }
     };
 
-    class UIVector {
+    class Size {
     public:
-        Unit x;
-        Unit y;
+        Dimension x;
+        Dimension y;
 
-        UIVector();
-        UIVector(const UIVector& v);
-        UIVector(const glm::vec2& v);
-        UIVector(Unit x);
-        UIVector(Unit x, Unit y);
-        UIVector& operator=(const UIVector& other);
-        bool operator==(const UIVector& other) const;
-        UIVector operator+(const UIVector& other);
-        UIVector operator+(const float other);
-        UIVector operator-();
-        UIVector operator-(const UIVector& other);
-        UIVector operator+=(const UIVector& other);
-        UIVector operator+=(const float other);
-        UIVector operator-=(const UIVector& other);
-        glm::vec2 to_pixels(glm::vec2 parentSize = glm::vec2(0));
-        operator glm::vec2();
-        static glm::vec2 get_relative_position(UIVector pos, UIVector size, glm::vec2 parentSize, Placement placement);
+        static Size make_zero() { return Size {}; }
+        static Size make_pixels(int x, int y) { return Size { Dimension::make_pixels(x), Dimension::make_pixels(y) }; }
+        static Size make_pixels(glm::ivec2 vector) { return Size { Dimension::make_pixels(vector.x), Dimension::make_pixels(vector.y) }; }
+        static Size make_percent(float x, float y) { return Size { Dimension::make_percent(x), Dimension::make_percent(y) }; }
+        static Size make_percent(glm::vec2 vector) { return Size { Dimension::make_percent(vector.x), Dimension::make_percent(vector.y) }; }
+
+        Size() = default;
+        Size(Size const&) = default;
+
+        Size(Dimension both)
+            : x(both)
+            , y(both) {};
+
+        Size(Dimension x, Dimension y)
+            : x(x)
+            , y(y) {};
+
+        Size& operator=(const Size& other);
+        bool operator==(const Size& other) const { return x == other.x && y == other.y; }
+        Size operator+(const Size& other) const { return Size(x + other.x, y + other.y); }
+        Size operator-() const { return Size(-x, -y); }
+        Size operator-(const Size& other) const { return Size(x - other.x, y - other.y); }
+        Size& operator+=(const Size& other);
+        Size& operator-=(const Size& other);
+
+        glm::ivec2 to_pixels(glm::ivec2 parent_size = glm::ivec2 { 0 }) const {
+            return glm::ivec2(x.to_pixels(parent_size.x), y.to_pixels(parent_size.y));
+        }
     };
 
     inline namespace literals {
 
-        Unit operator"" _px(long double value);
-        Unit operator"" _px(unsigned long long value);
-        Unit operator"" _p(long double value);
-        Unit operator"" _p(unsigned long long value);
+        Dimension operator"" _px(unsigned long long value);
+        Dimension operator"" _pc(long double value);
+        Dimension operator"" _pc(unsigned long long value);
+        Dimension operator"" _em(long double value);
+        Dimension operator"" _em(unsigned long long value);
 
     }
 

@@ -16,11 +16,11 @@ namespace Birdy3d::ui {
 
         TextField(is_widget_options auto options)
             : Scrollable(options) {
-            add_filled_rectangle(0_px, 100_p, utils::Color::Name::BG_INPUT);
+            add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG_INPUT);
             m_text = add_text(0_px, std::string(), utils::Color::Name::FG);
         }
 
-        glm::vec2 minimal_size() override;
+        glm::ivec2 minimal_size() override;
         std::string text();
         void text(std::string);
         void append(std::string);
@@ -49,14 +49,14 @@ namespace Birdy3d::ui {
         void scroll_if_needed(std::size_t cursor_pos);
 
     private:
-        std::size_t char_index(glm::vec2 pos);
+        std::size_t char_index(glm::ivec2 pos);
 
         /**
          * @brief Pixel coordinates of a character in the text.
          *
          * The bottom right coordinates of the character, relative to the origin of m_text.
          */
-        glm::vec2 coordinate_of_index(std::size_t index);
+        glm::ivec2 coordinate_of_index(std::size_t index);
     };
 
 }

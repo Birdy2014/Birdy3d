@@ -10,22 +10,27 @@ namespace Birdy3d::ui {
     public:
         Scrollable(is_widget_options auto options)
             : Widget(options) {
-            m_scrollbar_vertical = add_filled_rectangle(0_px, UIVector(10_px, 100_p), utils::Color::Name::NONE, Placement::TOP_RIGHT);
-            m_scrollbar_horizontal = add_filled_rectangle(0_px, UIVector(100_p, 10_px), utils::Color::Name::NONE, Placement::BOTTOM_LEFT);
+            m_scrollbar_vertical = add_filled_rectangle(0_px, Size(10_px, 100_pc), utils::Color::Name::NONE, Placement::TOP_RIGHT);
+            m_scrollbar_horizontal = add_filled_rectangle(0_px, Size(100_pc, 10_px), utils::Color::Name::NONE, Placement::BOTTOM_LEFT);
             m_scrollbar_vertical->in_foreground = true;
             m_scrollbar_horizontal->in_foreground = true;
-            m_padding = glm::vec4(0, 10, 0, 10);
+            m_padding = {
+                .left = 0_px,
+                .right = 10_px,
+                .top = 0_px,
+                .bottom = 10_px
+            };
         }
 
-        glm::vec2 minimal_size() override;
-        void arrange(glm::vec2 pos, glm::vec2 size) override;
+        glm::ivec2 minimal_size() override;
+        void arrange(glm::ivec2 pos, glm::ivec2 size) override;
 
     protected:
         bool m_horizontal_scroll_enabled = true;
         bool m_vertical_scroll_enabled = true;
-        glm::vec2 m_scroll_offset = glm::vec2(0);
-        glm::vec2 m_content_size;
-        glm::vec2 m_max_scroll_offset;
+        glm::ivec2 m_scroll_offset { 0 };
+        glm::ivec2 m_content_size;
+        glm::ivec2 m_max_scroll_offset { 0 };
 
         void draw() override;
         void on_scroll(ScrollEvent&) override;

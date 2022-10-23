@@ -8,7 +8,7 @@
 
 namespace Birdy3d::ui {
 
-    Triangle::Triangle(UIVector position, UIVector size, utils::Color::Name color, Type type, Placement placement)
+    Triangle::Triangle(Position position, Size size, utils::Color::Name color, Type type, Placement placement)
         : Shape(position, size, color, placement) {
         this->type = type;
     }
@@ -50,7 +50,7 @@ namespace Birdy3d::ui {
     }
 
     bool Triangle::contains(glm::vec2 point) {
-        glm::vec2 position = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 position = Position::get_relative_position(m_position, m_size, m_parentSize, m_placement);
         glm::vec2 size = m_size.to_pixels(m_parentSize);
         glm::vec2 a = position;
         glm::vec2 b = position + glm::vec2(size.x, 0);
@@ -82,7 +82,7 @@ namespace Birdy3d::ui {
     void Triangle::update_values() {
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glm::vec2 pos = UIVector::get_relative_position(m_position, m_size, m_parentSize, m_placement);
+        glm::vec2 pos = Position::get_relative_position(m_position, m_size, m_parentSize, m_placement);
         glm::vec2 size = m_size.to_pixels(m_parentSize);
         m_move_self = glm::mat4(1);
         m_move_self = glm::translate(m_move_self, glm::vec3(pos + glm::vec2(size.x / 2, size.y / 2), 0.0f));
