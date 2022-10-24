@@ -11,6 +11,7 @@
 #include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"
 #include "ui/console/Commands.hpp"
+#include "utils/Stacktrace.hpp"
 #include <memory>
 
 namespace Birdy3d::core {
@@ -78,6 +79,7 @@ namespace Birdy3d::core {
         glfwSetCharCallback(m_window, character_callback);
 
         glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(gl_message_callback, 0);
 
         // Init variables
@@ -193,6 +195,8 @@ namespace Birdy3d::core {
 
         if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
             return;
+
+        utils::print_stacktrace();
 
         if (type == GL_DEBUG_TYPE_ERROR)
             core::Logger::error("OpenGL: source = {}, severity = {}, message = {}\n", error_source_map.at(source), error_severity_map.at(severity), message);

@@ -4,12 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #ifdef BIRDY3D_PLATFORM_LINUX
-    #include <cstdlib>
-    #include <execinfo.h>
-    #include <signal.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <unistd.h>
+    #include <csignal>
 #endif
 
 using namespace Birdy3d;
@@ -80,22 +75,20 @@ BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, MoveUpDown);
 
 #ifdef BIRDY3D_PLATFORM_LINUX
 void handler(int sig) {
-    void* array[10];
-    size_t size;
+    if (sig == SIGSEGV)
+        std::cout << "SIGNAL " << sig << "(SIGSEGV)\n";
+    else
+        std::cout << "SIGNAL " << sig << "\n";
 
-    // get void*'s for all entries on the stack
-    size = backtrace(array, 10);
+    utils::print_stacktrace();
 
-    // print out all the frames to stderr
-    fprintf(stderr, "Error: signal %d:\n", sig);
-    backtrace_symbols_fd(array, size, STDERR_FILENO);
     exit(1);
 }
 #endif
 
 int main() {
 #ifdef BIRDY3D_PLATFORM_LINUX
-    signal(SIGSEGV, handler);
+    std::signal(SIGSEGV, handler);
 #endif
 
     if (!core::Application::init("Birdy3d", 1280, 720, "gruvbox-dark.json")) {
