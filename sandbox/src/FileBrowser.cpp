@@ -14,7 +14,7 @@ std::optional<ui::TreeItem> FileBrowserTreeModel::item(ui::TreeItem const* paren
             };
         case 1:
             return ui::TreeItem {
-                .text = std::filesystem::path { root_directory.name }.filename(),
+                .text = std::filesystem::path { root_directory.name }.filename().string(),
                 .data = std::make_any<core::ResourceIdentifier>(root_directory),
                 .local_index = local_index,
                 .is_leaf = !std::filesystem::is_directory(root_directory.name),
@@ -79,7 +79,7 @@ std::optional<ui::TreeItem> FileBrowserTreeModel::item(ui::TreeItem const* paren
             id.source = "file";
             id.name = entry.path().string();
             return ui::TreeItem {
-                .text = entry.path().filename(),
+                .text = entry.path().filename().string(),
                 .data = std::make_any<core::ResourceIdentifier>(id),
                 .local_index = local_index,
                 .is_leaf = is_leaf,

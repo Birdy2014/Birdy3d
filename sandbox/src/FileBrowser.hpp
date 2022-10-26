@@ -28,8 +28,8 @@ public:
 
     FileBrowser(Options options)
         : ui::Widget(options)
-        , m_root_directory(options.root_directory)
-        , m_current_directory(options.root_directory) {
+        , m_root_directory(options.root_directory.string())
+        , m_current_directory(options.root_directory.string()) {
         using namespace ui::literals;
         set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 10);
 
@@ -40,7 +40,7 @@ public:
         m_tree->m_model = std::make_unique<FileBrowserTreeModel>();
         auto tree_model = static_cast<FileBrowserTreeModel*>(m_tree->m_model.get());
         m_root_directory.source = "file";
-        m_root_directory.name = options.root_directory;
+        m_root_directory.name = options.root_directory.string();
         if (m_root_directory.name.ends_with('/'))
             m_root_directory.name = m_root_directory.name.substr(0, m_root_directory.name.length() - 1);
         tree_model->root_directory = m_root_directory;
