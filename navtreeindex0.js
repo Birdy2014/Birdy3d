@@ -55,6 +55,7 @@ var NAVTREEINDEX0 =
 "Shader_8hpp_source.html":[2,0,0,0,4,9],
 "Shape_8hpp_source.html":[2,0,0,0,5,9],
 "Spotlight_8hpp_source.html":[2,0,0,0,4,10],
+"Stacktrace_8hpp_source.html":[2,0,0,0,6,4],
 "TextField_8hpp_source.html":[2,0,0,0,5,1,9],
 "TextRenderer_8hpp_source.html":[2,0,0,0,5,10],
 "Texture_8hpp_source.html":[2,0,0,0,4,11],
@@ -66,7 +67,7 @@ var NAVTREEINDEX0 =
 "TypeRegistry_8hpp_source.html":[2,0,0,0,6,0,5],
 "Types_8hpp_source.html":[2,0,0,0,6,0,6],
 "UIEvent_8hpp_source.html":[2,0,0,0,5,13],
-"Unicode_8hpp_source.html":[2,0,0,0,6,4],
+"Unicode_8hpp_source.html":[2,0,0,0,6,5],
 "Units_8hpp_source.html":[2,0,0,0,5,14],
 "Vertex_8hpp_source.html":[2,0,0,0,4,12],
 "Widget_8hpp_source.html":[2,0,0,0,5,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "structBirdy3d_1_1ui_1_1Character.html":[1,0,0,6,3],
 "structBirdy3d_1_1ui_1_1CheckBox_1_1Options.html":[1,0,0,6,5,0],
 "structBirdy3d_1_1ui_1_1CollapsibleContainer_1_1Options.html":[1,0,0,6,7,0],
-"structBirdy3d_1_1ui_1_1Label_1_1Options.html":[1,0,0,6,22,0],
-"structBirdy3d_1_1ui_1_1NumberInput_1_1Options.html":[1,0,0,6,28,0]
+"structBirdy3d_1_1ui_1_1Label_1_1Options.html":[1,0,0,6,22,0]
 };

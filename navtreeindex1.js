@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"structBirdy3d_1_1ui_1_1NumberInput_1_1Options.html":[1,0,0,6,28,0],
 "structBirdy3d_1_1ui_1_1TextVertex.html":[1,0,0,6,41],
 "structBirdy3d_1_1ui_1_1TreeItemPosition.html":[1,0,0,6,44],
 "structBirdy3d_1_1ui_1_1Widget_1_1Options.html":[1,0,0,6,49,0],
