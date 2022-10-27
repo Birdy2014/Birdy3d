@@ -101,22 +101,22 @@ template&lt;typename EventType , typename... Args&gt; </td></tr>
 <tr class="memitem:ad892d6a5b115009081b52bd4e487e950"><td class="memItemLeft" align="right" valign="top"><a id="ad892d6a5b115009081b52bd4e487e950" name="ad892d6a5b115009081b52bd4e487e950"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>flush</b> (int amount=-1)</td></tr>
 <tr class="separator:ad892d6a5b115009081b52bd4e487e950"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a271c39f0b3242935233f56349212e268"><td class="memTemplParams" colspan="2"><a id="a271c39f0b3242935233f56349212e268" name="a271c39f0b3242935233f56349212e268"></a>
+<tr class="memitem:acb5a54c0b7cef5290e91e834e0336996"><td class="memTemplParams" colspan="2"><a id="acb5a54c0b7cef5290e91e834e0336996" name="acb5a54c0b7cef5290e91e834e0336996"></a>
 template&lt;class T , class EventType &gt; </td></tr>
-<tr class="memitem:a271c39f0b3242935233f56349212e268"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>subscribe</b> (T *instance, void(T::*memberFunction)(const EventType &amp;), std::any options={})</td></tr>
-<tr class="separator:a271c39f0b3242935233f56349212e268"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf799b0187ce2e58cea0dc6673f9a0a5"><td class="memTemplParams" colspan="2"><a id="adf799b0187ce2e58cea0dc6673f9a0a5" name="adf799b0187ce2e58cea0dc6673f9a0a5"></a>
+<tr class="memitem:acb5a54c0b7cef5290e91e834e0336996"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>subscribe</b> (T *instance, void(T::*member_function)(EventType const &amp;), std::any options={})</td></tr>
+<tr class="separator:acb5a54c0b7cef5290e91e834e0336996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0253046480b8b68c3aba11d1fa2cb09"><td class="memTemplParams" colspan="2"><a id="aa0253046480b8b68c3aba11d1fa2cb09" name="aa0253046480b8b68c3aba11d1fa2cb09"></a>
 template&lt;class EventType &gt; </td></tr>
-<tr class="memitem:adf799b0187ce2e58cea0dc6673f9a0a5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>subscribe</b> (std::function&lt; void(const EventType &amp;)&gt; func, std::any options={})</td></tr>
-<tr class="separator:adf799b0187ce2e58cea0dc6673f9a0a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acea091faaabdaa8c12a5d71e3aed1723"><td class="memTemplParams" colspan="2"><a id="acea091faaabdaa8c12a5d71e3aed1723" name="acea091faaabdaa8c12a5d71e3aed1723"></a>
+<tr class="memitem:aa0253046480b8b68c3aba11d1fa2cb09"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>subscribe</b> (std::function&lt; void(EventType const &amp;)&gt; func, std::any options={})</td></tr>
+<tr class="separator:aa0253046480b8b68c3aba11d1fa2cb09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cb6fedfd4a438e600332fd4de7a4c4c"><td class="memTemplParams" colspan="2"><a id="a7cb6fedfd4a438e600332fd4de7a4c4c" name="a7cb6fedfd4a438e600332fd4de7a4c4c"></a>
 template&lt;class T , class EventType &gt; </td></tr>
-<tr class="memitem:acea091faaabdaa8c12a5d71e3aed1723"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unsubscribe</b> (T *instance, void(T::*memberFunction)(const EventType &amp;), std::any options={})</td></tr>
-<tr class="separator:acea091faaabdaa8c12a5d71e3aed1723"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6b8a5ef0cf69fc9c8a684cd91ae2f23"><td class="memTemplParams" colspan="2"><a id="ac6b8a5ef0cf69fc9c8a684cd91ae2f23" name="ac6b8a5ef0cf69fc9c8a684cd91ae2f23"></a>
+<tr class="memitem:a7cb6fedfd4a438e600332fd4de7a4c4c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unsubscribe</b> (T *instance, void(T::*member_function)(EventType const &amp;), std::any options={})</td></tr>
+<tr class="separator:a7cb6fedfd4a438e600332fd4de7a4c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4280bd90a2110de38b5f60f49f025110"><td class="memTemplParams" colspan="2"><a id="a4280bd90a2110de38b5f60f49f025110" name="a4280bd90a2110de38b5f60f49f025110"></a>
 template&lt;class EventType &gt; </td></tr>
-<tr class="memitem:ac6b8a5ef0cf69fc9c8a684cd91ae2f23"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unsubscribe</b> (std::function&lt; void(const EventType &amp;)&gt; func, std::any options={})</td></tr>
-<tr class="separator:ac6b8a5ef0cf69fc9c8a684cd91ae2f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4280bd90a2110de38b5f60f49f025110"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unsubscribe</b> (std::function&lt; void(EventType const &amp;)&gt; func, std::any options={})</td></tr>
+<tr class="separator:a4280bd90a2110de38b5f60f49f025110"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>engine/src/events/<a class="el" href="EventBus_8hpp_source.html">EventBus.hpp</a></li>
