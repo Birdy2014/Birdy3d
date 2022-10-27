@@ -41,14 +41,14 @@ namespace Birdy3d::utils {
         glm::vec4 value;
 
         Color();
-        Color(const std::string& color);
-        Color(const char* color);
+        Color(std::string const& color);
+        Color(char const* color);
         Color(glm::vec4 color);
         operator glm::vec4() const;
-        std::string to_string() const;
-        Color& operator=(const std::string& color);
-        bool operator<(const Color& other) const;
-        static glm::vec4 parse(const std::string& colorString);
+        [[nodiscard]] std::string to_string() const;
+        Color& operator=(std::string const& color);
+        bool operator<(Color const& other) const;
+        static glm::vec4 parse(std::string const& color_string);
         float r() { return value.r; }
         float g() { return value.g; }
         float b() { return value.b; }

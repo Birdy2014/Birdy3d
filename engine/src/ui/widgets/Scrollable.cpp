@@ -4,25 +4,27 @@
 
 namespace Birdy3d::ui {
 
-    glm::ivec2 Scrollable::minimal_size() {
+    glm::ivec2 Scrollable::minimal_size()
+    {
         if (!m_horizontal_scroll_enabled && !m_vertical_scroll_enabled)
             return Widget::minimal_size();
         if (m_horizontal_scroll_enabled && !m_vertical_scroll_enabled) {
             auto minsize_horizontal = m_padding.left.to_pixels() + m_padding.right.to_pixels();
             if (m_layout && m_children_visible)
                 minsize_horizontal += m_layout->minimal_size(m_children, Layout::Direction::VERTICAL);
-            return { minsize_horizontal, 1 };
+            return {minsize_horizontal, 1};
         }
         if (!m_horizontal_scroll_enabled && m_vertical_scroll_enabled) {
             auto minsize_vertical = m_padding.top.to_pixels() + m_padding.bottom.to_pixels();
             if (m_layout && m_children_visible)
                 minsize_vertical += m_layout->minimal_size(m_children, Layout::Direction::HORIZONTAL);
-            return { 1, minsize_vertical };
+            return {1, minsize_vertical};
         }
         return glm::ivec2(1);
     }
 
-    void Scrollable::arrange(glm::ivec2 pos, glm::ivec2 size) {
+    void Scrollable::arrange(glm::ivec2 pos, glm::ivec2 size)
+    {
         bool resized = false;
         if (size != m_actual_size)
             resized = true;
@@ -49,7 +51,7 @@ namespace Birdy3d::ui {
         m_scrollbar_vertical->parent_size(m_actual_size);
         m_scrollbar_horizontal->parent_size(m_actual_size);
 
-        for (const auto& shape : m_shapes) {
+        for (auto const& shape : m_shapes) {
             auto shape_pos = shape->position().to_pixels(m_actual_size);
             auto shape_size = shape->size().to_pixels(m_actual_size);
             if (m_content_size.x < shape_pos.x + shape_size.x)
@@ -58,7 +60,7 @@ namespace Birdy3d::ui {
                 m_content_size.y = shape_pos.y + shape_size.y;
         }
 
-        for (const auto& shape : m_shapes) {
+        for (auto const& shape : m_shapes) {
             if (shape.get() == m_scrollbar_horizontal || shape.get() == m_scrollbar_vertical)
                 shape->parent_size(m_actual_size);
             else
@@ -96,12 +98,13 @@ namespace Birdy3d::ui {
             m_layout->arrange(m_children, pos + glm::ivec2(m_padding.left.to_pixels(), m_padding.top.to_pixels()) + m_scroll_offset, m_content_size - glm::ivec2(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels()));
 
         if (resized) {
-            auto resize_event = ResizeEvent {};
+            auto resize_event = ResizeEvent{};
             notify_event(resize_event);
         }
     }
 
-    void Scrollable::draw() {
+    void Scrollable::draw()
+    {
         // HACK: Because the m_move matrix scrolls the content, this ugly code draws the scrollbars with the correct matrix
         auto move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
         m_scrollbar_vertical->color(utils::Color::Name::FG);
@@ -112,7 +115,8 @@ namespace Birdy3d::ui {
         m_scrollbar_horizontal->color(utils::Color::Name::NONE);
     }
 
-    void Scrollable::on_scroll(ScrollEvent& event) {
+    void Scrollable::on_scroll(ScrollEvent& event)
+    {
         event.handled();
 
         float speed = 10.0f;
@@ -122,7 +126,8 @@ namespace Birdy3d::ui {
         check_scroll_bounds();
     }
 
-    void Scrollable::on_click(ClickEvent& event) {
+    void Scrollable::on_click(ClickEvent& event)
+    {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT)
             return;
 
@@ -146,7 +151,8 @@ namespace Birdy3d::ui {
         ungrab_cursor();
     }
 
-    void Scrollable::on_update() {
+    void Scrollable::on_update()
+    {
         if (m_scrollbar_vertical_grabbed) {
             m_scroll_offset.y -= core::Input::cursor_pos_offset().y * (m_content_size.y / m_actual_size.y);
             check_scroll_bounds();
@@ -158,11 +164,13 @@ namespace Birdy3d::ui {
         Widget::on_update();
     }
 
-    void Scrollable::on_resize(ResizeEvent&) {
+    void Scrollable::on_resize(ResizeEvent&)
+    {
         check_scroll_bounds();
     }
 
-    void Scrollable::check_scroll_bounds() {
+    void Scrollable::check_scroll_bounds()
+    {
         if (m_scroll_offset.x > 0)
             m_scroll_offset.x = 0;
         if (m_scroll_offset.x < m_max_scroll_offset.x)

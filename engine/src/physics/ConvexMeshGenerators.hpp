@@ -17,12 +17,12 @@ namespace Birdy3d::physics {
 
     class ConvexMeshGenerators {
     public:
-        static std::shared_ptr<render::Model> generate_model(GenerationMode, const render::Model&);
+        static std::shared_ptr<render::Model> generate_model(GenerationMode, render::Model const&);
 
     private:
-        static std::optional<render::Mesh> copy(const render::Mesh&);
-        static std::optional<render::Mesh> hull(const render::Mesh&);
-        static std::optional<render::Mesh> decomposition(const render::Mesh&);
+        static std::optional<render::Mesh> copy(render::Mesh const&);
+        static std::optional<render::Mesh> hull(render::Mesh const&);
+        static std::optional<render::Mesh> decomposition(render::Mesh const&);
     };
 
 }

@@ -7,7 +7,8 @@
 
 namespace Birdy3d::utils {
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_plane(unsigned int resolution) {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_plane(unsigned int resolution)
+    {
         std::vector<render::Vertex> vertices;
         std::vector<unsigned int> indices;
         std::size_t vertex_count = (resolution + 1) * (resolution + 1);
@@ -44,11 +45,12 @@ namespace Birdy3d::utils {
             indices.push_back(v + resolution + 1);
         }
 
-        auto mesh = render::Mesh { vertices, indices };
+        auto mesh = render::Mesh{vertices, indices};
         return std::make_shared<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_cube() {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_cube()
+    {
         // clang-format off
         std::vector<render::Vertex> vertices = {
             render::Vertex { glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec2(0.875f, 0.50f), glm::vec3(-1.0f, 0.0f, 0.0f) },
@@ -102,11 +104,12 @@ namespace Birdy3d::utils {
         };
         // clang-format on
 
-        auto mesh = render::Mesh { vertices, indices };
+        auto mesh = render::Mesh{vertices, indices};
         return std::make_shared<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_uv_sphere(unsigned int resolution) {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_uv_sphere(unsigned int resolution)
+    {
         int longitude_count = resolution;
         int latitude_count = resolution;
 
@@ -132,7 +135,7 @@ namespace Birdy3d::utils {
 
                 v.normal = v.position;
 
-                v.texCoords = glm::vec2(
+                v.tex_coords = glm::vec2(
                     (float)lon / longitude_count,
                     (float)lat / latitude_count);
 
@@ -172,11 +175,12 @@ namespace Birdy3d::utils {
             indices.push_back(v + 1);
         }
 
-        auto mesh = render::Mesh { vertices, indices };
+        auto mesh = render::Mesh{vertices, indices};
         return std::make_shared<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution [[maybe_unused]]) {
+    std::shared_ptr<render::Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution [[maybe_unused]])
+    {
         // TODO: ico sphere primitive
         BIRDY3D_TODO
         return nullptr;

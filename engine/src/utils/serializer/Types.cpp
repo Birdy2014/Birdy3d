@@ -2,15 +2,18 @@
 
 namespace Birdy3d::serializer {
 
-    Value& Array::operator[](std::size_t i) {
+    Value& Array::operator[](std::size_t i)
+    {
         return value[i];
     }
 
-    Value& Object::operator[](std::string i) {
+    Value& Object::operator[](std::string i)
+    {
         return value[i];
     }
 
-    ParseError::ParseError(std::size_t start, std::size_t end, std::string_view message, std::string_view file) {
+    ParseError::ParseError(std::size_t start, std::size_t end, std::string_view message, std::string_view file)
+    {
         std::size_t line_begin = 0;
         std::size_t line_end = 0;
         std::size_t line_nr = 0;
@@ -38,19 +41,22 @@ namespace Birdy3d::serializer {
             fmt::arg("reset", "\033[0m"));
     }
 
-    char Parser::consume_char() {
+    char Parser::consume_char()
+    {
         if (m_pos >= m_content.size())
             return '\0';
         return m_content[m_pos++];
     };
 
-    char Parser::current_char() {
+    char Parser::current_char()
+    {
         if (m_pos >= m_content.size())
             return '\0';
         return m_content[m_pos];
     };
 
-    std::string Parser::consume_until(char until) {
+    std::string Parser::consume_until(char until)
+    {
         std::string out;
         char c = consume_char();
         while (c != until) {
@@ -63,7 +69,8 @@ namespace Birdy3d::serializer {
         return out;
     }
 
-    bool Parser::match(std::string s) {
+    bool Parser::match(std::string s)
+    {
         std::size_t begin = m_pos;
         std::size_t i = 0;
         char c = consume_char();

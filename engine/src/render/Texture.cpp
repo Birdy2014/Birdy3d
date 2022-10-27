@@ -6,7 +6,8 @@
 
 namespace Birdy3d::render {
 
-    Texture::Texture(const std::string& file_path) {
+    Texture::Texture(std::string const& file_path)
+    {
         unsigned char* data = stbi_load(file_path.data(), &m_width, &m_height, &m_channels, 0);
 
         if (!data) {
@@ -50,10 +51,11 @@ namespace Birdy3d::render {
         stbi_image_free(data);
     }
 
-    Texture::Texture(const utils::Color& color) {
+    Texture::Texture(utils::Color const& color)
+    {
         glm::vec4 vec = color.value;
         m_transparent = vec.a < 1;
-        float data[4] = { vec.r, vec.g, vec.b, vec.a };
+        float data[4] = {vec.r, vec.g, vec.b, vec.a};
         glGenTextures(1, &m_id);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_id);
@@ -69,7 +71,8 @@ namespace Birdy3d::render {
         : m_preset(preset)
         , m_width(width)
         , m_height(height)
-        , m_resizable(true) {
+        , m_resizable(true)
+    {
         glGenTextures(1, &m_id);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_id);
@@ -123,20 +126,24 @@ namespace Birdy3d::render {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
-    Texture::~Texture() {
+    Texture::~Texture()
+    {
         glDeleteTextures(1, &m_id);
     }
 
-    bool Texture::transparent() const {
+    bool Texture::transparent() const
+    {
         return m_transparent;
     }
 
-    void Texture::bind(int texture_unit) {
+    void Texture::bind(int texture_unit)
+    {
         glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, m_id);
     }
 
-    void Texture::resize(int width, int height) {
+    void Texture::resize(int width, int height)
+    {
         if (!m_resizable)
             return;
         m_width = width;
@@ -146,11 +153,13 @@ namespace Birdy3d::render {
         glTexImage2D(GL_TEXTURE_2D, 0, m_internalformat, m_width, m_height, 0, m_format, m_type, nullptr);
     }
 
-    GLuint Texture::id() const {
+    GLuint Texture::id() const
+    {
         return m_id;
     }
 
-    bool Texture::is_depth() const {
+    bool Texture::is_depth() const
+    {
         return m_depth;
     }
 

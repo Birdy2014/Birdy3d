@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/ResourceHandle.hpp"
 #include "ecs/Component.hpp"
 #include "physics/ConvexMeshGenerators.hpp"
 #include "physics/Forward.hpp"
@@ -13,7 +12,7 @@ namespace Birdy3d::physics {
     class Collider : public ecs::Component {
     public:
         Collider();
-        Collider(const std::string&);
+        Collider(std::string const&);
         Collider(GenerationMode);
         void start() override;
         CollisionPoints collides(Collider&);
@@ -28,8 +27,8 @@ namespace Birdy3d::physics {
         glm::vec3 m_points[4];
         int m_point_count;
 
-        bool collides(const render::Mesh& mesh_a, const render::Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b);
-        glm::vec3 support(const render::Mesh& a, const render::Mesh& b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction);
+        bool collides(render::Mesh const& mesh_a, render::Mesh const& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b);
+        glm::vec3 support(render::Mesh const& a, render::Mesh const& b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction);
         bool line(glm::vec3& direction);
         bool triangle(glm::vec3& direction);
         bool tetrahedron(glm::vec3& direction);

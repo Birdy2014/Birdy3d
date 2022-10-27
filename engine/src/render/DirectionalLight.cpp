@@ -1,7 +1,6 @@
 #include "render/DirectionalLight.hpp"
 
 #include "core/Application.hpp"
-#include "core/ResourceManager.hpp"
 #include "ecs/Entity.hpp"
 #include "ecs/Scene.hpp"
 #include "render/Camera.hpp"
@@ -15,16 +14,18 @@ namespace Birdy3d::render {
         : color(color)
         , intensity_ambient(intensity_ambient)
         , intensity_diffuse(intensity_diffuse)
-        , shadow_enabled(shadow_enabled) { }
+        , shadow_enabled(shadow_enabled)
+    { }
 
-    void DirectionalLight::setup_shadow_map() {
+    void DirectionalLight::setup_shadow_map()
+    {
         m_depth_shader = "directional_light_depth.glsl";
 
         glGenFramebuffers(1, &m_shadow_map_fbo);
 
         glGenTextures(1, &m_shadow_map);
         glBindTexture(GL_TEXTURE_2D_ARRAY, m_shadow_map);
-        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, SHADOW_SIZE, SHADOW_SIZE, core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, shadow_size, shadow_size, core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -32,7 +33,7 @@ namespace Birdy3d::render {
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 
-        constexpr float bordercolor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        constexpr float bordercolor[] = {1.0f, 1.0f, 1.0f, 1.0f};
         glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, bordercolor);
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_map_fbo);
@@ -48,7 +49,8 @@ namespace Birdy3d::render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void DirectionalLight::use(const Shader& light_shader, int id, int textureid) {
+    void DirectionalLight::use(Shader const& light_shader, int id, int textureid)
+    {
         if (!m_shadow_map_updated) {
             gen_shadow_map();
             m_shadow_map_updated = true;
@@ -69,12 +71,13 @@ namespace Birdy3d::render {
         light_shader.set_int(name + "shadow_map", textureid);
     }
 
-    void DirectionalLight::gen_shadow_map() {
+    void DirectionalLight::gen_shadow_map()
+    {
         glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_map_fbo);
         glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_FRONT);
         glEnable(GL_DEPTH_TEST);
-        glViewport(0, 0, SHADOW_SIZE, SHADOW_SIZE);
+        glViewport(0, 0, shadow_size, shadow_size);
 
         int shadow_cascade_size = core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE);
         m_depth_shader.arg("SHADOW_CASCADE_SIZE", shadow_cascade_size);
@@ -100,16 +103,19 @@ namespace Birdy3d::render {
         glCullFace(GL_BACK);
     }
 
-    void DirectionalLight::start() {
+    void DirectionalLight::start()
+    {
         setup_shadow_map();
     }
 
-    void DirectionalLight::update() {
+    void DirectionalLight::update()
+    {
         if (shadow_enabled)
             m_shadow_map_updated = false;
     }
 
-    void DirectionalLight::serialize(serializer::Adapter& adapter) {
+    void DirectionalLight::serialize(serializer::Adapter& adapter)
+    {
         adapter("shadow_enabled", shadow_enabled);
         adapter("color", color);
         adapter("intensity_ambient", intensity_ambient);
@@ -117,12 +123,13 @@ namespace Birdy3d::render {
         adapter("cam_offset", m_cam_offset);
     }
 
-    glm::mat4 DirectionalLight::calculate_light_space_matrix(const float near_plane, const float far_plane) {
-        const auto camera = entity->scene->m_current_camera;
-        const auto projection = glm::perspective(camera->fov, (float)camera->target->width() / (float)camera->target->height(), near_plane, far_plane);
-        const auto view = entity->scene->m_current_camera->view();
+    glm::mat4 DirectionalLight::calculate_light_space_matrix(float const near_plane, float const far_plane)
+    {
+        auto const camera = entity->scene->m_current_camera;
+        auto const projection = glm::perspective(camera->fov, (float)camera->target->width() / (float)camera->target->height(), near_plane, far_plane);
+        auto const view = entity->scene->m_current_camera->view();
 
-        const auto inv = glm::inverse(projection * view);
+        auto const inv = glm::inverse(projection * view);
 
         std::vector<glm::vec4> frustum_corners;
         for (unsigned int x = 0; x < 2; ++x) {
@@ -135,12 +142,12 @@ namespace Birdy3d::render {
         }
 
         glm::vec3 center = glm::vec3(0, 0, 0);
-        for (const auto& v : frustum_corners) {
+        for (auto const& v : frustum_corners) {
             center += glm::vec3(v);
         }
         center /= frustum_corners.size();
 
-        const auto light_view = glm::lookAt(center - entity->world_forward(), center, entity->world_up());
+        auto const light_view = glm::lookAt(center - entity->world_forward(), center, entity->world_up());
 
         float min_x = std::numeric_limits<float>::max();
         float max_x = std::numeric_limits<float>::min();
@@ -148,8 +155,8 @@ namespace Birdy3d::render {
         float max_y = std::numeric_limits<float>::min();
         float min_z = std::numeric_limits<float>::max();
         float max_z = std::numeric_limits<float>::min();
-        for (const auto& v : frustum_corners) {
-            const auto trf = light_view * v;
+        for (auto const& v : frustum_corners) {
+            auto const trf = light_view * v;
             min_x = std::min(min_x, trf.x);
             max_x = std::max(max_x, trf.x);
             min_y = std::min(min_y, trf.y);

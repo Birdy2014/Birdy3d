@@ -17,7 +17,8 @@
     float weight = 1.0f;                                                     \
     int column = 0;                                                          \
     int row = 0;                                                             \
-    Options& merge_widget_options(::Birdy3d::ui::Widget::Options o) {        \
+    Options& merge_widget_options(::Birdy3d::ui::Widget::Options o)          \
+    {                                                                        \
         position = o.position;                                               \
         size = o.size;                                                       \
         placement = o.placement;                                             \
@@ -47,8 +48,10 @@ namespace Birdy3d::ui {
     template <class T>
     concept is_layout = std::is_base_of_v<Layout, T>;
 
+    // clang-format off
     template <class T>
-    concept is_widget_options = requires(T t) {
+    concept is_widget_options = requires(T t)
+    {
         { t.position } -> std::same_as<Position&>;
         { t.size } -> std::same_as<Size&>;
         { t.placement } -> std::same_as<Placement&>;
@@ -58,6 +61,7 @@ namespace Birdy3d::ui {
         { t.column } -> std::same_as<int&>;
         { t.row } -> std::same_as<int&>;
     };
+    // clang-format on
 
     class Widget {
     public:
@@ -87,18 +91,19 @@ namespace Birdy3d::ui {
             , name(options.name)
             , weight(options.weight)
             , column(options.column)
-            , row(options.row) { }
+            , row(options.row)
+        { }
 
         virtual ~Widget() = default;
 
         void to_foreground(Widget* w);
 
         // Returns the position relative to the parent's origin in pixels
-        glm::ivec2 preferred_position(glm::ivec2 parentSize, glm::ivec2 size);
+        glm::ivec2 preferred_position(glm::ivec2 parent_size, glm::ivec2 size);
 
         // Returns the size in pixels
         virtual glm::ivec2 minimal_size();
-        glm::ivec2 preferred_size(glm::ivec2 parentSize);
+        glm::ivec2 preferred_size(glm::ivec2 parent_size);
 
         virtual void arrange(glm::ivec2 pos, glm::ivec2 size);
         void set_canvas(Canvas*);
@@ -125,7 +130,7 @@ namespace Birdy3d::ui {
         // Callbacks
         typedef std::function<void(UIEvent&)> CallbackType;
 
-        void add_callback(const std::string& name, CallbackType callback);
+        void add_callback(std::string const& name, CallbackType callback);
 
     protected:
         friend class Canvas;
@@ -156,12 +161,12 @@ namespace Birdy3d::ui {
          */
         virtual void draw();
 
-        virtual bool contains(glm::ivec2) const;
+        [[nodiscard]] virtual bool contains(glm::ivec2) const;
 
         // Callbacks
-        void execute_callbacks(const std::string& name, UIEvent& event);
+        void execute_callbacks(std::string const& name, UIEvent& event);
 
-        bool has_callbacks(const std::string& name);
+        bool has_callbacks(std::string const& name);
 
         // Events
         virtual void on_scroll(ScrollEvent&);
@@ -184,7 +189,8 @@ namespace Birdy3d::ui {
 
         // Layout
         template <is_layout T, typename... Args>
-        void set_layout(Args... args) {
+        void set_layout(Args... args)
+        {
             m_layout = std::make_unique<T>(args...);
         }
 
@@ -194,22 +200,25 @@ namespace Birdy3d::ui {
         void clear_children();
 
         template <is_widget T>
-        std::shared_ptr<T> add_child(typename T::Options options) {
+        std::shared_ptr<T> add_child(typename T::Options options)
+        {
             auto widget = std::make_shared<T>(options);
             add_child(widget);
             return std::static_pointer_cast<T>(widget);
         }
 
         template <is_specialized_widget T>
-        std::shared_ptr<T> add_child(Options widget_options, typename T::Options specialized_options) {
+        std::shared_ptr<T> add_child(Options widget_options, typename T::Options specialized_options)
+        {
             return add_child<T>(specialized_options.merge_widget_options(widget_options));
         }
 
         template <is_widget T = Widget>
-        std::shared_ptr<T> get_widget(const std::string& name, bool hidden = true) {
+        std::shared_ptr<T> get_widget(std::string const& name, bool hidden = true)
+        {
             if (this->hidden && !hidden)
                 return nullptr;
-            for (const auto& child : m_children) {
+            for (auto const& child : m_children) {
                 std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(child);
                 if (casted && child->name == name) {
                     return casted;

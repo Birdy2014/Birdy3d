@@ -19,13 +19,15 @@ namespace Birdy3d::ui {
         Text* button_text;
 
         Button(is_widget_options auto options)
-            : Widget(options) {
+            : Widget(options)
+        {
             add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG, Placement::BOTTOM_LEFT);
             add_rectangle(0_px, 100_pc, utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
             button_text = add_text(0_px, options.text, utils::Color::Name::FG, Placement::CENTER);
         };
 
-        glm::ivec2 minimal_size() override {
+        glm::ivec2 minimal_size() override
+        {
             auto min_size = core::Application::theme().text_renderer().text_size(button_text->text(), button_text->font_size).to_pixels() + glm::ivec2(2);
             return glm::max(min_size, Widget::minimal_size());
         }
@@ -33,18 +35,21 @@ namespace Birdy3d::ui {
         std::function<void()> callback_click;
 
     protected:
-        void on_click(ClickEvent& event) override {
+        void on_click(ClickEvent& event) override
+        {
             if (callback_click && event.action == GLFW_PRESS) {
                 event.handled();
                 callback_click();
             }
         }
 
-        void on_mouse_enter(MouseEnterEvent&) override {
+        void on_mouse_enter(MouseEnterEvent&) override
+        {
             core::Input::set_cursor(core::Input::CURSOR_HAND);
         }
 
-        void on_mouse_leave(MouseLeaveEvent&) override {
+        void on_mouse_leave(MouseLeaveEvent&) override
+        {
             core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
         }
     };

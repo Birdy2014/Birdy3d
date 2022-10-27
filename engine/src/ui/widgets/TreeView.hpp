@@ -43,16 +43,16 @@ namespace Birdy3d::ui {
 
         TreeView(Options);
         virtual void draw() override;
-        virtual bool contains(glm::ivec2) const override;
+        [[nodiscard]] virtual bool contains(glm::ivec2) const override;
         virtual glm::ivec2 minimal_size() override;
         void unselect() { m_selected_item = {}; }
 
         void update_cache();
 
     protected:
-        const int m_indent_size = 20;
-        const int m_offset_x_button = -12;
-        const int m_offset_x_left = 15;
+        int const m_indent_size = 20;
+        int const m_offset_x_button = -12;
+        int const m_offset_x_left = 15;
         std::list<TreeItem> m_item_cache;
         std::map<std::size_t, bool> m_item_collapsed;
         bool m_items_changed = true;

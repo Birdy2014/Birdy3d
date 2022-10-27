@@ -20,22 +20,24 @@ namespace Birdy3d::ecs {
 
         std::shared_ptr<Entity> clone();
 
-        const std::vector<std::shared_ptr<Entity>>& children() const { return m_children; }
+        [[nodiscard]] std::vector<std::shared_ptr<Entity>> const& children() const { return m_children; }
         void add_child(std::shared_ptr<Entity>);
         void add_child_at(std::size_t, std::shared_ptr<Entity>);
 
         template <class T = Entity, typename... Args>
-        std::shared_ptr<T> add_child(Args... args) {
+        std::shared_ptr<T> add_child(Args... args)
+        {
             static_assert(std::is_base_of<Entity, T>::value);
             auto entity = std::make_shared<T>(args...);
             add_child(entity);
             return std::static_pointer_cast<T>(entity);
         }
 
-        const std::vector<std::shared_ptr<Component>>& components() const { return m_components; }
+        [[nodiscard]] std::vector<std::shared_ptr<Component>> const& components() const { return m_components; }
         void add_component(std::shared_ptr<Component>);
         template <class T, typename... Args>
-        std::shared_ptr<T> add_component(Args... args) {
+        std::shared_ptr<T> add_component(Args... args)
+        {
             static_assert(std::is_base_of<Component, T>::value);
             auto component = std::make_shared<T>(args...);
             add_component(component);
@@ -52,10 +54,11 @@ namespace Birdy3d::ecs {
         void set_scene(Scene* scene);
 
         template <class T>
-        void get_components(std::vector<std::shared_ptr<T>>& components, bool hidden = true, bool recursive = false) const {
+        void get_components(std::vector<std::shared_ptr<T>>& components, bool hidden = true, bool recursive = false) const
+        {
             if (this->hidden && !hidden)
                 return;
-            for (const auto& c : m_components) {
+            for (auto const& c : m_components) {
                 if (!c->loaded())
                     continue;
                 auto casted = std::dynamic_pointer_cast<T>(c);
@@ -64,7 +67,7 @@ namespace Birdy3d::ecs {
                 }
             }
             if (recursive) {
-                for (const auto& o : m_children) {
+                for (auto const& o : m_children) {
                     o->get_components<T>(components, hidden, recursive);
                 }
             }
@@ -72,17 +75,19 @@ namespace Birdy3d::ecs {
         }
 
         template <class T>
-        std::vector<std::shared_ptr<T>> get_components(bool hidden = true, bool recursive = false) const {
+        std::vector<std::shared_ptr<T>> get_components(bool hidden = true, bool recursive = false) const
+        {
             std::vector<std::shared_ptr<T>> components;
             get_components<T>(components, hidden, recursive);
             return components;
         }
 
         template <class T>
-        std::shared_ptr<T> get_component(bool hidden = true, bool recursive = false) const {
+        std::shared_ptr<T> get_component(bool hidden = true, bool recursive = false) const
+        {
             if (this->hidden && !hidden)
                 return nullptr;
-            for (const auto& c : m_components) {
+            for (auto const& c : m_components) {
                 if (!c->loaded())
                     continue;
                 auto casted = std::dynamic_pointer_cast<T>(c);
@@ -91,7 +96,7 @@ namespace Birdy3d::ecs {
                 }
             }
             if (recursive) {
-                for (const auto& o : m_children) {
+                for (auto const& o : m_children) {
                     auto c = o->get_component<T>(hidden, recursive);
                     if (c)
                         return c;
@@ -103,7 +108,7 @@ namespace Birdy3d::ecs {
         void remove();
         virtual void serialize(serializer::Adapter&);
 
-        bool is_descendant_of(Entity const&) const;
+        [[nodiscard]] bool is_descendant_of(Entity const&) const;
         [[nodiscard]] std::shared_ptr<Entity> move_child_out(Entity*);
 
     private:

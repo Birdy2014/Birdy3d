@@ -8,7 +8,8 @@
 namespace Birdy3d::serializer {
 
     template <class Base, class Derived>
-    Base* create_derived() {
+    Base* create_derived()
+    {
         return new Derived();
     }
 
@@ -18,11 +19,13 @@ namespace Birdy3d::serializer {
         typedef std::map<std::string, CreateInstanceFunction> TypeCreateMap;
         typedef std::unordered_map<std::type_index, std::string> TypeNameMap;
 
-        static Base* create_instance(std::string const& s) {
+        static Base* create_instance(std::string const& s)
+        {
             return get_create_map()[s]();
         }
 
-        static std::string instance_name(std::type_index i) {
+        static std::string instance_name(std::type_index i)
+        {
             return get_name_map()[i];
         }
 
@@ -30,13 +33,15 @@ namespace Birdy3d::serializer {
         static TypeCreateMap* create_instance_map;
         static TypeNameMap* name_type_map;
 
-        static TypeCreateMap& get_create_map() {
+        static TypeCreateMap& get_create_map()
+        {
             if (!create_instance_map)
                 create_instance_map = new TypeCreateMap;
             return *create_instance_map;
         }
 
-        static TypeNameMap& get_name_map() {
+        static TypeNameMap& get_name_map()
+        {
             if (!name_type_map)
                 name_type_map = new TypeNameMap;
             return *name_type_map;
@@ -45,7 +50,8 @@ namespace Birdy3d::serializer {
 
     template <class Base, class Derived>
     struct DerivedRegister : public BaseRegister<Base> {
-        DerivedRegister(std::string const& s) {
+        DerivedRegister(std::string const& s)
+        {
             BaseRegister<Base>::get_create_map()[s] = &create_derived<Base, Derived>;
             BaseRegister<Base>::get_name_map()[typeid(Derived)] = s;
         }

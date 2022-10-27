@@ -4,23 +4,28 @@
 
 namespace Birdy3d::render {
 
-    void Material::diffuse_map(const core::ResourceIdentifier& id) {
+    void Material::diffuse_map(core::ResourceIdentifier const& id)
+    {
         m_diffuse_map = id;
     }
 
-    void Material::specular_map(const core::ResourceIdentifier& id) {
+    void Material::specular_map(core::ResourceIdentifier const& id)
+    {
         m_specular_map = id;
     }
 
-    void Material::normal_map(const core::ResourceIdentifier& id) {
+    void Material::normal_map(core::ResourceIdentifier const& id)
+    {
         m_normal_map = id;
     }
 
-    void Material::emissive_map(const core::ResourceIdentifier& id) {
+    void Material::emissive_map(core::ResourceIdentifier const& id)
+    {
         m_emissive_map = id;
     }
 
-    void Material::use(const Shader& shader) const {
+    void Material::use(Shader const& shader) const
+    {
         shader.set_bool("material.diffuse_map_enabled", diffuse_map_enabled);
         shader.set_vec4("material.diffuse_color", diffuse_color);
         m_diffuse_map->bind(0);
@@ -41,14 +46,16 @@ namespace Birdy3d::render {
         shader.set_int("material.emissive_map", 3);
     }
 
-    bool Material::transparent() const {
+    bool Material::transparent() const
+    {
         if (diffuse_map_enabled)
             return m_diffuse_map->transparent();
         else
             return diffuse_color.value.a < 1;
     }
 
-    void Material::serialize(serializer::Adapter& adapter) {
+    void Material::serialize(serializer::Adapter& adapter)
+    {
         adapter("diffuse_map_enabled", diffuse_map_enabled);
         adapter("diffuse_color", diffuse_color);
         adapter("diffuse_map", m_diffuse_map);

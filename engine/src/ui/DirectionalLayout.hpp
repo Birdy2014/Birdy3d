@@ -19,12 +19,12 @@ namespace Birdy3d::ui {
 
         DirectionalLayout() = delete;
         DirectionalLayout(Direction dir, int gap = 0, bool preserve_child_size = false);
-        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const override;
-        glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override;
+        void arrange(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const override;
+        [[nodiscard]] glm::ivec2 minimal_size(std::list<std::shared_ptr<Widget>> const& children) const override;
 
     private:
-        void arrange_full_size(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const;
-        void arrange_preserve_size(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const;
+        void arrange_full_size(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const;
+        void arrange_preserve_size(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const;
     };
 
 }

@@ -21,13 +21,13 @@ namespace Birdy3d::render {
         Spotlight(utils::Color color = utils::Color::WHITE, float intensity_ambient = 1, float intensity_diffuse = 1, float linear = 0, float quadratic = 0, float inner_cutoff = glm::radians(40.0f), float outer_cutoff = glm::radians(50.0f), bool shadow_enabled = true);
         void setup_shadow_map();
         void gen_shadow_map();
-        void use(const Shader& light_shader, int id, int textureid);
+        void use(Shader const& light_shader, int id, int textureid);
         void start() override;
         void update() override;
         void serialize(serializer::Adapter&) override;
 
     private:
-        const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+        unsigned int const shadow_width = 2048, shadow_height = 2048;
         float m_far = 25.0f;
         glm::mat4 m_light_space_transform;
         core::ResourceHandle<Shader> m_depth_shader;

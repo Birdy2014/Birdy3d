@@ -7,10 +7,11 @@
 
 namespace Birdy3d::physics {
 
-    std::shared_ptr<render::Model> ConvexMeshGenerators::generate_model(GenerationMode mode, const render::Model& model) {
+    std::shared_ptr<render::Model> ConvexMeshGenerators::generate_model(GenerationMode mode, render::Model const& model)
+    {
         if (mode == GenerationMode::COPY || mode == GenerationMode::HULL_MESHES || mode == GenerationMode::DECOMPOSITION_MESHES) {
             std::vector<render::Mesh> meshes;
-            for (const auto& m : model.get_meshes()) {
+            for (auto const& m : model.get_meshes()) {
                 std::optional<render::Mesh> out_mesh;
                 switch (mode) {
                 case GenerationMode::COPY:
@@ -35,10 +36,10 @@ namespace Birdy3d::physics {
             std::vector<render::Vertex> vertices;
             std::vector<unsigned int> indices;
             unsigned int previous_sizes = 0;
-            for (const auto& m : model.get_meshes()) {
-                for (const auto& vertex : m.vertices)
+            for (auto const& m : model.get_meshes()) {
+                for (auto const& vertex : m.vertices)
                     vertices.push_back(vertex);
-                for (const auto& index : m.indices)
+                for (auto const& index : m.indices)
                     indices.push_back(previous_sizes + index);
                 previous_sizes += m.indices.size();
             }
@@ -60,19 +61,21 @@ namespace Birdy3d::physics {
         }
     }
 
-    std::optional<render::Mesh> ConvexMeshGenerators::copy(const render::Mesh& mesh) {
+    std::optional<render::Mesh> ConvexMeshGenerators::copy(render::Mesh const& mesh)
+    {
         std::vector<render::Vertex> vertices = mesh.vertices;
         std::vector<unsigned int> indices = mesh.indices;
-        return render::Mesh { vertices, indices };
+        return render::Mesh{vertices, indices};
     }
 
-    std::optional<render::Mesh> ConvexMeshGenerators::hull(const render::Mesh& mesh) {
+    std::optional<render::Mesh> ConvexMeshGenerators::hull(render::Mesh const& mesh)
+    {
         std::vector<glm::vec3> visited;
 
         // Create first tetrahedron
         // Get line along one dimension
         glm::vec3 point_min, point_max;
-        for (auto direction : { glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1) }) {
+        for (auto direction : {glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)}) {
             point_max = mesh.find_furthest_point(direction);
             point_min = mesh.find_furthest_point(-direction);
             if (point_max != point_min)
@@ -85,7 +88,7 @@ namespace Birdy3d::physics {
         // Get furthest point from line
         glm::vec3 furthest_point_line = point_max;
         float furthest_distance = 0;
-        for (const auto& point : mesh.vertices) {
+        for (auto const& point : mesh.vertices) {
             // Calculate distance between furthest_point and line
             float distance = std::abs(glm::length(glm::cross(point_max - point_min, point.position - point_min)) / glm::length(point_max - point_min));
             if (distance > furthest_distance) {
@@ -103,7 +106,7 @@ namespace Birdy3d::physics {
         Triangle plane_triangle(point_min, point_max, furthest_point_line);
         glm::vec3 n = plane_triangle.normal();
         float d = glm::dot(n, point_min);
-        for (const auto& point : mesh.vertices) {
+        for (auto const& point : mesh.vertices) {
             float distance = glm::dot(glm::vec4(n, d), glm::vec4(point.position, -1.0f));
             if (std::abs(distance) > std::abs(furthest_distance)) {
                 furthest_point_plane = point.position;
@@ -119,7 +122,7 @@ namespace Birdy3d::physics {
         visited.push_back(point_max);
         visited.push_back(furthest_point_line);
         visited.push_back(furthest_point_plane);
-        auto intermediate = IntermediateMesh { point_min, point_max, furthest_point_line, furthest_point_plane };
+        auto intermediate = IntermediateMesh{point_min, point_max, furthest_point_line, furthest_point_plane};
 
         // Get other triangles
         bool done = false;
@@ -142,7 +145,8 @@ namespace Birdy3d::physics {
         return intermediate.to_mesh();
     }
 
-    std::optional<render::Mesh> ConvexMeshGenerators::decomposition(const render::Mesh&) {
+    std::optional<render::Mesh> ConvexMeshGenerators::decomposition(render::Mesh const&)
+    {
         // TODO: Convex decomposition
         BIRDY3D_TODO
         return {};

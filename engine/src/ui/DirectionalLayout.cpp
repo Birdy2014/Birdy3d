@@ -7,23 +7,26 @@ namespace Birdy3d::ui {
     DirectionalLayout::DirectionalLayout(Direction dir, int gap, bool preserve_child_size)
         : dir(dir)
         , gap(gap)
-        , preserve_child_size(preserve_child_size) { }
+        , preserve_child_size(preserve_child_size)
+    { }
 
-    void DirectionalLayout::arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const {
+    void DirectionalLayout::arrange(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const
+    {
         if (preserve_child_size)
             arrange_preserve_size(children, pos, size);
         else
             arrange_full_size(children, pos, size);
     }
 
-    glm::ivec2 DirectionalLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children) const {
+    glm::ivec2 DirectionalLayout::minimal_size(std::list<std::shared_ptr<Widget>> const& children) const
+    {
         if (children.empty())
             return glm::ivec2(0);
         glm::ivec2 minsize(0);
         switch (dir) {
         case Direction::RIGHT:
         case Direction::LEFT:
-            for (const auto& child : children) {
+            for (auto const& child : children) {
                 glm::ivec2 csize = child->minimal_size();
                 minsize.x += csize.x;
                 if (csize.y > minsize.y)
@@ -33,7 +36,7 @@ namespace Birdy3d::ui {
             break;
         case Direction::DOWN:
         case Direction::UP:
-            for (const auto& child : children) {
+            for (auto const& child : children) {
                 glm::ivec2 csize = child->minimal_size();
                 if (csize.x > minsize.x)
                     minsize.x = csize.x;
@@ -45,16 +48,17 @@ namespace Birdy3d::ui {
         return minsize;
     }
 
-    void DirectionalLayout::arrange_full_size(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const {
+    void DirectionalLayout::arrange_full_size(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const
+    {
         std::list<Widget*> smaller_widgets;
-        for (const auto& widget : children)
+        for (auto const& widget : children)
             smaller_widgets.push_back(widget.get());
         int gapps = gap * (children.size() - 1);
         float weights = 0;
         int widget_size;
         bool horizontal = dir == Direction::LEFT || dir == Direction::RIGHT;
 
-        for (const auto& c : children)
+        for (auto const& c : children)
             weights += c->weight;
 
         if (horizontal)
@@ -84,7 +88,7 @@ namespace Birdy3d::ui {
         }
 
         int offset = 0;
-        for (const auto& w : children) {
+        for (auto const& w : children) {
             int current_widget_size = std::max(static_cast<int>(widget_size * w->weight), horizontal ? w->minimal_size().x : w->minimal_size().y);
             switch (dir) {
             case Direction::RIGHT:
@@ -104,9 +108,10 @@ namespace Birdy3d::ui {
         }
     }
 
-    void DirectionalLayout::arrange_preserve_size(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const {
+    void DirectionalLayout::arrange_preserve_size(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const
+    {
         int offset = 0;
-        for (const auto& w : children) {
+        for (auto const& w : children) {
             glm::ivec2 widget_size = w->preferred_size(size);
             switch (dir) {
             case Direction::RIGHT:

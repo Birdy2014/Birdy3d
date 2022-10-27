@@ -33,10 +33,10 @@ namespace Birdy3d::ui {
         bool m_dragging = false;
         std::any m_dragging_value;
 
-        void on_scroll_raw(const events::InputScrollEvent& event);
-        void on_click_raw(const events::InputClickEvent& event);
-        void on_key_raw(const events::InputKeyEvent& event);
-        void on_char_raw(const events::InputCharEvent& event);
+        void on_scroll_raw(events::InputScrollEvent const& event);
+        void on_click_raw(events::InputClickEvent const& event);
+        void on_key_raw(events::InputKeyEvent const& event);
+        void on_char_raw(events::InputCharEvent const& event);
     };
 
 }

@@ -10,9 +10,11 @@ namespace Birdy3d::events {
         ecs::Entity* const entity;
 
         TransformChangedEvent(ecs::Entity* entity)
-            : entity(entity) { }
+            : entity(entity)
+        { }
 
-        bool check_options(std::any options) override {
+        bool check_options(std::any options) override
+        {
             return options.type() == typeid(ecs::Entity*) && std::any_cast<ecs::Entity*>(options) == entity;
         }
     };

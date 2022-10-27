@@ -26,33 +26,34 @@ namespace Birdy3d::serializer {
     class MinimalJsonGenerator : public Generator {
     public:
         using Generator::Generator;
-        void generate(const Value&) override;
+        void generate(Value const&) override;
 
     private:
-        void generate_string(const String&);
-        void generate_number(const Number&);
-        void generate_bool(const Bool&);
-        void generate_null(const Null&);
-        void generate_array(const Array&);
-        void generate_object(const Object&);
+        void generate_string(String const&);
+        void generate_number(Number const&);
+        void generate_bool(Bool const&);
+        void generate_null(Null const&);
+        void generate_array(Array const&);
+        void generate_object(Object const&);
     };
 
     class PrettyJsonGenerator : public Generator {
     public:
         PrettyJsonGenerator(std::ostream& stream, std::size_t indent_width = 4)
             : Generator(stream)
-            , m_indent_width(indent_width) { }
-        void generate(const Value&) override;
+            , m_indent_width(indent_width)
+        { }
+        void generate(Value const&) override;
 
     private:
         std::size_t m_indent_width = 4;
 
-        void generate_string(const String&);
-        void generate_number(const Number&);
-        void generate_bool(const Bool&);
-        void generate_null(const Null&);
-        void generate_array(const Array&, std::size_t);
-        void generate_object(const Object&, std::size_t);
+        void generate_string(String const&);
+        void generate_number(Number const&);
+        void generate_bool(Bool const&);
+        void generate_null(Null const&);
+        void generate_array(Array const&, std::size_t);
+        void generate_object(Object const&, std::size_t);
     };
 
 }

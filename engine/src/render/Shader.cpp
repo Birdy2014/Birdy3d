@@ -7,12 +7,13 @@
 
 namespace Birdy3d::render {
 
-    Shader::Shader(const std::string& name, std::map<std::string, std::string> params)
+    Shader::Shader(std::string const& name, std::map<std::string, std::string> params)
         : m_name(name)
-        , m_params(params) {
+        , m_params(params)
+    {
         PreprocessedSources shader_sources = preprocess_file(name);
 
-        for (const auto& param : m_params) {
+        for (auto const& param : m_params) {
             auto it = std::find(m_valid_param_names.cbegin(), m_valid_param_names.cend(), param.first);
             if (it == m_valid_param_names.cend())
                 core::Logger::warn("Shader '{}': invalid parameter '{}'", name, param.first);
@@ -27,7 +28,8 @@ namespace Birdy3d::render {
         compile(shader_sources);
     }
 
-    bool Shader::check_compile_errors(GLuint shader, GLenum type) {
+    bool Shader::check_compile_errors(GLuint shader, GLenum type)
+    {
         std::string type_string = "Invalid type";
         if (type == GL_VERTEX_SHADER)
             type_string = "vertex";
@@ -59,7 +61,8 @@ namespace Birdy3d::render {
         return false;
     }
 
-    Shader::PreprocessedSources Shader::preprocess_file(std::string name) {
+    Shader::PreprocessedSources Shader::preprocess_file(std::string name)
+    {
         PreprocessedSources preprocessed_file;
 
         std::string path = core::ResourceManager::get_resource_path(name, core::ResourceType::SHADER);
@@ -130,13 +133,14 @@ namespace Birdy3d::render {
         return preprocessed_file;
     }
 
-    void Shader::compile(const Shader::PreprocessedSources& shader_sources) {
+    void Shader::compile(Shader::PreprocessedSources const& shader_sources)
+    {
         m_id = glCreateProgram();
 
         GLuint vertex_shader = 0, geometry_shader = 0, fragment_shader = 0;
 
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-        const char* vertex_source_string = shader_sources.vertex_shader.c_str();
+        char const* vertex_source_string = shader_sources.vertex_shader.c_str();
         glShaderSource(vertex_shader, 1, &vertex_source_string, nullptr);
         glCompileShader(vertex_shader);
         glAttachShader(m_id, vertex_shader);
@@ -148,7 +152,7 @@ namespace Birdy3d::render {
 
         if (shader_sources.has_geometry_shader) {
             geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
-            const char* geometry_source_string = shader_sources.geometry_shader.c_str();
+            char const* geometry_source_string = shader_sources.geometry_shader.c_str();
             glShaderSource(geometry_shader, 1, &geometry_source_string, nullptr);
             glCompileShader(geometry_shader);
             glAttachShader(m_id, geometry_shader);
@@ -164,7 +168,7 @@ namespace Birdy3d::render {
         }
 
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        const char* fragment_source_string = shader_sources.fragment_shader.c_str();
+        char const* fragment_source_string = shader_sources.fragment_shader.c_str();
         glShaderSource(fragment_shader, 1, &fragment_source_string, nullptr);
         glCompileShader(fragment_shader);
         glAttachShader(m_id, fragment_shader);
@@ -192,107 +196,133 @@ namespace Birdy3d::render {
         glDeleteShader(fragment_shader);
     }
 
-    void Shader::use() const {
+    void Shader::use() const
+    {
         glUseProgram(m_id);
     }
 
-    void Shader::set_bool(const char* name, bool value) const {
+    void Shader::set_bool(char const* name, bool value) const
+    {
         glProgramUniform1i(m_id, glGetUniformLocation(m_id, name), (int)value);
     }
 
-    void Shader::set_int(const char* name, int value) const {
+    void Shader::set_int(char const* name, int value) const
+    {
         glProgramUniform1i(m_id, glGetUniformLocation(m_id, name), value);
     }
 
-    void Shader::set_float(const char* name, float value) const {
+    void Shader::set_float(char const* name, float value) const
+    {
         glProgramUniform1f(m_id, glGetUniformLocation(m_id, name), value);
     }
 
-    void Shader::set_vec2(const char* name, const glm::vec2& value) const {
+    void Shader::set_vec2(char const* name, glm::vec2 const& value) const
+    {
         glProgramUniform2fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
-    void Shader::set_vec2(const char* name, float x, float y) const {
+    void Shader::set_vec2(char const* name, float x, float y) const
+    {
         glProgramUniform2f(m_id, glGetUniformLocation(m_id, name), x, y);
     }
 
-    void Shader::set_vec3(const char* name, const glm::vec3& value) const {
+    void Shader::set_vec3(char const* name, glm::vec3 const& value) const
+    {
         glProgramUniform3fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
-    void Shader::set_vec3(const char* name, float x, float y, float z) const {
+    void Shader::set_vec3(char const* name, float x, float y, float z) const
+    {
         glProgramUniform3f(m_id, glGetUniformLocation(m_id, name), x, y, z);
     }
 
-    void Shader::set_vec4(const char* name, const glm::vec4& value) const {
+    void Shader::set_vec4(char const* name, glm::vec4 const& value) const
+    {
         glProgramUniform4fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
-    void Shader::set_vec4(const char* name, float x, float y, float z, float w) const {
+    void Shader::set_vec4(char const* name, float x, float y, float z, float w) const
+    {
         glProgramUniform4f(m_id, glGetUniformLocation(m_id, name), x, y, z, w);
     }
 
-    void Shader::set_mat2(const char* name, const glm::mat2& mat) const {
+    void Shader::set_mat2(char const* name, glm::mat2 const& mat) const
+    {
         glProgramUniformMatrix2fv(m_id, glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::set_mat3(const char* name, const glm::mat3& mat) const {
+    void Shader::set_mat3(char const* name, glm::mat3 const& mat) const
+    {
         glProgramUniformMatrix3fv(m_id, glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::set_mat4(const char* name, const glm::mat4& mat) const {
+    void Shader::set_mat4(char const* name, glm::mat4 const& mat) const
+    {
         glProgramUniformMatrix4fv(m_id, glGetUniformLocation(m_id, name), 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::set_bool(const std::string& name, bool value) const {
+    void Shader::set_bool(std::string const& name, bool value) const
+    {
         glProgramUniform1i(m_id, glGetUniformLocation(m_id, name.c_str()), (int)value);
     }
 
-    void Shader::set_int(const std::string& name, int value) const {
+    void Shader::set_int(std::string const& name, int value) const
+    {
         glProgramUniform1i(m_id, glGetUniformLocation(m_id, name.c_str()), value);
     }
 
-    void Shader::set_float(const std::string& name, float value) const {
+    void Shader::set_float(std::string const& name, float value) const
+    {
         glProgramUniform1f(m_id, glGetUniformLocation(m_id, name.c_str()), value);
     }
 
-    void Shader::set_vec2(const std::string& name, const glm::vec2& value) const {
+    void Shader::set_vec2(std::string const& name, glm::vec2 const& value) const
+    {
         glProgramUniform2fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
-    void Shader::set_vec2(const std::string& name, float x, float y) const {
+    void Shader::set_vec2(std::string const& name, float x, float y) const
+    {
         glProgramUniform2f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y);
     }
 
-    void Shader::set_vec3(const std::string& name, const glm::vec3& value) const {
+    void Shader::set_vec3(std::string const& name, glm::vec3 const& value) const
+    {
         glProgramUniform3fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
-    void Shader::set_vec3(const std::string& name, float x, float y, float z) const {
+    void Shader::set_vec3(std::string const& name, float x, float y, float z) const
+    {
         glProgramUniform3f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y, z);
     }
 
-    void Shader::set_vec4(const std::string& name, const glm::vec4& value) const {
+    void Shader::set_vec4(std::string const& name, glm::vec4 const& value) const
+    {
         glProgramUniform4fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
-    void Shader::set_vec4(const std::string& name, float x, float y, float z, float w) const {
+    void Shader::set_vec4(std::string const& name, float x, float y, float z, float w) const
+    {
         glProgramUniform4f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y, z, w);
     }
 
-    void Shader::set_mat2(const std::string& name, const glm::mat2& mat) const {
+    void Shader::set_mat2(std::string const& name, glm::mat2 const& mat) const
+    {
         glProgramUniformMatrix2fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::set_mat3(const std::string& name, const glm::mat3& mat) const {
+    void Shader::set_mat3(std::string const& name, glm::mat3 const& mat) const
+    {
         glProgramUniformMatrix3fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::set_mat4(const std::string& name, const glm::mat4& mat) const {
+    void Shader::set_mat4(std::string const& name, glm::mat4 const& mat) const
+    {
         glProgramUniformMatrix4fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::PreprocessedSources::operator+=(const PreprocessedSources& other) {
+    void Shader::PreprocessedSources::operator+=(PreprocessedSources const& other)
+    {
         vertex_shader += other.vertex_shader;
         geometry_shader += other.geometry_shader;
         fragment_shader += other.fragment_shader;

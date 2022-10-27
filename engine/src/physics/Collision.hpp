@@ -11,7 +11,7 @@ namespace Birdy3d::physics {
         glm::vec3 furthest_b; // Furthest point of B into A
         glm::vec3 normal; // B – A normalized
         float depth; // Length of B – A
-        bool hasCollision = false;
+        bool has_collision = false;
     };
 
     class Collision {
@@ -20,11 +20,13 @@ namespace Birdy3d::physics {
         Collider* collider_b;
         CollisionPoints points;
 
-        Collision(Collider* colliderA, Collider* colliderB)
-            : collider_a(colliderA)
-            , collider_b(colliderB) { }
+        Collision(Collider* collider_a, Collider* collider_b)
+            : collider_a(collider_a)
+            , collider_b(collider_b)
+        { }
 
-        bool contains(Collider* collider) {
+        bool contains(Collider* collider)
+        {
             return collider == collider_a || collider == collider_b;
         }
     };

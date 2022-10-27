@@ -19,9 +19,11 @@ namespace Birdy3d::render {
         , m_inner_cutoff(inner_cutoff)
         , m_outer_cutoff(outer_cutoff)
         , shadow_enabled(shadow_enabled)
-        , m_shadow_rendertarget(SHADOW_WIDTH, SHADOW_HEIGHT) { }
+        , m_shadow_rendertarget(shadow_width, shadow_height)
+    { }
 
-    void Spotlight::setup_shadow_map() {
+    void Spotlight::setup_shadow_map()
+    {
         m_depth_shader = core::ResourceManager::get_shader("spot_light_depth.glsl");
         m_shadow_map = m_shadow_rendertarget.add_texture(Texture::Preset::DEPTH);
         m_shadow_rendertarget.finish();
@@ -31,7 +33,8 @@ namespace Birdy3d::render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Spotlight::gen_shadow_map() {
+    void Spotlight::gen_shadow_map()
+    {
         glm::vec3 world_pos = entity->transform.world_position();
 
         m_shadow_rendertarget.bind();
@@ -40,7 +43,7 @@ namespace Birdy3d::render {
         glEnable(GL_DEPTH_TEST);
 
         m_depth_shader->use();
-        float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
+        float aspect = (float)shadow_width / (float)shadow_height;
         float near = 1.0f;
         m_far = 25.0f;
         glm::mat4 light_projection = glm::perspective(m_outer_cutoff * 2, aspect, near, m_far);
@@ -55,7 +58,8 @@ namespace Birdy3d::render {
         glCullFace(GL_BACK);
     }
 
-    void Spotlight::use(const Shader& light_shader, int id, int textureid) {
+    void Spotlight::use(Shader const& light_shader, int id, int textureid)
+    {
         if (!m_shadow_map_updated) {
             gen_shadow_map();
             m_shadow_map_updated = true;
@@ -76,16 +80,19 @@ namespace Birdy3d::render {
         light_shader.set_int(name + "shadow_map", textureid);
     }
 
-    void Spotlight::start() {
+    void Spotlight::start()
+    {
         setup_shadow_map();
     }
 
-    void Spotlight::update() {
+    void Spotlight::update()
+    {
         if (shadow_enabled)
             m_shadow_map_updated = false;
     }
 
-    void Spotlight::serialize(serializer::Adapter& adapter) {
+    void Spotlight::serialize(serializer::Adapter& adapter)
+    {
         adapter("shadow_enabled", shadow_enabled);
         adapter("color", color);
         adapter("intensity_ambient", intensity_ambient);

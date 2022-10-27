@@ -14,7 +14,7 @@ namespace Birdy3d::ecs {
         void external_start();
         void external_update();
         void external_cleanup();
-        bool loaded() const { return m_loaded; }
+        [[nodiscard]] bool loaded() const { return m_loaded; }
         void remove();
         virtual void serialize(serializer::Adapter&) { }
 
@@ -33,9 +33,9 @@ namespace Birdy3d::ecs {
     protected:
         bool m_loaded = false;
 
-        virtual void start() {};
-        virtual void update() {};
-        virtual void cleanup() {};
+        virtual void start(){};
+        virtual void update(){};
+        virtual void cleanup(){};
 
         BIRDY3D_REGISTER_TYPE_DEC(Component);
     };

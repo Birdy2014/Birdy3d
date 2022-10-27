@@ -7,27 +7,32 @@
 
 namespace Birdy3d::ui {
 
-    glm::ivec2 TextField::minimal_size() {
-        return { 1.0f, core::Application::theme().line_height() };
+    glm::ivec2 TextField::minimal_size()
+    {
+        return {1.0f, core::Application::theme().line_height()};
     }
 
-    std::string TextField::text() {
+    std::string TextField::text()
+    {
         return *m_text;
     }
 
-    void TextField::text(std::string text) {
+    void TextField::text(std::string text)
+    {
         std::u32string new_text = utils::Unicode::utf8_to_utf32(text);
         if (new_text != *m_text)
             m_changed = true;
         *m_text = new_text;
     }
 
-    void TextField::append(std::string text) {
+    void TextField::append(std::string text)
+    {
         m_changed = true;
         *m_text += text;
     }
 
-    void TextField::clear() {
+    void TextField::clear()
+    {
         m_text->clear();
         m_text->cursor_pos = 0;
         m_selecting = false;
@@ -37,11 +42,13 @@ namespace Birdy3d::ui {
         m_changed = true;
     }
 
-    void TextField::scroll_down() {
+    void TextField::scroll_down()
+    {
         m_scroll_offset.y = m_max_scroll_offset.y;
     }
 
-    void TextField::on_update() {
+    void TextField::on_update()
+    {
         Scrollable::on_update();
         if (m_selecting) {
             auto local_pos = core::Input::cursor_pos_int() - m_actual_pos;
@@ -57,7 +64,8 @@ namespace Birdy3d::ui {
         }
     }
 
-    void TextField::on_click(ClickEvent& event) {
+    void TextField::on_click(ClickEvent& event)
+    {
         if (multiline)
             Scrollable::on_click(event);
 
@@ -86,7 +94,8 @@ namespace Birdy3d::ui {
         }
     }
 
-    void TextField::on_key(KeyEvent& event) {
+    void TextField::on_key(KeyEvent& event)
+    {
         if (readonly || (event.action != GLFW_PRESS && event.action != GLFW_REPEAT))
             return;
 
@@ -130,16 +139,16 @@ namespace Birdy3d::ui {
             case GLFW_KEY_UP: {
                 if (!multiline)
                     break;
-                const auto cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
-                const auto line_height = core::Application::theme().line_height();
-                m_text->cursor_pos = char_index({ cursor_pixel_pos.x, cursor_pixel_pos.y - line_height * 2.0f });
+                auto const cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
+                auto const line_height = core::Application::theme().line_height();
+                m_text->cursor_pos = char_index({cursor_pixel_pos.x, cursor_pixel_pos.y - line_height * 2.0f});
                 break;
             }
             case GLFW_KEY_DOWN: {
                 if (!multiline)
                     break;
-                const auto cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
-                m_text->cursor_pos = char_index({ cursor_pixel_pos.x, cursor_pixel_pos.y });
+                auto const cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
+                m_text->cursor_pos = char_index({cursor_pixel_pos.x, cursor_pixel_pos.y});
                 break;
             }
             }
@@ -147,12 +156,14 @@ namespace Birdy3d::ui {
         scroll_if_needed(m_text->cursor_pos);
     }
 
-    void TextField::draw() {
+    void TextField::draw()
+    {
         if (multiline)
             Scrollable::draw();
     }
 
-    void TextField::on_char(CharEvent& event) {
+    void TextField::on_char(CharEvent& event)
+    {
         if (readonly)
             return;
 
@@ -170,21 +181,25 @@ namespace Birdy3d::ui {
         scroll_if_needed(m_text->cursor_pos);
     }
 
-    void TextField::on_mouse_enter(MouseEnterEvent&) {
+    void TextField::on_mouse_enter(MouseEnterEvent&)
+    {
         if (!readonly)
             core::Input::set_cursor(core::Input::CURSOR_TEXT);
     }
 
-    void TextField::on_mouse_leave(MouseLeaveEvent&) {
+    void TextField::on_mouse_leave(MouseLeaveEvent&)
+    {
         if (!readonly)
             core::Input::set_cursor(core::Input::CURSOR_DEFAULT);
     }
 
-    void TextField::on_focus_lost(FocusLostEvent&) {
+    void TextField::on_focus_lost(FocusLostEvent&)
+    {
         m_text->cursor_visible = false;
     }
 
-    void TextField::clear_selection() {
+    void TextField::clear_selection()
+    {
         if (!m_text->highlight_visible)
             return;
         if (m_text->highlight_start > m_text->highlight_end)
@@ -200,7 +215,8 @@ namespace Birdy3d::ui {
         m_selecting = false;
     }
 
-    void TextField::late_update() {
+    void TextField::late_update()
+    {
         Widget::late_update();
         if (m_changed) {
             if (on_change)
@@ -209,9 +225,10 @@ namespace Birdy3d::ui {
         }
     }
 
-    void TextField::scroll_if_needed(std::size_t cursor_pos) {
-        const auto cursor_pixel_pos = coordinate_of_index(cursor_pos) + m_scroll_offset;
-        const auto line_height = core::Application::theme().line_height();
+    void TextField::scroll_if_needed(std::size_t cursor_pos)
+    {
+        auto const cursor_pixel_pos = coordinate_of_index(cursor_pos) + m_scroll_offset;
+        auto const line_height = core::Application::theme().line_height();
         // Scroll left
         if (cursor_pixel_pos.x < 0)
             m_scroll_offset.x -= cursor_pixel_pos.x;
@@ -226,7 +243,8 @@ namespace Birdy3d::ui {
             m_scroll_offset.y -= cursor_pixel_pos.y - m_actual_size.y;
     }
 
-    std::size_t TextField::char_index(glm::ivec2 pos) {
+    std::size_t TextField::char_index(glm::ivec2 pos)
+    {
         float width = 0;
         float height = core::Application::theme().line_height();
         float current_char_width;
@@ -251,9 +269,10 @@ namespace Birdy3d::ui {
         return m_text->length();
     }
 
-    glm::ivec2 TextField::coordinate_of_index(std::size_t index) {
-        const auto line_height = core::Application::theme().line_height();
-        glm::ivec2 pos = { 0.0f, line_height };
+    glm::ivec2 TextField::coordinate_of_index(std::size_t index)
+    {
+        auto const line_height = core::Application::theme().line_height();
+        glm::ivec2 pos = {0.0f, line_height};
         for (std::size_t i = 0; i < m_text->length() && i < index; ++i) {
             if (m_text->text()[i] == '\x1B') {
                 i++; // Go to color

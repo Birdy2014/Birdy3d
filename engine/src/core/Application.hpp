@@ -25,7 +25,7 @@ namespace Birdy3d::core {
         static std::weak_ptr<ui::Canvas> canvas;
         static ecs::Entity* selected_entity;
 
-        static bool init(const char* window_name, int width, int height, const std::string& theme_name);
+        static bool init(char const* window_name, int width, int height, std::string const& theme_name);
         static void cleanup();
         static void mainloop();
         static GLFWwindow* get_window();
@@ -36,7 +36,7 @@ namespace Birdy3d::core {
         static int option_int(IntOption);
         static void option_int(IntOption, int);
         static ui::Theme& theme();
-        static bool theme(const std::string&);
+        static bool theme(std::string const&);
 
     private:
         static GLFWwindow* m_window;
@@ -50,7 +50,7 @@ namespace Birdy3d::core {
         static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
         static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void character_callback(GLFWwindow* window, unsigned int codepoint);
-        static void gl_message_callback(GLenum, GLenum, GLenum, GLenum, GLsizei, const GLchar*, const void*);
+        static void gl_message_callback(GLenum, GLenum, GLenum, GLenum, GLsizei, GLchar const*, void const*);
     };
 
 }

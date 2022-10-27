@@ -10,11 +10,13 @@
 namespace Birdy3d::physics {
 
     PhysicsWorld::PhysicsWorld(ecs::Entity* scene)
-        : m_scene(scene) { }
+        : m_scene(scene)
+    { }
 
     PhysicsWorld::~PhysicsWorld() { }
 
-    void PhysicsWorld::update() {
+    void PhysicsWorld::update()
+    {
         auto colliders = m_scene->get_components<Collider>(false, true);
         for (auto it = colliders.begin(); it != colliders.end(); it++) {
             auto c1 = *it;
@@ -22,7 +24,7 @@ namespace Birdy3d::physics {
                 if (c1 == c2)
                     continue;
                 Collision* collision = nullptr;
-                for (const auto& c : m_collisions) {
+                for (auto const& c : m_collisions) {
                     if (c->contains(c1.get()) && c->contains(c2.get())) {
                         collision = c.get();
                         break;
@@ -33,10 +35,10 @@ namespace Birdy3d::physics {
                     collision = unique_collision.get();
                     m_collisions.push_back(std::move(unique_collision));
                 }
-                bool collided_last_frame = collision->points.hasCollision;
+                bool collided_last_frame = collision->points.has_collision;
                 CollisionPoints points = c1->collides(*c2.get());
                 collision->points = points;
-                if (points.hasCollision) {
+                if (points.has_collision) {
                     if (collided_last_frame)
                         core::Application::event_bus->emit<events::CollisionEvent>(c1, c2, events::CollisionEvent::COLLIDING);
                     else

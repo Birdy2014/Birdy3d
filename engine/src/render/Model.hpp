@@ -13,14 +13,14 @@ namespace Birdy3d::render {
 
     class Model {
     public:
-        Model(const std::string& path);
+        Model(std::string const& path);
         Model(Mesh);
         Model(std::vector<Mesh>&);
-        void render(ecs::Entity& entity, const Material* material, const Shader& shader, bool transparent) const;
-        void render_depth(ecs::Entity&, const Shader&) const;
-        void render_wireframe(ecs::Entity&, const Shader&) const;
-        const std::vector<Mesh>& get_meshes() const;
-        std::pair<glm::vec3, glm::vec3> bounding_box() const { return m_bounding_box; }
+        void render(ecs::Entity& entity, Material const* material, Shader const& shader, bool transparent) const;
+        void render_depth(ecs::Entity&, Shader const&) const;
+        void render_wireframe(ecs::Entity&, Shader const&) const;
+        [[nodiscard]] std::vector<Mesh> const& get_meshes() const;
+        [[nodiscard]] std::pair<glm::vec3, glm::vec3> bounding_box() const { return m_bounding_box; }
 
     private:
         std::vector<Mesh> m_meshes;
@@ -29,8 +29,8 @@ namespace Birdy3d::render {
         std::pair<glm::vec3, glm::vec3> m_bounding_box;
 
         void load(std::string path);
-        void process_node(aiNode* node, const aiScene* scene);
-        Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
+        void process_node(aiNode* node, aiScene const* scene);
+        Mesh process_mesh(aiMesh* mesh, aiScene const* scene);
         void compute_bounding_box();
     };
 

@@ -73,7 +73,7 @@ namespace Birdy3d::serializer {
 
     // Reflection
     class ReflectClass;
-    void adapter_reflect(ReflectClass* reflect_class, const std::string& member_name, std::type_index member_type, void* member_ptr);
+    void adapter_reflect(ReflectClass* reflect_class, std::string const& member_name, std::type_index member_type, void* member_ptr);
 
     class Adapter {
     public:
@@ -85,14 +85,17 @@ namespace Birdy3d::serializer {
 
         Adapter(Object* object, Mode mode)
             : m_object(object)
-            , m_mode(mode) { }
+            , m_mode(mode)
+        { }
 
         Adapter(ReflectClass* reflect_class)
             : m_class(reflect_class)
-            , m_mode(Mode::REFLECT) { }
+            , m_mode(Mode::REFLECT)
+        { }
 
         template <typename T>
-        void operator()(const std::string& key, T& value) {
+        void operator()(std::string const& key, T& value)
+        {
             switch (m_mode) {
             case Mode::SAVE:
                 m_object->value[key] = adapter_save(value);
@@ -106,7 +109,8 @@ namespace Birdy3d::serializer {
             }
         }
 
-        Mode mode() {
+        Mode mode()
+        {
             return m_mode;
         }
 
@@ -120,12 +124,14 @@ namespace Birdy3d::serializer {
 
     // Implementations
     template <ArithmeticType T>
-    Value adapter_save(T& value) {
+    Value adapter_save(T& value)
+    {
         return Number(value);
     }
 
     template <class T>
-    Value adapter_save(T& value) {
+    Value adapter_save(T& value)
+    {
         auto object = Object();
         Adapter adapter(&object, Adapter::Mode::SAVE);
         value.serialize(adapter);
@@ -133,7 +139,8 @@ namespace Birdy3d::serializer {
     }
 
     template <typename T>
-    Value adapter_save(std::vector<T>& value) {
+    Value adapter_save(std::vector<T>& value)
+    {
         auto array = Array();
         for (T& item : value) {
             array.value.push_back(adapter_save(item));
@@ -142,7 +149,8 @@ namespace Birdy3d::serializer {
     }
 
     template <typename T, std::size_t N>
-    Value adapter_save(std::array<T, N>& value) {
+    Value adapter_save(std::array<T, N>& value)
+    {
         auto array = Array();
         for (T& item : value) {
             array.value.push_back(adapter_save(item));
@@ -151,7 +159,8 @@ namespace Birdy3d::serializer {
     }
 
     template <typename T>
-    Value adapter_save(std::unique_ptr<T>& value) {
+    Value adapter_save(std::unique_ptr<T>& value)
+    {
         if (value == nullptr)
             return Null();
         auto object = Object();
@@ -161,7 +170,8 @@ namespace Birdy3d::serializer {
     }
 
     template <typename T>
-    Value adapter_save(std::shared_ptr<T>& value) {
+    Value adapter_save(std::shared_ptr<T>& value)
+    {
         if (value == nullptr)
             return Null();
         auto object = Object();
@@ -174,7 +184,8 @@ namespace Birdy3d::serializer {
     }
 
     template <typename T>
-    Value adapter_save(std::weak_ptr<T>& value) {
+    Value adapter_save(std::weak_ptr<T>& value)
+    {
         auto ptr = value.lock();
         return adapter_save(ptr);
     }
@@ -183,13 +194,15 @@ namespace Birdy3d::serializer {
 
     // Implementations
     template <ArithmeticType T>
-    void adapter_load(Value* from, T& to) {
+    void adapter_load(Value* from, T& to)
+    {
         if (auto number_ptr = std::get_if<Number>(from))
             to = number_ptr->value;
     }
 
     template <class T>
-    void adapter_load(Value* from, T& to) {
+    void adapter_load(Value* from, T& to)
+    {
         if (auto object_ptr = std::get_if<Object>(from)) {
             Adapter adapter(object_ptr, Adapter::Mode::LOAD);
             to.serialize(adapter);
@@ -197,7 +210,8 @@ namespace Birdy3d::serializer {
     }
 
     template <typename T>
-    void adapter_load(Value* from, std::vector<T>& to) {
+    void adapter_load(Value* from, std::vector<T>& to)
+    {
         if (auto array_ptr = std::get_if<Array>(from)) {
             to.resize(array_ptr->value.size());
             for (std::size_t i = 0; i < array_ptr->value.size(); i++) {
@@ -207,7 +221,8 @@ namespace Birdy3d::serializer {
     }
 
     template <typename T, std::size_t N>
-    void adapter_load(Value* from, std::array<T, N>& to) {
+    void adapter_load(Value* from, std::array<T, N>& to)
+    {
         if (auto array_ptr = std::get_if<Array>(from)) {
             for (std::size_t i = 0; i < array_ptr->value.size(); i++) {
                 adapter_load(&array_ptr->value[i], to[i]);
@@ -216,7 +231,8 @@ namespace Birdy3d::serializer {
     }
 
     template <class T>
-    void adapter_load(Value* from, std::unique_ptr<T>& to) {
+    void adapter_load(Value* from, std::unique_ptr<T>& to)
+    {
         if (auto object_ptr = std::get_if<Object>(from)) {
             String* type_string_ptr;
             if ((type_string_ptr = std::get_if<String>(&object_ptr->value["type"])) && std::holds_alternative<Object>(object_ptr->value["data"])) {
@@ -229,7 +245,8 @@ namespace Birdy3d::serializer {
     }
 
     template <class T>
-    void adapter_load(Value* from, std::shared_ptr<T>& to) {
+    void adapter_load(Value* from, std::shared_ptr<T>& to)
+    {
         if (auto object_ptr = std::get_if<Object>(from)) {
             if (auto id_number_ptr = std::get_if<Number>(&object_ptr->value["id"])) {
                 std::shared_ptr<void> ptr = PointerRegistry::get_ptr_from_id(id_number_ptr->value);
@@ -250,7 +267,8 @@ namespace Birdy3d::serializer {
     }
 
     template <class T>
-    void adapter_load(Value* from, std::weak_ptr<T>& to) {
+    void adapter_load(Value* from, std::weak_ptr<T>& to)
+    {
         std::shared_ptr<T> ptr;
         adapter_load(from, ptr);
         to = ptr;

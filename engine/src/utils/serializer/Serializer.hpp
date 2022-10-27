@@ -14,7 +14,8 @@ namespace Birdy3d::serializer {
 
     class Serializer {
     public:
-        static void serialize(GeneratorType type, std::string name, auto& value, std::ostream& stream) {
+        static void serialize(GeneratorType type, std::string name, auto& value, std::ostream& stream)
+        {
             serializer::Object object;
             serializer::Adapter adapter(&object, Adapter::Mode::SAVE);
             adapter(name, value);
@@ -31,13 +32,15 @@ namespace Birdy3d::serializer {
             PointerRegistry::clear();
         }
 
-        static std::string serialize(GeneratorType type, std::string name, auto& value) {
+        static std::string serialize(GeneratorType type, std::string name, auto& value)
+        {
             std::stringstream stream;
             serialize(type, name, value, stream);
             return stream.str();
         }
 
-        static void serialize(GeneratorType type, auto& value, std::ostream& stream) {
+        static void serialize(GeneratorType type, auto& value, std::ostream& stream)
+        {
             auto object = adapter_save(value);
             std::unique_ptr<Generator> generator;
             switch (type) {
@@ -50,13 +53,15 @@ namespace Birdy3d::serializer {
             PointerRegistry::clear();
         }
 
-        static std::string serialize(GeneratorType type, auto& value) {
+        static std::string serialize(GeneratorType type, auto& value)
+        {
             std::stringstream stream;
             serialize(type, value, stream);
             return stream.str();
         }
 
-        static void deserialize(std::string text, std::string name, auto& value) {
+        static void deserialize(std::string text, std::string name, auto& value)
+        {
             try {
                 serializer::JsonParser parser(text);
                 auto parsed = parser.parse();
@@ -73,7 +78,8 @@ namespace Birdy3d::serializer {
             }
         }
 
-        static void deserialize(std::string text, auto& value) {
+        static void deserialize(std::string text, auto& value)
+        {
             try {
                 serializer::JsonParser parser(text);
                 auto parsed = parser.parse();

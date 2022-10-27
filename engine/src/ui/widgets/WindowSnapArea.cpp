@@ -4,20 +4,21 @@
 #include "core/Input.hpp"
 #include "events/EventBus.hpp"
 #include "ui/Canvas.hpp"
-#include "ui/Theme.hpp"
 #include "ui/Window.hpp"
 
 namespace Birdy3d::ui {
 
     WindowSnapArea::WindowSnapArea(Options options)
         : Widget(options)
-        , mode(options.mode) {
+        , mode(options.mode)
+    {
         core::Application::event_bus->subscribe(this, &WindowSnapArea::on_click_raw);
         core::Application::event_bus->subscribe(this, &WindowSnapArea::on_resize_raw);
         m_background_rect = add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG);
     }
 
-    void WindowSnapArea::on_update() {
+    void WindowSnapArea::on_update()
+    {
         Widget* focused_widget = canvas->focused_widget();
         Window* focused_window = dynamic_cast<Window*>(focused_widget);
         if (!focused_window)
@@ -26,7 +27,8 @@ namespace Birdy3d::ui {
             rearrange_windows();
     }
 
-    void WindowSnapArea::on_click_raw(const events::InputClickEvent& event) {
+    void WindowSnapArea::on_click_raw(events::InputClickEvent const& event)
+    {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_RELEASE)
             return;
 
@@ -97,11 +99,13 @@ namespace Birdy3d::ui {
         rearrange_windows();
     }
 
-    void WindowSnapArea::on_resize_raw(const events::WindowResizeEvent&) {
+    void WindowSnapArea::on_resize_raw(events::WindowResizeEvent const&)
+    {
         rearrange_windows();
     }
 
-    void WindowSnapArea::rearrange_windows() {
+    void WindowSnapArea::rearrange_windows()
+    {
         auto new_size = Size::make_pixels(m_actual_size);
         auto new_pos = m_actual_pos;
         auto size_sum = glm::ivec2(0);

@@ -22,7 +22,8 @@
 namespace Birdy3d::core {
 
     template <>
-    bool ResourceHandle<render::Shader>::load(const ResourceIdentifier& new_id) {
+    bool ResourceHandle<render::Shader>::load(ResourceIdentifier const& new_id)
+    {
         auto val = ResourceManager::get_shader_ptr(new_id);
         if (!val)
             return false;
@@ -31,7 +32,8 @@ namespace Birdy3d::core {
     }
 
     template <>
-    bool ResourceHandle<ui::Theme>::load(const ResourceIdentifier& new_id) {
+    bool ResourceHandle<ui::Theme>::load(ResourceIdentifier const& new_id)
+    {
         auto val = ResourceManager::get_theme_ptr(new_id);
         if (!val)
             return false;
@@ -40,7 +42,8 @@ namespace Birdy3d::core {
     }
 
     template <>
-    bool ResourceHandle<render::Model>::load(const ResourceIdentifier& new_id) {
+    bool ResourceHandle<render::Model>::load(ResourceIdentifier const& new_id)
+    {
         auto val = ResourceManager::get_model_ptr(new_id);
         if (!val)
             return false;
@@ -49,7 +52,8 @@ namespace Birdy3d::core {
     }
 
     template <>
-    bool ResourceHandle<render::Texture>::load(const ResourceIdentifier& new_id) {
+    bool ResourceHandle<render::Texture>::load(ResourceIdentifier const& new_id)
+    {
         auto val = ResourceManager::get_texture_ptr(new_id);
         if (!val)
             return false;
@@ -57,7 +61,8 @@ namespace Birdy3d::core {
         return true;
     }
 
-    ResourceIdentifier::ResourceIdentifier(std::string full_name) {
+    ResourceIdentifier::ResourceIdentifier(std::string full_name)
+    {
         std::vector<std::string> parts;
         std::size_t last_pos = 0;
         std::size_t current_pos = full_name.find_first_of(':');
@@ -97,11 +102,12 @@ namespace Birdy3d::core {
         }
     }
 
-    ResourceIdentifier::ResourceIdentifier(const char* full_name)
-        : ResourceIdentifier(std::string { full_name }) {};
+    ResourceIdentifier::ResourceIdentifier(char const* full_name)
+        : ResourceIdentifier(std::string{full_name}){};
 
-    ResourceIdentifier::operator std::string() const {
-        return source + "::" + name + std::accumulate(args.cbegin(), args.cend(), std::string {}, [](const std::string& sum, const std::pair<std::string, std::string>& element) { return sum + ":" + element.first + "=" + element.second; });
+    ResourceIdentifier::operator std::string() const
+    {
+        return source + "::" + name + std::accumulate(args.cbegin(), args.cend(), std::string{}, [](std::string const& sum, std::pair<std::string, std::string> const& element) { return sum + ":" + element.first + "=" + element.second; });
     }
 
     std::unordered_map<std::string, std::shared_ptr<render::Shader>> ResourceManager::m_shaders;
@@ -109,23 +115,28 @@ namespace Birdy3d::core {
     std::unordered_map<std::string, std::shared_ptr<render::Model>> ResourceManager::m_models;
     std::unordered_map<std::string, std::shared_ptr<render::Texture>> ResourceManager::m_textures;
 
-    ResourceHandle<render::Shader> ResourceManager::get_shader(const std::string& name) {
+    ResourceHandle<render::Shader> ResourceManager::get_shader(std::string const& name)
+    {
         return ResourceHandle<render::Shader>(name);
     }
 
-    ResourceHandle<ui::Theme> ResourceManager::get_theme(const std::string& name) {
+    ResourceHandle<ui::Theme> ResourceManager::get_theme(std::string const& name)
+    {
         return ResourceHandle<ui::Theme>(name);
     }
 
-    ResourceHandle<render::Model> ResourceManager::get_model(const std::string& name) {
+    ResourceHandle<render::Model> ResourceManager::get_model(std::string const& name)
+    {
         return ResourceHandle<render::Model>(name);
     }
 
-    ResourceHandle<render::Texture> ResourceManager::get_texture(const std::string& name) {
+    ResourceHandle<render::Texture> ResourceManager::get_texture(std::string const& name)
+    {
         return ResourceHandle<render::Texture>(name);
     }
 
-    std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(const ResourceIdentifier& id) {
+    std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(ResourceIdentifier const& id)
+    {
         std::string name = static_cast<std::string>(id);
         std::shared_ptr<render::Shader> shader = m_shaders[name];
         if (!shader) {
@@ -134,7 +145,7 @@ namespace Birdy3d::core {
                 return nullptr;
             }
             std::map<std::string, std::string> shader_parameters;
-            for (const auto& [key, value] : id.args) {
+            for (auto const& [key, value] : id.args) {
                 shader_parameters[key] = value;
             }
             shader = std::make_shared<render::Shader>(id.name, shader_parameters);
@@ -143,7 +154,8 @@ namespace Birdy3d::core {
         return shader;
     }
 
-    std::shared_ptr<ui::Theme> ResourceManager::get_theme_ptr(const ResourceIdentifier& id) {
+    std::shared_ptr<ui::Theme> ResourceManager::get_theme_ptr(ResourceIdentifier const& id)
+    {
         std::string name = static_cast<std::string>(id);
         std::shared_ptr<ui::Theme> theme = m_themes[name];
         if (!theme) {
@@ -156,7 +168,7 @@ namespace Birdy3d::core {
                     return nullptr;
                 try {
                     theme = std::make_shared<ui::Theme>(file_content);
-                } catch (const std::exception& e) {
+                } catch (std::exception const& e) {
                     return nullptr;
                 }
             } else {
@@ -167,7 +179,8 @@ namespace Birdy3d::core {
         return theme;
     }
 
-    std::shared_ptr<render::Model> ResourceManager::get_model_ptr(const ResourceIdentifier& id) {
+    std::shared_ptr<render::Model> ResourceManager::get_model_ptr(ResourceIdentifier const& id)
+    {
         std::string name = static_cast<std::string>(id);
         std::shared_ptr<render::Model> model = m_models[name];
         if (!model) {
@@ -214,7 +227,8 @@ namespace Birdy3d::core {
         return model;
     }
 
-    std::shared_ptr<render::Texture> ResourceManager::get_texture_ptr(const ResourceIdentifier& id) {
+    std::shared_ptr<render::Texture> ResourceManager::get_texture_ptr(ResourceIdentifier const& id)
+    {
         std::string name = static_cast<std::string>(id);
         std::shared_ptr<render::Texture> texture = m_textures[name];
         if (!texture) {
@@ -234,7 +248,8 @@ namespace Birdy3d::core {
         return texture;
     }
 
-    std::string ResourceManager::get_resource_path(std::string name, ResourceType type) {
+    std::string ResourceManager::get_resource_path(std::string name, ResourceType type)
+    {
         if (name.size() == 0) {
             Logger::error("invalid resource name");
             return {};
@@ -269,8 +284,7 @@ namespace Birdy3d::core {
             name,
             get_resource_dir() + name,
             get_resource_dir() + subdir + name,
-            get_resource_dir() + default_dir + name
-        };
+            get_resource_dir() + default_dir + name};
 
         for (auto path : possible_paths) {
             if (std::filesystem::is_regular_file(path))
@@ -281,7 +295,8 @@ namespace Birdy3d::core {
         return {};
     }
 
-    std::string ResourceManager::get_executable_dir() {
+    std::string ResourceManager::get_executable_dir()
+    {
 #if defined(BIRDY3D_PLATFORM_LINUX)
         char result[PATH_MAX];
         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
@@ -293,12 +308,14 @@ namespace Birdy3d::core {
         return exec.substr(0, exec.find_last_of("/\\") + 1);
     }
 
-    std::string ResourceManager::get_resource_dir() {
-        static auto const resource_dir = get_executable_dir() + "../resources/";
-        return resource_dir;
+    std::string ResourceManager::get_resource_dir()
+    {
+        static auto const RESOURCE_DIR = get_executable_dir() + "../resources/";
+        return RESOURCE_DIR;
     }
 
-    std::string ResourceManager::read_file(const std::string& path, bool convert_eol) {
+    std::string ResourceManager::read_file(std::string const& path, bool convert_eol)
+    {
         std::ifstream file_stream;
         std::string content;
         try {

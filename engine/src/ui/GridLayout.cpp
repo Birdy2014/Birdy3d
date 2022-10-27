@@ -8,15 +8,17 @@
 namespace Birdy3d::ui {
 
     StaticGridLayout::StaticGridLayout(int gap)
-        : m_gap(gap) { }
+        : m_gap(gap)
+    { }
 
-    void StaticGridLayout::arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const {
+    void StaticGridLayout::arrange(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const
+    {
         // Minimal widths/heights
         std::map<int, int> min_widths; // Widths of columns
         std::map<int, int> min_heights; // Height of rows
         std::map<int, int> max_widths; // Widths of columns
         std::map<int, int> max_heights; // Height of rows
-        for (const auto& child : children) {
+        for (auto const& child : children) {
             auto minimal = child->minimal_size();
             if (minimal.x > min_widths[child->column])
                 min_widths[child->column] = minimal.x;
@@ -76,14 +78,14 @@ namespace Birdy3d::ui {
         }
 
         // Set position and size of widgets
-        for (const auto& child : children) {
+        for (auto const& child : children) {
             glm::ivec2 widget_position = pos;
-            for (const auto& [column, width] : result_widths) {
+            for (auto const& [column, width] : result_widths) {
                 if (column >= child->column)
                     break;
                 widget_position.x += width + m_gap;
             }
-            for (const auto& [row, height] : result_heights) {
+            for (auto const& [row, height] : result_heights) {
                 if (row >= child->row)
                     break;
                 widget_position.y += height + m_gap;
@@ -97,24 +99,25 @@ namespace Birdy3d::ui {
         }
     }
 
-    glm::ivec2 StaticGridLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children) const {
+    glm::ivec2 StaticGridLayout::minimal_size(std::list<std::shared_ptr<Widget>> const& children) const
+    {
         std::map<int, int> widths;
         std::map<int, int> heights;
-        for (const auto& child : children) {
+        for (auto const& child : children) {
             if (child->minimal_size().x > widths[child->column])
                 widths[child->column] = child->minimal_size().x;
             if (child->minimal_size().y > heights[child->row])
                 heights[child->row] = child->minimal_size().y;
         }
 
-        glm::ivec2 size { 0 };
-        for ([[maybe_unused]] const auto& [column, width] : widths)
+        glm::ivec2 size{0};
+        for ([[maybe_unused]] auto const& [column, width] : widths)
             size.x += width + m_gap;
         size.x -= m_gap;
         if (size.x < 0)
             size.x = 0;
 
-        for ([[maybe_unused]] const auto& [row, height] : heights)
+        for ([[maybe_unused]] auto const& [row, height] : heights)
             size.y += height + m_gap;
         size.y -= m_gap;
         if (size.y < 0)
@@ -124,12 +127,14 @@ namespace Birdy3d::ui {
     }
 
     DynamicGridLayout::DynamicGridLayout(int gap)
-        : m_gap(gap) { }
+        : m_gap(gap)
+    { }
 
-    void DynamicGridLayout::arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const {
-        glm::ivec2 offset { 0 };
+    void DynamicGridLayout::arrange(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const
+    {
+        glm::ivec2 offset{0};
         float row_height = 0;
-        for (const auto& child : children) {
+        for (auto const& child : children) {
             auto child_size = child->minimal_size();
             if (offset.x + child_size.x > size.x) {
                 offset.y += row_height + m_gap;
@@ -143,16 +148,18 @@ namespace Birdy3d::ui {
         }
     }
 
-    glm::ivec2 DynamicGridLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children) const {
+    glm::ivec2 DynamicGridLayout::minimal_size([[maybe_unused]] std::list<std::shared_ptr<Widget>> const& children) const
+    {
         // TODO: DynamicGridLayout minimal_size
         return {};
     }
 
-    glm::ivec2 DynamicGridLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children, float suggested_size, Layout::Direction direction) const {
+    glm::ivec2 DynamicGridLayout::minimal_size(std::list<std::shared_ptr<Widget>> const& children, float suggested_size, Layout::Direction direction) const
+    {
         if (direction == Layout::Direction::HORIZONTAL) {
-            glm::ivec2 offset { 0 };
+            glm::ivec2 offset{0};
             float row_height = 0;
-            for (const auto& child : children) {
+            for (auto const& child : children) {
                 auto child_size = child->minimal_size();
                 if (offset.x + child_size.x > suggested_size) {
                     offset.y += row_height + m_gap;
@@ -172,9 +179,10 @@ namespace Birdy3d::ui {
         return {};
     }
 
-    float DynamicGridLayout::minimal_size(const std::list<std::shared_ptr<Widget>>& children, Layout::Direction direction) const {
+    float DynamicGridLayout::minimal_size(std::list<std::shared_ptr<Widget>> const& children, Layout::Direction direction) const
+    {
         float minsize = 0;
-        for (const auto& child : children) {
+        for (auto const& child : children) {
             auto direction_size = direction == Layout::Direction::HORIZONTAL ? child->minimal_size().x : child->minimal_size().y;
             if (direction_size > minsize)
                 minsize = direction_size;

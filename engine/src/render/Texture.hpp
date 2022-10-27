@@ -17,17 +17,17 @@ namespace Birdy3d::render {
             DEPTH
         };
 
-        Texture(const std::string& file_path);
-        Texture(const utils::Color&);
+        Texture(std::string const& file_path);
+        Texture(utils::Color const&);
         Texture(int width, int height, Preset);
         Texture(Texture&) = delete;
         ~Texture();
-        bool transparent() const;
+        [[nodiscard]] bool transparent() const;
         void bind(int texture_unit);
         void resize(int width, int height);
-        GLuint id() const;
-        bool is_depth() const;
-        Preset preset() const { return m_preset; }
+        [[nodiscard]] GLuint id() const;
+        [[nodiscard]] bool is_depth() const;
+        [[nodiscard]] Preset preset() const { return m_preset; }
 
     private:
         Preset m_preset = Preset::NONE;

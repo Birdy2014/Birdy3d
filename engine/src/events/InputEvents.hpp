@@ -6,40 +6,44 @@ namespace Birdy3d::events {
 
     class InputScrollEvent : public Event {
     public:
-        const double xoffset;
-        const double yoffset;
+        double const xoffset;
+        double const yoffset;
 
         InputScrollEvent(double xoffset, double yoffset)
             : xoffset(xoffset)
-            , yoffset(yoffset) { }
+            , yoffset(yoffset)
+        { }
     };
 
     class InputClickEvent : public Event {
     public:
-        const int button;
-        const int action;
-        const int mods;
+        int const button;
+        int const action;
+        int const mods;
 
         InputClickEvent(int button, int action, int mods)
             : button(button)
             , action(action)
-            , mods(mods) { }
+            , mods(mods)
+        { }
     };
 
     class InputKeyEvent : public Event {
     public:
-        const int key;
-        const int scancode;
-        const int action;
-        const int mods;
+        int const key;
+        int const scancode;
+        int const action;
+        int const mods;
 
         InputKeyEvent(int key, int scancode, int action, int mods)
             : key(key)
             , scancode(scancode)
             , action(action)
-            , mods(mods) { }
+            , mods(mods)
+        { }
 
-        bool check_options(std::any options) override {
+        bool check_options(std::any options) override
+        {
             int key_option = std::any_cast<int>(options);
             return key_option == key && action == 1; // GLFW_PRESS
         }
@@ -47,10 +51,11 @@ namespace Birdy3d::events {
 
     class InputCharEvent : public Event {
     public:
-        const unsigned int codepoint;
+        unsigned int const codepoint;
 
         InputCharEvent(unsigned int codepoint)
-            : codepoint(codepoint) { }
+            : codepoint(codepoint)
+        { }
     };
 
 }

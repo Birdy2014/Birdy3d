@@ -22,14 +22,14 @@ namespace Birdy3d::ui {
          * @param text The text to print.
          * @param color The color in which the text is printed. NONE won't change the color.
          */
-        static void print(const std::string&, utils::Color::Name = utils::Color::Name::NONE);
+        static void print(std::string const&, utils::Color::Name = utils::Color::Name::NONE);
 
         /**
          * @brief Prints line of text to the console.
          * @param text The text to print.
          * @param color The color in which the text is printed. NONE won't change the color. The color will be reset to FG after the line is printed.
          */
-        static void println(const std::string&, utils::Color::Name = utils::Color::Name::NONE);
+        static void println(std::string const&, utils::Color::Name = utils::Color::Name::NONE);
 
         /**
          * @brief Executes a command in the console and prints the command.
@@ -48,7 +48,7 @@ namespace Birdy3d::ui {
          * @brief Register a new command to the console.
          * @param name Name of the command. Any previously registered commands with the same name will be overwritten.
          */
-        static void register_command(const std::string& name, const CommandCallback&);
+        static void register_command(std::string const& name, CommandCallback const&);
 
     private:
         // This is required for console.list_commands

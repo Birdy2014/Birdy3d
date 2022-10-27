@@ -12,7 +12,8 @@ namespace Birdy3d::utils {
 
     FPPlayerController::FPPlayerController() { }
 
-    void FPPlayerController::start() {
+    void FPPlayerController::start()
+    {
         m_cam = entity->get_component<render::Camera>();
         if (auto canvas = core::Application::canvas.lock())
             m_menu = canvas->get_widget("menu");
@@ -24,13 +25,15 @@ namespace Birdy3d::utils {
         core::Application::event_bus->subscribe(this, &FPPlayerController::on_key);
     }
 
-    void FPPlayerController::cleanup() {
+    void FPPlayerController::cleanup()
+    {
         if (m_menu.lock()) {
             core::Application::event_bus->unsubscribe(this, &FPPlayerController::on_key);
         }
     }
 
-    void FPPlayerController::update() {
+    void FPPlayerController::update()
+    {
         // Keyboard
         if (!core::Input::is_cursor_hidden())
             return;
@@ -68,7 +71,8 @@ namespace Birdy3d::utils {
             entity->transform.orientation.x = -max_pitch;
     }
 
-    void FPPlayerController::on_key(const events::InputKeyEvent& event) {
+    void FPPlayerController::on_key(events::InputKeyEvent const& event)
+    {
         if (event.action != GLFW_PRESS)
             return;
         switch (event.key) {
@@ -90,7 +94,8 @@ namespace Birdy3d::utils {
         }
     }
 
-    void FPPlayerController::serialize(serializer::Adapter& adapter) {
+    void FPPlayerController::serialize(serializer::Adapter& adapter)
+    {
         adapter("flashlight", flashlight);
     }
 

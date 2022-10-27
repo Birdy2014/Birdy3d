@@ -2,11 +2,13 @@
 
 namespace Birdy3d::serializer {
 
-    Value JsonParser::parse() {
+    Value JsonParser::parse()
+    {
         return parse_value();
     }
 
-    Value JsonParser::parse_value() {
+    Value JsonParser::parse_value()
+    {
         forward();
         char c = current_char();
         if (c == '"' || c == '\'')
@@ -21,38 +23,40 @@ namespace Birdy3d::serializer {
             return parse_array();
         if (c == '{')
             return parse_object();
-        throw ParseError { m_pos, m_pos + 1, "Expected value", m_content };
+        throw ParseError{m_pos, m_pos + 1, "Expected value", m_content};
     }
 
-    String JsonParser::parse_string() {
+    String JsonParser::parse_string()
+    {
         auto start = m_pos;
         char c = consume_char();
         if (c != '"' && c != '\'')
-            throw ParseError { start, m_pos, "Expected string", m_content };
+            throw ParseError{start, m_pos, "Expected string", m_content};
         std::string s = consume_until(c);
         if (current_char() == '\0')
-            throw ParseError { start, m_pos, "Expected string", m_content };
+            throw ParseError{start, m_pos, "Expected string", m_content};
         m_pos++;
         return String(s);
     }
 
-    Number JsonParser::parse_number() {
+    Number JsonParser::parse_number()
+    {
         auto start = m_pos;
         bool dot = false;
         bool e = false;
         std::string num;
         char c = consume_char();
         if (!((c >= '0' && c <= '9') || c == '.' || c == '-'))
-            throw ParseError { start, m_pos, "Expected number", m_content };
+            throw ParseError{start, m_pos, "Expected number", m_content};
         while ((c >= '0' && c <= '9') || c == '.' || c == '-' || c == 'e') {
             if (c == '.') {
                 if (dot)
-                    throw ParseError { start, m_pos, "Too many dots in number", m_content };
+                    throw ParseError{start, m_pos, "Too many dots in number", m_content};
                 dot = true;
             }
             if (c == 'e') {
                 if (e)
-                    throw ParseError { start, m_pos, "Too many e in number", m_content };
+                    throw ParseError{start, m_pos, "Too many e in number", m_content};
                 e = true;
             }
             num += c;
@@ -62,23 +66,26 @@ namespace Birdy3d::serializer {
         return Number(std::atof(num.c_str()));
     }
 
-    Bool JsonParser::parse_bool() {
+    Bool JsonParser::parse_bool()
+    {
         if (match("true"))
             return Bool(true);
         if (match("false"))
             return Bool(false);
-        throw ParseError { m_pos, m_pos + 1, "Expected boolean", m_content };
+        throw ParseError{m_pos, m_pos + 1, "Expected boolean", m_content};
     }
 
-    Null JsonParser::parse_null() {
+    Null JsonParser::parse_null()
+    {
         if (match("null"))
             return Null();
-        throw ParseError { m_pos, m_pos + 1, "Expected null", m_content };
+        throw ParseError{m_pos, m_pos + 1, "Expected null", m_content};
     }
 
-    Array JsonParser::parse_array() {
+    Array JsonParser::parse_array()
+    {
         if (consume_char() != '[')
-            throw ParseError { m_pos - 1, m_pos, "Expected array start", m_content };
+            throw ParseError{m_pos - 1, m_pos, "Expected array start", m_content};
         auto array = Array();
         do {
             forward();
@@ -92,13 +99,14 @@ namespace Birdy3d::serializer {
         m_pos--;
         forward();
         if (consume_char() != ']')
-            throw ParseError { m_pos - 1, m_pos, "Expected array end", m_content };
+            throw ParseError{m_pos - 1, m_pos, "Expected array end", m_content};
         return array;
     }
 
-    Object JsonParser::parse_object() {
+    Object JsonParser::parse_object()
+    {
         if (consume_char() != '{')
-            throw ParseError { m_pos - 1, m_pos, "Expected object start", m_content };
+            throw ParseError{m_pos - 1, m_pos, "Expected object start", m_content};
         auto object = Object();
         do {
             forward();
@@ -109,7 +117,7 @@ namespace Birdy3d::serializer {
             auto key = parse_string();
             forward();
             if (consume_char() != ':')
-                throw ParseError { m_pos - 1, m_pos, "Expected ':'", m_content };
+                throw ParseError{m_pos - 1, m_pos, "Expected ':'", m_content};
             forward();
             auto value = parse_value();
             object.value[key.value] = value;
@@ -117,12 +125,13 @@ namespace Birdy3d::serializer {
         m_pos--;
         forward();
         if (consume_char() != '}')
-            throw ParseError { m_pos - 1, m_pos, "Expected object end", m_content };
+            throw ParseError{m_pos - 1, m_pos, "Expected object end", m_content};
         return object;
     }
 
     // Utils
-    void JsonParser::forward() {
+    void JsonParser::forward()
+    {
         char c;
         do {
             c = consume_char();
@@ -131,7 +140,8 @@ namespace Birdy3d::serializer {
     }
 
     // Minimal Generator
-    void MinimalJsonGenerator::generate(const Value& value) {
+    void MinimalJsonGenerator::generate(Value const& value)
+    {
         if (auto v = std::get_if<String>(&value))
             return generate_string(*v);
         if (auto v = std::get_if<Number>(&value))
@@ -146,26 +156,31 @@ namespace Birdy3d::serializer {
             return generate_object(*v);
     }
 
-    void MinimalJsonGenerator::generate_string(const String& value) {
+    void MinimalJsonGenerator::generate_string(String const& value)
+    {
         m_stream << '"' << value.value << '"';
     }
 
-    void MinimalJsonGenerator::generate_number(const Number& value) {
+    void MinimalJsonGenerator::generate_number(Number const& value)
+    {
         m_stream << value.value;
     }
 
-    void MinimalJsonGenerator::generate_bool(const Bool& value) {
+    void MinimalJsonGenerator::generate_bool(Bool const& value)
+    {
         if (value.value)
             m_stream << "true";
         else
             m_stream << "false";
     }
 
-    void MinimalJsonGenerator::generate_null(const Null&) {
+    void MinimalJsonGenerator::generate_null(Null const&)
+    {
         m_stream << "null";
     }
 
-    void MinimalJsonGenerator::generate_array(const Array& value) {
+    void MinimalJsonGenerator::generate_array(Array const& value)
+    {
         m_stream << '[';
         for (std::size_t i = 0; i < value.value.size(); i++) {
             auto& item = value.value[i];
@@ -187,10 +202,11 @@ namespace Birdy3d::serializer {
         m_stream << ']';
     }
 
-    void MinimalJsonGenerator::generate_object(const Object& value) {
+    void MinimalJsonGenerator::generate_object(Object const& value)
+    {
         m_stream << '{';
         std::size_t i = 0;
-        for (const auto& pair : value.value) {
+        for (auto const& pair : value.value) {
             m_stream << '"' << pair.first << "\":";
             auto& item = pair.second;
             if (auto v = std::get_if<String>(&item))
@@ -213,7 +229,8 @@ namespace Birdy3d::serializer {
     }
 
     // Pretty Generator
-    void PrettyJsonGenerator::generate(const Value& value) {
+    void PrettyJsonGenerator::generate(Value const& value)
+    {
         if (auto v = std::get_if<String>(&value))
             return generate_string(*v);
         if (auto v = std::get_if<Number>(&value))
@@ -228,26 +245,31 @@ namespace Birdy3d::serializer {
             return generate_object(*v, 0);
     }
 
-    void PrettyJsonGenerator::generate_string(const String& value) {
+    void PrettyJsonGenerator::generate_string(String const& value)
+    {
         m_stream << '"' << value.value << '"';
     }
 
-    void PrettyJsonGenerator::generate_number(const Number& value) {
+    void PrettyJsonGenerator::generate_number(Number const& value)
+    {
         m_stream << value.value;
     }
 
-    void PrettyJsonGenerator::generate_bool(const Bool& value) {
+    void PrettyJsonGenerator::generate_bool(Bool const& value)
+    {
         if (value.value)
             m_stream << "true";
         else
             m_stream << "false";
     }
 
-    void PrettyJsonGenerator::generate_null(const Null&) {
+    void PrettyJsonGenerator::generate_null(Null const&)
+    {
         m_stream << "null";
     }
 
-    void PrettyJsonGenerator::generate_array(const Array& value, std::size_t indent) {
+    void PrettyJsonGenerator::generate_array(Array const& value, std::size_t indent)
+    {
         m_stream << '[';
         for (std::size_t i = 0; i < value.value.size(); i++) {
             m_stream << '\n';
@@ -275,10 +297,11 @@ namespace Birdy3d::serializer {
         m_stream << ']';
     }
 
-    void PrettyJsonGenerator::generate_object(const Object& value, std::size_t indent) {
+    void PrettyJsonGenerator::generate_object(Object const& value, std::size_t indent)
+    {
         m_stream << '{';
         std::size_t i = 0;
-        for (const auto& pair : value.value) {
+        for (auto const& pair : value.value) {
             m_stream << '\n';
             for (std::size_t i = 0; i < indent * m_indent_width + m_indent_width; i++)
                 m_stream << ' ';

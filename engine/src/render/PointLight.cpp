@@ -15,9 +15,11 @@ namespace Birdy3d::render {
         , intensity_diffuse(intensity_diffuse)
         , linear(linear)
         , quadratic(quadratic)
-        , shadow_enabled(shadow_enabled) { }
+        , shadow_enabled(shadow_enabled)
+    { }
 
-    void PointLight::setup_shadow_map() {
+    void PointLight::setup_shadow_map()
+    {
         m_depth_shader = core::ResourceManager::get_shader("point_light_depth.glsl");
         // framebuffer
         glGenFramebuffers(1, &m_shadow_map_fbo);
@@ -25,7 +27,7 @@ namespace Birdy3d::render {
         glGenTextures(1, &m_shadow_map);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_shadow_map);
         for (unsigned int i = 0; i < 6; i++)
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, shadow_width, shadow_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -40,7 +42,8 @@ namespace Birdy3d::render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void PointLight::use(const Shader& light_shader, int id, int textureid) {
+    void PointLight::use(Shader const& light_shader, int id, int textureid)
+    {
         if (!m_shadow_map_updated) {
             gen_shadow_map();
             m_shadow_map_updated = true;
@@ -59,17 +62,18 @@ namespace Birdy3d::render {
         light_shader.set_float(name + "far", m_far);
     }
 
-    void PointLight::gen_shadow_map() {
+    void PointLight::gen_shadow_map()
+    {
         glm::vec3 world_pos = entity->transform.world_position();
 
-        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glViewport(0, 0, shadow_width, shadow_height);
         glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_map_fbo);
         glClear(GL_DEPTH_BUFFER_BIT);
         glCullFace(GL_FRONT);
         glEnable(GL_DEPTH_TEST);
 
         m_depth_shader->use();
-        float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
+        float aspect = (float)shadow_width / (float)shadow_height;
         float near = 1.0f;
         glm::mat4 shadow_proj = glm::perspective(glm::radians(90.0f), aspect, near, m_far);
 
@@ -88,16 +92,19 @@ namespace Birdy3d::render {
         glCullFace(GL_BACK);
     }
 
-    void PointLight::start() {
+    void PointLight::start()
+    {
         setup_shadow_map();
     }
 
-    void PointLight::update() {
+    void PointLight::update()
+    {
         if (shadow_enabled)
             m_shadow_map_updated = false;
     }
 
-    void PointLight::serialize(serializer::Adapter& adapter) {
+    void PointLight::serialize(serializer::Adapter& adapter)
+    {
         adapter("shadow_enabled", shadow_enabled);
         adapter("color", color);
         adapter("intensity_ambient", intensity_ambient);

@@ -3,7 +3,8 @@
 
 namespace Birdy3d::ui {
 
-    void ConsoleCommands::register_ui() {
+    void ConsoleCommands::register_ui()
+    {
         Console::register_command("ui.theme", [](std::vector<std::string> args) {
             if (args.size() != 1) {
                 Console::println("Usage: ui.theme <theme>");

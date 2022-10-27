@@ -7,42 +7,42 @@ namespace Birdy3d::render {
 
     class Shader {
     public:
-        Shader(const std::string& name, std::map<std::string, std::string> params);
+        Shader(std::string const& name, std::map<std::string, std::string> params);
         void use() const;
-        void set_bool(const char* name, bool value) const;
-        void set_int(const char* name, int value) const;
-        void set_float(const char* name, float value) const;
-        void set_vec2(const char* name, const glm::vec2& value) const;
-        void set_vec2(const char* name, float x, float y) const;
-        void set_vec3(const char* name, const glm::vec3& value) const;
-        void set_vec3(const char* name, float x, float y, float z) const;
-        void set_vec4(const char* name, const glm::vec4& value) const;
-        void set_vec4(const char* name, float x, float y, float z, float w) const;
-        void set_mat2(const char* name, const glm::mat2& mat) const;
-        void set_mat3(const char* name, const glm::mat3& mat) const;
-        void set_mat4(const char* name, const glm::mat4& mat) const;
+        void set_bool(char const* name, bool value) const;
+        void set_int(char const* name, int value) const;
+        void set_float(char const* name, float value) const;
+        void set_vec2(char const* name, glm::vec2 const& value) const;
+        void set_vec2(char const* name, float x, float y) const;
+        void set_vec3(char const* name, glm::vec3 const& value) const;
+        void set_vec3(char const* name, float x, float y, float z) const;
+        void set_vec4(char const* name, glm::vec4 const& value) const;
+        void set_vec4(char const* name, float x, float y, float z, float w) const;
+        void set_mat2(char const* name, glm::mat2 const& mat) const;
+        void set_mat3(char const* name, glm::mat3 const& mat) const;
+        void set_mat4(char const* name, glm::mat4 const& mat) const;
 
-        void set_bool(const std::string& name, bool value) const;
-        void set_int(const std::string& name, int value) const;
-        void set_float(const std::string& name, float value) const;
-        void set_vec2(const std::string& name, const glm::vec2& value) const;
-        void set_vec2(const std::string& name, float x, float y) const;
-        void set_vec3(const std::string& name, const glm::vec3& value) const;
-        void set_vec3(const std::string& name, float x, float y, float z) const;
-        void set_vec4(const std::string& name, const glm::vec4& value) const;
-        void set_vec4(const std::string& name, float x, float y, float z, float w) const;
-        void set_mat2(const std::string& name, const glm::mat2& mat) const;
-        void set_mat3(const std::string& name, const glm::mat3& mat) const;
-        void set_mat4(const std::string& name, const glm::mat4& mat) const;
+        void set_bool(std::string const& name, bool value) const;
+        void set_int(std::string const& name, int value) const;
+        void set_float(std::string const& name, float value) const;
+        void set_vec2(std::string const& name, glm::vec2 const& value) const;
+        void set_vec2(std::string const& name, float x, float y) const;
+        void set_vec3(std::string const& name, glm::vec3 const& value) const;
+        void set_vec3(std::string const& name, float x, float y, float z) const;
+        void set_vec4(std::string const& name, glm::vec4 const& value) const;
+        void set_vec4(std::string const& name, float x, float y, float z, float w) const;
+        void set_mat2(std::string const& name, glm::mat2 const& mat) const;
+        void set_mat3(std::string const& name, glm::mat3 const& mat) const;
+        void set_mat4(std::string const& name, glm::mat4 const& mat) const;
 
     private:
         struct PreprocessedSources {
             std::string vertex_shader;
             std::string geometry_shader;
             std::string fragment_shader;
-            bool has_geometry_shader { false };
+            bool has_geometry_shader{false};
 
-            void operator+=(const PreprocessedSources&);
+            void operator+=(PreprocessedSources const&);
         };
 
         std::string m_name;
@@ -52,7 +52,7 @@ namespace Birdy3d::render {
 
         bool check_compile_errors(GLuint shader, GLenum type);
         PreprocessedSources preprocess_file(std::string name);
-        void compile(const PreprocessedSources& shader_sources);
+        void compile(PreprocessedSources const& shader_sources);
     };
 
 }

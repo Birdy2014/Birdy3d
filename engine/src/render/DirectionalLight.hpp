@@ -2,8 +2,8 @@
 
 #include "core/ResourceHandle.hpp"
 #include "ecs/Component.hpp"
-#include "render/Rendertarget.hpp"
 #include "render/Shader.hpp"
+#include "utils/Color.hpp"
 
 namespace Birdy3d::render {
 
@@ -17,13 +17,13 @@ namespace Birdy3d::render {
         DirectionalLight(utils::Color color = utils::Color::WHITE, float intensity_ambient = 1, float intensity_diffuse = 1, bool shadow_enabled = true);
         void setup_shadow_map();
         void gen_shadow_map();
-        void use(const Shader& light_shader, int id, int textureid);
+        void use(Shader const& light_shader, int id, int textureid);
         void start() override;
         void update() override;
         void serialize(serializer::Adapter&) override;
 
     private:
-        const unsigned int SHADOW_SIZE = 2048;
+        unsigned int const shadow_size = 2048;
         float m_cam_offset = 1000.0f;
         std::vector<float> m_shadow_cascade_levels;
         std::vector<glm::mat4> m_light_space_transforms;
@@ -31,7 +31,7 @@ namespace Birdy3d::render {
         GLuint m_shadow_map_fbo, m_shadow_map;
         bool m_shadow_map_updated = false;
 
-        glm::mat4 calculate_light_space_matrix(const float near_plane, const float far_plane);
+        glm::mat4 calculate_light_space_matrix(float const near_plane, float const far_plane);
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(ecs::Component, DirectionalLight);
     };

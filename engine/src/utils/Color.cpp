@@ -6,27 +6,33 @@
 
 namespace Birdy3d::utils {
 
-    Color::Color() {
+    Color::Color()
+    {
         value = glm::vec4(0, 0, 0, 1);
     }
 
-    Color::Color(const std::string& color) {
+    Color::Color(std::string const& color)
+    {
         value = parse(color);
     }
 
-    Color::Color(const char* color) {
+    Color::Color(char const* color)
+    {
         value = parse(std::string(color));
     }
 
-    Color::Color(glm::vec4 color) {
+    Color::Color(glm::vec4 color)
+    {
         value = color;
     }
 
-    Color::operator glm::vec4() const {
+    Color::operator glm::vec4() const
+    {
         return value;
     }
 
-    std::string Color::to_string() const {
+    std::string Color::to_string() const
+    {
         std::stringstream stream;
         stream << '#' << std::setfill('0') << std::hex;
         stream << std::setw(2) << std::clamp((int)(value.r * 255), 0, 255);
@@ -37,34 +43,37 @@ namespace Birdy3d::utils {
         return stream.str();
     }
 
-    Color& Color::operator=(const std::string& color) {
+    Color& Color::operator=(std::string const& color)
+    {
         value = parse(color);
         return *this;
     }
 
-    bool Color::operator<(const Color& other) const {
+    bool Color::operator<(Color const& other) const
+    {
         float val = value.r * 255 + value.g * 255 * 16 + value.b * 255 * 16 * 16 + value.a * 255 * 16 * 16 * 16;
         float otherval = other.value.r * 255 + other.value.g * 255 * 16 + other.value.b * 255 * 16 * 16 + other.value.a * 255 * 16 * 16 * 16;
         return val < otherval;
     }
 
-    glm::vec4 Color::parse(const std::string& colorString) {
-        bool has_hash = colorString.at(0) == '#';
+    glm::vec4 Color::parse(std::string const& color_string)
+    {
+        bool has_hash = color_string.at(0) == '#';
 
         int color_length;
-        if ((int)colorString.length() == 6 + has_hash || (int)colorString.length() == 8 + has_hash) {
+        if ((int)color_string.length() == 6 + has_hash || (int)color_string.length() == 8 + has_hash) {
             color_length = 2;
-        } else if ((int)colorString.length() == 3 + has_hash) {
+        } else if ((int)color_string.length() == 3 + has_hash) {
             color_length = 1;
         } else {
-            core::Logger::warn("Invalid color: {}", colorString);
+            core::Logger::warn("Invalid color: {}", color_string);
             return glm::vec4(1);
         }
 
         glm::vec4 color(1);
 
-        for (size_t pos = has_hash; pos < colorString.length(); pos += color_length) {
-            int nr = std::stoi(colorString.substr(pos, color_length), nullptr, 16);
+        for (size_t pos = has_hash; pos < color_string.length(); pos += color_length) {
+            int nr = std::stoi(color_string.substr(pos, color_length), nullptr, 16);
             color[pos / color_length] = nr / (std::pow(16, color_length) - 1);
         }
         return color;
@@ -79,12 +88,14 @@ namespace Birdy3d::utils {
 namespace Birdy3d::serializer {
 
     template <>
-    Value adapter_save(utils::Color& value) {
+    Value adapter_save(utils::Color& value)
+    {
         return String(value.to_string());
     }
 
     template <>
-    void adapter_load(Value* from, utils::Color& to) {
+    void adapter_load(Value* from, utils::Color& to)
+    {
         if (auto string_ptr = std::get_if<String>(from)) {
             to = utils::Color::parse(string_ptr->value);
         }

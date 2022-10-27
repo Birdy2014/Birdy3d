@@ -1,6 +1,5 @@
 #pragma once
 
-#include "events/InputEvents.hpp"
 #include "ui/Container.hpp"
 #include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
@@ -9,7 +8,7 @@ namespace Birdy3d::ui {
 
     class Window : public Container {
     public:
-        const int BORDER_SIZE = 4;
+        int const border_size = 4;
         std::function<void()> callback_close;
 
         Window(Options);

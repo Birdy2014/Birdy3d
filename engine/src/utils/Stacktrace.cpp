@@ -10,7 +10,8 @@
 
 namespace Birdy3d::utils {
 
-    void print_stacktrace() {
+    void print_stacktrace()
+    {
 #ifdef BIRDY3D_PLATFORM_LINUX
         void* trace_array[10];
         size_t trace_size;
@@ -19,12 +20,12 @@ namespace Birdy3d::utils {
         auto messages = backtrace_symbols(trace_array, trace_size);
 
         printf("[bt] Execution path:\n");
-        auto line_regex = std::regex { "(.+)\\((\\+0x[0-9a-f]+)\\) \\[0x[0-9a-f]+\\]" };
+        auto line_regex = std::regex{"(.+)\\((\\+0x[0-9a-f]+)\\) \\[0x[0-9a-f]+\\]"};
         for (std::size_t i = 1; i < trace_size; ++i) {
             printf("[bt] #%lu %s\n", i, messages[i]);
 
             std::smatch matches;
-            auto line = std::string { messages[i] };
+            auto line = std::string{messages[i]};
 
             if (std::regex_match(line, matches, line_regex)) {
                 auto executable_path = matches[1];

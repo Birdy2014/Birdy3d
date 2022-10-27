@@ -9,7 +9,7 @@ namespace Birdy3d::ui {
     public:
         struct Options {
             BIRDY3D_WIDGET_OPTIONS_STRUCT
-            float value { 0 };
+            float value{0};
         };
 
         float max_value = std::numeric_limits<float>::infinity();
