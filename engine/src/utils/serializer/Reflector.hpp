@@ -17,7 +17,8 @@ namespace Birdy3d::serializer {
         ReflectMember(std::string name, std::type_index type, void* value)
             : name(name)
             , type(type)
-            , value(value) { }
+            , value(value)
+        { }
     };
 
     class ReflectClass {
@@ -29,7 +30,8 @@ namespace Birdy3d::serializer {
     class Reflector {
     public:
         template <class T>
-        static const ReflectClass& get_class(T* c) {
+        static ReflectClass const& get_class(T* c)
+        {
             if (m_classes.count(c) > 0)
                 return m_classes[c];
             Adapter adapter(&m_classes[c]);

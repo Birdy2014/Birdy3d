@@ -1,6 +1,7 @@
 #pragma once
 
 #include "events/Event.hpp"
+#include "events/InputEvents.hpp"
 #include <any>
 #include <functional>
 #include <list>
@@ -18,9 +19,10 @@ namespace Birdy3d::events {
     class HandlerFunctionBase {
     public:
         HandlerFunctionBase(std::any options)
-            : m_options(options) { }
+            : m_options(options)
+        { }
 
-        virtual ~HandlerFunctionBase() {};
+        virtual ~HandlerFunctionBase(){};
 
         virtual void exec(Event* event) = 0;
 
@@ -31,14 +33,15 @@ namespace Birdy3d::events {
     template <class T, class EventType>
     class MemberFunctionHandler : public HandlerFunctionBase {
     public:
-        typedef void (T::*MemberFunction)(const EventType&);
+        typedef void (T::*MemberFunction)(EventType const&);
 
-        MemberFunctionHandler(T* instance, MemberFunction memberFunction, std::any options)
+        MemberFunctionHandler(T* instance, MemberFunction member_function, std::any options)
             : HandlerFunctionBase(options)
-            , m_instance { instance }
-            , m_member_function { memberFunction } {};
+            , m_instance{instance}
+            , m_member_function{member_function} {};
 
-        void exec(Event* event) override {
+        void exec(Event* event) override
+        {
             if (m_options.has_value() && !event->check_options(m_options))
                 return;
             EventType* casted_event = static_cast<EventType*>(event);
@@ -54,13 +57,15 @@ namespace Birdy3d::events {
     template <class EventType>
     class FunctionHandler : public HandlerFunctionBase {
     public:
-        typedef std::function<void(const EventType&)> HandlerFunction;
+        typedef std::function<void(EventType const&)> HandlerFunction;
 
         FunctionHandler(HandlerFunction func, std::any options)
             : HandlerFunctionBase(options)
-            , m_function(func) { }
+            , m_function(func)
+        { }
 
-        void exec(Event* event) override {
+        void exec(Event* event) override
+        {
             if (m_options.has_value() && !event->check_options(m_options))
                 return;
             m_function(std::as_const(*static_cast<EventType*>(event)));
@@ -76,18 +81,21 @@ namespace Birdy3d::events {
     class EventBus {
     public:
         template <typename EventType, typename... Args>
-        void emit(Args... args) {
+        void emit(Args... args)
+        {
             m_event_queue.push(std::make_unique<EventType>(args...));
         }
 
-        void flush(int amount = -1) {
+        void flush(int amount = -1)
+        {
             for (int i = 0; (amount <= -1 || i < amount) && !m_event_queue.empty(); i++) {
                 exec_first();
             }
         }
 
         template <class T, class EventType>
-        void subscribe(T* instance, void (T::*memberFunction)(const EventType&), std::any options = {}) {
+        void subscribe(T* instance, void (T::*member_function)(EventType const&), std::any options = {})
+        {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr) {
@@ -96,11 +104,12 @@ namespace Birdy3d::events {
                 m_subscribers[typeid(EventType)] = std::move(handler_list);
             }
 
-            handlers->push_back(std::make_unique<MemberFunctionHandler<T, EventType>>(instance, memberFunction, options));
+            handlers->push_back(std::make_unique<MemberFunctionHandler<T, EventType>>(instance, member_function, options));
         }
 
         template <class EventType>
-        void subscribe(std::function<void(const EventType&)> func, std::any options = {}) {
+        void subscribe(std::function<void(EventType const&)> func, std::any options = {})
+        {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr) {
@@ -113,7 +122,8 @@ namespace Birdy3d::events {
         }
 
         template <class T, class EventType>
-        void unsubscribe(T* instance, void (T::*memberFunction)(const EventType&), std::any options = {}) {
+        void unsubscribe(T* instance, void (T::*member_function)(EventType const&), std::any options = {})
+        {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr)
@@ -123,7 +133,7 @@ namespace Birdy3d::events {
                 auto casted = dynamic_cast<MemberFunctionHandler<T, EventType>*>(handler.get());
                 if (!casted)
                     return false;
-                if (casted->m_instance != instance || casted->m_member_function != memberFunction)
+                if (casted->m_instance != instance || casted->m_member_function != member_function)
                     return false;
                 if (options.has_value() && !any_equals(casted->m_options, options))
                     return false;
@@ -132,7 +142,8 @@ namespace Birdy3d::events {
         }
 
         template <class EventType>
-        void unsubscribe(std::function<void(const EventType&)> func, std::any options = {}) {
+        void unsubscribe(std::function<void(EventType const&)> func, std::any options = {})
+        {
             HandlerList* handlers = m_subscribers[typeid(EventType)].get();
 
             if (handlers == nullptr)
@@ -154,7 +165,8 @@ namespace Birdy3d::events {
         std::map<std::type_index, std::unique_ptr<HandlerList>> m_subscribers;
         std::queue<std::unique_ptr<Event>> m_event_queue;
 
-        void exec_first() {
+        void exec_first()
+        {
             if (m_event_queue.empty())
                 return;
             Event* event = m_event_queue.front().get();
@@ -172,7 +184,8 @@ namespace Birdy3d::events {
             m_event_queue.pop();
         }
 
-        bool any_equals(std::any a, std::any b) {
+        bool any_equals(std::any a, std::any b)
+        {
             if (a.type() != b.type())
                 return false;
 

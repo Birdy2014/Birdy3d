@@ -1,9 +1,7 @@
 #pragma once
 
-#include "core/Base.hpp"
 #include "render/Forward.hpp"
 #include "render/Material.hpp"
-#include "render/Texture.hpp"
 #include "render/Vertex.hpp"
 
 namespace Birdy3d::render {
@@ -25,23 +23,25 @@ namespace Birdy3d::render {
             , indices(other.indices)
             , m_vao(other.m_vao)
             , m_vbo(other.m_vao)
-            , m_ebo(other.m_ebo) {
+            , m_ebo(other.m_ebo)
+        {
             other.m_vao = 0;
             other.m_vbo = 0;
             other.m_ebo = 0;
         }
 
-        Mesh& operator=(Mesh&& other) {
+        Mesh& operator=(Mesh&& other)
+        {
             if (this != &other) {
                 release();
             }
             return *this;
         }
 
-        void render(const Shader& shader, const Material& material) const;
+        void render(Shader const& shader, Material const& material) const;
         void render_depth() const;
         void render_wireframe() const;
-        glm::vec3 find_furthest_point(const glm::vec3 direction) const;
+        [[nodiscard]] glm::vec3 find_furthest_point(const glm::vec3 direction) const;
 
     private:
         unsigned int m_vao, m_vbo, m_ebo;

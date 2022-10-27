@@ -26,19 +26,22 @@ namespace Birdy3d::serializer {
 
     struct String {
         String(std::string v)
-            : value(v) { }
+            : value(v)
+        { }
         std::string value;
     };
 
     struct Number {
         Number(double v)
-            : value(v) { }
+            : value(v)
+        { }
         double value;
     };
 
     struct Bool {
         Bool(bool v)
-            : value(v) { }
+            : value(v)
+        { }
         bool value;
     };
 
@@ -58,7 +61,8 @@ namespace Birdy3d::serializer {
     public:
         ParseError(std::size_t start, std::size_t end, std::string_view message, std::string_view file);
 
-        const char* what() const noexcept override {
+        [[nodiscard]] char const* what() const noexcept override
+        {
             return m_message.c_str();
         }
 
@@ -70,7 +74,8 @@ namespace Birdy3d::serializer {
     public:
         Parser(std::string content)
             : m_content(content)
-            , m_pos(0) { }
+            , m_pos(0)
+        { }
         virtual ~Parser() = default;
         virtual Value parse() = 0;
 
@@ -88,9 +93,10 @@ namespace Birdy3d::serializer {
     class Generator {
     public:
         Generator(std::ostream& stream)
-            : m_stream(stream) { }
+            : m_stream(stream)
+        { }
         virtual ~Generator() = default;
-        virtual void generate(const Value&) = 0;
+        virtual void generate(Value const&) = 0;
 
     protected:
         std::ostream& m_stream;

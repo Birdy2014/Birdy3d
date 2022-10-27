@@ -14,7 +14,7 @@ namespace Birdy3d::ecs {
 
         Transform3d() = delete;
         Transform3d(Entity*);
-        Transform3d(const Transform3d&);
+        Transform3d(Transform3d const&);
         void update(bool changed = false);
         glm::mat4 global_matrix();
         glm::mat4 local_matrix();

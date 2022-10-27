@@ -7,8 +7,8 @@ namespace Birdy3d::ui {
     class StaticGridLayout : public Layout {
     public:
         StaticGridLayout(int gap = 0);
-        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const override;
-        glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override;
+        void arrange(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const override;
+        [[nodiscard]] glm::ivec2 minimal_size(std::list<std::shared_ptr<Widget>> const& children) const override;
 
     private:
         int m_gap;
@@ -17,10 +17,10 @@ namespace Birdy3d::ui {
     class DynamicGridLayout : public Layout {
     public:
         DynamicGridLayout(int gap = 0);
-        void arrange(const std::list<std::shared_ptr<Widget>>& children, glm::ivec2 pos, glm::ivec2 size) const override;
-        glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children) const override;
-        glm::ivec2 minimal_size(const std::list<std::shared_ptr<Widget>>& children, float suggested_size, Direction) const override;
-        float minimal_size(const std::list<std::shared_ptr<Widget>>& children, Direction) const override;
+        void arrange(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const override;
+        [[nodiscard]] glm::ivec2 minimal_size(std::list<std::shared_ptr<Widget>> const& children) const override;
+        [[nodiscard]] glm::ivec2 minimal_size(std::list<std::shared_ptr<Widget>> const& children, float suggested_size, Direction) const override;
+        [[nodiscard]] float minimal_size(std::list<std::shared_ptr<Widget>> const& children, Direction) const override;
 
     private:
         int m_gap;

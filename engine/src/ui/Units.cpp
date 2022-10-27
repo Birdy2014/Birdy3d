@@ -7,65 +7,76 @@ namespace Birdy3d::ui {
 
     // Dimension
 
-    Dimension& Dimension::operator+=(const Dimension& other) {
+    Dimension& Dimension::operator+=(Dimension const& other)
+    {
         pixels += other.pixels;
         percent += other.percent;
         em += other.em;
         return *this;
     }
 
-    Dimension& Dimension::operator-=(const Dimension& other) {
+    Dimension& Dimension::operator-=(Dimension const& other)
+    {
         pixels -= other.pixels;
         percent -= other.percent;
         em -= other.em;
         return *this;
     }
 
-    int Dimension::to_pixels(int parent_size) const {
+    int Dimension::to_pixels(int parent_size) const
+    {
         return pixels + (percent / 100) * parent_size + em * core::Application::theme().line_height();
     }
 
     // Position
 
-    Position& Position::operator=(const Position& other) {
+    Position& Position::operator=(Position const& other)
+    {
         x = other.x;
         y = other.y;
         return *this;
     }
 
-    Position& Position::operator+=(const Position& other) {
+    Position& Position::operator+=(Position const& other)
+    {
         x += other.x;
         y += other.y;
         return *this;
     }
 
-    Position& Position::operator-=(const Position& other) {
+    Position& Position::operator-=(Position const& other)
+    {
         x -= other.x;
         y -= other.y;
         return *this;
     }
 
-    Position Position::operator+(const Size& other) const {
+    Position Position::operator+(Size const& other) const
+    {
         return Position(x + other.x, y + other.y);
     }
 
-    Position Position::operator-(const Size& other) const {
+    Position Position::operator-(Size const& other) const
+    {
         return Position(x - other.x, y - other.y);
     }
 
-    Position& Position::operator+=(const Size& other) {
+    Position& Position::operator+=(Size const& other)
+    {
         x += other.x;
         y += other.y;
         return *this;
     }
 
-    Position& Position::operator-=(const Size& other) {
+    Position& Position::operator-=(Size const& other)
+    {
         x -= other.x;
         y -= other.y;
         return *this;
     }
 
-    glm::ivec2 Position::get_relative_position(Position pos, Size size, glm::ivec2 parent_size, Placement placement) {
+    glm::ivec2 Position::get_relative_position(Position pos, Size size, glm::ivec2 parent_size, Placement placement)
+    {
         glm::ivec2 p = pos.to_pixels(parent_size);
         glm::ivec2 s = size.to_pixels(parent_size);
         glm::ivec2 out;
@@ -89,19 +100,22 @@ namespace Birdy3d::ui {
 
     // Size
 
-    Size& Size::operator=(const Size& other) {
+    Size& Size::operator=(Size const& other)
+    {
         x = other.x;
         y = other.y;
         return *this;
     }
 
-    Size& Size::operator+=(const Size& other) {
+    Size& Size::operator+=(Size const& other)
+    {
         x += other.x;
         y += other.y;
         return *this;
     }
 
-    Size& Size::operator-=(const Size& other) {
+    Size& Size::operator-=(Size const& other)
+    {
         x -= other.x;
         y -= other.y;
         return *this;
@@ -111,23 +125,28 @@ namespace Birdy3d::ui {
 
     inline namespace literals {
 
-        Dimension operator"" _px(unsigned long long value) {
+        Dimension operator"" _px(unsigned long long value)
+        {
             return Dimension::make_pixels(value);
         }
 
-        Dimension operator"" _pc(long double value) {
+        Dimension operator"" _pc(long double value)
+        {
             return Dimension::make_percent(value);
         }
 
-        Dimension operator"" _pc(unsigned long long value) {
+        Dimension operator"" _pc(unsigned long long value)
+        {
             return Dimension::make_percent(value);
         }
 
-        Dimension operator"" _em(long double value) {
+        Dimension operator"" _em(long double value)
+        {
             return Dimension::make_em(value);
         }
 
-        Dimension operator"" _em(unsigned long long value) {
+        Dimension operator"" _em(unsigned long long value)
+        {
             return Dimension::make_em(value);
         }
 

@@ -31,7 +31,7 @@ BraceWrapping:
   AfterClass:      false
   AfterControlStatement: Never
   AfterEnum:       false
-  AfterFunction:   false
+  AfterFunction:   true
   AfterNamespace:  false
   AfterObjCDeclaration: false
   AfterStruct:     false
@@ -60,7 +60,7 @@ CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
-Cpp11BracedListStyle: false
+Cpp11BracedListStyle: true
 DeriveLineEnding: true
 DerivePointerAlignment: false
 DisableFormat:   false
@@ -112,6 +112,8 @@ PenaltyBreakTemplateDeclaration: 10
 PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Left
+QualifierOrder: [ 'inline', 'static', 'type', 'const', 'volatile' ]
+QualifierAlignment: Custom
 ReflowComments:  true
 SortIncludes:    true
 SortUsingDeclarations: true
@@ -119,7 +121,7 @@ SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true
-SpaceBeforeCpp11BracedList: true
+SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: ControlStatements

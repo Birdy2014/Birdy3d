@@ -64,7 +64,7 @@ namespace Birdy3d::render {
 
         void render_quad();
         void render_deferred();
-        void render_forward(bool renderOpaque);
+        void render_forward(bool render_opaque);
         void render_normals();
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, Camera);

@@ -29,11 +29,12 @@ public:
     FileBrowser(Options options)
         : ui::Widget(options)
         , m_root_directory(options.root_directory.string())
-        , m_current_directory(options.root_directory.string()) {
+        , m_current_directory(options.root_directory.string())
+    {
         using namespace ui::literals;
         set_layout<ui::DirectionalLayout>(ui::DirectionalLayout::Direction::RIGHT, 10);
 
-        auto tree_scroll_container = add_child<ui::ScrollContainer>({ .size = { 50_px, 100_pc }, .weight = 0.4 });
+        auto tree_scroll_container = add_child<ui::ScrollContainer>({.size = {50_px, 100_pc}, .weight = 0.4});
         tree_scroll_container->set_layout<ui::MaxLayout>();
 
         m_tree = tree_scroll_container->add_child<ui::TreeView>({});
@@ -66,7 +67,8 @@ private:
 
         FileItem(Options options)
             : ui::Widget(options)
-            , m_resource_id(options.id) {
+            , m_resource_id(options.id)
+        {
             using namespace ui::literals;
             add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG_INPUT);
             m_label = add_text(0_px, std::filesystem::path(options.id.name).filename().string(), utils::Color::Name::FG, ui::Placement::BOTTOM_LEFT);
@@ -77,7 +79,8 @@ private:
         core::ResourceIdentifier m_resource_id;
         ui::Text* m_label;
 
-        void on_click(ui::ClickEvent& event) override {
+        void on_click(ui::ClickEvent& event) override
+        {
             if (event.button == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_PRESS)
                 canvas->start_drag(m_resource_id);
         }

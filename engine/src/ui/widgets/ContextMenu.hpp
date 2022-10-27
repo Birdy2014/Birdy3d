@@ -42,11 +42,11 @@ namespace Birdy3d::ui {
         Rectangle* m_border_rect;
         Triangle* m_submenu_triangle;
 
-        bool contains(glm::ivec2) const override;
+        [[nodiscard]] bool contains(glm::ivec2) const override;
 
         void draw_context_item_children(ContextItem&);
         bool handle_context_item_children_click(ContextItem&, bool click);
-        bool context_item_contains(const ContextItem&, Position) const;
+        [[nodiscard]] bool context_item_contains(ContextItem const&, Position) const;
 
         void on_click(ClickEvent&) override;
         void on_key(KeyEvent&) override;

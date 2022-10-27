@@ -30,8 +30,8 @@ namespace Birdy3d::ui {
         Rectangle* m_background_rect;
         std::vector<Window*> m_windows;
 
-        void on_click_raw(const events::InputClickEvent&);
-        void on_resize_raw(const events::WindowResizeEvent&);
+        void on_click_raw(events::InputClickEvent const&);
+        void on_resize_raw(events::WindowResizeEvent const&);
         void rearrange_windows();
     };
 

@@ -49,7 +49,7 @@ namespace Birdy3d::ui {
         GLuint m_texture_atlas;
         glm::vec2 m_texture_atlas_size;
         glm::ivec2 m_texture_atlas_current_pos;
-        int m_texture_atlas_current_line_height { 0 };
+        int m_texture_atlas_current_line_height{0};
 
         bool add_char(char32_t c);
         utils::Color::Name parse_color_escape(char32_t);
@@ -68,9 +68,9 @@ namespace Birdy3d::ui {
         ~Text();
         void draw(glm::mat4 move) override;
         bool contains(glm::vec2 point) override;
-        std::string text() const;
+        [[nodiscard]] std::string text() const;
         void text(std::string value);
-        std::u32string text_u32() const;
+        [[nodiscard]] std::u32string text_u32() const;
         void text_u32(std::u32string value);
         void append(std::string);
         void append(std::u32string);
@@ -86,7 +86,7 @@ namespace Birdy3d::ui {
         bool operator==(std::u32string value) const { return text_u32() == value; }
         std::u32string::iterator begin() { return m_text.begin(); }
         std::u32string::iterator end() { return m_text.end(); }
-        std::size_t length() const { return m_text.length(); }
+        [[nodiscard]] std::size_t length() const { return m_text.length(); }
         void insert(std::size_t index, char32_t* value) { m_text.insert(index, value); }
         void insert(std::size_t index, std::u32string value) { m_text.insert(index, value); }
         void erase(std::size_t index) { m_text.erase(m_text.begin() + index, m_text.begin() + index + 1); }

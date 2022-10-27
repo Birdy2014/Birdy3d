@@ -6,15 +6,18 @@ namespace Birdy3d::render {
 
     Rendertarget::Rendertarget()
         : m_width(1)
-        , m_height(1) { }
+        , m_height(1)
+    { }
 
     Rendertarget::Rendertarget(int width, int height)
         : m_width(width)
-        , m_height(height) { }
+        , m_height(height)
+    { }
 
     Rendertarget::Rendertarget(int width, int height, std::initializer_list<Texture::Preset> presets, bool depth_rbo)
         : m_width(width)
-        , m_height(height) {
+        , m_height(height)
+    {
         for (Texture::Preset preset : presets)
             add_texture(preset);
         if (depth_rbo)
@@ -26,15 +29,18 @@ namespace Birdy3d::render {
         : m_initialized(true)
         , m_id(id)
         , m_width(width)
-        , m_height(height) { }
+        , m_height(height)
+    { }
 
-    Rendertarget::~Rendertarget() {
+    Rendertarget::~Rendertarget()
+    {
         glDeleteFramebuffers(1, &m_id);
         if (m_rbo_depth != 0)
             glDeleteRenderbuffers(1, &m_rbo_depth);
     }
 
-    Texture* Rendertarget::add_texture(Texture::Preset preset) {
+    Texture* Rendertarget::add_texture(Texture::Preset preset)
+    {
         m_initialized = false;
         auto texture = std::make_unique<Texture>(m_width, m_height, preset);
         auto ptr = texture.get();
@@ -42,7 +48,8 @@ namespace Birdy3d::render {
         return ptr;
     }
 
-    void Rendertarget::add_depth_rbo() {
+    void Rendertarget::add_depth_rbo()
+    {
         if (m_rbo_depth != 0)
             return;
         m_initialized = false;
@@ -51,14 +58,15 @@ namespace Birdy3d::render {
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
     }
 
-    bool Rendertarget::finish() {
+    bool Rendertarget::finish()
+    {
         std::vector<GLenum> attachments;
 
         glGenFramebuffers(1, &m_id);
         glBindFramebuffer(GL_FRAMEBUFFER, m_id);
 
         std::size_t color_attachment_id = 0;
-        for (const auto& texture : m_textures) {
+        for (auto const& texture : m_textures) {
             if (texture->is_depth()) {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->id(), 0);
                 continue;
@@ -77,14 +85,15 @@ namespace Birdy3d::render {
         return m_initialized;
     }
 
-    void Rendertarget::resize(int width, int height) {
+    void Rendertarget::resize(int width, int height)
+    {
         m_width = width;
         m_height = height;
 
         if (!m_initialized)
             return;
 
-        for (const auto& texture : m_textures)
+        for (auto const& texture : m_textures)
             texture->resize(m_width, m_height);
 
         if (m_rbo_depth == 0)
@@ -97,7 +106,8 @@ namespace Birdy3d::render {
         finish();
     }
 
-    void Rendertarget::bind() {
+    void Rendertarget::bind()
+    {
         if (!m_initialized) {
             core::Logger::critical("Trying to bind uninitialized Framebuffer");
             return;

@@ -21,9 +21,11 @@ namespace Birdy3d::events {
         CollisionEvent(const std::weak_ptr<physics::Collider> collider_a, const std::weak_ptr<physics::Collider> collider_b, const Type type)
             : collider_a(collider_a)
             , collider_b(collider_b)
-            , type(type) { }
+            , type(type)
+        { }
 
-        bool check_options(std::any options) override {
+        bool check_options(std::any options) override
+        {
             ecs::Entity* entity = nullptr;
             if (options.type() == typeid(ecs::Entity*))
                 entity = std::any_cast<ecs::Entity*>(options);
@@ -41,7 +43,8 @@ namespace Birdy3d::events {
             return std::find(colliders.begin(), colliders.end(), collider_a_ptr) != colliders.end() || std::find(colliders.begin(), colliders.end(), collider_b_ptr) != colliders.end();
         }
 
-        std::shared_ptr<physics::Collider> other(physics::Collider* current) {
+        std::shared_ptr<physics::Collider> other(physics::Collider* current)
+        {
             auto collider_a_ptr = collider_a.lock();
             auto collider_b_ptr = collider_b.lock();
             if (!collider_a_ptr || !collider_b_ptr)

@@ -25,11 +25,13 @@ namespace Birdy3d::ui {
 
         virtual ~UIEvent() = default;
 
-        void handled() {
+        void handled()
+        {
             m_bubbles = false;
         }
 
-        bool bubbles() {
+        bool bubbles()
+        {
             switch (type) {
             case SCROLL:
             case CLICK:
@@ -41,44 +43,49 @@ namespace Birdy3d::ui {
             }
         }
 
-        virtual std::string debug_text() const { return "UIEvent ()"; }
+        [[nodiscard]] virtual std::string debug_text() const { return "UIEvent ()"; }
 
     protected:
         explicit UIEvent(Type type)
-            : type { type } { }
+            : type{type}
+        { }
 
     private:
-        bool m_bubbles { true };
+        bool m_bubbles{true};
     };
 
     class ScrollEvent : public UIEvent {
     public:
-        const double xoffset;
-        const double yoffset;
+        double const xoffset;
+        double const yoffset;
 
         ScrollEvent(double xoffset, double yoffset)
             : UIEvent(UIEvent::SCROLL)
             , xoffset(xoffset)
-            , yoffset(yoffset) { }
+            , yoffset(yoffset)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("ScrollEvent ( xoffset: {}, yoffset: {} )", xoffset, yoffset);
         }
     };
 
     class ClickEvent : public UIEvent {
     public:
-        const int button;
-        const int action;
-        const int mods;
+        int const button;
+        int const action;
+        int const mods;
 
         ClickEvent(int button, int action, int mods)
             : UIEvent(UIEvent::CLICK)
             , button(button)
             , action(action)
-            , mods(mods) { }
+            , mods(mods)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             // FIXME: Make format prettier
             return fmt::format("ClickEvent ( button: {}, action: {}, mods: {} )", button, action, mods);
         }
@@ -86,19 +93,21 @@ namespace Birdy3d::ui {
 
     class KeyEvent : public UIEvent {
     public:
-        const int key;
-        const int scancode;
-        const int action;
-        const int mods;
+        int const key;
+        int const scancode;
+        int const action;
+        int const mods;
 
         KeyEvent(int key, int scancode, int action, int mods)
             : UIEvent(UIEvent::KEY)
             , key(key)
             , scancode(scancode)
             , action(action)
-            , mods(mods) { }
+            , mods(mods)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             // FIXME: Make format prettier
             return fmt::format("KeyEvent ( key: {}, action: {}, mods: {} )", key, action, mods);
         }
@@ -106,13 +115,15 @@ namespace Birdy3d::ui {
 
     class CharEvent : public UIEvent {
     public:
-        const unsigned int codepoint;
+        unsigned int const codepoint;
 
         CharEvent(unsigned int codepoint)
             : UIEvent(UIEvent::CHAR)
-            , codepoint(codepoint) { }
+            , codepoint(codepoint)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("CharEvent ( codepoint: {} )", codepoint);
         }
     };
@@ -120,9 +131,11 @@ namespace Birdy3d::ui {
     class MouseEnterEvent : public UIEvent {
     public:
         MouseEnterEvent()
-            : UIEvent(UIEvent::MOUSE_ENTER) { }
+            : UIEvent(UIEvent::MOUSE_ENTER)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("MouseEnterEvent ()");
         }
     };
@@ -130,9 +143,11 @@ namespace Birdy3d::ui {
     class MouseLeaveEvent : public UIEvent {
     public:
         MouseLeaveEvent()
-            : UIEvent(UIEvent::MOUSE_LEAVE) { }
+            : UIEvent(UIEvent::MOUSE_LEAVE)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("MouseLeaveEvent ()");
         }
     };
@@ -140,9 +155,11 @@ namespace Birdy3d::ui {
     class FocusEvent : public UIEvent {
     public:
         FocusEvent()
-            : UIEvent(UIEvent::FOCUS) { }
+            : UIEvent(UIEvent::FOCUS)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("FocusEvent ()");
         }
     };
@@ -150,9 +167,11 @@ namespace Birdy3d::ui {
     class FocusLostEvent : public UIEvent {
     public:
         FocusLostEvent()
-            : UIEvent(UIEvent::FOCUS_LOST) { }
+            : UIEvent(UIEvent::FOCUS_LOST)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("FocusLostEvent ()");
         }
     };
@@ -160,9 +179,11 @@ namespace Birdy3d::ui {
     class ResizeEvent : public UIEvent {
     public:
         ResizeEvent()
-            : UIEvent(UIEvent::RESIZE) { }
+            : UIEvent(UIEvent::RESIZE)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("ResizeEvent ()");
         }
     };
@@ -173,9 +194,11 @@ namespace Birdy3d::ui {
 
         DropEvent(std::any data)
             : UIEvent(UIEvent::DROP)
-            , data(data) { }
+            , data(data)
+        { }
 
-        virtual std::string debug_text() const override {
+        [[nodiscard]] virtual std::string debug_text() const override
+        {
             return fmt::format("DropEvent ( datatype: {} )", data.type().name());
         }
     };
@@ -187,7 +210,8 @@ namespace Birdy3d::ui {
 
 template <Birdy3d::ui::is_event EventType>
 struct fmt::formatter<EventType> {
-    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin())
+    {
         auto it = ctx.begin(), end = ctx.end();
         if (it != end && *it != '}')
             throw format_error("invalid format");
@@ -197,7 +221,8 @@ struct fmt::formatter<EventType> {
     using Type = Birdy3d::ui::UIEvent::Type;
 
     template <typename FormatContext>
-    auto format(const EventType& event, FormatContext& ctx) -> decltype(ctx.out()) {
+    auto format(EventType const& event, FormatContext& ctx) -> decltype(ctx.out())
+    {
         return format_to(ctx.out(), "{}", event.debug_text());
     }
 };

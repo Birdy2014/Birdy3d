@@ -7,22 +7,26 @@
 namespace Birdy3d::ui {
 
     NumberInput::NumberInput(Options options)
-        : TextField(options) {
+        : TextField(options)
+    {
         value(options.value);
     }
 
-    float NumberInput::value() {
+    float NumberInput::value()
+    {
         return m_value;
     }
 
-    void NumberInput::value(float value) {
+    void NumberInput::value(float value)
+    {
         m_value = std::clamp(value, min_value, max_value);
         std::stringstream stream;
         stream << std::fixed << std::setprecision(3) << m_value;
         text(stream.str());
     }
 
-    void NumberInput::on_update() {
+    void NumberInput::on_update()
+    {
         if (m_dragging) {
             auto offsets = core::Input::cursor_pos_offset();
             float change = offsets.x + offsets.y;
@@ -35,7 +39,8 @@ namespace Birdy3d::ui {
         TextField::on_update();
     }
 
-    void NumberInput::on_scroll(ScrollEvent& event) {
+    void NumberInput::on_scroll(ScrollEvent& event)
+    {
         float change = event.yoffset;
         if (!core::Input::key_pressed(GLFW_KEY_LEFT_CONTROL))
             change *= 0.1f;
@@ -45,7 +50,8 @@ namespace Birdy3d::ui {
         value(m_value + change);
     }
 
-    void NumberInput::on_click(ClickEvent& event) {
+    void NumberInput::on_click(ClickEvent& event)
+    {
         event.handled();
 
         if (event.button != GLFW_MOUSE_BUTTON_RIGHT)
@@ -60,24 +66,28 @@ namespace Birdy3d::ui {
         }
     }
 
-    void NumberInput::on_key(KeyEvent& event) {
+    void NumberInput::on_key(KeyEvent& event)
+    {
         TextField::on_key(event);
         set_text_value();
     }
 
-    void NumberInput::on_char(CharEvent& event) {
+    void NumberInput::on_char(CharEvent& event)
+    {
         if ((event.codepoint < '0' || event.codepoint > '9') && event.codepoint != '.')
             return;
         TextField::on_char(event);
         set_text_value();
     }
 
-    void NumberInput::on_focus_lost(FocusLostEvent& event) {
+    void NumberInput::on_focus_lost(FocusLostEvent& event)
+    {
         TextField::on_focus_lost(event);
         m_dragging = false;
     }
 
-    void NumberInput::set_text_value() {
+    void NumberInput::set_text_value()
+    {
         auto t = text();
         if (t.empty() || std::count(t.begin(), t.end(), '.') > 1)
             return;

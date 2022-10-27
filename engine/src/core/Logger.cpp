@@ -4,7 +4,8 @@
 
 namespace Birdy3d::core {
 
-    void Logger::print_console(const std::string& text, Type type) {
+    void Logger::print_console(std::string const& text, Type type)
+    {
         utils::Color::Name color = [&type] {
             switch (type) {
             case Type::DEBUG:

@@ -11,12 +11,12 @@ namespace Birdy3d::ui {
 
     class Theme {
     public:
-        Theme(const std::string& file_content);
+        Theme(std::string const& file_content);
         TextRenderer& text_renderer();
-        utils::Color color(utils::Color::Name) const;
-        std::string font() const;
-        int font_size() const;
-        int line_height() const;
+        [[nodiscard]] utils::Color color(utils::Color::Name) const;
+        [[nodiscard]] std::string font() const;
+        [[nodiscard]] int font_size() const;
+        [[nodiscard]] int line_height() const;
         void serialize(serializer::Adapter&);
 
     private:

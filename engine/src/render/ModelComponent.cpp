@@ -3,37 +3,45 @@
 namespace Birdy3d::render {
 
     ModelComponent::ModelComponent()
-        : material(nullptr) { }
+        : material(nullptr)
+    { }
 
-    ModelComponent::ModelComponent(const std::string& name, std::shared_ptr<Material> material)
+    ModelComponent::ModelComponent(std::string const& name, std::shared_ptr<Material> material)
         : material(material)
-        , m_model(name) { }
+        , m_model(name)
+    { }
 
-    void ModelComponent::start() {
+    void ModelComponent::start()
+    {
         if (!m_model)
             core::Logger::warn("No model specified");
     }
 
-    void ModelComponent::serialize(serializer::Adapter& adapter) {
+    void ModelComponent::serialize(serializer::Adapter& adapter)
+    {
         adapter("model", m_model);
         adapter("material", material);
     }
 
-    void ModelComponent::render(const Shader& shader, bool transparent) const {
+    void ModelComponent::render(Shader const& shader, bool transparent) const
+    {
         if (m_model)
             m_model->render(*entity, material.get(), shader, transparent);
     }
 
-    void ModelComponent::render_depth(const Shader& shader) const {
+    void ModelComponent::render_depth(Shader const& shader) const
+    {
         if (m_model)
             m_model->render_depth(*entity, shader);
     }
 
-    core::ResourceHandle<Model> ModelComponent::model() {
+    core::ResourceHandle<Model> ModelComponent::model()
+    {
         return m_model;
     }
 
-    void ModelComponent::model(const std::string& name) {
+    void ModelComponent::model(std::string const& name)
+    {
         m_model = name;
     }
 

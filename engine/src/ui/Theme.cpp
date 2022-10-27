@@ -1,22 +1,23 @@
 #include "ui/Theme.hpp"
 
-#include "core/Logger.hpp"
-#include "core/ResourceManager.hpp"
 #include "utils/serializer/Serializer.hpp"
 #include <fstream>
 
 namespace Birdy3d::ui {
 
-    Theme::Theme(const std::string& file_content) {
+    Theme::Theme(std::string const& file_content)
+    {
         serializer::Serializer::deserialize(file_content, *this);
         m_text_renderer = std::make_unique<TextRenderer>(*this);
     }
 
-    TextRenderer& Theme::text_renderer() {
+    TextRenderer& Theme::text_renderer()
+    {
         return *m_text_renderer.get();
     }
 
-    utils::Color Theme::color(utils::Color::Name n) const {
+    utils::Color Theme::color(utils::Color::Name n) const
+    {
         if ((int)n < 16)
             return m_termcolors[(int)n];
         switch (n) {
@@ -39,19 +40,23 @@ namespace Birdy3d::ui {
         }
     }
 
-    std::string Theme::font() const {
+    std::string Theme::font() const
+    {
         return m_font;
     }
 
-    int Theme::font_size() const {
+    int Theme::font_size() const
+    {
         return m_font_size;
     }
 
-    int Theme::line_height() const {
+    int Theme::line_height() const
+    {
         return m_line_height;
     }
 
-    void Theme::serialize(serializer::Adapter& adapter) {
+    void Theme::serialize(serializer::Adapter& adapter)
+    {
         adapter("termcolors", m_termcolors);
         adapter("color_fg", m_color_fg);
         adapter("color_bg", m_color_bg);

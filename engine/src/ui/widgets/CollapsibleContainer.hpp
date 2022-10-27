@@ -16,24 +16,26 @@ namespace Birdy3d::ui {
         };
 
         CollapsibleContainer(Options options)
-            : Container(options) {
+            : Container(options)
+        {
             m_padding = {
                 .left = 4_px,
                 .right = 4_px,
                 .top = 1_em,
-                .bottom = 0_px
-            };
+                .bottom = 0_px};
             add_filled_rectangle(0_px, Size(100_pc, 100_pc - 1_em), utils::Color::Name::BG, Placement::BOTTOM_LEFT);
             add_filled_rectangle(0_px, Size(100_pc, 1_em), utils::Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);
             m_arrow = add_filled_triangle(-4_px, 14_px, utils::Color::Name::FG, Placement::TOP_RIGHT);
             m_title = add_text(Position(10_px, 0_px), options.title, utils::Color::Name::FG, Placement::TOP_LEFT);
         }
 
-        void title(std::string text) {
+        void title(std::string text)
+        {
             m_title->text(text);
         }
 
-        void toggle_collapsed() {
+        void toggle_collapsed()
+        {
             m_children_visible = !m_children_visible;
             m_arrow->rotation(glm::radians(m_children_visible ? 60.0f : 0.0f));
         }
@@ -42,7 +44,8 @@ namespace Birdy3d::ui {
         Triangle* m_arrow;
         Text* m_title;
 
-        void on_click(ClickEvent& event) override {
+        void on_click(ClickEvent& event) override
+        {
             if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
                 return;
             auto local_cursor_pos = core::Input::cursor_pos_int() - m_actual_pos;

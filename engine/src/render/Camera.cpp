@@ -26,7 +26,8 @@ namespace Birdy3d::render {
         , m_old_target_height(1)
         , m_gbuffer(1, 1)
         , m_ssao_target(1, 1)
-        , m_ssao_blur_target(1, 1) { }
+        , m_ssao_blur_target(1, 1)
+    { }
 
     Camera::Camera(std::shared_ptr<Rendertarget> target, bool deferred)
         : deferred_enabled(deferred)
@@ -35,9 +36,11 @@ namespace Birdy3d::render {
         , m_old_target_height(target->height())
         , m_gbuffer(target->width(), target->height())
         , m_ssao_target(target->width(), target->height())
-        , m_ssao_blur_target(target->width(), target->height()) { }
+        , m_ssao_blur_target(target->width(), target->height())
+    { }
 
-    void Camera::start() {
+    void Camera::start()
+    {
         m_projection = glm::perspective(fov, (float)m_old_target_width / (float)m_old_target_height, near, far);
 
         m_gbuffer_position = m_gbuffer.add_texture(Texture::Preset::COLOR_RGBA_FLOAT);
@@ -87,7 +90,8 @@ namespace Birdy3d::render {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
 
-    void Camera::cleanup() {
+    void Camera::cleanup()
+    {
         if (m_outline_vao != 0) {
             glDeleteVertexArrays(1, &m_outline_vao);
             glDeleteBuffers(1, &m_outline_vbo);
@@ -96,7 +100,8 @@ namespace Birdy3d::render {
         }
     }
 
-    void Camera::render() {
+    void Camera::render()
+    {
         if (!target) {
             core::Logger::error("Camera Rendertarget not set");
             return;
@@ -151,7 +156,8 @@ namespace Birdy3d::render {
             render_normals();
     }
 
-    void Camera::render_quad() {
+    void Camera::render_quad()
+    {
         if (m_quad_vao == 0) {
             float quad_vertices[] = {
                 // clang-format off
@@ -178,7 +184,8 @@ namespace Birdy3d::render {
         glBindVertexArray(0);
     }
 
-    void Camera::render_deferred() {
+    void Camera::render_deferred()
+    {
         auto lerp = [](float a, float b, float f) {
             return a + f * (b - a);
         };
@@ -257,7 +264,8 @@ namespace Birdy3d::render {
         render_quad();
     }
 
-    void Camera::render_forward(bool renderOpaque) {
+    void Camera::render_forward(bool render_opaque)
+    {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -270,7 +278,7 @@ namespace Birdy3d::render {
             m_spotlights[i]->use(*m_forward_shader, i, 4 + m_dirlights.size() + m_pointlights.size() + i);
 
         target->bind();
-        if (renderOpaque) {
+        if (render_opaque) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } else {
             glBindFramebuffer(GL_READ_FRAMEBUFFER, m_gbuffer.id());
@@ -282,7 +290,7 @@ namespace Birdy3d::render {
         m_forward_shader->set_mat4("projection", m_projection);
         m_forward_shader->set_mat4("view", m_view);
         m_forward_shader->set_vec3("view_pos", entity->transform.world_position());
-        if (renderOpaque) {
+        if (render_opaque) {
             for (auto m : m_models) {
                 m->render(*m_forward_shader, false);
             }
@@ -300,7 +308,8 @@ namespace Birdy3d::render {
         }
     }
 
-    void Camera::render_normals() {
+    void Camera::render_normals()
+    {
         glEnable(GL_DEPTH_TEST);
 
         target->bind();
@@ -314,7 +323,8 @@ namespace Birdy3d::render {
         }
     }
 
-    void Camera::render_outline(ecs::Entity* selected_entity) {
+    void Camera::render_outline(ecs::Entity* selected_entity)
+    {
         if (selected_entity == nullptr)
             return;
 
@@ -358,7 +368,7 @@ namespace Birdy3d::render {
             }
         };
 
-        compute_matrix(selected_entity, glm::mat4 { 1 });
+        compute_matrix(selected_entity, glm::mat4{1});
 
         // clang-format off
         glm::vec3 vertices[24] = {
@@ -398,7 +408,8 @@ namespace Birdy3d::render {
         glDrawArrays(GL_LINES, 0, 24);
     }
 
-    void Camera::render_collider_wireframe() {
+    void Camera::render_collider_wireframe()
+    {
         glEnable(GL_DEPTH_TEST);
         target->bind();
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -414,7 +425,8 @@ namespace Birdy3d::render {
         glEnable(GL_CULL_FACE);
     }
 
-    void Camera::serialize(serializer::Adapter& adapter) {
+    void Camera::serialize(serializer::Adapter& adapter)
+    {
         adapter("deferred", deferred_enabled);
         adapter("fov", fov);
         adapter("near", near);

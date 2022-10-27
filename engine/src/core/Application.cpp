@@ -26,11 +26,13 @@ namespace Birdy3d::core {
     std::unordered_map<BoolOption, bool> Application::m_options_bool;
     std::unordered_map<IntOption, int> Application::m_options_int;
 
-    void glfw_error_callback([[maybe_unused]] int error, const char* description) {
+    void glfw_error_callback([[maybe_unused]] int error, char const* description)
+    {
         core::Logger::error("GLFW Error: {}", description);
     }
 
-    bool Application::init(const char* window_name, int width, int height, const std::string& theme_name) {
+    bool Application::init(char const* window_name, int width, int height, std::string const& theme_name)
+    {
 #ifdef _GLFW_WAYLAND
         // make wayland default instead of X11
         auto const wayland_display = std::getenv("WAYLAND_DISPLAY");
@@ -94,11 +96,13 @@ namespace Birdy3d::core {
         return true;
     }
 
-    void Application::cleanup() {
+    void Application::cleanup()
+    {
         glfwTerminate();
     }
 
-    void Application::mainloop() {
+    void Application::mainloop()
+    {
         float last_frame = 0.0f;
         while (!glfwWindowShouldClose(m_window)) {
             float current_frame = glfwGetTime();
@@ -140,58 +144,62 @@ namespace Birdy3d::core {
         }
     }
 
-    void Application::framebuffer_size_callback(GLFWwindow*, int width, int height) {
+    void Application::framebuffer_size_callback(GLFWwindow*, int width, int height)
+    {
         render::Rendertarget::DEFAULT->resize(width, height);
         event_bus->emit<events::WindowResizeEvent>(width, height);
     }
 
-    void Application::window_focus_callback(GLFWwindow* window, int focused) {
+    void Application::window_focus_callback(GLFWwindow* window, int focused)
+    {
         if (focused && Input::is_cursor_hidden())
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         else
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
-    void Application::scroll_callback(GLFWwindow*, double xoffset, double yoffset) {
+    void Application::scroll_callback(GLFWwindow*, double xoffset, double yoffset)
+    {
         event_bus->emit<events::InputScrollEvent>(xoffset, yoffset);
     }
 
-    void Application::mouse_button_callback(GLFWwindow*, int button, int action, int mods) {
+    void Application::mouse_button_callback(GLFWwindow*, int button, int action, int mods)
+    {
         event_bus->emit<events::InputClickEvent>(button, action, mods);
     }
 
-    void Application::key_callback(GLFWwindow*, int key, int scancode, int action, int mods) {
+    void Application::key_callback(GLFWwindow*, int key, int scancode, int action, int mods)
+    {
         event_bus->emit<events::InputKeyEvent>(key, scancode, action, mods);
     }
 
-    void Application::character_callback(GLFWwindow*, unsigned int codepoint) {
+    void Application::character_callback(GLFWwindow*, unsigned int codepoint)
+    {
         event_bus->emit<events::InputCharEvent>(codepoint);
     }
 
-    void Application::gl_message_callback(GLenum source, GLenum type, GLenum, GLenum severity, GLsizei, const GLchar* message, const void*) {
-        static const std::unordered_map<GLenum, std::string> error_source_map {
-            { GL_DEBUG_SOURCE_API, "SOURCE_API" },
-            { GL_DEBUG_SOURCE_WINDOW_SYSTEM, "WINDOW_SYSTEM" },
-            { GL_DEBUG_SOURCE_SHADER_COMPILER, "SHADER_COMPILER" },
-            { GL_DEBUG_SOURCE_THIRD_PARTY, "THIRD_PARTY" },
-            { GL_DEBUG_SOURCE_APPLICATION, "APPLICATION" },
-            { GL_DEBUG_SOURCE_OTHER, "OTHER" }
-        };
-        static const std::unordered_map<GLenum, std::string> error_type_map {
-            { GL_DEBUG_TYPE_ERROR, "ERROR" },
-            { GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "DEPRECATED_BEHAVIOR" },
-            { GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "UNDEFINED_BEHAVIOR" },
-            { GL_DEBUG_TYPE_PORTABILITY, "PORTABILITY" },
-            { GL_DEBUG_TYPE_PERFORMANCE, "PERFORMANCE" },
-            { GL_DEBUG_TYPE_OTHER, "OTHER" },
-            { GL_DEBUG_TYPE_MARKER, "MARKER" }
-        };
-        static const std::unordered_map<GLenum, std::string> error_severity_map {
-            { GL_DEBUG_SEVERITY_HIGH, "HIGH" },
-            { GL_DEBUG_SEVERITY_MEDIUM, "MEDIUM" },
-            { GL_DEBUG_SEVERITY_LOW, "LOW" },
-            { GL_DEBUG_SEVERITY_NOTIFICATION, "NOTIFICATION" }
-        };
+    void Application::gl_message_callback(GLenum source, GLenum type, GLenum, GLenum severity, GLsizei, GLchar const* message, void const*)
+    {
+        static const std::unordered_map<GLenum, std::string> ERROR_SOURCE_MAP{
+            {GL_DEBUG_SOURCE_API, "SOURCE_API"},
+            {GL_DEBUG_SOURCE_WINDOW_SYSTEM, "WINDOW_SYSTEM"},
+            {GL_DEBUG_SOURCE_SHADER_COMPILER, "SHADER_COMPILER"},
+            {GL_DEBUG_SOURCE_THIRD_PARTY, "THIRD_PARTY"},
+            {GL_DEBUG_SOURCE_APPLICATION, "APPLICATION"},
+            {GL_DEBUG_SOURCE_OTHER, "OTHER"}};
+        static const std::unordered_map<GLenum, std::string> ERROR_TYPE_MAP{
+            {GL_DEBUG_TYPE_ERROR, "ERROR"},
+            {GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "DEPRECATED_BEHAVIOR"},
+            {GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "UNDEFINED_BEHAVIOR"},
+            {GL_DEBUG_TYPE_PORTABILITY, "PORTABILITY"},
+            {GL_DEBUG_TYPE_PERFORMANCE, "PERFORMANCE"},
+            {GL_DEBUG_TYPE_OTHER, "OTHER"},
+            {GL_DEBUG_TYPE_MARKER, "MARKER"}};
+        static const std::unordered_map<GLenum, std::string> ERROR_SEVERITY_MAP{
+            {GL_DEBUG_SEVERITY_HIGH, "HIGH"},
+            {GL_DEBUG_SEVERITY_MEDIUM, "MEDIUM"},
+            {GL_DEBUG_SEVERITY_LOW, "LOW"},
+            {GL_DEBUG_SEVERITY_NOTIFICATION, "NOTIFICATION"}};
 
         if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
             return;
@@ -199,30 +207,35 @@ namespace Birdy3d::core {
         utils::print_stacktrace();
 
         if (type == GL_DEBUG_TYPE_ERROR)
-            core::Logger::error("OpenGL: source = {}, severity = {}, message = {}\n", error_source_map.at(source), error_severity_map.at(severity), message);
+            core::Logger::error("OpenGL: source = {}, severity = {}, message = {}\n", ERROR_SOURCE_MAP.at(source), ERROR_SEVERITY_MAP.at(severity), message);
         else
-            core::Logger::warn("OpenGL: source = {}, type = {}, severity = {}, message = {}\n", error_source_map.at(source), error_type_map.at(type), error_severity_map.at(severity), message);
+            core::Logger::warn("OpenGL: source = {}, type = {}, severity = {}, message = {}\n", ERROR_SOURCE_MAP.at(source), ERROR_TYPE_MAP.at(type), ERROR_SEVERITY_MAP.at(severity), message);
     }
 
-    GLFWwindow* Application::get_window() {
+    GLFWwindow* Application::get_window()
+    {
         return m_window;
     }
 
-    glm::vec2 Application::get_viewport_size() {
+    glm::vec2 Application::get_viewport_size()
+    {
         GLint viewport[4];
         glGetIntegerv(GL_VIEWPORT, viewport);
         return glm::vec2(viewport[2], viewport[3]);
     }
 
-    bool Application::option_bool(BoolOption option) {
+    bool Application::option_bool(BoolOption option)
+    {
         return m_options_bool[option];
     }
 
-    void Application::option_toggle(BoolOption option) {
+    void Application::option_toggle(BoolOption option)
+    {
         option_bool(option, !option_bool(option));
     }
 
-    void Application::option_bool(BoolOption option, bool value) {
+    void Application::option_bool(BoolOption option, bool value)
+    {
         m_options_bool[option] = value;
         switch (option) {
         case BoolOption::VSYNC:
@@ -233,19 +246,23 @@ namespace Birdy3d::core {
         }
     }
 
-    int Application::option_int(IntOption option) {
+    int Application::option_int(IntOption option)
+    {
         return m_options_int[option];
     }
 
-    void Application::option_int(IntOption option, int value) {
+    void Application::option_int(IntOption option, int value)
+    {
         m_options_int[option] = value;
     }
 
-    ui::Theme& Application::theme() {
+    ui::Theme& Application::theme()
+    {
         return *m_theme;
     }
 
-    bool Application::theme(const std::string& name) {
+    bool Application::theme(std::string const& name)
+    {
         auto new_theme = ResourceManager::get_theme(name);
         if (!new_theme)
             return false;

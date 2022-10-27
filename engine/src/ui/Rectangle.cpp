@@ -1,24 +1,25 @@
 #include "ui/Rectangle.hpp"
 
-#include "core/ResourceManager.hpp"
 #include "render/Shader.hpp"
-#include "ui/Canvas.hpp"
 #include "ui/Theme.hpp"
 #include <glad/glad.h>
 
 namespace Birdy3d::ui {
 
     Rectangle::Rectangle(Position position, Size size, utils::Color::Name color, Type type, Placement placement)
-        : Shape(position, size, color, placement) {
+        : Shape(position, size, color, placement)
+    {
         this->type = type;
     }
 
-    Rectangle::~Rectangle() {
+    Rectangle::~Rectangle()
+    {
         glDeleteBuffers(1, &m_vbo);
         glDeleteVertexArrays(1, &m_vao);
     }
 
-    void Rectangle::draw(glm::mat4 move) {
+    void Rectangle::draw(glm::mat4 move)
+    {
         if (m_hidden)
             return;
 
@@ -49,14 +50,16 @@ namespace Birdy3d::ui {
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 
-    bool Rectangle::contains(glm::vec2 point) {
-        glm::vec2 bottom_left = Position::get_relative_position(m_position, m_size, m_parentSize, m_placement);
-        glm::vec2 size = m_size.to_pixels(m_parentSize);
+    bool Rectangle::contains(glm::vec2 point)
+    {
+        glm::vec2 bottom_left = Position::get_relative_position(m_position, m_size, m_parent_size, m_placement);
+        glm::vec2 size = m_size.to_pixels(m_parent_size);
         glm::vec2 top_right = bottom_left + size;
         return point.x > bottom_left.x && point.x < top_right.x && point.y > bottom_left.y && point.y < top_right.y;
     }
 
-    void Rectangle::create_buffers() {
+    void Rectangle::create_buffers()
+    {
         float vertices[4 * 4];
         // Create buffers
         glGenVertexArrays(1, &m_vao);
@@ -73,20 +76,21 @@ namespace Birdy3d::ui {
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
     }
 
-    void Rectangle::update_values() {
+    void Rectangle::update_values()
+    {
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glm::vec2 pos = Position::get_relative_position(m_position, m_size, m_parentSize, m_placement);
-        glm::vec2 size = m_size.to_pixels(m_parentSize);
+        glm::vec2 pos = Position::get_relative_position(m_position, m_size, m_parent_size, m_placement);
+        glm::vec2 size = m_size.to_pixels(m_parent_size);
         m_move_self = glm::mat4(1);
         m_move_self = glm::translate(m_move_self, glm::vec3(pos + glm::vec2(size.x / 2, size.y / 2), 0.0f));
         if (m_rotation != 0)
             m_move_self = glm::rotate(m_move_self, m_rotation, glm::vec3(0, 0, 1));
         m_move_self = glm::scale(m_move_self, glm::vec3(size, 1.0f));
-        float ua = m_texCoordA.x;
-        float va = m_texCoordA.y;
-        float ub = m_texCoordB.x;
-        float vb = m_texCoordB.y;
+        float ua = m_tex_coord_a.x;
+        float va = m_tex_coord_a.y;
+        float ub = m_tex_coord_b.x;
+        float vb = m_tex_coord_b.y;
         // clang-format off
         if (type == Shape::OUTLINE) {
             float vertices[] = {

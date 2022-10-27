@@ -6,12 +6,13 @@ namespace Birdy3d::events {
 
     class WindowResizeEvent : public Event {
     public:
-        const int width;
-        const int height;
+        int const width;
+        int const height;
 
         WindowResizeEvent(int width, int height)
             : width(width)
-            , height(height) { }
+            , height(height)
+        { }
     };
 
 }

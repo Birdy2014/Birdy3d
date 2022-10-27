@@ -1,31 +1,31 @@
 #include "physics/Collider.hpp"
 
-#include "core/Application.hpp"
 #include "core/Logger.hpp"
 #include "ecs/Entity.hpp"
-#include "ecs/Scene.hpp"
-#include "events/CollisionEvent.hpp"
 #include "physics/Collision.hpp"
 #include "render/Mesh.hpp"
 #include "render/Model.hpp"
 #include "render/ModelComponent.hpp"
-#include "render/Vertex.hpp"
 
 namespace Birdy3d::physics {
 
     Collider::Collider()
         : m_model(nullptr)
-        , m_generation_mode(GenerationMode::NONE) { }
+        , m_generation_mode(GenerationMode::NONE)
+    { }
 
-    Collider::Collider(const std::string& name)
+    Collider::Collider(std::string const& name)
         : m_model_name(name)
-        , m_generation_mode(GenerationMode::NONE) { }
+        , m_generation_mode(GenerationMode::NONE)
+    { }
 
     Collider::Collider(GenerationMode mode)
         : m_model(nullptr)
-        , m_generation_mode(mode) { }
+        , m_generation_mode(mode)
+    { }
 
-    void Collider::start() {
+    void Collider::start()
+    {
         if (m_generation_mode == GenerationMode::NONE) {
             m_model = core::ResourceManager::get_model(m_model_name).ptr();
         } else {
@@ -46,11 +46,13 @@ namespace Birdy3d::physics {
         }
     }
 
-    void Collider::render_wireframe(render::Shader& shader) {
+    void Collider::render_wireframe(render::Shader& shader)
+    {
         m_model->render_wireframe(*entity, shader);
     }
 
-    void Collider::serialize(serializer::Adapter& adapter) {
+    void Collider::serialize(serializer::Adapter& adapter)
+    {
         adapter("model_name", m_model_name);
         if (adapter.mode() == serializer::Adapter::Mode::LOAD) {
             int mode;
@@ -62,14 +64,15 @@ namespace Birdy3d::physics {
         }
     }
 
-    CollisionPoints Collider::collides(Collider& collider) {
-        CollisionPoints points = { glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false };
+    CollisionPoints Collider::collides(Collider& collider)
+    {
+        CollisionPoints points = {glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false};
         if (!m_model || !collider.m_model)
             return points;
-        for (const auto& own_mesh : m_model->get_meshes()) {
-            for (const auto& other_mesh : collider.m_model->get_meshes()) {
+        for (auto const& own_mesh : m_model->get_meshes()) {
+            for (auto const& other_mesh : collider.m_model->get_meshes()) {
                 if (collides(own_mesh, other_mesh, entity->transform.global_matrix(), collider.entity->transform.global_matrix())) {
-                    points.hasCollision = true;
+                    points.has_collision = true;
                     break;
                 }
             }
@@ -77,7 +80,8 @@ namespace Birdy3d::physics {
         return points;
     }
 
-    bool Collider::collides(const render::Mesh& mesh_a, const render::Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b) {
+    bool Collider::collides(render::Mesh const& mesh_a, render::Mesh const& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b)
+    {
         // FIXME: stop if one of the matrices scales to 0
         m_point_count = 0;
         glm::vec3 s = support(mesh_a, mesh_b, transform_a, transform_b, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -101,7 +105,8 @@ namespace Birdy3d::physics {
         }
     }
 
-    glm::vec3 Collider::support(const render::Mesh& mesh_a, const render::Mesh& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction) {
+    glm::vec3 Collider::support(render::Mesh const& mesh_a, render::Mesh const& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction)
+    {
         // Transform world direction to local direction
         glm::mat4 inverse_transform_a = glm::inverse(transform_a);
         glm::mat4 inverse_transform_b = glm::inverse(transform_b);
@@ -118,7 +123,8 @@ namespace Birdy3d::physics {
         return world_furthest_a - world_furthest_b;
     }
 
-    void Collider::push_front(glm::vec3 point) {
+    void Collider::push_front(glm::vec3 point)
+    {
         if (m_point_count >= 4 || m_point_count < 0)
             core::Logger::critical("Simplex has a maximum size of 4");
 
@@ -130,7 +136,8 @@ namespace Birdy3d::physics {
         m_point_count++;
     }
 
-    bool Collider::next_simplex(glm::vec3& direction) {
+    bool Collider::next_simplex(glm::vec3& direction)
+    {
         switch (m_point_count) {
         case 2:
             return line(direction);
@@ -143,7 +150,8 @@ namespace Birdy3d::physics {
         return false;
     }
 
-    bool Collider::line(glm::vec3& direction) {
+    bool Collider::line(glm::vec3& direction)
+    {
         glm::vec3 a = m_points[0];
         glm::vec3 b = m_points[1];
 
@@ -160,7 +168,8 @@ namespace Birdy3d::physics {
         return false;
     }
 
-    bool Collider::triangle(glm::vec3& direction) {
+    bool Collider::triangle(glm::vec3& direction)
+    {
         glm::vec3 a = m_points[0];
         glm::vec3 b = m_points[1];
         glm::vec3 c = m_points[2];
@@ -198,7 +207,8 @@ namespace Birdy3d::physics {
         return false;
     }
 
-    bool Collider::tetrahedron(glm::vec3& direction) {
+    bool Collider::tetrahedron(glm::vec3& direction)
+    {
         glm::vec3 a = m_points[0];
         glm::vec3 b = m_points[1];
         glm::vec3 c = m_points[2];
@@ -235,7 +245,8 @@ namespace Birdy3d::physics {
         return true;
     }
 
-    bool Collider::same_direction(glm::vec3 a, glm::vec3 b) {
+    bool Collider::same_direction(glm::vec3 a, glm::vec3 b)
+    {
         return glm::dot(a, b) > 0;
     }
 

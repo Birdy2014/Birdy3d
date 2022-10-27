@@ -9,15 +9,18 @@
 namespace Birdy3d::ecs {
 
     Transform3d::Transform3d(Entity* entity)
-        : m_entity(entity) { }
+        : m_entity(entity)
+    { }
 
-    Transform3d::Transform3d(const Transform3d& other)
+    Transform3d::Transform3d(Transform3d const& other)
         : position(other.position)
         , orientation(other.orientation)
         , scale(other.scale)
-        , m_entity(other.m_entity) { }
+        , m_entity(other.m_entity)
+    { }
 
-    void Transform3d::update(bool changed) {
+    void Transform3d::update(bool changed)
+    {
         if (position != m_old_position || orientation != m_old_orientation || scale != m_old_scale) {
             changed = true;
             // Set old values
@@ -45,33 +48,39 @@ namespace Birdy3d::ecs {
             child_entity->transform.update(changed);
     }
 
-    glm::mat4 Transform3d::global_matrix() {
+    glm::mat4 Transform3d::global_matrix()
+    {
         return m_global_matrix;
     }
 
-    glm::mat4 Transform3d::local_matrix() {
+    glm::mat4 Transform3d::local_matrix()
+    {
         return m_local_matrix;
     }
 
-    glm::vec3 Transform3d::world_position() {
+    glm::vec3 Transform3d::world_position()
+    {
         return global_matrix() * glm::vec4(0, 0, 0, 1);
     }
 
-    glm::vec3 Transform3d::world_orientation() {
+    glm::vec3 Transform3d::world_orientation()
+    {
         if (m_entity->parent)
             return m_entity->parent->transform.orientation + orientation;
         else
             return orientation;
     }
 
-    glm::vec3 Transform3d::world_scale() {
+    glm::vec3 Transform3d::world_scale()
+    {
         if (m_entity->parent)
             return m_entity->parent->transform.scale * scale;
         else
             return scale;
     }
 
-    void Transform3d::serialize(serializer::Adapter& adapter) {
+    void Transform3d::serialize(serializer::Adapter& adapter)
+    {
         adapter("position", position);
         adapter("orientation", orientation);
         adapter("scale", scale);

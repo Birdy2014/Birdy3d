@@ -9,7 +9,8 @@ namespace Birdy3d::ui {
     class Scrollable : public Widget {
     public:
         Scrollable(is_widget_options auto options)
-            : Widget(options) {
+            : Widget(options)
+        {
             m_scrollbar_vertical = add_filled_rectangle(0_px, Size(10_px, 100_pc), utils::Color::Name::NONE, Placement::TOP_RIGHT);
             m_scrollbar_horizontal = add_filled_rectangle(0_px, Size(100_pc, 10_px), utils::Color::Name::NONE, Placement::BOTTOM_LEFT);
             m_scrollbar_vertical->in_foreground = true;
@@ -18,8 +19,7 @@ namespace Birdy3d::ui {
                 .left = 0_px,
                 .right = 10_px,
                 .top = 0_px,
-                .bottom = 10_px
-            };
+                .bottom = 10_px};
         }
 
         glm::ivec2 minimal_size() override;
@@ -28,9 +28,9 @@ namespace Birdy3d::ui {
     protected:
         bool m_horizontal_scroll_enabled = true;
         bool m_vertical_scroll_enabled = true;
-        glm::ivec2 m_scroll_offset { 0 };
+        glm::ivec2 m_scroll_offset{0};
         glm::ivec2 m_content_size;
-        glm::ivec2 m_max_scroll_offset { 0 };
+        glm::ivec2 m_max_scroll_offset{0};
 
         void draw() override;
         void on_scroll(ScrollEvent&) override;

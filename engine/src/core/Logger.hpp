@@ -10,46 +10,53 @@ namespace Birdy3d::core {
     class Logger {
     public:
         template <typename... Args>
-        static void debug(const std::string_view format_string, const Args&... args) {
+        static void debug(const std::string_view format_string, Args const&... args)
+        {
             auto formatted = "DEBUG: " + fmt::vformat(format_string, fmt::make_format_args(args...));
             std::cout << formatted << '\n';
             print_console(formatted, Type::DEBUG);
         }
 
         template <typename... Args>
-        static void warn(const std::string_view format_string, const Args&... args) {
+        static void warn(const std::string_view format_string, Args const&... args)
+        {
             auto formatted = "WARNING: " + fmt::vformat(format_string, fmt::make_format_args(args...));
             std::cerr << "\e[0;33m" << formatted << "\e[0m\n";
             print_console(formatted, Type::WARN);
         }
 
         template <typename... Args>
-        static void error(const std::string_view format_string, const Args&... args) {
+        static void error(const std::string_view format_string, Args const&... args)
+        {
             auto formatted = "ERROR: " + fmt::vformat(format_string, fmt::make_format_args(args...));
             std::cerr << "\e[0;31m" << formatted << "\e[0m\n";
             print_console(formatted, Type::ERROR);
         }
 
         template <typename... Args>
-        static void critical(const std::string_view format_string, const Args&... args) {
+        static void critical(const std::string_view format_string, Args const&... args)
+        {
             auto formatted = "CRITICAL: " + fmt::vformat(format_string, fmt::make_format_args(args...));
             std::cerr << "\e[1;31m" << formatted << "\e[0m\n";
             std::abort();
         }
 
         template <typename T>
-        static void assert_not_null(void* obj, const T& message) {
+        static void assert_not_null(void* obj, const T& message)
+        {
             if (obj == nullptr)
                 Logger::critical("Assert not null failed: {}", message);
         }
 
         template <typename Arg>
-        static void print(const std::string_view file, const int line, const Arg& arg) {
+        static void print(const std::string_view file, int const line, Arg const& arg)
+        {
             std::cerr << file << ':' << line << ": " << fmt::vformat("{}", fmt::make_format_args(arg)) << '\n';
         }
 
         template <typename... Args>
-        static void print(const std::string_view file, const int line, const std::string_view format_string, const Args&... args) {
+        static void print(const std::string_view file, int const line, const std::string_view format_string, Args const&... args)
+        {
             std::cerr << file << ':' << line << ": " << fmt::vformat(format_string, fmt::make_format_args(args...)) << '\n';
         }
 
@@ -60,14 +67,15 @@ namespace Birdy3d::core {
             ERROR
         };
 
-        static void print_console(const std::string&, Type);
+        static void print_console(std::string const&, Type);
     };
 
 }
 
 template <glm::length_t L, typename T>
 struct fmt::formatter<glm::vec<L, T>> {
-    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin())
+    {
         auto it = ctx.begin(), end = ctx.end();
         if (it != end && *it != '}')
             throw format_error("invalid format");
@@ -75,7 +83,8 @@ struct fmt::formatter<glm::vec<L, T>> {
     }
 
     template <typename FormatContext>
-    auto format(const glm::vec<L, T>& v, FormatContext& ctx) -> decltype(ctx.out()) {
+    auto format(glm::vec<L, T> const& v, FormatContext& ctx) -> decltype(ctx.out())
+    {
         return format_to(ctx.out(), "{}", glm::to_string(v));
     }
 };

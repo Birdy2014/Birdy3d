@@ -15,7 +15,8 @@ namespace Birdy3d::ui {
     std::shared_ptr<TextField> Console::m_console_input;
     bool Console::m_created = false;
 
-    void Console::attach(Canvas& canvas) {
+    void Console::attach(Canvas& canvas)
+    {
         if (!m_console_window)
             create_window();
         if (!canvas.get_widget("ConsoleWindow", true))
@@ -23,31 +24,34 @@ namespace Birdy3d::ui {
         // TODO: Allow attaching console to multiple canvases
     }
 
-    void Console::create_window() {
-        m_console_window = std::make_shared<Window>(Widget::Options { .size = 400_px, .name = "ConsoleWindow" });
+    void Console::create_window()
+    {
+        m_console_window = std::make_shared<Window>(Widget::Options{.size = 400_px, .name = "ConsoleWindow"});
         m_console_window->set_layout<DirectionalLayout>(DirectionalLayout::Direction::DOWN, 5, false);
         m_console_window->title("Console");
         m_console_window->callback_close = []() {
             m_console_window->hidden = true;
         };
 
-        m_console_output = m_console_window->add_child<TextField>({ .size = Size(100_pc, 0_px), .placement = Placement::TOP_LEFT });
+        m_console_output = m_console_window->add_child<TextField>({.size = Size(100_pc, 0_px), .placement = Placement::TOP_LEFT});
         m_console_output->multiline = true;
         m_console_output->readonly = true;
 
-        m_console_input = m_console_window->add_child<TextField>({ .size = Size(100_pc, 20_px), .weight = 0 });
+        m_console_input = m_console_window->add_child<TextField>({.size = Size(100_pc, 20_px), .weight = 0});
         m_console_input->on_accept = input_callback;
 
         m_created = true;
     }
 
-    void Console::input_callback() {
+    void Console::input_callback()
+    {
         std::string input = m_console_input->text();
         m_console_input->clear();
         exec(input);
     }
 
-    void Console::print(const std::string& text, utils::Color::Name color) {
+    void Console::print(std::string const& text, utils::Color::Name color)
+    {
         if (!m_created)
             return;
 
@@ -59,7 +63,8 @@ namespace Birdy3d::ui {
         m_console_output->append(color_string + text);
     }
 
-    void Console::println(const std::string& text, utils::Color::Name color) {
+    void Console::println(std::string const& text, utils::Color::Name color)
+    {
         if (!m_created)
             return;
 
@@ -71,7 +76,8 @@ namespace Birdy3d::ui {
         m_console_output->scroll_down();
     }
 
-    void Console::exec(std::string input) {
+    void Console::exec(std::string input)
+    {
         if (input.empty())
             return;
 
@@ -107,7 +113,8 @@ namespace Birdy3d::ui {
         exec(name, command);
     }
 
-    void Console::exec(std::string name, std::vector<std::string> args) {
+    void Console::exec(std::string name, std::vector<std::string> args)
+    {
         if (!m_commands.contains(name)) {
             println("Command not found");
             return;
@@ -115,11 +122,13 @@ namespace Birdy3d::ui {
         m_commands[name](args);
     }
 
-    void Console::register_command(const std::string& name, const CommandCallback& callback) {
+    void Console::register_command(std::string const& name, CommandCallback const& callback)
+    {
         m_commands[name] = std::move(callback);
     }
 
-    void ConsoleCommands::register_console() {
+    void ConsoleCommands::register_console()
+    {
         Console::register_command("console.log", [](std::vector<std::string> args) {
             Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }));
         });

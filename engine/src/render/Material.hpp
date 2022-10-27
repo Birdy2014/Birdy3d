@@ -11,21 +11,21 @@ namespace Birdy3d::render {
     public:
         bool diffuse_map_enabled = false;
         utils::Color diffuse_color = utils::Color::WHITE;
-        void diffuse_map(const core::ResourceIdentifier&);
+        void diffuse_map(core::ResourceIdentifier const&);
 
         bool specular_map_enabled = false;
         float specular_value = 0.0f;
-        void specular_map(const core::ResourceIdentifier&);
+        void specular_map(core::ResourceIdentifier const&);
 
         bool normal_map_enabled = false;
-        void normal_map(const core::ResourceIdentifier&);
+        void normal_map(core::ResourceIdentifier const&);
 
         bool emissive_map_enabled = false;
         utils::Color emissive_color = utils::Color::BLACK;
-        void emissive_map(const core::ResourceIdentifier&);
+        void emissive_map(core::ResourceIdentifier const&);
 
-        void use(const Shader& shader) const;
-        bool transparent() const;
+        void use(Shader const& shader) const;
+        [[nodiscard]] bool transparent() const;
 
         void serialize(serializer::Adapter&);
 

@@ -1,7 +1,6 @@
 #include "render/Model.hpp"
 
 #include "core/Logger.hpp"
-#include "core/ResourceManager.hpp"
 #include "ecs/Entity.hpp"
 #include "render/Mesh.hpp"
 #include "render/Shader.hpp"
@@ -13,58 +12,66 @@
 
 namespace Birdy3d::render {
 
-    Model::Model(const std::string& path) {
+    Model::Model(std::string const& path)
+    {
         core::Logger::debug("Loading model: {}", path);
         load(path);
         compute_bounding_box();
     }
 
-    Model::Model(Mesh mesh) {
+    Model::Model(Mesh mesh)
+    {
         m_meshes.push_back(std::move(mesh));
         compute_bounding_box();
     }
 
-    Model::Model(std::vector<Mesh>& meshes) {
+    Model::Model(std::vector<Mesh>& meshes)
+    {
         for (auto& mesh : meshes)
             m_meshes.push_back(std::move(mesh));
     }
 
-    void Model::render(ecs::Entity& entity, const Material* material, const Shader& shader, bool transparent) const {
+    void Model::render(ecs::Entity& entity, Material const* material, Shader const& shader, bool transparent) const
+    {
         if (material == nullptr)
             material = &m_embedded_material;
         glm::mat4 model = entity.transform.global_matrix();
         shader.set_mat4("model", model);
-        for (const auto& m : m_meshes) {
+        for (auto const& m : m_meshes) {
             if (transparent == material->transparent())
                 m.render(shader, *material);
         }
     }
 
-    void Model::render_depth(ecs::Entity& entity, const Shader& shader) const {
+    void Model::render_depth(ecs::Entity& entity, Shader const& shader) const
+    {
         glm::mat4 model = entity.transform.global_matrix();
         shader.use();
         shader.set_mat4("model", model);
-        for (const auto& m : m_meshes) {
+        for (auto const& m : m_meshes) {
             m.render_depth();
         }
     }
 
-    void Model::render_wireframe(ecs::Entity& entity, const Shader& shader) const {
+    void Model::render_wireframe(ecs::Entity& entity, Shader const& shader) const
+    {
         glm::mat4 model = entity.transform.global_matrix();
         shader.use();
         shader.set_mat4("model", model);
-        for (const auto& m : m_meshes) {
+        for (auto const& m : m_meshes) {
             m.render_wireframe();
         }
     }
 
-    const std::vector<Mesh>& Model::get_meshes() const {
+    std::vector<Mesh> const& Model::get_meshes() const
+    {
         return m_meshes;
     }
 
-    void Model::load(std::string path) {
+    void Model::load(std::string path)
+    {
         Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+        aiScene const* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             core::Logger::critical("ASSIMP error: {}", importer.GetErrorString());
@@ -75,7 +82,8 @@ namespace Birdy3d::render {
         process_node(scene->mRootNode, scene);
     }
 
-    void Model::process_node(aiNode* node, const aiScene* scene) {
+    void Model::process_node(aiNode* node, aiScene const* scene)
+    {
         // process own meshes
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -87,7 +95,8 @@ namespace Birdy3d::render {
         }
     }
 
-    Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
+    Mesh Model::process_mesh(aiMesh* mesh, aiScene const* scene)
+    {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture*> textures;
@@ -101,9 +110,9 @@ namespace Birdy3d::render {
                 vertex.position = glm::vec3(0);
 
             if (mesh->HasTextureCoords(0))
-                vertex.texCoords = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+                vertex.tex_coords = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
             else
-                vertex.texCoords = glm::vec2(0);
+                vertex.tex_coords = glm::vec2(0);
 
             if (mesh->HasNormals())
                 vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
@@ -153,13 +162,14 @@ namespace Birdy3d::render {
             m_embedded_material.emissive_map_enabled = true;
         }
 
-        return Mesh { vertices, indices };
+        return Mesh{vertices, indices};
     }
 
-    void Model::compute_bounding_box() {
+    void Model::compute_bounding_box()
+    {
         glm::vec3 low(std::numeric_limits<float>::infinity());
         glm::vec3 high(-std::numeric_limits<float>::infinity());
-        for (const auto& mesh : m_meshes) {
+        for (auto const& mesh : m_meshes) {
             for (Vertex vertex : mesh.vertices) {
                 if (vertex.position.x < low.x)
                     low.x = vertex.position.x;
