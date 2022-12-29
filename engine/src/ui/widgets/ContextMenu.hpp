@@ -8,7 +8,7 @@ namespace Birdy3d::ui {
     public:
         typedef std::function<void()> ClickFunc;
 
-        std::unique_ptr<Text> text;
+        TextDescription text;
         std::list<ContextItem> children;
         ClickFunc callback_click;
         bool opened = false;
@@ -21,9 +21,8 @@ namespace Birdy3d::ui {
         friend class ContextMenu;
         friend class MenuBar;
 
-        Dimension m_padding = 10_px;
-        Position m_child_rect_pos;
-        Size m_child_rect_size;
+        int m_padding = 10;
+        Rect m_child_rect;
     };
 
     class ContextMenu : public Widget {
@@ -38,6 +37,7 @@ namespace Birdy3d::ui {
 
     private:
         int m_arrow_size;
+        int m_half_arrow_size;
         Rectangle* m_background_rect;
         Rectangle* m_border_rect;
         Triangle* m_submenu_triangle;
@@ -46,7 +46,7 @@ namespace Birdy3d::ui {
 
         void draw_context_item_children(ContextItem&);
         bool handle_context_item_children_click(ContextItem&, bool click);
-        [[nodiscard]] bool context_item_contains(ContextItem const&, Position) const;
+        [[nodiscard]] bool context_item_contains(ContextItem const&, glm::ivec2 point) const;
 
         void on_click(ClickEvent&) override;
         void on_key(KeyEvent&) override;

@@ -25,9 +25,9 @@ namespace Birdy3d::ui {
 
         WindowSnapArea(Options);
         void on_update() override;
+        virtual void draw() override;
 
     private:
-        Rectangle* m_background_rect;
         std::vector<Window*> m_windows;
 
         void on_click_raw(events::InputClickEvent const&);

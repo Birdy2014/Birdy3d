@@ -20,8 +20,7 @@ namespace Birdy3d::ui {
         void text(std::string text);
 
     private:
-        Text* m_text_shape;
-        Rectangle* m_check_shape;
+        TextDescription m_text;
 
         void on_click(ClickEvent&) override;
     };

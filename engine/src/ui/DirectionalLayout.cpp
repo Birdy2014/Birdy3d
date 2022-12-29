@@ -92,16 +92,16 @@ namespace Birdy3d::ui {
             int current_widget_size = std::max(static_cast<int>(widget_size * w->weight), horizontal ? w->minimal_size().x : w->minimal_size().y);
             switch (dir) {
             case Direction::RIGHT:
-                w->arrange(pos + glm::ivec2(offset, 0), glm::ivec2(current_widget_size, size.y));
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(offset, 0), glm::ivec2(current_widget_size, size.y)));
                 break;
             case Direction::LEFT:
-                w->arrange(pos + glm::ivec2(size.x - current_widget_size - offset, 0), glm::ivec2(current_widget_size, size.y));
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(size.x - current_widget_size - offset, 0), glm::ivec2(current_widget_size, size.y)));
                 break;
             case Direction::DOWN:
-                w->arrange(pos + glm::ivec2(0, offset), glm::ivec2(size.x, current_widget_size));
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(0, offset), glm::ivec2(size.x, current_widget_size)));
                 break;
             case Direction::UP:
-                w->arrange(pos + glm::ivec2(0, size.y - current_widget_size - offset), glm::ivec2(size.x, current_widget_size));
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(0, size.y - current_widget_size - offset), glm::ivec2(size.x, current_widget_size)));
                 break;
             }
             offset += current_widget_size + gap;
@@ -115,19 +115,19 @@ namespace Birdy3d::ui {
             glm::ivec2 widget_size = w->preferred_size(size);
             switch (dir) {
             case Direction::RIGHT:
-                w->arrange(pos + glm::ivec2(offset, 0), widget_size);
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(offset, 0), widget_size));
                 offset += widget_size.x + gap;
                 break;
             case Direction::LEFT:
-                w->arrange(pos + glm::ivec2(size.x - widget_size.x - offset, 0), widget_size);
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(size.x - widget_size.x - offset, 0), widget_size));
                 offset += widget_size.x + gap;
                 break;
             case Direction::DOWN:
-                w->arrange(pos + glm::ivec2(0, offset), widget_size);
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(0, offset), widget_size));
                 offset += widget_size.y + gap;
                 break;
             case Direction::UP:
-                w->arrange(pos + glm::ivec2(0, size.y - widget_size.y - offset), widget_size);
+                w->do_layout(Rect::from_position_and_size(pos + glm::ivec2(0, size.y - widget_size.y - offset), widget_size));
                 offset += widget_size.y + gap;
                 break;
             }

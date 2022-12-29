@@ -17,7 +17,7 @@ namespace Birdy3d::ui {
     void MaxLayout::arrange(std::list<std::shared_ptr<Widget>> const& children, glm::ivec2 pos, glm::ivec2 size) const
     {
         for (auto it = children.rbegin(); it != children.rend(); it++) {
-            (*it)->arrange(pos, size);
+            (*it)->do_layout(Rect::from_position_and_size(pos, size));
         }
     }
 
@@ -35,7 +35,7 @@ namespace Birdy3d::ui {
             glm::ivec2 child_pos = pos + child->preferred_position(size, child_size);
             if (child_size.x == 0 || child_size.y == 0)
                 child_size = size;
-            child->arrange(child_pos, child_size);
+            child->do_layout(Rect::from_position_and_size(child_pos, child_size));
         }
     }
 

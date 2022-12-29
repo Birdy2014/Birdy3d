@@ -1,7 +1,9 @@
 #pragma once
 
+#include "render/Forward.hpp"
 #include "ui/Layout.hpp"
-#include "ui/Shape.hpp"
+#include "ui/Rect.hpp"
+#include "ui/Text.hpp"
 #include "ui/UIEvent.hpp"
 #include "ui/Units.hpp"
 #include "utils/Color.hpp"
@@ -105,7 +107,7 @@ namespace Birdy3d::ui {
         virtual glm::ivec2 minimal_size();
         glm::ivec2 preferred_size(glm::ivec2 parent_size);
 
-        virtual void arrange(glm::ivec2 pos, glm::ivec2 size);
+        virtual void do_layout(Rect const&);
         void set_canvas(Canvas*);
 
         bool is_hovering();
@@ -116,14 +118,13 @@ namespace Birdy3d::ui {
         void ungrab_cursor();
 
         // Getters
-        glm::ivec2 actual_pos() { return m_actual_pos; }
-        glm::ivec2 actual_size() { return m_actual_size; }
+        Rect absolute_rect() { return m_absolute_rect; }
 
         // External Event calls
         void notify_event(UIEvent&);
         void external_draw();
         bool update_hover();
-        void update_visible_area(glm::ivec2 parent_visible_top_left, glm::ivec2 parent_visible_bottom_right);
+        void update_visible_area(Rect const& parent_visible_area);
         virtual void late_update();
         virtual void on_update();
 
@@ -142,23 +143,13 @@ namespace Birdy3d::ui {
             Dimension bottom;
         };
 
-        std::vector<std::unique_ptr<Shape>> m_shapes;
         std::list<std::shared_ptr<Widget>> m_children;
         std::unique_ptr<Layout> m_layout = nullptr;
-        glm::ivec2 m_actual_size = glm::ivec2(1);
-        glm::ivec2 m_actual_pos = glm::ivec2(1);
-        glm::ivec2 m_visible_size = glm::ivec2(1);
-        glm::ivec2 m_visible_pos = glm::ivec2(1);
-        glm::mat4 m_move = glm::mat4(1);
+        Rect m_absolute_rect{};
+        Rect m_visible_area{};
         Padding m_padding;
         bool m_children_visible = true;
-        bool m_shapes_visible = true;
 
-        /**
-         * @brief Custom drawing.
-         *
-         * Override this function for any drawing additional to shapes and child widgets.
-         */
         virtual void draw();
 
         [[nodiscard]] virtual bool contains(glm::ivec2) const;
@@ -180,12 +171,17 @@ namespace Birdy3d::ui {
         virtual void on_resize(ResizeEvent&) { }
         virtual void on_drop(DropEvent&) { }
 
-        // Shapes
-        Rectangle* add_rectangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Rectangle* add_filled_rectangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Triangle* add_triangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Triangle* add_filled_triangle(Position pos, Size size, utils::Color::Name, Placement = Placement::TOP_LEFT);
-        Text* add_text(Position pos, std::string text, utils::Color::Name, Placement = Placement::TOP_LEFT, int font_size = 0);
+        // Paint
+        void paint_background(bool outline) const;
+        void paint_background(utils::Color const&) const;
+        void paint_rectangle_filled(DimRect const&, utils::Color const& fill_color, unsigned int outline_width = 0, utils::Color const& outline_color = utils::Color::NONE) const;
+        void paint_rectangle_texture(DimRect const&, render::Texture const&) const;
+        void paint_triangle_filled(DimRect const&, float orientation, utils::Color const&) const;
+        void paint_text(Position position, Placement placement, TextDescription const& text) const;
+        void paint_rectangle_filled(Rect const&, utils::Color const& fill_color, unsigned int outline_width = 0, utils::Color const& outline_color = utils::Color::NONE) const;
+        void paint_rectangle_texture(Rect const&, render::Texture const&) const;
+        void paint_triangle_filled(Rect const&, float orientation, utils::Color const&) const;
+        void paint_text(glm::ivec2 position, TextDescription const& text) const;
 
         // Layout
         template <is_layout T, typename... Args>

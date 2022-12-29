@@ -5,10 +5,11 @@ target_sources(Birdy3d_engine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/DirectionalLayout.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GridLayout.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Layout.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/OpenGLPainter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Painter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Rectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TextRenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Theme.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Triangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Units.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Widget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Window.cpp

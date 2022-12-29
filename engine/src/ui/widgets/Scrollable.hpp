@@ -2,19 +2,16 @@
 
 #include "ui/Widget.hpp"
 
-#include "ui/Rectangle.hpp"
-
 namespace Birdy3d::ui {
+
+    // FIXME: Make scrollbars own widgets, so that they work in foreground. That also requires moving them
+    // into foreground automatically in case someone calls to_foreground on any other widget.
 
     class Scrollable : public Widget {
     public:
         Scrollable(is_widget_options auto options)
             : Widget(options)
         {
-            m_scrollbar_vertical = add_filled_rectangle(0_px, Size(10_px, 100_pc), utils::Color::Name::NONE, Placement::TOP_RIGHT);
-            m_scrollbar_horizontal = add_filled_rectangle(0_px, Size(100_pc, 10_px), utils::Color::Name::NONE, Placement::BOTTOM_LEFT);
-            m_scrollbar_vertical->in_foreground = true;
-            m_scrollbar_horizontal->in_foreground = true;
             m_padding = {
                 .left = 0_px,
                 .right = 10_px,
@@ -23,13 +20,12 @@ namespace Birdy3d::ui {
         }
 
         glm::ivec2 minimal_size() override;
-        void arrange(glm::ivec2 pos, glm::ivec2 size) override;
+        virtual void do_layout(Rect const&) override;
 
     protected:
         bool m_horizontal_scroll_enabled = true;
         bool m_vertical_scroll_enabled = true;
         glm::ivec2 m_scroll_offset{0};
-        glm::ivec2 m_content_size;
         glm::ivec2 m_max_scroll_offset{0};
 
         void draw() override;
@@ -37,10 +33,13 @@ namespace Birdy3d::ui {
         void on_click(ClickEvent&) override;
         void on_update() override;
         void on_resize(ResizeEvent&) override;
+        virtual glm::ivec2 content_size() = 0;
 
     private:
-        Rectangle* m_scrollbar_vertical;
-        Rectangle* m_scrollbar_horizontal;
+        Rect m_scrollbar_vertical_rect;
+        Rect m_scrollbar_horizontal_rect;
+        bool m_scrollbar_vertical_visible;
+        bool m_scrollbar_horizontal_visible;
         bool m_scrollbar_vertical_grabbed = false;
         bool m_scrollbar_horizontal_grabbed = false;
 

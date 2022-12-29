@@ -5,6 +5,8 @@
 
 namespace Birdy3d::render {
 
+    // TODO: Create a single set_uniform template
+
     class Shader {
     public:
         Shader(std::string const& name, std::map<std::string, std::string> params);
@@ -49,10 +51,12 @@ namespace Birdy3d::render {
         std::map<std::string, std::string> m_params;
         std::set<std::string> m_valid_param_names;
         GLuint m_id;
+        mutable bool m_printed_error = false;
 
         bool check_compile_errors(GLuint shader, GLenum type);
         PreprocessedSources preprocess_file(std::string name);
         void compile(PreprocessedSources const& shader_sources);
+        [[nodiscard]] bool check_program_valid() const;
     };
 
 }

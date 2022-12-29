@@ -319,11 +319,36 @@ namespace Birdy3d::ui {
         if (value.empty())
             return;
         m_text += value;
+        m_dirty = true;
     }
 
     void Text::clear()
     {
         m_text.clear();
+        m_dirty = true;
+    }
+
+    void Text::insert(std::size_t index, char32_t* value)
+    {
+        m_text.insert(index, value);
+        m_dirty = true;
+    }
+
+    void Text::insert(std::size_t index, std::u32string value)
+    {
+        m_text.insert(index, value);
+        m_dirty = true;
+    }
+
+    void Text::erase(std::size_t index)
+    {
+        m_text.erase(m_text.begin() + index, m_text.begin() + index + 1);
+        m_dirty = true;
+    }
+
+    void Text::erase(std::size_t start_index, std::size_t end_index)
+    {
+        m_text.erase(m_text.begin() + start_index, m_text.begin() + end_index);
         m_dirty = true;
     }
 

@@ -2,46 +2,44 @@
 
 #include "core/Input.hpp"
 #include "ecs/Entity.hpp"
-#include "ui/Rectangle.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
-#include "ui/Triangle.hpp"
 #include <stack>
 
 namespace Birdy3d::ui {
 
     TreeView::TreeView(Options options)
         : Widget(options)
-        , m_collapse_button(std::make_unique<Triangle>(0_px, Size(0.5_em), utils::Color::Name::FG))
-        , m_text_shape(std::make_unique<Text>(0_px, "", utils::Color::Name::FG, Placement::TOP_LEFT))
-    {
-        m_item_highlight_rect = add_filled_rectangle(0_px, Size(100_pc, 1_em), utils::Color::Name::BG_SELECTED, Placement::TOP_LEFT);
-        m_item_highlight_rect->hidden(true);
-    }
+    { }
 
     void TreeView::draw()
     {
         int offset_y = 0;
         for (auto const& item : m_item_cache) {
             if (m_selected_item.has_value() && m_selected_item.value() == item.hash) {
-                m_item_highlight_rect->position(Position::make_pixels(0, offset_y));
-                m_item_highlight_rect->draw(m_move);
+                auto line_height = core::Application::theme().line_height();
+                auto bg_selected_color = core::Application::theme().color(utils::Color::Name::BG_SELECTED);
+                auto position = glm::ivec2(0, offset_y);
+                auto size = glm::ivec2(m_absolute_rect.width(), line_height);
+                paint_rectangle_filled(Rect::from_position_and_size(position, size), bg_selected_color);
             }
             if (!item.is_leaf) {
-                m_collapse_button->position(Position(Dimension::make_pixels(item.depth * m_indent_size + m_offset_x_left + m_offset_x_button), Dimension::make_pixels(offset_y) + 0.5_em - Dimension::make_pixels(m_collapse_button->size().x.to_pixels() / 2.0f)));
-                m_collapse_button->rotation(glm::radians(m_item_collapsed[item.hash] ? 30.0f : 0.0f));
-                m_collapse_button->draw(m_move);
+                auto line_height = core::Application::theme().line_height();
+                auto fg_color = core::Application::theme().color(utils::Color::Name::FG);
+                auto size = glm::ivec2(line_height / 2.0f);
+                auto position = glm::ivec2(item.depth * m_indent_size + m_offset_x_left + m_offset_x_button, offset_y);
+                auto orientation = glm::radians(m_item_collapsed[item.hash] ? 30.0f : 0.0f);
+                paint_triangle_filled(Rect::from_position_and_size(position, size), orientation, fg_color);
             }
-            m_text_shape->position(Position::make_pixels(item.depth * m_indent_size + m_offset_x_left, offset_y));
-            m_text_shape->text(item.text);
-            m_text_shape->draw(m_move);
+            auto text = TextDescription(item.text);
+            paint_text(glm::ivec2(item.depth * m_indent_size + m_offset_x_left, offset_y), text);
             offset_y += core::Application::theme().line_height();
         }
     }
 
     bool TreeView::contains(glm::ivec2 point) const
     {
-        return point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y;
+        return m_visible_area.contains(point);
     }
 
     glm::ivec2 TreeView::minimal_size()
@@ -108,11 +106,13 @@ namespace Birdy3d::ui {
 
     void TreeView::on_click(ClickEvent& event)
     {
+        auto local_pos = core::Input::cursor_pos_int() - m_absolute_rect.position();
+
         if (event.action == GLFW_RELEASE) {
             ungrab_cursor();
 
             // Handle move
-            auto item = get_item_at_local_position(core::Input::cursor_pos_int() - m_actual_pos);
+            auto item = get_item_at_local_position(local_pos);
             if (!item || !m_selected_item.has_value())
                 return;
 
@@ -139,14 +139,12 @@ namespace Birdy3d::ui {
         // FIXME: Grab cursor and change cursor shape on cursor move if key is pressed down
         grab_cursor();
 
-        auto local_pos = core::Input::cursor_pos_int() - m_actual_pos;
         auto item = get_item_at_local_position(local_pos);
         if (!item)
             return;
 
         if (local_pos.x > m_offset_x_left + static_cast<int>(item->depth) * m_indent_size) {
             // Select
-            m_item_highlight_rect->hidden(false);
             m_selected_item = item->hash;
             m_model->on_select(event.button, *item);
         } else if (local_pos.x > m_offset_x_left + (static_cast<int>(item->depth) - 1) * m_indent_size) {

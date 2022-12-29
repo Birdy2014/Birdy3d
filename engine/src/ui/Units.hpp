@@ -106,6 +106,9 @@ namespace Birdy3d::ui {
         static Size make_pixels(glm::ivec2 vector) { return Size{Dimension::make_pixels(vector.x), Dimension::make_pixels(vector.y)}; }
         static Size make_percent(float x, float y) { return Size{Dimension::make_percent(x), Dimension::make_percent(y)}; }
         static Size make_percent(glm::vec2 vector) { return Size{Dimension::make_percent(vector.x), Dimension::make_percent(vector.y)}; }
+        static Size make_em(float x, float y) { return Size{Dimension::make_em(x), Dimension::make_em(y)}; }
+
+        static Size from_position(Position const& position) { return Size{position.x, position.y}; }
 
         Size() = default;
         Size(Size const&) = default;

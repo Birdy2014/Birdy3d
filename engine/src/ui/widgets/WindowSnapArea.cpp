@@ -14,7 +14,6 @@ namespace Birdy3d::ui {
     {
         core::Application::event_bus->subscribe(this, &WindowSnapArea::on_click_raw);
         core::Application::event_bus->subscribe(this, &WindowSnapArea::on_resize_raw);
-        m_background_rect = add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG);
     }
 
     void WindowSnapArea::on_update()
@@ -27,6 +26,11 @@ namespace Birdy3d::ui {
             rearrange_windows();
     }
 
+    void WindowSnapArea::draw()
+    {
+        paint_background(false);
+    }
+
     void WindowSnapArea::on_click_raw(events::InputClickEvent const& event)
     {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_RELEASE)
@@ -37,7 +41,7 @@ namespace Birdy3d::ui {
         if (!focused_window || !focused_window->dragged())
             return;
 
-        if (m_background_rect->contains(core::Input::cursor_pos_int() - m_actual_pos) && !core::Input::key_pressed(GLFW_KEY_LEFT_SHIFT)) {
+        if (m_absolute_rect.contains(core::Input::cursor_pos_int()) && !core::Input::key_pressed(GLFW_KEY_LEFT_SHIFT)) {
             std::vector<Window*>::iterator it;
             switch (mode) {
             case Mode::STACKING:
@@ -47,11 +51,11 @@ namespace Birdy3d::ui {
             case Mode::HORIZONTAL:
                 if (std::find(m_windows.begin(), m_windows.end(), focused_window) == m_windows.end()) {
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (core::Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
+                        if (core::Input::cursor_pos().x < (*it)->absolute_rect().left() + ((*it)->absolute_rect().width() / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
-                    focused_window->size.x = Dimension::make_pixels(m_actual_size.x / m_windows.size());
+                    focused_window->size.x = Dimension::make_pixels(m_absolute_rect.width() / m_windows.size());
                     for (Window* window : m_windows) {
                         if (window == focused_window)
                             continue;
@@ -61,7 +65,7 @@ namespace Birdy3d::ui {
                 } else {
                     m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), focused_window), m_windows.end());
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (core::Input::cursor_pos().x < (*it)->actual_pos().x + ((*it)->actual_size().x / 2))
+                        if (core::Input::cursor_pos().x < (*it)->absolute_rect().left() + ((*it)->absolute_rect().width() / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -70,11 +74,11 @@ namespace Birdy3d::ui {
             case Mode::VERTICAL:
                 if (std::find(m_windows.begin(), m_windows.end(), focused_window) == m_windows.end()) {
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (core::Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
+                        if (core::Input::cursor_pos().y < (*it)->absolute_rect().top() + ((*it)->absolute_rect().height() / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
-                    focused_window->size.y = Dimension::make_pixels(m_actual_size.y / m_windows.size());
+                    focused_window->size.y = Dimension::make_pixels(m_absolute_rect.height() / m_windows.size());
                     for (Window* window : m_windows) {
                         if (window == focused_window)
                             continue;
@@ -84,7 +88,7 @@ namespace Birdy3d::ui {
                 } else {
                     m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), focused_window), m_windows.end());
                     for (it = m_windows.begin(); it != m_windows.end(); it++) {
-                        if (core::Input::cursor_pos().y < (*it)->actual_pos().y + ((*it)->actual_size().y / 2))
+                        if (core::Input::cursor_pos().y < (*it)->absolute_rect().top() + ((*it)->absolute_rect().height() / 2))
                             break;
                     }
                     m_windows.insert(it, focused_window);
@@ -106,8 +110,8 @@ namespace Birdy3d::ui {
 
     void WindowSnapArea::rearrange_windows()
     {
-        auto new_size = Size::make_pixels(m_actual_size);
-        auto new_pos = m_actual_pos;
+        auto new_size = Size::make_pixels(m_absolute_rect.size());
+        auto new_pos = m_absolute_rect.position();
         auto size_sum = glm::ivec2(0);
         float size_diff;
 
@@ -125,7 +129,7 @@ namespace Birdy3d::ui {
             Window* window = m_windows[i];
             switch (mode) {
             case Mode::STACKING:
-                window->position = Position::make_pixels(m_actual_pos);
+                window->position = Position::make_pixels(m_absolute_rect.position());
                 window->size = new_size;
                 new_size.y -= 1_em;
                 break;
@@ -135,24 +139,24 @@ namespace Birdy3d::ui {
                     if (window == focused_window) {
                         if (focused_window->resizing_left()) {
                             if (i == 0) {
-                                focused_window->size.x += Dimension::make_pixels(m_actual_size.x - size_sum.x);
-                                focused_window->position = Position::make_pixels(m_actual_pos);
+                                focused_window->size.x += Dimension::make_pixels(m_absolute_rect.width() - size_sum.x);
+                                focused_window->position = Position::make_pixels(m_absolute_rect.position());
                             } else {
-                                m_windows[i - 1]->size.x += Dimension::make_pixels(m_actual_size.x - size_sum.x);
-                                new_pos.x += m_actual_size.x - size_sum.x;
+                                m_windows[i - 1]->size.x += Dimension::make_pixels(m_absolute_rect.width() - size_sum.x);
+                                new_pos.x += m_absolute_rect.width() - size_sum.x;
                             }
                         } else {
                             if (i == m_windows.size() - 1)
-                                focused_window->size.x += Dimension::make_pixels(m_actual_size.x - size_sum.x);
+                                focused_window->size.x += Dimension::make_pixels(m_absolute_rect.width() - size_sum.x);
                             else
-                                m_windows[i + 1]->size.x += Dimension::make_pixels(m_actual_size.x - size_sum.x);
+                                m_windows[i + 1]->size.x += Dimension::make_pixels(m_absolute_rect.width() - size_sum.x);
                         }
                     }
                 } else {
-                    size_diff = (m_actual_size.x - size_sum.x) / m_windows.size();
+                    size_diff = (m_absolute_rect.width() - size_sum.x) / m_windows.size();
                 }
                 window->position = Position::make_pixels(new_pos);
-                window->size.y = Dimension::make_pixels(m_actual_size.y);
+                window->size.y = Dimension::make_pixels(m_absolute_rect.height());
                 window->size.x += Dimension::make_pixels(size_diff);
                 new_pos.x += std::max(window->minimal_size().x, window->size.x.to_pixels());
                 break;
@@ -163,25 +167,25 @@ namespace Birdy3d::ui {
                     if (window == focused_window) {
                         if (focused_window->resizing_top()) {
                             if (i == m_windows.size() - 1) {
-                                focused_window->position = Position::make_pixels(m_actual_pos);
+                                focused_window->position = Position::make_pixels(m_absolute_rect.position());
                             } else {
-                                m_windows[i + 1]->size.y += Dimension::make_pixels(m_actual_size.y - size_sum.y);
+                                m_windows[i + 1]->size.y += Dimension::make_pixels(m_absolute_rect.height() - size_sum.y);
                             }
                         } else {
                             if (i == 0) {
-                                focused_window->size.y += Dimension::make_pixels(m_actual_size.y - size_sum.y);
-                                focused_window->position = Position::make_pixels(m_actual_pos);
+                                focused_window->size.y += Dimension::make_pixels(m_absolute_rect.height() - size_sum.y);
+                                focused_window->position = Position::make_pixels(m_absolute_rect.position());
                             } else {
-                                m_windows[i - 1]->size.y += Dimension::make_pixels(m_actual_size.y - size_sum.y);
-                                new_pos.y += m_actual_size.y - size_sum.y;
+                                m_windows[i - 1]->size.y += Dimension::make_pixels(m_absolute_rect.height() - size_sum.y);
+                                new_pos.y += m_absolute_rect.height() - size_sum.y;
                             }
                         }
                     }
                 } else {
-                    size_diff = (m_actual_size.y - size_sum.y) / m_windows.size();
+                    size_diff = (m_absolute_rect.height() - size_sum.y) / m_windows.size();
                 }
                 window->position = Position::make_pixels(new_pos);
-                window->size.x = Dimension::make_pixels(m_actual_size.x);
+                window->size.x = Dimension::make_pixels(m_absolute_rect.width());
                 window->size.y += Dimension::make_pixels(size_diff);
                 new_pos.y += std::max(window->minimal_size().y, window->size.y.to_pixels());
                 break;
