@@ -6,7 +6,7 @@
 
 namespace Birdy3d::ui {
 
-    class Rectangle : public Shape {
+    class [[deprecated]] Rectangle : public Shape {
     public:
         Rectangle(Position position, Size size, utils::Color::Name color = utils::Color::Name::WHITE, Type type = FILLED, Placement placement = Placement::TOP_LEFT);
         ~Rectangle();

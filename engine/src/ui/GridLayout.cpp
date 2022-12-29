@@ -95,7 +95,7 @@ namespace Birdy3d::ui {
             size.x = result_widths[child->column];
             size.y = result_heights[child->row];
 
-            child->arrange(widget_position, size);
+            child->do_layout(Rect::from_position_and_size(widget_position, size));
         }
     }
 
@@ -141,7 +141,7 @@ namespace Birdy3d::ui {
                 row_height = 0;
                 offset.x = 0;
             }
-            child->arrange(pos + offset, child_size);
+            child->do_layout(Rect::from_position_and_size(pos + offset, child_size));
             offset.x += child_size.x + m_gap;
             if (row_height < child_size.y)
                 row_height = child_size.y;

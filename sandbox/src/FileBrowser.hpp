@@ -68,16 +68,22 @@ private:
         FileItem(Options options)
             : ui::Widget(options)
             , m_resource_id(options.id)
+            , m_label(std::filesystem::path(options.id.name).filename().string())
         {
             using namespace ui::literals;
-            add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG_INPUT);
-            m_label = add_text(0_px, std::filesystem::path(options.id.name).filename().string(), utils::Color::Name::FG, ui::Placement::BOTTOM_LEFT);
             this->size = 100_px;
         }
 
     private:
         core::ResourceIdentifier m_resource_id;
-        ui::Text* m_label;
+        ui::TextDescription m_label;
+
+        void draw() override
+        {
+            auto input_color = core::Application::theme().color(utils::Color::Name::BG_INPUT);
+            paint_background(input_color);
+            paint_text(ui::Position(0_px), ui::Placement::BOTTOM_LEFT, m_label);
+        }
 
         void on_click(ui::ClickEvent& event) override
         {

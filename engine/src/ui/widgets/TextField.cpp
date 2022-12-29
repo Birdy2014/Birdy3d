@@ -51,7 +51,7 @@ namespace Birdy3d::ui {
     {
         Scrollable::on_update();
         if (m_selecting) {
-            auto local_pos = core::Input::cursor_pos_int() - m_actual_pos;
+            auto local_pos = core::Input::cursor_pos_int() - m_absolute_rect.position();
             auto scrolled_text_local_pos = local_pos - m_scroll_offset;
             auto char_pos = char_index(glm::ivec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
             if (m_text->highlight_start == char_pos) {
@@ -76,7 +76,7 @@ namespace Birdy3d::ui {
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
-            auto local_pos = core::Input::cursor_pos_int() - m_actual_pos;
+            auto local_pos = core::Input::cursor_pos_int() - m_absolute_rect.position();
             auto scrolled_text_local_pos = local_pos - m_scroll_offset;
             auto char_pos = char_index(glm::ivec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
             m_selecting = true;
@@ -158,6 +158,12 @@ namespace Birdy3d::ui {
 
     void TextField::draw()
     {
+        auto color_input_bg = core::Application::theme().color(utils::Color::Name::BG_INPUT);
+        paint_background(color_input_bg);
+
+        auto move = glm::translate(glm::mat4(1.0f), glm::vec3(m_absolute_rect.position() - m_scroll_offset, 0.0f));
+        m_text->draw(move);
+
         if (multiline)
             Scrollable::draw();
     }
@@ -233,14 +239,19 @@ namespace Birdy3d::ui {
         if (cursor_pixel_pos.x < 0)
             m_scroll_offset.x -= cursor_pixel_pos.x;
         // Scroll right
-        if (cursor_pixel_pos.x > m_actual_size.x)
-            m_scroll_offset.x -= cursor_pixel_pos.x - m_actual_size.x;
+        if (cursor_pixel_pos.x > m_absolute_rect.width())
+            m_scroll_offset.x -= cursor_pixel_pos.x - m_absolute_rect.width();
         // Scroll up
         if (cursor_pixel_pos.y - line_height < 0)
             m_scroll_offset.y -= cursor_pixel_pos.y - line_height;
         // Scroll down
-        if (cursor_pixel_pos.y > m_actual_size.y)
-            m_scroll_offset.y -= cursor_pixel_pos.y - m_actual_size.y;
+        if (cursor_pixel_pos.y > m_absolute_rect.height())
+            m_scroll_offset.y -= cursor_pixel_pos.y - m_absolute_rect.height();
+    }
+
+    glm::ivec2 TextField::content_size()
+    {
+        return m_text->size().to_pixels();
     }
 
     std::size_t TextField::char_index(glm::ivec2 pos)

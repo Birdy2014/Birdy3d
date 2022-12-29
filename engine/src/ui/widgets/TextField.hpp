@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ui/Widget.hpp"
 #include "ui/widgets/Scrollable.hpp"
 #include <functional>
 #include <string>
@@ -17,8 +16,7 @@ namespace Birdy3d::ui {
         TextField(is_widget_options auto options)
             : Scrollable(options)
         {
-            add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG_INPUT);
-            m_text = add_text(0_px, std::string(), utils::Color::Name::FG);
+            m_text = std::make_unique<Text>(0_px, std::string(), utils::Color::Name::FG, Placement::TOP_LEFT);
         }
 
         glm::ivec2 minimal_size() override;
@@ -30,7 +28,7 @@ namespace Birdy3d::ui {
 
     protected:
         float m_side_padding = 2;
-        Text* m_text;
+        std::unique_ptr<Text> m_text;
         bool m_selecting = false;
         bool m_changed = false;
 
@@ -48,6 +46,7 @@ namespace Birdy3d::ui {
         void clear_selection();
         void late_update() override;
         void scroll_if_needed(std::size_t cursor_pos);
+        virtual glm::ivec2 content_size() override;
 
     private:
         std::size_t char_index(glm::ivec2 pos);

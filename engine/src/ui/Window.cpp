@@ -14,11 +14,7 @@ namespace Birdy3d::ui {
             .right = Dimension::make_pixels(border_size),
             .top = 1_em,
             .bottom = Dimension::make_pixels(border_size)};
-        add_filled_rectangle(0_px, {100_pc, 100_pc - 1_em}, utils::Color::Name::BG, Placement::BOTTOM_LEFT);
-        add_filled_rectangle(0_px, {100_pc, 1_em}, utils::Color::Name::BG_TITLE_BAR, Placement::TOP_LEFT);
-        add_rectangle(0_px, 100_pc, utils::Color::Name::BORDER);
-        m_close_button = add_filled_rectangle({-4_px, 4_px}, {1_em - 8_px}, utils::Color::Name::RED, Placement::TOP_RIGHT);
-        m_title = add_text({10_px, 3_px}, "", utils::Color::Name::FG, Placement::TOP_LEFT);
+        m_close_button_rect = DimRect::from_position_and_size({-4_px, 4_px}, {1_em - 8_px}, Placement::TOP_RIGHT);
     }
 
     void Window::to_foreground()
@@ -29,7 +25,7 @@ namespace Birdy3d::ui {
     glm::ivec2 Window::minimal_size()
     {
         glm::ivec2 layout_minsize = Widget::minimal_size();
-        int min_width = m_title->size().x.to_pixels() + m_close_button->size().x.to_pixels() + border_size * 2 + 14;
+        int min_width = m_title.text_size().x + m_close_button_rect.size().x.to_pixels() + border_size * 2 + 14;
         return glm::ivec2(std::max(layout_minsize.x, min_width), layout_minsize.y);
     }
 
@@ -38,8 +34,25 @@ namespace Birdy3d::ui {
         glm::ivec2 layout_minsize(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels());
         if (m_layout && m_children_visible)
             layout_minsize += m_layout->minimal_size(m_children);
-        int min_width = m_title->size().x.to_pixels() + m_close_button->size().x.to_pixels() + border_size * 2 + 14;
+        int min_width = m_title.text_size().x + m_close_button_rect.size().x.to_pixels() + border_size * 2 + 14;
         return glm::ivec2(std::max(layout_minsize.x, min_width), layout_minsize.y);
+    }
+
+    void Window::draw_titlebar()
+    {
+        auto bg_color = core::Application::theme().color(utils::Color::Name::BG);
+        auto color_red = core::Application::theme().color(utils::Color::Name::RED);
+        paint_rectangle_filled(DimRect::from_position_and_size(Position(0_px), Size(100_pc, 1_em), Placement::TOP_LEFT), bg_color);
+        paint_rectangle_filled(m_close_button_rect, color_red);
+        paint_text(glm::ivec2(10, 3), m_title);
+    }
+
+    void Window::draw()
+    {
+        paint_background(true);
+        draw_titlebar();
+        // HACK: Ugly workaround for titlebar drawing over border
+        paint_rectangle_filled(Rect::from_position_and_size(glm::ivec2(0), m_absolute_rect.size()), utils::Color::NONE, 1, core::Application::theme().color(utils::Color::Name::BORDER));
     }
 
     void Window::on_update()
@@ -51,7 +64,7 @@ namespace Birdy3d::ui {
         if (!is_hovering())
             return;
 
-        glm::ivec2 local_cursor_pos = core::Input::cursor_pos_int() - m_actual_pos;
+        glm::ivec2 local_cursor_pos = core::Input::cursor_pos_int() - m_absolute_rect.position();
 
         m_hover_drag = false;
         m_hover_resize_x_left = false;
@@ -59,21 +72,21 @@ namespace Birdy3d::ui {
         m_hover_resize_y_top = false;
         m_hover_resize_y_bottom = false;
 
-        if (!m_dragging && !m_resize_x_left && !m_resize_x_right && !m_resize_y_top && !m_resize_y_bottom && m_close_button->contains(local_cursor_pos)) {
+        if (!m_dragging && !m_resize_x_left && !m_resize_x_right && !m_resize_y_top && !m_resize_y_bottom && m_close_button_rect.contains(core::Input::cursor_pos_int(), m_absolute_rect)) {
             core::Input::set_cursor(core::Input::CURSOR_HAND);
             return;
         }
 
         if (local_cursor_pos.x < border_size)
             m_hover_resize_x_left = true;
-        if (local_cursor_pos.x > m_actual_size.x - border_size)
+        if (local_cursor_pos.x > m_absolute_rect.width() - border_size)
             m_hover_resize_x_right = true;
         if (local_cursor_pos.y < border_size)
             m_hover_resize_y_top = true;
-        if (local_cursor_pos.y > m_actual_size.y - border_size)
+        if (local_cursor_pos.y > m_absolute_rect.height() - border_size)
             m_hover_resize_y_bottom = true;
 
-        if (local_cursor_pos.y <= core::Application::theme().line_height() && local_cursor_pos.y > border_size && local_cursor_pos.x >= border_size && local_cursor_pos.x <= m_actual_size.x - border_size)
+        if (local_cursor_pos.y <= core::Application::theme().line_height() && local_cursor_pos.y > border_size && local_cursor_pos.x >= border_size && local_cursor_pos.x <= m_absolute_rect.width() - border_size)
             m_hover_drag = true;
 
         // Set cursor
@@ -123,10 +136,10 @@ namespace Birdy3d::ui {
             position.x = new_x;
         }
         if (m_resize_x_right) {
-            size.x = Dimension::make_pixels(core::Input::cursor_pos().x - m_actual_pos.x);
+            size.x = Dimension::make_pixels(local_cursor_pos.x);
         }
         if (m_resize_y_top) {
-            auto new_y = Dimension::make_pixels(core::Input::cursor_pos().y - m_cursor_down_local_pos.y);
+            auto new_y = Dimension::make_pixels(local_cursor_pos.y);
             if (size.y + position.y - new_y < minsize.y) {
                 new_y = size.y + position.y - minsize.y;
             }
@@ -134,10 +147,10 @@ namespace Birdy3d::ui {
             position.y = new_y;
         }
         if (m_resize_y_bottom) {
-            size.y = Dimension::make_pixels(core::Input::cursor_pos().y - m_actual_pos.y);
+            size.y = Dimension::make_pixels(local_cursor_pos.y);
         }
-        m_actual_pos = position.to_pixels();
-        m_actual_size = glm::ivec2(std::max(size.x.to_pixels(), minimal_size().x), std::max(size.y.to_pixels(), minimal_size().y));
+        m_absolute_rect.position(position.to_pixels());
+        m_absolute_rect.size(glm::ivec2(std::max(size.x.to_pixels(), minimal_size().x), std::max(size.y.to_pixels(), minimal_size().y)));
     }
 
     void Window::on_click(ClickEvent& event)
@@ -149,10 +162,8 @@ namespace Birdy3d::ui {
 
         if (event.action == GLFW_PRESS) {
             to_foreground();
-            m_cursor_down_local_pos = core::Input::cursor_pos() - glm::vec2(m_actual_pos.x, m_actual_pos.y);
+            m_cursor_down_local_pos = core::Input::cursor_pos() - glm::vec2(m_absolute_rect.position());
         }
-
-        glm::ivec2 local_cursor_pos = core::Input::cursor_pos_int() - m_actual_pos;
 
         if (event.action == GLFW_RELEASE) {
             ungrab_cursor();
@@ -161,11 +172,11 @@ namespace Birdy3d::ui {
             m_resize_x_right = false;
             m_resize_y_top = false;
             m_resize_y_bottom = false;
-            size = Size::make_pixels(m_actual_size);
+            size = Size::make_pixels(m_absolute_rect.size());
             return;
         }
 
-        if (m_close_button->contains(local_cursor_pos)) {
+        if (m_close_button_rect.contains(core::Input::cursor_pos_int(), m_absolute_rect)) {
             if (callback_close)
                 callback_close();
             return;

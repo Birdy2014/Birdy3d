@@ -4,53 +4,67 @@
 #include "core/Logger.hpp"
 #include "ui/Canvas.hpp"
 #include "ui/Layout.hpp"
-#include "ui/Rectangle.hpp"
-#include "ui/TextRenderer.hpp"
-#include "ui/Triangle.hpp"
+#include "ui/Painter.hpp"
+#include "ui/Theme.hpp"
 #include "ui/UIEvent.hpp"
 #include <algorithm>
 #include <cassert>
 
 namespace Birdy3d::ui {
 
-    Rectangle* Widget::add_rectangle(Position pos, Size size, utils::Color::Name color, Placement placement)
+    void Widget::paint_background(bool outline) const
     {
-        std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::OUTLINE, placement);
-        Rectangle* ptr = rectangle.get();
-        m_shapes.push_back(std::move(rectangle));
-        return ptr;
+        auto& theme = core::Application::theme();
+        auto background_color = theme.color(utils::Color::Name::BG);
+        auto outline_color = theme.color(utils::Color::Name::BORDER);
+        Painter::the().paint_rectangle_filled(m_absolute_rect, background_color, outline ? 1 : 0, outline_color);
     }
 
-    Rectangle* Widget::add_filled_rectangle(Position pos, Size size, utils::Color::Name color, Placement placement)
+    void Widget::paint_background(utils::Color const& background_color) const
     {
-        std::unique_ptr<Rectangle> rectangle = std::make_unique<Rectangle>(pos, size, color, Shape::FILLED, placement);
-        Rectangle* ptr = rectangle.get();
-        m_shapes.push_back(std::move(rectangle));
-        return ptr;
+        Painter::the().paint_rectangle_filled(m_absolute_rect, background_color, 0, utils::Color::NONE);
     }
 
-    Triangle* Widget::add_triangle(Position pos, Size size, utils::Color::Name color, Placement placement)
+    void Widget::paint_rectangle_filled(DimRect const& rectangle, utils::Color const& fill_color, unsigned int outline_width, utils::Color const& outline_color) const
     {
-        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::OUTLINE, placement);
-        Triangle* ptr = triangle.get();
-        m_shapes.push_back(std::move(triangle));
-        return ptr;
+        Painter::the().paint_rectangle_filled(rectangle.to_rect(m_absolute_rect), fill_color, outline_width, outline_color);
     }
 
-    Triangle* Widget::add_filled_triangle(Position pos, Size size, utils::Color::Name color, Placement placement)
+    void Widget::paint_rectangle_texture(DimRect const& rectangle, render::Texture const& texture) const
     {
-        std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(pos, size, color, Shape::FILLED, placement);
-        Triangle* ptr = triangle.get();
-        m_shapes.push_back(std::move(triangle));
-        return ptr;
+        Painter::the().paint_rectangle_texture(rectangle.to_rect(m_absolute_rect), texture);
     }
 
-    Text* Widget::add_text(Position pos, std::string text, utils::Color::Name color, Placement placement, int font_size)
+    void Widget::paint_triangle_filled(DimRect const& rectangle, float orientation, utils::Color const& fill_color) const
     {
-        std::unique_ptr<Text> shape = std::make_unique<Text>(pos, text, color, placement, font_size);
-        Text* ptr = shape.get();
-        m_shapes.push_back(std::move(shape));
-        return ptr;
+        Painter::the().paint_triangle_filled(rectangle.to_rect(m_absolute_rect), orientation, fill_color);
+    }
+
+    void Widget::paint_text(Position position, Placement placement, TextDescription const& text) const
+    {
+        auto relative_position = Position::get_relative_position(position, Size::make_pixels(text.text_size()), m_absolute_rect.size(), placement);
+        auto absolute_position = m_absolute_rect.position() + relative_position;
+        Painter::the().paint_text(absolute_position, text);
+    }
+
+    void Widget::paint_rectangle_filled(Rect const& rectangle, utils::Color const& fill_color, unsigned int outline_width, utils::Color const& outline_color) const
+    {
+        Painter::the().paint_rectangle_filled(Rect::from_position_and_size(m_absolute_rect.position() + rectangle.position(), rectangle.size()), fill_color, outline_width, outline_color);
+    }
+
+    void Widget::paint_rectangle_texture(Rect const& rectangle, render::Texture const& texture) const
+    {
+        Painter::the().paint_rectangle_texture(Rect::from_position_and_size(m_absolute_rect.position() + rectangle.position(), rectangle.size()), texture);
+    }
+
+    void Widget::paint_triangle_filled(Rect const& rectangle, float orientation, utils::Color const& fill_color) const
+    {
+        Painter::the().paint_triangle_filled(Rect::from_position_and_size(m_absolute_rect.position() + rectangle.position(), rectangle.size()), orientation, fill_color);
+    }
+
+    void Widget::paint_text(glm::ivec2 position, TextDescription const& text) const
+    {
+        Painter::the().paint_text(m_absolute_rect.position() + position, text);
     }
 
     void Widget::notify_event(UIEvent& event)
@@ -129,21 +143,11 @@ namespace Birdy3d::ui {
         if (hidden)
             return;
 
-        // Transform to OpenGL coordinates
-        auto viewport_y = core::Application::get_viewport_size().y;
-        auto visible_pos_bottom = m_visible_pos.y + m_visible_size.y;
-        auto visible_pos_bottom_moved_origin = viewport_y - visible_pos_bottom;
-
         // Background
-        assert(m_visible_size.x >= 0 && m_visible_size.y >= 0);
-        glScissor(m_visible_pos.x, visible_pos_bottom_moved_origin - 1, m_visible_size.x + 2, m_visible_size.y + 2);
+        Painter::the().visible_rectangle(m_visible_area);
 
-        if (m_shapes_visible) {
-            for (auto const& s : m_shapes) {
-                if (!s->in_foreground)
-                    s->draw(m_move);
-            }
-        }
+        // Self
+        draw();
 
         // Children
         if (m_children_visible) {
@@ -151,16 +155,7 @@ namespace Birdy3d::ui {
                 child->external_draw();
 
             // Foreground
-            glScissor(m_visible_pos.x, visible_pos_bottom_moved_origin - 1, m_visible_size.x + 2, m_visible_size.y + 2);
-        }
-
-        draw();
-
-        if (m_shapes_visible) {
-            for (auto const& s : m_shapes) {
-                if (s->in_foreground)
-                    s->draw(m_move);
-            }
+            Painter::the().visible_rectangle(m_visible_area);
         }
     }
 
@@ -184,21 +179,16 @@ namespace Birdy3d::ui {
         return glm::max(size.to_pixels(parent_size), minimal_size());
     }
 
-    void Widget::arrange(glm::ivec2 pos, glm::ivec2 size)
+    void Widget::do_layout(Rect const& rect)
     {
-        bool resized = false;
-        if (size != m_actual_size)
-            resized = true;
-        m_actual_pos = pos;
-        m_actual_size = size;
-        m_move = glm::translate(glm::mat4(1), glm::vec3(m_actual_pos, 0.0f));
+        bool resized = rect.size() != m_absolute_rect.size();
+        m_absolute_rect = rect;
 
-        for (auto const& s : m_shapes) {
-            s->parent_size(size);
+        if (m_layout && m_children_visible) {
+            auto padding_top_left = glm::ivec2(m_padding.left.to_pixels(), m_padding.top.to_pixels());
+            auto padding_size = glm::ivec2(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels());
+            m_layout->arrange(m_children, m_absolute_rect.position() + padding_top_left, rect.size() - padding_size);
         }
-
-        if (m_layout && m_children_visible)
-            m_layout->arrange(m_children, pos + glm::ivec2(m_padding.left.to_pixels(), m_padding.top.to_pixels()), size - glm::ivec2(m_padding.left.to_pixels() + m_padding.right.to_pixels(), m_padding.top.to_pixels() + m_padding.bottom.to_pixels()));
 
         if (resized) {
             auto event = ResizeEvent{};
@@ -245,23 +235,13 @@ namespace Birdy3d::ui {
 
     bool Widget::contains(glm::ivec2 point) const
     {
-        auto local_point = point - m_actual_pos;
-        return (point.x > m_visible_pos.x && point.y > m_visible_pos.y && point.x < m_visible_pos.x + m_visible_size.x && point.y < m_visible_pos.y + m_visible_size.y)
-            && (std::ranges::find_if(m_shapes, [&local_point](auto const& shape) { return shape->contains(local_point); }) != m_shapes.end());
+        return m_visible_area.contains(point);
     }
 
     bool Widget::update_hover()
     {
         if (hidden)
             return false;
-
-        // foreground shapes
-        for (auto const& shape : m_shapes) {
-            if (shape->in_foreground && shape->contains(core::Input::cursor_pos_int() - m_actual_pos)) {
-                canvas->set_hovering(this);
-                return true;
-            }
-        }
 
         if (m_children_visible) {
             for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
@@ -279,21 +259,16 @@ namespace Birdy3d::ui {
         return false;
     }
 
-    void Widget::update_visible_area(glm::ivec2 parent_visible_top_left, glm::ivec2 parent_visible_bottom_right)
+    void Widget::update_visible_area(Rect const& parent_visible_area)
     {
-        assert(parent_visible_top_left.x <= parent_visible_bottom_right.x && parent_visible_top_left.y <= parent_visible_bottom_right.y);
-        assert(m_actual_size.x >= 0 && m_actual_size.y >= 0);
-
         if (hidden)
             return;
 
-        m_visible_pos = glm::ivec2(std::max(parent_visible_top_left.x, m_actual_pos.x), std::max(parent_visible_top_left.y, m_actual_pos.y));
-        glm::ivec2 actual_bottom_right = m_actual_pos + m_actual_size;
-        glm::ivec2 visible_bottom_right = glm::ivec2(std::min(parent_visible_bottom_right.x, actual_bottom_right.x), std::min(parent_visible_bottom_right.y, actual_bottom_right.y));
-        m_visible_size = glm::ivec2(std::max(visible_bottom_right.x - m_visible_pos.x, 0), std::max(visible_bottom_right.y - m_visible_pos.y, 0));
+        m_visible_area = m_absolute_rect;
+        m_visible_area.shrink_to(parent_visible_area);
 
         for (auto const& child : m_children)
-            child->update_visible_area(m_visible_pos, visible_bottom_right);
+            child->update_visible_area(m_visible_area);
     }
 
     void Widget::on_update()

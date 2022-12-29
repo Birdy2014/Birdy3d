@@ -56,11 +56,7 @@ namespace Birdy3d::ui {
         std::list<TreeItem> m_item_cache;
         std::map<std::size_t, bool> m_item_collapsed;
         bool m_items_changed = true;
-        Rectangle* m_item_highlight_rect;
         std::optional<std::size_t> m_selected_item;
-
-        std::unique_ptr<Triangle> m_collapse_button;
-        std::unique_ptr<Text> m_text_shape;
 
         TreeItem* get_item_at_local_position(glm::ivec2);
         TreeItem* get_item_from_cache(std::size_t hash);

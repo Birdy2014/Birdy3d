@@ -1,24 +1,24 @@
 #include "ui/widgets/CheckBox.hpp"
 
-#include "ui/Rectangle.hpp"
-#include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
 
 namespace Birdy3d::ui {
 
     CheckBox::CheckBox(Options options)
         : Widget(options)
+        , m_text(options.text)
     {
-        add_rectangle(0_px, 14_px, utils::Color::Name::FG, Placement::CENTER_LEFT);
-        m_text_shape = add_text(Position(16_px, 0_px), options.text, utils::Color::Name::FG, Placement::CENTER_LEFT);
-        m_check_shape = add_filled_rectangle(1_px, 10_px, utils::Color::Name::FG, Placement::CENTER_LEFT);
-        size = Size(16_px, 0_px) + core::Application::theme().text_renderer().text_size(m_text_shape->text(), core::Application::theme().font_size());
+        size = Size(16_px, 0_px) + Size::make_pixels(m_text.text_size());
     }
 
     void CheckBox::draw()
     {
-        m_check_shape->hidden(!checked);
-        Widget::draw();
+        auto fg_color = core::Application::theme().color(utils::Color::Name::FG);
+        paint_rectangle_filled(DimRect::from_position_and_size(0_px, 14_px, Placement::CENTER_LEFT), utils::Color::NONE, 1, fg_color);
+        paint_text(Position::make_pixels(16, 0), Placement::CENTER_LEFT, m_text);
+        if (checked) {
+            paint_rectangle_filled(DimRect::from_position_and_size(1_px, 10_px, Placement::CENTER_LEFT), fg_color);
+        }
     }
 
     void CheckBox::on_click(ClickEvent& event)
@@ -35,13 +35,13 @@ namespace Birdy3d::ui {
 
     std::string CheckBox::text()
     {
-        return m_text_shape->text();
+        return m_text.text();
     }
 
     void CheckBox::text(std::string text)
     {
-        m_text_shape->text(text);
-        size = Size(16_px, 0_px) + core::Application::theme().text_renderer().text_size(m_text_shape->text(), core::Application::theme().font_size());
+        m_text.text(text);
+        size = Size(16_px, 0_px) + Size::make_pixels(m_text.text_size());
     }
 
 }

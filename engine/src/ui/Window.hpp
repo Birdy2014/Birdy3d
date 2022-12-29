@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ui/Container.hpp"
-#include "ui/Rectangle.hpp"
-#include "ui/TextRenderer.hpp"
 
 namespace Birdy3d::ui {
 
@@ -15,8 +13,8 @@ namespace Birdy3d::ui {
         void to_foreground();
         glm::ivec2 minimal_size() override;
 
-        std::string title() { return m_title->text(); }
-        void title(std::string title) { m_title->text(title); }
+        std::string title() { return m_title.text(); }
+        void title(std::string title) { m_title.text(title); }
         bool dragging() { return m_dragging; }
         bool resizing() { return m_resize_x_left || m_resize_x_right || m_resize_y_top || m_resize_y_bottom; }
         bool resizing_left() { return m_resize_x_left; }
@@ -25,15 +23,19 @@ namespace Birdy3d::ui {
         bool resizing_bottom() { return m_resize_y_bottom; }
         bool dragged() { return m_dragged; }
 
+        void draw_titlebar();
+
     protected:
         void on_update() override;
         void on_click(ClickEvent&) override;
         void on_mouse_leave(MouseLeaveEvent&) override;
         glm::ivec2 minimal_window_size();
 
+        virtual void draw() override;
+
     private:
-        Rectangle* m_close_button;
-        Text* m_title;
+        DimRect m_close_button_rect;
+        TextDescription m_title;
         bool m_hover_drag = false;
         bool m_hover_resize_x_left = false;
         bool m_hover_resize_x_right = false;

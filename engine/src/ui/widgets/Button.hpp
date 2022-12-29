@@ -1,9 +1,6 @@
 #pragma once
 
-#include "core/Application.hpp"
 #include "core/Input.hpp"
-#include "ui/TextRenderer.hpp"
-#include "ui/Theme.hpp"
 #include "ui/Widget.hpp"
 #include <functional>
 
@@ -16,25 +13,29 @@ namespace Birdy3d::ui {
             std::string text;
         };
 
-        Text* button_text;
+        TextDescription button_text;
 
         Button(is_widget_options auto options)
             : Widget(options)
         {
-            add_filled_rectangle(0_px, 100_pc, utils::Color::Name::BG, Placement::BOTTOM_LEFT);
-            add_rectangle(0_px, 100_pc, utils::Color::Name::BORDER, Placement::BOTTOM_LEFT);
-            button_text = add_text(0_px, options.text, utils::Color::Name::FG, Placement::CENTER);
+            button_text = options.text;
         };
 
         glm::ivec2 minimal_size() override
         {
-            auto min_size = core::Application::theme().text_renderer().text_size(button_text->text(), button_text->font_size).to_pixels() + glm::ivec2(2);
+            auto min_size = button_text.text_size() + glm::ivec2(2);
             return glm::max(min_size, Widget::minimal_size());
         }
 
         std::function<void()> callback_click;
 
     protected:
+        void draw() override
+        {
+            paint_background(true);
+            paint_text(0_px, Placement::CENTER, button_text);
+        }
+
         void on_click(ClickEvent& event) override
         {
             if (callback_click && event.action == GLFW_PRESS) {

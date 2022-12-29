@@ -17,6 +17,8 @@ namespace Birdy3d::ui {
 
         virtual ~Layout() = default;
 
+        // FIXME: Rename arrange to do_layout and use Rect instead of pos and size
+
         /**
          * @brief Sets the position and size of all widgets in the list.
          *

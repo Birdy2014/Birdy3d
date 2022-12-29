@@ -68,3 +68,23 @@ namespace Birdy3d::serializer {
     void adapter_load(Value*, utils::Color&);
 
 }
+
+template <>
+struct fmt::formatter<Birdy3d::utils::Color> {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin())
+    {
+        auto it = ctx.begin(), end = ctx.end();
+        if (it != end && *it != '}')
+            throw format_error("invalid format");
+        return it;
+    }
+
+    template <typename FormatContext>
+    auto format(Birdy3d::utils::Color const& color, FormatContext& ctx) -> decltype(ctx.out())
+    {
+        auto r = static_cast<int>(color.value.r * 255);
+        auto g = static_cast<int>(color.value.g * 255);
+        auto b = static_cast<int>(color.value.b * 255);
+        return format_to(ctx.out(), "Color{{\033[38;2;{};{};{}m{}\033[0m}}", r, g, b, color.value);
+    }
+};

@@ -2,32 +2,30 @@
 
 #include "core/Input.hpp"
 #include "ui/Canvas.hpp"
-#include "ui/Rectangle.hpp"
-#include "ui/TextRenderer.hpp"
+#include "ui/Painter.hpp"
 #include "ui/Theme.hpp"
-#include "ui/Triangle.hpp"
 
 namespace Birdy3d::ui {
 
     ContextItem::ContextItem(std::string text, ClickFunc func)
-        : text(std::make_unique<Text>(0_px, text, utils::Color::Name::FG, Placement::TOP_LEFT))
+        : text(TextDescription(text))
         , callback_click(func)
-        , m_child_rect_size(Size(m_padding * 2))
+        , m_child_rect(Rect::from_position_and_size(glm::ivec2(0), glm::ivec2(m_padding * 2)))
     { }
 
     ContextItem& ContextItem::add_child(std::string text, ClickFunc func)
     {
-        m_child_rect_size.y += 1_em;
+        m_child_rect.height(m_child_rect.height() + (1_em).to_pixels());
         return children.emplace_back(text, func);
     }
 
     void ContextItem::remove_child(std::string text)
     {
         auto it = std::remove_if(children.begin(), children.end(), [&text](ContextItem const& item) {
-            return text == item.text->text();
+            return text == item.text.text();
         });
         if (it != children.end())
-            m_child_rect_size.y -= 1_em;
+            m_child_rect.height(m_child_rect.height() - (1_em).to_pixels());
     }
 
     ContextMenu::ContextMenu(Options options)
@@ -35,17 +33,14 @@ namespace Birdy3d::ui {
         , root_item(ContextItem("Root", nullptr))
     {
         m_arrow_size = core::Application::theme().font_size() / 2;
-        m_background_rect = add_filled_rectangle(0_px, 0_px, utils::Color::Name::BG, Placement::TOP_LEFT);
-        m_border_rect = add_rectangle(0_px, 0_px, utils::Color::Name::BORDER, Placement::TOP_LEFT);
-        m_submenu_triangle = add_filled_triangle(0_px, Dimension::make_pixels(m_arrow_size), utils::Color::Name::FG);
+        m_half_arrow_size = core::Application::theme().font_size() / 4;
         this->hidden = true;
         m_children_visible = false;
-        m_shapes_visible = false;
     }
 
     void ContextMenu::draw()
     {
-        root_item.m_child_rect_pos = Position::make_pixels(m_actual_pos);
+        root_item.m_child_rect.position(m_absolute_rect.position());
         glDisable(GL_SCISSOR_TEST);
         draw_context_item_children(root_item);
         glEnable(GL_SCISSOR_TEST);
@@ -54,7 +49,7 @@ namespace Birdy3d::ui {
     void ContextMenu::open(glm::ivec2 open_pos)
     {
         position = Position::make_pixels(open_pos);
-        m_actual_pos = open_pos;
+        m_absolute_rect.position(open_pos);
         hidden = false;
         focus();
         canvas->to_foreground(this);
@@ -64,16 +59,16 @@ namespace Birdy3d::ui {
 
     void ContextMenu::open()
     {
-        auto open_pos = Position::make_pixels(core::Input::cursor_pos_int());
+        auto open_pos = core::Input::cursor_pos_int();
         glm::ivec2 viewport = core::Application::get_viewport_size();
-        if (open_pos.x.to_pixels() + root_item.m_child_rect_size.x.to_pixels() > viewport.x)
-            position.x = open_pos.x - root_item.m_child_rect_size.x; // Left
+        if (open_pos.x + root_item.m_child_rect.width() > viewport.x)
+            position.x = Dimension::make_pixels(open_pos.x - root_item.m_child_rect.width()); // Left
         else
-            position.x = open_pos.x; // Right
-        if (open_pos.y.to_pixels() + root_item.m_child_rect_size.y.to_pixels() > viewport.y)
-            position.y = open_pos.y - root_item.m_child_rect_size.y; // Up
+            position.x = Dimension::make_pixels(open_pos.x); // Right
+        if (open_pos.y + root_item.m_child_rect.height() > viewport.y)
+            position.y = Dimension::make_pixels(open_pos.y - root_item.m_child_rect.height()); // Up
         else
-            position.y = open_pos.y; // Down
+            position.y = Dimension::make_pixels(open_pos.y); // Down
         open(position.to_pixels());
     }
 
@@ -87,39 +82,37 @@ namespace Birdy3d::ui {
 
     bool ContextMenu::contains(glm::ivec2 point) const
     {
-        return context_item_contains(root_item, Position::make_pixels(point));
+        return context_item_contains(root_item, point);
     }
 
     void ContextMenu::draw_context_item_children(ContextItem& item)
     {
         // TODO: Put the x size calculation in the ContextItem and figure out how to add the arrow length after children are added.
-        item.m_child_rect_size.x = Dimension::make_zero();
+        item.m_child_rect.size(glm::ivec2{0, item.m_child_rect.height()});
         for (auto const& child_item : item.children) {
-            auto text_width = child_item.text->size().x;
+            auto text_width = child_item.text.text_size().x;
             if (!child_item.children.empty())
-                text_width += Dimension::make_pixels(m_arrow_size + 5);
-            if (item.m_child_rect_size.x < text_width)
-                item.m_child_rect_size.x = text_width;
+                text_width += m_arrow_size + 5;
+            if (item.m_child_rect.width() < text_width)
+                item.m_child_rect.size(glm::ivec2{text_width, item.m_child_rect.height()});
         }
-        item.m_child_rect_size.x += item.m_padding * 2;
+        item.m_child_rect.width(item.m_child_rect.width() + item.m_padding * 2);
 
-        m_background_rect->position(item.m_child_rect_pos);
-        m_background_rect->size(item.m_child_rect_size);
-        m_background_rect->draw(glm::mat4(1));
-        m_border_rect->position(item.m_child_rect_pos);
-        m_border_rect->size(item.m_child_rect_size);
-        m_border_rect->draw(glm::mat4(1));
+        // TODO: only get the color once?
+        auto bg_color = core::Application::theme().color(utils::Color::Name::BG);
+        auto border_color = core::Application::theme().color(utils::Color::Name::BORDER);
+        auto fg_color = core::Application::theme().color(utils::Color::Name::FG);
+        Painter::the().paint_rectangle_filled(item.m_child_rect, bg_color, 1, border_color);
 
         auto offset_y = item.m_padding;
         for (auto const& child_item : item.children) {
             if (!child_item.children.empty()) {
-                m_submenu_triangle->position(item.m_child_rect_pos + Position(item.m_child_rect_size.x - Dimension::make_pixels(m_arrow_size) - item.m_padding, offset_y + 0.5_em - Dimension::make_pixels(m_arrow_size / 2)));
-                m_submenu_triangle->rotation(glm::radians(30.0f));
-                m_submenu_triangle->draw(glm::mat4(1));
+                auto position = item.m_child_rect.position() + glm::ivec2(item.m_child_rect.width() - m_arrow_size - item.m_padding, offset_y + (0.5_em).to_pixels() - m_half_arrow_size);
+                Painter::the().paint_triangle_filled(Rect::from_position_and_size(position, glm::ivec2{m_arrow_size}), glm::radians(30.0f), fg_color);
             }
-            child_item.text->position(Position(item.m_child_rect_pos.x + item.m_padding, item.m_child_rect_pos.y + offset_y));
-            child_item.text->draw(glm::mat4(1));
-            offset_y += 1_em;
+            auto position = glm::ivec2(item.m_child_rect.left() + item.m_padding, item.m_child_rect.top() + offset_y);
+            Painter::the().paint_text(position, child_item.text);
+            offset_y += (1_em).to_pixels();
         }
         for (auto& child_item : item.children) {
             if (!child_item.children.empty() && child_item.opened) {
@@ -131,12 +124,12 @@ namespace Birdy3d::ui {
 
     bool ContextMenu::handle_context_item_children_click(ContextItem& item, bool click)
     {
-        auto local_pos = Position::make_pixels(core::Input::cursor_pos()) - item.m_child_rect_pos;
+        auto local_pos = core::Input::cursor_pos_int() - item.m_child_rect.position();
         bool found = false;
-        if (local_pos.x > 0_px && local_pos.x < item.m_child_rect_size.x && local_pos.y > 0_px && local_pos.y < item.m_child_rect_size.y) {
+        if (local_pos.x > 0 && local_pos.x < item.m_child_rect.width() && local_pos.y > 0 && local_pos.y < item.m_child_rect.height()) {
             auto offset_y = item.m_padding;
             for (auto& child_item : item.children) {
-                offset_y += 1_em;
+                offset_y += (1_em).to_pixels();
                 child_item.opened = false;
                 if (found)
                     continue;
@@ -150,15 +143,15 @@ namespace Birdy3d::ui {
                     if (!child_item.children.empty()) {
                         child_item.opened = true;
                         // Set position of new menu
-                        Size viewport = Size::make_pixels(core::Application::get_viewport_size());
-                        if (item.m_child_rect_pos.x + child_item.m_child_rect_size.x > viewport.x)
-                            child_item.m_child_rect_pos.x = item.m_child_rect_pos.x - child_item.m_child_rect_size.x; // Left
+                        auto viewport = core::Application::get_viewport_size();
+                        if (item.m_child_rect.left() + child_item.m_child_rect.width() > viewport.x)
+                            child_item.m_child_rect.left(item.m_child_rect.left() - child_item.m_child_rect.width());
                         else
-                            child_item.m_child_rect_pos.x = item.m_child_rect_pos.x + item.m_child_rect_size.x; // Right
-                        if (item.m_child_rect_pos.y + offset_y + child_item.m_child_rect_size.y - 1_em - item.m_padding > viewport.y)
-                            child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - child_item.m_child_rect_size.y - 1_em - item.m_padding; // Up
+                            child_item.m_child_rect.left(item.m_child_rect.left() + item.m_child_rect.width()); // Right
+                        if (item.m_child_rect.top() + offset_y + child_item.m_child_rect.height() - (1_em).to_pixels() - item.m_padding > viewport.y)
+                            child_item.m_child_rect.top(item.m_child_rect.top() + offset_y - child_item.m_child_rect.height() - (1_em).to_pixels() - item.m_padding); // Up
                         else
-                            child_item.m_child_rect_pos.y = item.m_child_rect_pos.y + offset_y - 1_em - item.m_padding; // Down
+                            child_item.m_child_rect.top(item.m_child_rect.top() + offset_y - (1_em).to_pixels() - item.m_padding); // Down
 
                         // Close all children of newly opened item
                         for (auto& child_child_item : child_item.children)
@@ -182,9 +175,9 @@ namespace Birdy3d::ui {
         return found;
     }
 
-    bool ContextMenu::context_item_contains(ContextItem const& item, Position point) const
+    bool ContextMenu::context_item_contains(ContextItem const& item, glm::ivec2 point) const
     {
-        if (point.x > item.m_child_rect_pos.x && point.y > item.m_child_rect_pos.y && point.x < item.m_child_rect_pos.x + item.m_child_rect_size.x && point.y < item.m_child_rect_pos.y + item.m_child_rect_size.y)
+        if (point.x > item.m_child_rect.left() && point.y > item.m_child_rect.top() && point.x < item.m_child_rect.left() + item.m_child_rect.width() && point.y < item.m_child_rect.top() + item.m_child_rect.height())
             return true;
         for (auto const& child_item : item.children) {
             if (child_item.opened && !child_item.children.empty()) {
@@ -216,20 +209,19 @@ namespace Birdy3d::ui {
 
     void ContextMenu::on_focus_lost(FocusLostEvent&)
     {
+        birdy3d_dbgln("focus lost");
         hidden = true;
     }
 
     MenuBar::MenuBar(Options options)
         : Widget(options)
-    {
-        add_filled_rectangle(0_pc, 100_pc, utils::Color::Name::BG);
-    }
+    { }
 
     ContextItem& MenuBar::add_item(std::string text)
     {
         auto menu = std::make_unique<ContextMenu>(Options{});
         menu->canvas = canvas;
-        menu->root_item.text->text(text);
+        menu->root_item.text.text(text);
         ContextItem& item = menu->root_item;
         m_menus.push_back(std::move(menu));
         return item;
@@ -238,21 +230,21 @@ namespace Birdy3d::ui {
     void MenuBar::remove_item(std::string text)
     {
         std::remove_if(m_menus.begin(), m_menus.end(), [&text](std::unique_ptr<ContextMenu> const& menu) {
-            return text == menu->root_item.text->text();
+            return text == menu->root_item.text.text();
         });
     }
 
     void MenuBar::draw()
     {
-        Widget::draw();
+        paint_background(false);
+
         int x = 0;
         for (auto& menu : m_menus) {
-            menu->root_item.text->position(Position::make_pixels(x, 0));
-            menu->root_item.text->draw(m_move);
+            paint_text(glm::ivec2(x, 0), menu->root_item.text);
             // menu->external_draw() would reset glScissor, but menu->draw() doesn't check for hidden.
             if (!menu->hidden)
                 menu->draw();
-            x += menu->root_item.text->size().x.to_pixels() + m_menu_gap;
+            x += menu->root_item.text.text_size().x + m_menu_gap;
         }
     }
 
@@ -260,14 +252,14 @@ namespace Birdy3d::ui {
     {
         if (event.button != GLFW_MOUSE_BUTTON_LEFT || event.action != GLFW_PRESS)
             return;
-        int curosr_x = core::Input::cursor_pos().x - m_actual_pos.x;
+        int curosr_x = core::Input::cursor_pos().x - m_absolute_rect.left();
         int x = 0;
         for (auto& menu : m_menus) {
-            x += menu->root_item.text->size().x.to_pixels();
+            x += menu->root_item.text.text_size().x;
             if (curosr_x < x) {
                 if (menu->was_last_focused())
                     return;
-                glm::ivec2 open_pos = m_actual_pos + glm::ivec2(x - menu->root_item.text->size().x.to_pixels(), m_actual_size.y);
+                glm::ivec2 open_pos = m_absolute_rect.position() + glm::ivec2(x - menu->root_item.text.text_size().x, m_absolute_rect.height());
                 menu->open(open_pos);
                 return;
             }

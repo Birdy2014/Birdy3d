@@ -12,7 +12,6 @@ namespace Birdy3d::ui {
     class TextRenderer;
     class Text;
     class Theme;
-    class Triangle;
     class Dimension;
     class Position;
     class Size;
@@ -28,9 +27,12 @@ namespace Birdy3d::ui {
     class NumberInput;
     class ScrollContainer;
     class Textarea;
+    class TextDescription;
     class TextField;
     class TreeView;
     class TreeItem;
     class WindowSnapArea;
+    class Painter;
+    class Rect;
 
 }
