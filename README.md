@@ -2,19 +2,19 @@
 A 3D game engine written in C++20.
 It's main purpose is for me to learn C++ and OpenGL.
 
-This documentation will be expanded in the future.
-
 ## Building
 [![Build](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml/badge.svg)](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml)
 
 Birdy3d supports both Linux and Windows.
 
-Dependencies:
+Dependencies (the optional dependencies will be automatically downloaded if they are not found):
 - CMake
-- assimp
-- glm
-- freetype2
-- Wayland or Xorg (Linux)
+- libgl
+- wayland-protocols or Xorg (Linux)
+- assimp (optional)
+- glm (optional)
+- freetype2 (optional)
+- fmtlib (optional)
 
 Compiling on Linux using GCC >= 10 or Clang >= 10 and Make:
 
