@@ -55,7 +55,7 @@ namespace Birdy3d::ui {
         event.handled();
 
         if (event.button != GLFW_MOUSE_BUTTON_RIGHT)
-            TextField::on_click(event);
+            return TextField::on_click(event);
 
         if (event.action == GLFW_PRESS) {
             grab_cursor();
