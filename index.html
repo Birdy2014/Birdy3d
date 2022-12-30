@@ -96,17 +96,18 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a>A 3D game engine written in C++20. It's main purpose is for me to learn C++ and OpenGL.</p>
-<p>This documentation will be expanded in the future.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Building</h1>
 <p><a href="https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml"><img src="https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml/badge.svg" alt="Build" style="pointer-events: none;" class="inline"/></a></p>
 <p>Birdy3d supports both Linux and Windows.</p>
-<p>Dependencies:</p><ul>
+<p>Dependencies (the optional dependencies will be automatically downloaded if they are not found):</p><ul>
 <li>CMake</li>
-<li>assimp</li>
-<li>glm</li>
-<li>freetype2</li>
-<li>Wayland or Xorg (Linux)</li>
+<li>libgl</li>
+<li>wayland-protocols or Xorg (Linux)</li>
+<li>assimp (optional)</li>
+<li>glm (optional)</li>
+<li>freetype2 (optional)</li>
+<li>fmtlib (optional)</li>
 </ul>
 <p>Compiling on Linux using GCC &gt;= 10 or Clang &gt;= 10 and Make:</p>
 <div class="fragment"><div class="line">cmake -B build -DCMAKE_BUILD_TYPE=Release -G Make</div>
