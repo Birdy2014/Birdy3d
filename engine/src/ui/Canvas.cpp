@@ -137,11 +137,17 @@ namespace Birdy3d::ui {
                 auto ui_event = ClickEvent{event.button, event.action, event.mods};
                 m_focused_widget->notify_event(ui_event);
             }
-        } else if (m_hovering_widget && m_hovering_widget != this) {
-            if (event.action == GLFW_PRESS)
+            return;
+        }
+
+        if (m_hovering_widget && m_hovering_widget != this) {
+            if (!m_hovering_widget->is_focused() && event.action == GLFW_PRESS)
                 m_hovering_widget->focus();
-            auto ui_event = ClickEvent{event.button, event.action, event.mods};
-            m_hovering_widget->notify_event(ui_event);
+
+            if (m_hovering_widget->is_focused()) {
+                auto ui_event = ClickEvent{event.button, event.action, event.mods};
+                m_hovering_widget->notify_event(ui_event);
+            }
         }
     }
 
