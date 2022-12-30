@@ -26,7 +26,8 @@ private:
 
     void draw() override
     {
-        paint_background(false);
+        auto color_input_bg = Birdy3d::core::Application::theme().color(Birdy3d::utils::Color::Name::BG_INPUT);
+        paint_background(color_input_bg);
         paint_text(glm::ivec2(0), m_text);
     }
 
