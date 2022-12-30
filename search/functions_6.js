@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['print_0',['print',['../classBirdy3d_1_1ui_1_1Console.html#a31723769cbb3aeeb26c09acf3d43a8bb',1,'Birdy3d::ui::Console']]],
-  ['println_1',['println',['../classBirdy3d_1_1ui_1_1Console.html#acca6498759fbb5d2b8eccce20479e306',1,'Birdy3d::ui::Console']]],
-  ['priority_2',['priority',['../classBirdy3d_1_1ecs_1_1Component.html#afd2d3418e99c259107ee481f3e1a8bdd',1,'Birdy3d::ecs::Component::priority()'],['../classBirdy3d_1_1physics_1_1Collider.html#a22174909aeb146bfd829fc8679541f10',1,'Birdy3d::physics::Collider::priority()']]]
+  ['read_5ffile_0',['read_file',['../classBirdy3d_1_1core_1_1ResourceManager.html#a3f703e3d23651c487be839ef3df3f53b',1,'Birdy3d::core::ResourceManager']]],
+  ['register_5fcommand_1',['register_command',['../classBirdy3d_1_1ui_1_1Console.html#a620f66fc0a736883b8f51702be01e26a',1,'Birdy3d::ui::Console']]]
 ];

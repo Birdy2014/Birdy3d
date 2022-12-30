@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['exec_0',['exec',['../classBirdy3d_1_1ui_1_1Console.html#a20068a7a44f21e4d037b5a6e8f7827d5',1,'Birdy3d::ui::Console::exec(std::string)'],['../classBirdy3d_1_1ui_1_1Console.html#a83f5339c1b5422fb752a88935f526d79',1,'Birdy3d::ui::Console::exec(std::string name, std::vector&lt; std::string &gt; args)']]]
+  ['get_5fresource_5fpath_0',['get_resource_path',['../classBirdy3d_1_1core_1_1ResourceManager.html#a242aa6f8b1caf04202d670e3688e2f30',1,'Birdy3d::core::ResourceManager']]]
 ];

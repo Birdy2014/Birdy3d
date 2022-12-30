@@ -25,6 +25,7 @@ var hierarchy =
     [ "Birdy3d::ui::ContextItem", "classBirdy3d_1_1ui_1_1ContextItem.html", null ],
     [ "Birdy3d::physics::ConvexMeshGenerators", "classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html", null ],
     [ "Birdy3d::ui::Dimension", "classBirdy3d_1_1ui_1_1Dimension.html", null ],
+    [ "Birdy3d::ui::DimRect", "classBirdy3d_1_1ui_1_1DimRect.html", null ],
     [ "Birdy3d::ecs::Entity", "classBirdy3d_1_1ecs_1_1Entity.html", [
       [ "Birdy3d::ecs::Scene", "classBirdy3d_1_1ecs_1_1Scene.html", null ]
     ] ],
@@ -41,6 +42,8 @@ var hierarchy =
     [ "std::exception", null, [
       [ "Birdy3d::serializer::ParseError", "classBirdy3d_1_1serializer_1_1ParseError.html", null ]
     ] ],
+    [ "fmt::formatter< Birdy3d::ui::Rect >", "structfmt_1_1formatter_3_01Birdy3d_1_1ui_1_1Rect_01_4.html", null ],
+    [ "fmt::formatter< Birdy3d::utils::Color >", "structfmt_1_1formatter_3_01Birdy3d_1_1utils_1_1Color_01_4.html", null ],
     [ "fmt::formatter< EventType >", "structfmt_1_1formatter_3_01EventType_01_4.html", null ],
     [ "fmt::formatter< glm::vec< L, T > >", "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html", null ],
     [ "Birdy3d::serializer::Generator", "classBirdy3d_1_1serializer_1_1Generator.html", [
@@ -75,6 +78,9 @@ var hierarchy =
     [ "Birdy3d::ui::Widget::Options", "structBirdy3d_1_1ui_1_1Widget_1_1Options.html", null ],
     [ "Birdy3d::ui::WindowSnapArea::Options", "structBirdy3d_1_1ui_1_1WindowSnapArea_1_1Options.html", null ],
     [ "Birdy3d::ui::Widget::Padding", "structBirdy3d_1_1ui_1_1Widget_1_1Padding.html", null ],
+    [ "Birdy3d::ui::Painter", "classBirdy3d_1_1ui_1_1Painter.html", [
+      [ "Birdy3d::ui::OpenGLPainter", "classBirdy3d_1_1ui_1_1OpenGLPainter.html", null ]
+    ] ],
     [ "Birdy3d::serializer::Parser", "classBirdy3d_1_1serializer_1_1Parser.html", [
       [ "Birdy3d::serializer::JsonParser", "classBirdy3d_1_1serializer_1_1JsonParser.html", null ]
     ] ],
@@ -82,22 +88,27 @@ var hierarchy =
     [ "Birdy3d::serializer::PointerRegistry", "classBirdy3d_1_1serializer_1_1PointerRegistry.html", null ],
     [ "Birdy3d::ui::Position", "classBirdy3d_1_1ui_1_1Position.html", null ],
     [ "Birdy3d::utils::PrimitiveGenerator", "classBirdy3d_1_1utils_1_1PrimitiveGenerator.html", null ],
+    [ "Birdy3d::ui::Rect", "classBirdy3d_1_1ui_1_1Rect.html", null ],
     [ "Birdy3d::serializer::ReflectClass", "classBirdy3d_1_1serializer_1_1ReflectClass.html", null ],
     [ "Birdy3d::serializer::ReflectMember", "structBirdy3d_1_1serializer_1_1ReflectMember.html", null ],
     [ "Birdy3d::serializer::Reflector", "classBirdy3d_1_1serializer_1_1Reflector.html", null ],
     [ "Birdy3d::render::Rendertarget", "classBirdy3d_1_1render_1_1Rendertarget.html", null ],
     [ "Birdy3d::core::ResourceHandle< T >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
+    [ "Birdy3d::core::ResourceHandle< Birdy3d::render::Model >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
+    [ "Birdy3d::core::ResourceHandle< Birdy3d::render::Shader >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
+    [ "Birdy3d::core::ResourceHandle< Birdy3d::render::Texture >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
+    [ "Birdy3d::core::ResourceHandle< Birdy3d::ui::Theme >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
     [ "Birdy3d::core::ResourceIdentifier", "classBirdy3d_1_1core_1_1ResourceIdentifier.html", null ],
     [ "Birdy3d::core::ResourceManager", "classBirdy3d_1_1core_1_1ResourceManager.html", null ],
     [ "Birdy3d::serializer::Serializer", "classBirdy3d_1_1serializer_1_1Serializer.html", null ],
     [ "Birdy3d::render::Shader", "classBirdy3d_1_1render_1_1Shader.html", null ],
     [ "Birdy3d::ui::Shape", "classBirdy3d_1_1ui_1_1Shape.html", [
       [ "Birdy3d::ui::Rectangle", "classBirdy3d_1_1ui_1_1Rectangle.html", null ],
-      [ "Birdy3d::ui::Text", "classBirdy3d_1_1ui_1_1Text.html", null ],
-      [ "Birdy3d::ui::Triangle", "classBirdy3d_1_1ui_1_1Triangle.html", null ]
+      [ "Birdy3d::ui::Text", "classBirdy3d_1_1ui_1_1Text.html", null ]
     ] ],
     [ "Birdy3d::ui::Size", "classBirdy3d_1_1ui_1_1Size.html", null ],
     [ "Birdy3d::serializer::String", "structBirdy3d_1_1serializer_1_1String.html", null ],
+    [ "Birdy3d::ui::TextDescription", "classBirdy3d_1_1ui_1_1TextDescription.html", null ],
     [ "Birdy3d::ui::TextRenderer", "classBirdy3d_1_1ui_1_1TextRenderer.html", null ],
     [ "Birdy3d::render::Texture", "classBirdy3d_1_1render_1_1Texture.html", null ],
     [ "Birdy3d::ui::TextVertex", "structBirdy3d_1_1ui_1_1TextVertex.html", null ],
