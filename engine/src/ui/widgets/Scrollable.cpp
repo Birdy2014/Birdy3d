@@ -36,45 +36,6 @@ namespace Birdy3d::ui {
             m_layout->arrange(m_children, m_absolute_rect.position() - m_scroll_offset + padding_top_left, content_size_cache - (m_max_scroll_offset - m_scroll_offset) - padding_size);
         }
 
-        m_max_scroll_offset.x = std::max(content_size_cache.x - m_absolute_rect.width(), 0);
-        m_max_scroll_offset.y = std::max(content_size_cache.y - m_absolute_rect.height(), 0);
-
-        // Vertical scollbar
-        if (m_vertical_scroll_enabled && m_max_scroll_offset.y > 0) {
-            m_scrollbar_vertical_visible = true;
-
-            m_scrollbar_vertical_rect.width(10);
-            m_scrollbar_vertical_rect.left(m_absolute_rect.width() - 10);
-
-            auto scrollbar_height_ratio = static_cast<float>(m_absolute_rect.height()) / static_cast<float>(content_size_cache.y);
-            auto scrollbar_y_offset_ratio = 0.0f;
-            if (m_max_scroll_offset.y > 0.0f)
-                scrollbar_y_offset_ratio = (static_cast<float>(m_scroll_offset.y) / static_cast<float>(m_max_scroll_offset.y)) * (1.0f - scrollbar_height_ratio);
-
-            m_scrollbar_vertical_rect.height(scrollbar_height_ratio * m_absolute_rect.height());
-            m_scrollbar_vertical_rect.top(scrollbar_y_offset_ratio * m_absolute_rect.height());
-        } else {
-            m_scrollbar_vertical_visible = false;
-        }
-
-        // Horizontal scollbar
-        if (m_horizontal_scroll_enabled && m_max_scroll_offset.x > 0) {
-            m_scrollbar_horizontal_visible = true;
-
-            m_scrollbar_horizontal_rect.height(10);
-            m_scrollbar_horizontal_rect.top(m_absolute_rect.height() - 10);
-
-            auto scrollbar_width_ratio = static_cast<float>(m_absolute_rect.width()) / static_cast<float>(content_size_cache.x);
-            auto scrollbar_x_offset_ratio = 0.0f;
-            if (m_max_scroll_offset.x > 0.0f)
-                scrollbar_x_offset_ratio = (static_cast<float>(m_scroll_offset.x) / static_cast<float>(m_max_scroll_offset.x)) * (1.0f - scrollbar_width_ratio);
-
-            m_scrollbar_horizontal_rect.width(scrollbar_width_ratio * m_absolute_rect.width());
-            m_scrollbar_horizontal_rect.left(scrollbar_x_offset_ratio * m_absolute_rect.width());
-        } else {
-            m_scrollbar_horizontal_visible = false;
-        }
-
         if (resized) {
             auto event = ResizeEvent{};
             notify_event(event);
@@ -131,6 +92,46 @@ namespace Birdy3d::ui {
     {
         auto content_size_cache = content_size();
 
+        m_max_scroll_offset.x = std::max(content_size_cache.x - m_absolute_rect.width(), 0);
+        m_max_scroll_offset.y = std::max(content_size_cache.y - m_absolute_rect.height(), 0);
+
+        // Vertical scollbar
+        if (m_vertical_scroll_enabled && m_max_scroll_offset.y > 0) {
+            m_scrollbar_vertical_visible = true;
+
+            m_scrollbar_vertical_rect.width(10);
+            m_scrollbar_vertical_rect.left(m_absolute_rect.width() - 10);
+
+            auto scrollbar_height_ratio = static_cast<float>(m_absolute_rect.height()) / static_cast<float>(content_size_cache.y);
+            auto scrollbar_y_offset_ratio = 0.0f;
+            if (m_max_scroll_offset.y > 0.0f)
+                scrollbar_y_offset_ratio = (static_cast<float>(m_scroll_offset.y) / static_cast<float>(m_max_scroll_offset.y)) * (1.0f - scrollbar_height_ratio);
+
+            m_scrollbar_vertical_rect.height(scrollbar_height_ratio * m_absolute_rect.height());
+            m_scrollbar_vertical_rect.top(scrollbar_y_offset_ratio * m_absolute_rect.height());
+        } else {
+            m_scrollbar_vertical_visible = false;
+        }
+
+        // Horizontal scollbar
+        if (m_horizontal_scroll_enabled && m_max_scroll_offset.x > 0) {
+            m_scrollbar_horizontal_visible = true;
+
+            m_scrollbar_horizontal_rect.height(10);
+            m_scrollbar_horizontal_rect.top(m_absolute_rect.height() - 10);
+
+            auto scrollbar_width_ratio = static_cast<float>(m_absolute_rect.width()) / static_cast<float>(content_size_cache.x);
+            auto scrollbar_x_offset_ratio = 0.0f;
+            if (m_max_scroll_offset.x > 0.0f)
+                scrollbar_x_offset_ratio = (static_cast<float>(m_scroll_offset.x) / static_cast<float>(m_max_scroll_offset.x)) * (1.0f - scrollbar_width_ratio);
+
+            m_scrollbar_horizontal_rect.width(scrollbar_width_ratio * m_absolute_rect.width());
+            m_scrollbar_horizontal_rect.left(scrollbar_x_offset_ratio * m_absolute_rect.width());
+        } else {
+            m_scrollbar_horizontal_visible = false;
+        }
+
+        // Scrolling
         if (m_scrollbar_vertical_grabbed) {
             m_scroll_offset.y += core::Input::cursor_pos_offset().y * (content_size_cache.y / m_absolute_rect.height());
             check_scroll_bounds();
