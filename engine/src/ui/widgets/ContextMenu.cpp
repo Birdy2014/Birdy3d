@@ -209,7 +209,6 @@ namespace Birdy3d::ui {
 
     void ContextMenu::on_focus_lost(FocusLostEvent&)
     {
-        birdy3d_dbgln("focus lost");
         hidden = true;
     }
 
