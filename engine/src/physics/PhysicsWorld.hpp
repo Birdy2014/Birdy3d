@@ -15,7 +15,7 @@ namespace Birdy3d::physics {
 
     private:
         ecs::Entity* m_scene;
-        std::vector<std::unique_ptr<Collision>> m_collisions;
+        std::vector<Collision> m_collisions;
     };
 
 }

@@ -9,8 +9,6 @@ namespace Birdy3d::physics {
 
     class ColliderComponent final : public ecs::Component {
     public:
-        std::shared_ptr<Collider> collider;
-
         ColliderComponent();
         ColliderComponent(GenerationMode);
 
@@ -18,6 +16,8 @@ namespace Birdy3d::physics {
         void serialize(serializer::Adapter&) override;
         int priority() override { return 10; }
         void render_wireframe(render::Shader&);
+
+        [[nodiscard]] std::shared_ptr<Collider> collider() const { return m_collider.ptr(); }
 
     private:
         GenerationMode m_generation_mode = GenerationMode::NONE;

@@ -18,9 +18,7 @@ namespace Birdy3d::physics {
     void for_each_combination_of(std::vector<std::shared_ptr<ColliderComponent>> const& items, auto callback)
     {
         for (auto i = items.cbegin(); i != items.cend(); ++i) {
-            for (auto j = i; j != items.cend(); ++j) {
-                if (i == j)
-                    continue;
+            for (auto j = i + 1; j != items.cend(); ++j) {
                 callback(*i->get(), *j->get());
             }
         }
@@ -30,24 +28,22 @@ namespace Birdy3d::physics {
     {
         auto collider_components = m_scene->get_components<ColliderComponent>(false, true);
         for_each_combination_of(collider_components, [&](ColliderComponent const& collider_component_1, ColliderComponent const& collider_component_2) {
-            auto collider_1 = collider_component_1.collider;
-            auto collider_2 = collider_component_2.collider;
+            auto collider_1 = collider_component_1.collider();
+            auto collider_2 = collider_component_2.collider();
 
             if (!collider_1 || !collider_2)
                 return;
 
-            auto collision_iterator = std::ranges::find_if(m_collisions, [&](std::unique_ptr<Collision> const& collision) {
-                return collision->contains(collider_1.get()) && collision->contains(collider_2.get());
+            auto collision_iterator = std::ranges::find_if(m_collisions, [&](Collision const& collision) {
+                return collision.contains(collider_component_1) && collision.contains(collider_component_2);
             });
 
             Collision* collision = {};
 
             if (collision_iterator != m_collisions.end()) {
-                collision = collision_iterator->get();
+                collision = &*collision_iterator;
             } else {
-                auto unique_collision = std::make_unique<Collision>(collider_1.get(), collider_2.get());
-                collision = unique_collision.get();
-                m_collisions.push_back(std::move(unique_collision));
+                collision = &m_collisions.emplace_back(collider_component_1, collider_component_2);
             }
 
             bool collided_last_frame = collision->points.has_collision;
@@ -55,12 +51,12 @@ namespace Birdy3d::physics {
             collision->points = points;
             if (points.has_collision) {
                 if (collided_last_frame)
-                    core::Application::event_bus->emit<events::CollisionEvent>(collider_component_1.collider, collider_component_2.collider, events::CollisionEvent::COLLIDING);
+                    core::Application::event_bus->emit<events::CollisionEvent>(collider_1, collider_2, events::CollisionEvent::COLLIDING);
                 else
-                    core::Application::event_bus->emit<events::CollisionEvent>(collider_component_1.collider, collider_component_2.collider, events::CollisionEvent::ENTER);
+                    core::Application::event_bus->emit<events::CollisionEvent>(collider_1, collider_2, events::CollisionEvent::ENTER);
             } else {
                 if (collided_last_frame) {
-                    core::Application::event_bus->emit<events::CollisionEvent>(collider_component_1.collider, collider_component_2.collider, events::CollisionEvent::EXIT);
+                    core::Application::event_bus->emit<events::CollisionEvent>(collider_1, collider_2, events::CollisionEvent::EXIT);
                 }
             }
         });
