@@ -1,6 +1,8 @@
 #include "core/ResourceManager.hpp"
 
 #include "core/Logger.hpp"
+#include "physics/Collider.hpp"
+#include "physics/CollisionSphere.hpp"
 #include "physics/ConvexMeshGenerators.hpp"
 #include "render/Model.hpp"
 #include "render/Shader.hpp"
@@ -272,22 +274,22 @@ namespace Birdy3d::core {
         if (collider)
             return collider;
 
+        auto model = get_model_ptr(id);
+        if (!model)
+            return {};
+
         if (id.source == "primitive") {
             if (id.name == "plane") {
                 Logger::error("Can't generate a Collider for the plane primitive.");
                 return {};
-            } else if (id.name == "uv_sphere") {
-                Logger::debug("TODO: Generate CollisionSphere");
-            } else if (id.name == "ico_sphere") {
-                Logger::debug("TODO: Generate CollisionSphere");
+            } else if (id.name == "uv_sphere" || id.name == " ico_sphere") {
+                auto shapes = std::vector<std::unique_ptr<physics::CollisionShape>>();
+                shapes.push_back(std::make_unique<physics::CollisionSphere>(1.0f));
+                collider = std::make_shared<physics::Collider>(model, std::move(shapes));
             }
         }
 
         if (!collider) {
-            auto model = get_model_ptr(id);
-            if (!model)
-                return {};
-
             physics::GenerationMode generation_mode = physics::GenerationMode::NONE;
             if (!id.args.contains("generation_mode"))
                 return {};

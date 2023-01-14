@@ -25,6 +25,7 @@
 #include "physics/ColliderComponent.hpp"
 #include "physics/CollisionMesh.hpp"
 #include "physics/CollisionShape.hpp"
+#include "physics/CollisionSphere.hpp"
 #include "physics/ConvexMeshGenerators.hpp"
 #include "physics/PhysicsWorld.hpp"
 
