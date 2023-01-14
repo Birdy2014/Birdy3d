@@ -88,7 +88,7 @@ namespace Birdy3d::physics {
         m_triangles.splice(m_triangles.cend(), new_triangles);
     }
 
-    render::Mesh IntermediateMesh::to_mesh() const
+    Mesh IntermediateMesh::to_mesh() const
     {
         std::vector<render::Vertex> vertices;
         std::vector<unsigned int> indices;
@@ -102,7 +102,7 @@ namespace Birdy3d::physics {
             vertices.emplace_back<render::Vertex>({triangle.b, normal, glm::vec3{}, glm::vec3{}});
             vertices.emplace_back<render::Vertex>({triangle.c, normal, glm::vec3{}, glm::vec3{}});
         }
-        return render::Mesh{vertices, indices};
+        return Mesh{vertices, indices};
     }
 
 }

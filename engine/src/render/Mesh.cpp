@@ -92,18 +92,4 @@ namespace Birdy3d::render {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-    glm::vec3 Mesh::find_furthest_point(const glm::vec3 direction) const
-    {
-        float max = -std::numeric_limits<float>::infinity();
-        glm::vec3 furthest_vertex;
-        for (Vertex vertex : vertices) {
-            float dot = glm::dot(vertex.position, direction);
-            if (dot > max) {
-                max = dot;
-                furthest_vertex = vertex.position;
-            }
-        }
-        return furthest_vertex;
-    }
-
 }

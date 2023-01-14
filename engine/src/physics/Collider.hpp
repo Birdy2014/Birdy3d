@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ecs/Component.hpp"
+#include "ecs/Forward.hpp"
+#include "physics/CollisionShape.hpp"
 #include "physics/ConvexMeshGenerators.hpp"
 #include "physics/Forward.hpp"
 #include "render/Forward.hpp"
@@ -9,34 +10,29 @@
 
 namespace Birdy3d::physics {
 
-    class Collider : public ecs::Component {
+    class Collider {
     public:
         Collider();
-        Collider(std::string const&);
-        Collider(GenerationMode);
-        void start() override;
-        CollisionPoints collides(Collider&);
-        void render_wireframe(render::Shader&);
-        void serialize(serializer::Adapter&) override;
-        int priority() override { return 10; }
+        Collider(std::shared_ptr<render::Model>, std::vector<std::unique_ptr<CollisionShape>>);
+        CollisionPoints compute_collision(Collider const& collider_a, Collider const& collider_b, glm::mat4 const transform_a, glm::mat4 const transform_b);
+        void render_wireframe(ecs::Entity&, render::Shader&);
 
     private:
         std::string m_model_name;
-        std::shared_ptr<render::Model> m_model;
+        std::shared_ptr<render::Model> m_render_model;
+        std::vector<std::unique_ptr<CollisionShape>> m_collision_shapes;
         GenerationMode m_generation_mode;
         glm::vec3 m_points[4];
         int m_point_count;
 
-        bool collides(render::Mesh const& mesh_a, render::Mesh const& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b);
-        glm::vec3 support(render::Mesh const& a, render::Mesh const& b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction);
+        bool collides(CollisionShape const& shape_a, CollisionShape const& shape_b, glm::mat4 const transform_a, glm::mat4 const transform_b);
+        glm::vec3 support(CollisionShape const& a, CollisionShape const& b, glm::mat4 const transform_a, glm::mat4 const transform_b, glm::vec3 direction);
         bool line(glm::vec3& direction);
         bool triangle(glm::vec3& direction);
         bool tetrahedron(glm::vec3& direction);
         bool same_direction(glm::vec3 a, glm::vec3 b);
         void push_front(glm::vec3 point);
         bool next_simplex(glm::vec3& direction);
-
-        BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, Collider);
     };
 
 }

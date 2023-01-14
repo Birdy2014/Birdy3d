@@ -5,7 +5,7 @@
 #include "core/ResourceManager.hpp"
 #include "ecs/Entity.hpp"
 #include "ecs/Scene.hpp"
-#include "physics/Collider.hpp"
+#include "physics/ColliderComponent.hpp"
 #include "render/DirectionalLight.hpp"
 #include "render/ModelComponent.hpp"
 #include "render/PointLight.hpp"
@@ -419,7 +419,7 @@ namespace Birdy3d::render {
         m_simple_color_shader->set_mat4("projection", m_projection);
         m_simple_color_shader->set_mat4("view", m_view);
         m_simple_color_shader->set_vec4("color", utils::Color("#00ff0080"));
-        for (auto c : entity->scene->get_components<physics::Collider>(false, true)) {
+        for (auto c : entity->scene->get_components<physics::ColliderComponent>(false, true)) {
             c->render_wireframe(*m_simple_color_shader);
         }
         glEnable(GL_CULL_FACE);

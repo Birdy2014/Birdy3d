@@ -1,77 +1,32 @@
 #include "physics/Collider.hpp"
 
 #include "core/Logger.hpp"
-#include "ecs/Entity.hpp"
 #include "physics/Collision.hpp"
-#include "render/Mesh.hpp"
 #include "render/Model.hpp"
-#include "render/ModelComponent.hpp"
 
 namespace Birdy3d::physics {
 
     Collider::Collider()
-        : m_model(nullptr)
+        : m_render_model(nullptr)
         , m_generation_mode(GenerationMode::NONE)
     { }
 
-    Collider::Collider(std::string const& name)
-        : m_model_name(name)
-        , m_generation_mode(GenerationMode::NONE)
+    Collider::Collider(std::shared_ptr<render::Model> model, std::vector<std::unique_ptr<CollisionShape>> shapes)
+        : m_render_model(model)
+        , m_collision_shapes(std::move(shapes))
     { }
 
-    Collider::Collider(GenerationMode mode)
-        : m_model(nullptr)
-        , m_generation_mode(mode)
-    { }
-
-    void Collider::start()
+    void Collider::render_wireframe(ecs::Entity& entity, render::Shader& shader)
     {
-        if (m_generation_mode == GenerationMode::NONE) {
-            m_model = core::ResourceManager::get_model(m_model_name).ptr();
-        } else {
-            auto model_component = entity->get_component<render::ModelComponent>();
-            if (!model_component) {
-                core::Logger::warn("Entity '{}' doesn't have any ModelComponent", entity->name);
-                return;
-            }
-            auto model = model_component->model();
-            if (!model) {
-                core::Logger::warn("Entity '{}' doesn't have any model", entity->name);
-                return;
-            }
-            if (m_generation_mode == GenerationMode::COPY)
-                m_model = model.ptr();
-            else
-                m_model = ConvexMeshGenerators::generate_model(m_generation_mode, *model);
-        }
+        m_render_model->render_wireframe(entity, shader);
     }
 
-    void Collider::render_wireframe(render::Shader& shader)
-    {
-        m_model->render_wireframe(*entity, shader);
-    }
-
-    void Collider::serialize(serializer::Adapter& adapter)
-    {
-        adapter("model_name", m_model_name);
-        if (adapter.mode() == serializer::Adapter::Mode::LOAD) {
-            int mode;
-            adapter("generaton_mode", mode);
-            m_generation_mode = (GenerationMode)mode;
-        } else {
-            int mode = (int)m_generation_mode;
-            adapter("generaton_mode", mode);
-        }
-    }
-
-    CollisionPoints Collider::collides(Collider& collider)
+    CollisionPoints Collider::compute_collision(Collider const& collider_a, Collider const& collider_b, const glm::mat4 transform_a, const glm::mat4 transform_b)
     {
         CollisionPoints points = {glm::vec3(0), glm::vec3(0), glm::vec3(0), 0, false};
-        if (!m_model || !collider.m_model)
-            return points;
-        for (auto const& own_mesh : m_model->get_meshes()) {
-            for (auto const& other_mesh : collider.m_model->get_meshes()) {
-                if (collides(own_mesh, other_mesh, entity->transform.global_matrix(), collider.entity->transform.global_matrix())) {
+        for (auto const& shape_a : collider_a.m_collision_shapes) {
+            for (auto const& shape_b : collider_b.m_collision_shapes) {
+                if (collides(*shape_a.get(), *shape_b.get(), transform_a, transform_b)) {
                     points.has_collision = true;
                     break;
                 }
@@ -80,18 +35,18 @@ namespace Birdy3d::physics {
         return points;
     }
 
-    bool Collider::collides(render::Mesh const& mesh_a, render::Mesh const& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b)
+    bool Collider::collides(CollisionShape const& shape_a, CollisionShape const& shape_b, const glm::mat4 transform_a, const glm::mat4 transform_b)
     {
         // FIXME: stop if one of the matrices scales to 0
         m_point_count = 0;
-        glm::vec3 s = support(mesh_a, mesh_b, transform_a, transform_b, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::vec3 s = support(shape_a, shape_b, transform_a, transform_b, glm::vec3(1.0f, 0.0f, 0.0f));
         push_front(s);
         glm::vec3 direction = -s;
 
         while (true) {
             if (direction == glm::vec3(0))
                 core::Logger::critical("direction ist 0 in loop. point_count: {}", m_point_count);
-            s = support(mesh_a, mesh_b, transform_a, transform_b, direction);
+            s = support(shape_a, shape_b, transform_a, transform_b, direction);
 
             if (glm::dot(s, direction) <= 0)
                 return false;
@@ -105,7 +60,7 @@ namespace Birdy3d::physics {
         }
     }
 
-    glm::vec3 Collider::support(render::Mesh const& mesh_a, render::Mesh const& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction)
+    glm::vec3 Collider::support(CollisionShape const& mesh_a, CollisionShape const& mesh_b, const glm::mat4 transform_a, const glm::mat4 transform_b, glm::vec3 direction)
     {
         // Transform world direction to local direction
         glm::mat4 inverse_transform_a = glm::inverse(transform_a);
@@ -249,7 +204,5 @@ namespace Birdy3d::physics {
     {
         return glm::dot(a, b) > 0;
     }
-
-    BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, Collider);
 
 }

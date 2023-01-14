@@ -1,6 +1,7 @@
 #include "core/ResourceManager.hpp"
 
 #include "core/Logger.hpp"
+#include "physics/ConvexMeshGenerators.hpp"
 #include "render/Model.hpp"
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
@@ -61,6 +62,16 @@ namespace Birdy3d::core {
         return true;
     }
 
+    template <>
+    bool ResourceHandle<physics::Collider>::load(ResourceIdentifier const& new_id)
+    {
+        auto val = ResourceManager::get_collider_ptr(new_id);
+        if (!val)
+            return false;
+        m_ptr = val;
+        return true;
+    }
+
     ResourceIdentifier::ResourceIdentifier(std::string full_name)
     {
         std::vector<std::string> parts;
@@ -114,25 +125,31 @@ namespace Birdy3d::core {
     std::unordered_map<std::string, std::shared_ptr<ui::Theme>> ResourceManager::m_themes;
     std::unordered_map<std::string, std::shared_ptr<render::Model>> ResourceManager::m_models;
     std::unordered_map<std::string, std::shared_ptr<render::Texture>> ResourceManager::m_textures;
+    std::unordered_map<std::string, std::shared_ptr<physics::Collider>> ResourceManager::m_colliders;
 
-    ResourceHandle<render::Shader> ResourceManager::get_shader(std::string const& name)
+    ResourceHandle<render::Shader> ResourceManager::get_shader(ResourceIdentifier const& id)
     {
-        return ResourceHandle<render::Shader>(name);
+        return ResourceHandle<render::Shader>(id);
     }
 
-    ResourceHandle<ui::Theme> ResourceManager::get_theme(std::string const& name)
+    ResourceHandle<ui::Theme> ResourceManager::get_theme(ResourceIdentifier const& id)
     {
-        return ResourceHandle<ui::Theme>(name);
+        return ResourceHandle<ui::Theme>(id);
     }
 
-    ResourceHandle<render::Model> ResourceManager::get_model(std::string const& name)
+    ResourceHandle<render::Model> ResourceManager::get_model(ResourceIdentifier const& id)
     {
-        return ResourceHandle<render::Model>(name);
+        return ResourceHandle<render::Model>(id);
     }
 
-    ResourceHandle<render::Texture> ResourceManager::get_texture(std::string const& name)
+    ResourceHandle<render::Texture> ResourceManager::get_texture(ResourceIdentifier const& id)
     {
-        return ResourceHandle<render::Texture>(name);
+        return ResourceHandle<render::Texture>(id);
+    }
+
+    ResourceHandle<physics::Collider> ResourceManager::get_collider(ResourceIdentifier const& id)
+    {
+        return ResourceHandle<physics::Collider>(id);
     }
 
     std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(ResourceIdentifier const& id)
@@ -246,6 +263,58 @@ namespace Birdy3d::core {
             m_textures[name] = texture;
         }
         return texture;
+    }
+
+    std::shared_ptr<physics::Collider> ResourceManager::get_collider_ptr(ResourceIdentifier const& id)
+    {
+        std::string name = static_cast<std::string>(id);
+        auto collider = m_colliders[name];
+        if (collider)
+            return collider;
+
+        if (id.source == "primitive") {
+            if (id.name == "plane") {
+                Logger::error("Can't generate a Collider for the plane primitive.");
+                return {};
+            } else if (id.name == "uv_sphere") {
+                Logger::debug("TODO: Generate CollisionSphere");
+            } else if (id.name == "ico_sphere") {
+                Logger::debug("TODO: Generate CollisionSphere");
+            }
+        }
+
+        if (!collider) {
+            auto model = get_model_ptr(id);
+            if (!model)
+                return {};
+
+            physics::GenerationMode generation_mode = physics::GenerationMode::NONE;
+            if (!id.args.contains("generation_mode"))
+                return {};
+
+            auto mode_string = id.args.at("generation_mode");
+            if (mode_string == "NONE") {
+                generation_mode = physics::GenerationMode::NONE;
+            } else if (mode_string == "COPY") {
+                generation_mode = physics::GenerationMode::COPY;
+            } else if (mode_string == "HULL_MODEL") {
+                generation_mode = physics::GenerationMode::HULL_MODEL;
+            } else if (mode_string == "HULL_MESHES") {
+                generation_mode = physics::GenerationMode::HULL_MESHES;
+            } else if (mode_string == "DECOMPOSITION_MODEL") {
+                generation_mode = physics::GenerationMode::DECOMPOSITION_MODEL;
+            } else if (mode_string == "DECOMPOSITION_MESHES") {
+                generation_mode = physics::GenerationMode::DECOMPOSITION_MESHES;
+            } else {
+                Logger::error("Invalid generation mode '{}'", mode_string);
+                return {};
+            }
+
+            collider = physics::ConvexMeshGenerators::generate_collider(generation_mode, model);
+        }
+
+        m_colliders[name] = collider;
+        return collider;
     }
 
     std::string ResourceManager::get_resource_path(std::string name, ResourceType type)

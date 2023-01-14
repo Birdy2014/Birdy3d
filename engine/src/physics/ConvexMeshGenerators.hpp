@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Base.hpp"
+#include "physics/Forward.hpp"
 #include "render/Forward.hpp"
 #include <optional>
 
@@ -17,12 +18,12 @@ namespace Birdy3d::physics {
 
     class ConvexMeshGenerators {
     public:
-        static std::shared_ptr<render::Model> generate_model(GenerationMode, render::Model const&);
+        static std::shared_ptr<Collider> generate_collider(GenerationMode, std::shared_ptr<render::Model>);
 
     private:
-        static std::optional<render::Mesh> copy(render::Mesh const&);
-        static std::optional<render::Mesh> hull(render::Mesh const&);
-        static std::optional<render::Mesh> decomposition(render::Mesh const&);
+        static std::optional<Mesh> copy(Mesh const&);
+        static std::optional<Mesh> hull(Mesh const&);
+        static std::optional<Mesh> decomposition(Mesh const&);
     };
 
 }
