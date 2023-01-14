@@ -25,9 +25,8 @@ namespace Birdy3d::ecs {
         void add_child_at(std::size_t, std::shared_ptr<Entity>);
 
         template <class T = Entity, typename... Args>
-        std::shared_ptr<T> add_child(Args... args)
+        std::shared_ptr<T> add_child(Args... args) requires std::is_base_of<Entity, T>::value
         {
-            static_assert(std::is_base_of<Entity, T>::value);
             auto entity = std::make_shared<T>(args...);
             add_child(entity);
             return std::static_pointer_cast<T>(entity);
@@ -36,9 +35,8 @@ namespace Birdy3d::ecs {
         [[nodiscard]] std::vector<std::shared_ptr<Component>> const& components() const { return m_components; }
         void add_component(std::shared_ptr<Component>);
         template <class T, typename... Args>
-        std::shared_ptr<T> add_component(Args... args)
+        std::shared_ptr<T> add_component(Args... args) requires std::is_base_of<Component, T>::value
         {
-            static_assert(std::is_base_of<Component, T>::value);
             auto component = std::make_shared<T>(args...);
             add_component(component);
             return std::static_pointer_cast<T>(component);
