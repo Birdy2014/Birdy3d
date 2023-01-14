@@ -16,18 +16,18 @@ namespace Birdy3d::physics {
 
     class Collision {
     public:
-        Collider* collider_a;
-        Collider* collider_b;
+        ColliderComponent const& collider_component_a;
+        ColliderComponent const& collider_component_b;
         CollisionPoints points;
 
-        Collision(Collider* collider_a, Collider* collider_b)
-            : collider_a(collider_a)
-            , collider_b(collider_b)
+        Collision(ColliderComponent const& collider_a, ColliderComponent const& collider_b)
+            : collider_component_a(collider_a)
+            , collider_component_b(collider_b)
         { }
 
-        bool contains(Collider* collider)
+        [[nodiscard]] bool contains(ColliderComponent const& collider_component) const
         {
-            return collider == collider_a || collider == collider_b;
+            return &collider_component == &collider_component_a || &collider_component == &collider_component_b;
         }
     };
 
