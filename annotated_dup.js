@@ -30,11 +30,16 @@ var annotated_dup =
         [ "WindowResizeEvent", "classBirdy3d_1_1events_1_1WindowResizeEvent.html", null ]
       ] ],
       [ "physics", null, [
-        [ "Collider", "classBirdy3d_1_1physics_1_1Collider.html", "classBirdy3d_1_1physics_1_1Collider" ],
+        [ "Collider", "classBirdy3d_1_1physics_1_1Collider.html", null ],
+        [ "ColliderComponent", "classBirdy3d_1_1physics_1_1ColliderComponent.html", "classBirdy3d_1_1physics_1_1ColliderComponent" ],
         [ "Collision", "classBirdy3d_1_1physics_1_1Collision.html", null ],
+        [ "CollisionMesh", "classBirdy3d_1_1physics_1_1CollisionMesh.html", null ],
         [ "CollisionPoints", "classBirdy3d_1_1physics_1_1CollisionPoints.html", null ],
+        [ "CollisionShape", "classBirdy3d_1_1physics_1_1CollisionShape.html", null ],
+        [ "CollisionSphere", "classBirdy3d_1_1physics_1_1CollisionSphere.html", null ],
         [ "ConvexMeshGenerators", "classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html", null ],
         [ "IntermediateMesh", "classBirdy3d_1_1physics_1_1IntermediateMesh.html", null ],
+        [ "Mesh", "structBirdy3d_1_1physics_1_1Mesh.html", null ],
         [ "PhysicsWorld", "classBirdy3d_1_1physics_1_1PhysicsWorld.html", null ],
         [ "Triangle", "structBirdy3d_1_1physics_1_1Triangle.html", "structBirdy3d_1_1physics_1_1Triangle" ]
       ] ],

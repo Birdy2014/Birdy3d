@@ -8,11 +8,16 @@ var hierarchy =
     ] ],
     [ "Birdy3d::serializer::Bool", "structBirdy3d_1_1serializer_1_1Bool.html", null ],
     [ "Birdy3d::ui::Character", "structBirdy3d_1_1ui_1_1Character.html", null ],
+    [ "Birdy3d::physics::Collider", "classBirdy3d_1_1physics_1_1Collider.html", null ],
     [ "Birdy3d::physics::Collision", "classBirdy3d_1_1physics_1_1Collision.html", null ],
     [ "Birdy3d::physics::CollisionPoints", "classBirdy3d_1_1physics_1_1CollisionPoints.html", null ],
+    [ "Birdy3d::physics::CollisionShape", "classBirdy3d_1_1physics_1_1CollisionShape.html", [
+      [ "Birdy3d::physics::CollisionMesh", "classBirdy3d_1_1physics_1_1CollisionMesh.html", null ],
+      [ "Birdy3d::physics::CollisionSphere", "classBirdy3d_1_1physics_1_1CollisionSphere.html", null ]
+    ] ],
     [ "Birdy3d::utils::Color", "classBirdy3d_1_1utils_1_1Color.html", null ],
     [ "Birdy3d::ecs::Component", "classBirdy3d_1_1ecs_1_1Component.html", [
-      [ "Birdy3d::physics::Collider", "classBirdy3d_1_1physics_1_1Collider.html", null ],
+      [ "Birdy3d::physics::ColliderComponent", "classBirdy3d_1_1physics_1_1ColliderComponent.html", null ],
       [ "Birdy3d::render::Camera", "classBirdy3d_1_1render_1_1Camera.html", null ],
       [ "Birdy3d::render::DirectionalLight", "classBirdy3d_1_1render_1_1DirectionalLight.html", null ],
       [ "Birdy3d::render::ModelComponent", "classBirdy3d_1_1render_1_1ModelComponent.html", null ],
@@ -65,6 +70,7 @@ var hierarchy =
     ] ],
     [ "Birdy3d::core::Logger", "classBirdy3d_1_1core_1_1Logger.html", null ],
     [ "Birdy3d::render::Material", "classBirdy3d_1_1render_1_1Material.html", null ],
+    [ "Birdy3d::physics::Mesh", "structBirdy3d_1_1physics_1_1Mesh.html", null ],
     [ "Birdy3d::render::Mesh", "classBirdy3d_1_1render_1_1Mesh.html", null ],
     [ "Birdy3d::render::Model", "classBirdy3d_1_1render_1_1Model.html", null ],
     [ "Birdy3d::serializer::Null", "structBirdy3d_1_1serializer_1_1Null.html", null ],
@@ -94,6 +100,7 @@ var hierarchy =
     [ "Birdy3d::serializer::Reflector", "classBirdy3d_1_1serializer_1_1Reflector.html", null ],
     [ "Birdy3d::render::Rendertarget", "classBirdy3d_1_1render_1_1Rendertarget.html", null ],
     [ "Birdy3d::core::ResourceHandle< T >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
+    [ "Birdy3d::core::ResourceHandle< Birdy3d::physics::Collider >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
     [ "Birdy3d::core::ResourceHandle< Birdy3d::render::Model >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
     [ "Birdy3d::core::ResourceHandle< Birdy3d::render::Shader >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
     [ "Birdy3d::core::ResourceHandle< Birdy3d::render::Texture >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],

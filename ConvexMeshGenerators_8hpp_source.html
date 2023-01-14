@@ -98,34 +98,34 @@ $(document).ready(function(){initNavTree('ConvexMeshGenerators_8hpp_source.html'
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;core/Base.hpp&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;render/Forward.hpp&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span>Birdy3d::physics {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keyword">enum class</span> GenerationMode {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        NONE,</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        COPY,</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        HULL_MODEL,</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        HULL_MESHES,</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        DECOMPOSITION_MODEL,</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        DECOMPOSITION_MESHES</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    };</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">   18</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">ConvexMeshGenerators</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">static</span> std::shared_ptr&lt;render::Model&gt; generate_model(GenerationMode, <a class="code hl_class" href="classBirdy3d_1_1render_1_1Model.html">render::Model</a> <span class="keyword">const</span>&amp;);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">static</span> std::optional&lt;render::Mesh&gt; copy(<a class="code hl_class" href="classBirdy3d_1_1render_1_1Mesh.html">render::Mesh</a> <span class="keyword">const</span>&amp;);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">static</span> std::optional&lt;render::Mesh&gt; hull(<a class="code hl_class" href="classBirdy3d_1_1render_1_1Mesh.html">render::Mesh</a> <span class="keyword">const</span>&amp;);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">static</span> std::optional&lt;render::Mesh&gt; decomposition(<a class="code hl_class" href="classBirdy3d_1_1render_1_1Mesh.html">render::Mesh</a> <span class="keyword">const</span>&amp;);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    };</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
-<div class="ttc" id="aclassBirdy3d_1_1physics_1_1ConvexMeshGenerators_html"><div class="ttname"><a href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">Birdy3d::physics::ConvexMeshGenerators</a></div><div class="ttdef"><b>Definition:</b> ConvexMeshGenerators.hpp:18</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1render_1_1Mesh_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Mesh.html">Birdy3d::render::Mesh</a></div><div class="ttdef"><b>Definition:</b> Mesh.hpp:9</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1render_1_1Model_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Model.html">Birdy3d::render::Model</a></div><div class="ttdef"><b>Definition:</b> Model.hpp:14</div></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;physics/Forward.hpp&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;render/Forward.hpp&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span>Birdy3d::physics {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">enum class</span> GenerationMode {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        NONE,</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        COPY,</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        HULL_MODEL,</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        HULL_MESHES,</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        DECOMPOSITION_MODEL,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        DECOMPOSITION_MESHES</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    };</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">   19</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">ConvexMeshGenerators</a> {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keyword">static</span> std::shared_ptr&lt;Collider&gt; generate_collider(GenerationMode, std::shared_ptr&lt;render::Model&gt;);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">static</span> std::optional&lt;Mesh&gt; copy(<a class="code hl_struct" href="structBirdy3d_1_1physics_1_1Mesh.html">Mesh</a> <span class="keyword">const</span>&amp;);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">static</span> std::optional&lt;Mesh&gt; hull(<a class="code hl_struct" href="structBirdy3d_1_1physics_1_1Mesh.html">Mesh</a> <span class="keyword">const</span>&amp;);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">static</span> std::optional&lt;Mesh&gt; decomposition(<a class="code hl_struct" href="structBirdy3d_1_1physics_1_1Mesh.html">Mesh</a> <span class="keyword">const</span>&amp;);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    };</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
+<div class="ttc" id="aclassBirdy3d_1_1physics_1_1ConvexMeshGenerators_html"><div class="ttname"><a href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">Birdy3d::physics::ConvexMeshGenerators</a></div><div class="ttdef"><b>Definition:</b> ConvexMeshGenerators.hpp:19</div></div>
+<div class="ttc" id="astructBirdy3d_1_1physics_1_1Mesh_html"><div class="ttname"><a href="structBirdy3d_1_1physics_1_1Mesh.html">Birdy3d::physics::Mesh</a></div><div class="ttdef"><b>Definition:</b> IntermediateMesh.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
