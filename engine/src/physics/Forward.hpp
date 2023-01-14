@@ -6,6 +6,8 @@ namespace Birdy3d::physics {
     class ColliderComponent;
     class Collision;
     class CollisionMesh;
+    class CollisionShape;
+    class CollisionSphere;
     class CollisionPoints;
     class CollisionShape;
     class ConvexMeshGenerators;
