@@ -22,6 +22,9 @@
 
 // Physics
 #include "physics/Collider.hpp"
+#include "physics/ColliderComponent.hpp"
+#include "physics/CollisionMesh.hpp"
+#include "physics/CollisionShape.hpp"
 #include "physics/ConvexMeshGenerators.hpp"
 #include "physics/PhysicsWorld.hpp"
 

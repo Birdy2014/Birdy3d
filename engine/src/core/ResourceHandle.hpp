@@ -1,5 +1,6 @@
 #pragma once
 
+#include "physics/Forward.hpp"
 #include "render/Forward.hpp"
 #include "ui/Forward.hpp"
 #include "utils/serializer/Adapter.hpp"
@@ -44,6 +45,7 @@ namespace Birdy3d::core {
         explicit operator bool() const { return static_cast<bool>(m_ptr); }
         [[nodiscard]] std::shared_ptr<T> ptr() const { return m_ptr; }
         bool load() { return load(m_id); }
+        ResourceIdentifier const& id() { return m_id; }
 
         bool operator=(ResourceIdentifier new_id)
         {
@@ -86,6 +88,8 @@ namespace Birdy3d::core {
     bool ResourceHandle<render::Model>::load(ResourceIdentifier const& new_name);
     template <>
     bool ResourceHandle<render::Texture>::load(ResourceIdentifier const& new_name);
+    template <>
+    bool ResourceHandle<physics::Collider>::load(ResourceIdentifier const& new_name);
 
 }
 

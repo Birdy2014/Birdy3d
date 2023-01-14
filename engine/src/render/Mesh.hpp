@@ -41,7 +41,6 @@ namespace Birdy3d::render {
         void render(Shader const& shader, Material const& material) const;
         void render_depth() const;
         void render_wireframe() const;
-        [[nodiscard]] glm::vec3 find_furthest_point(const glm::vec3 direction) const;
 
     private:
         unsigned int m_vao, m_vbo, m_ebo;
