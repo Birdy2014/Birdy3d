@@ -99,23 +99,23 @@ $(document).ready(function(){initNavTree('Collision_8hpp_source.html',''); initR
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;physics/Forward.hpp&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span>Birdy3d::physics {</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1physics_1_1CollisionPoints.html">    8</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1physics_1_1CollisionPoints.html">CollisionPoints</a> {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        glm::vec3 furthest_a; <span class="comment">// Furthest point of A into B</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        glm::vec3 furthest_b; <span class="comment">// Furthest point of B into A</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        glm::vec3 normal; <span class="comment">// B – A normalized</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="keywordtype">float</span> depth; <span class="comment">// Length of B – A</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keywordtype">bool</span> has_collision = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span>Birdy3d::physics {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1physics_1_1CollisionPoints.html">    9</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1physics_1_1CollisionPoints.html">CollisionPoints</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        glm::vec3 furthest_a; <span class="comment">// Furthest point of A into B</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        glm::vec3 furthest_b; <span class="comment">// Furthest point of B into A</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        glm::vec3 normal; <span class="comment">// B – A normalized</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keywordtype">float</span> depth; <span class="comment">// Length of B – A</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    };</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1physics_1_1Collision.html">   17</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1physics_1_1Collision.html">Collision</a> {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <a class="code hl_class" href="classBirdy3d_1_1physics_1_1ColliderComponent.html">ColliderComponent</a> <span class="keyword">const</span>&amp; collider_component_a;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_class" href="classBirdy3d_1_1physics_1_1ColliderComponent.html">ColliderComponent</a> <span class="keyword">const</span>&amp; collider_component_b;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <a class="code hl_class" href="classBirdy3d_1_1physics_1_1CollisionPoints.html">CollisionPoints</a> points;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        std::optional&lt;CollisionPoints&gt; points;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <a class="code hl_class" href="classBirdy3d_1_1physics_1_1Collision.html">Collision</a>(<a class="code hl_class" href="classBirdy3d_1_1physics_1_1ColliderComponent.html">ColliderComponent</a> <span class="keyword">const</span>&amp; collider_a, <a class="code hl_class" href="classBirdy3d_1_1physics_1_1ColliderComponent.html">ColliderComponent</a> <span class="keyword">const</span>&amp; collider_b)</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            : collider_component_a(collider_a)</div>
@@ -130,7 +130,7 @@ $(document).ready(function(){initNavTree('Collision_8hpp_source.html',''); initR
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1physics_1_1ColliderComponent_html"><div class="ttname"><a href="classBirdy3d_1_1physics_1_1ColliderComponent.html">Birdy3d::physics::ColliderComponent</a></div><div class="ttdef"><b>Definition:</b> ColliderComponent.hpp:10</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1physics_1_1CollisionPoints_html"><div class="ttname"><a href="classBirdy3d_1_1physics_1_1CollisionPoints.html">Birdy3d::physics::CollisionPoints</a></div><div class="ttdef"><b>Definition:</b> Collision.hpp:8</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1physics_1_1CollisionPoints_html"><div class="ttname"><a href="classBirdy3d_1_1physics_1_1CollisionPoints.html">Birdy3d::physics::CollisionPoints</a></div><div class="ttdef"><b>Definition:</b> Collision.hpp:9</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1physics_1_1Collision_html"><div class="ttname"><a href="classBirdy3d_1_1physics_1_1Collision.html">Birdy3d::physics::Collision</a></div><div class="ttdef"><b>Definition:</b> Collision.hpp:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

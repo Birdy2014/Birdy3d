@@ -113,25 +113,29 @@ $(document).ready(function(){initNavTree('Transform_8hpp_source.html',''); initR
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Transform3d.html">Transform3d</a>(<a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a>*);</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Transform3d.html">Transform3d</a>(<a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Transform3d.html">Transform3d</a> <span class="keyword">const</span>&amp;);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keywordtype">void</span> update(<span class="keywordtype">bool</span> changed = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        glm::mat4 global_matrix();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        glm::mat4 local_matrix();</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        glm::vec3 world_position();</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        glm::vec3 world_orientation();</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        glm::vec3 world_scale();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordtype">void</span> serialize(<a class="code hl_class" href="classBirdy3d_1_1serializer_1_1Adapter.html">serializer::Adapter</a>&amp;);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        glm::mat4 m_global_matrix;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        glm::mat4 m_local_matrix;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a>* m_entity = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="comment">// Copies for change detection</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        glm::vec3 m_old_position = glm::vec3(0);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        glm::vec3 m_old_orientation = glm::vec3(0);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        glm::vec3 m_old_scale = glm::vec3(0);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    };</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        [[nodiscard]] glm::mat4 global_matrix() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        [[nodiscard]] glm::mat4 inverse_global_matrix() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        [[nodiscard]] glm::mat4 local_matrix() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        [[nodiscard]] glm::vec3 world_position() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        [[nodiscard]] glm::vec3 world_orientation() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        [[nodiscard]] glm::vec3 world_scale() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        [[nodiscard]] glm::vec3 local_to_global(glm::vec3) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        [[nodiscard]] glm::vec3 global_to_local(glm::vec3) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordtype">void</span> serialize(<a class="code hl_class" href="classBirdy3d_1_1serializer_1_1Adapter.html">serializer::Adapter</a>&amp;);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        glm::mat4 m_global_matrix;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        glm::mat4 m_local_matrix;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keyword">mutable</span> std::optional&lt;glm::mat4&gt; m_inverse_global_matrix;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_class" href="classBirdy3d_1_1ecs_1_1Entity.html">Entity</a>* m_entity = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// Copies for change detection</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        glm::vec3 m_old_position = glm::vec3(0);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        glm::vec3 m_old_orientation = glm::vec3(0);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        glm::vec3 m_old_scale = glm::vec3(0);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    };</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1ecs_1_1Entity_html"><div class="ttname"><a href="classBirdy3d_1_1ecs_1_1Entity.html">Birdy3d::ecs::Entity</a></div><div class="ttdef"><b>Definition:</b> Entity.hpp:10</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ecs_1_1Transform3d_html"><div class="ttname"><a href="classBirdy3d_1_1ecs_1_1Transform3d.html">Birdy3d::ecs::Transform3d</a></div><div class="ttdef"><b>Definition:</b> Transform.hpp:9</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1serializer_1_1Adapter_html"><div class="ttname"><a href="classBirdy3d_1_1serializer_1_1Adapter.html">Birdy3d::serializer::Adapter</a></div><div class="ttdef"><b>Definition:</b> Adapter.hpp:78</div></div>
