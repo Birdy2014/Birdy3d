@@ -48,22 +48,29 @@ namespace Birdy3d::ecs {
             child_entity->transform.update(changed);
     }
 
-    glm::mat4 Transform3d::global_matrix()
+    glm::mat4 Transform3d::global_matrix() const
     {
         return m_global_matrix;
     }
 
-    glm::mat4 Transform3d::local_matrix()
+    glm::mat4 Transform3d::inverse_global_matrix() const
+    {
+        if (!m_inverse_global_matrix.has_value())
+            m_inverse_global_matrix = glm::inverse(global_matrix());
+        return m_inverse_global_matrix.value();
+    }
+
+    glm::mat4 Transform3d::local_matrix() const
     {
         return m_local_matrix;
     }
 
-    glm::vec3 Transform3d::world_position()
+    glm::vec3 Transform3d::world_position() const
     {
-        return global_matrix() * glm::vec4(0, 0, 0, 1);
+        return local_to_global(glm::vec3(0.0f));
     }
 
-    glm::vec3 Transform3d::world_orientation()
+    glm::vec3 Transform3d::world_orientation() const
     {
         if (m_entity->parent)
             return m_entity->parent->transform.orientation + orientation;
@@ -71,12 +78,22 @@ namespace Birdy3d::ecs {
             return orientation;
     }
 
-    glm::vec3 Transform3d::world_scale()
+    glm::vec3 Transform3d::world_scale() const
     {
         if (m_entity->parent)
             return m_entity->parent->transform.scale * scale;
         else
             return scale;
+    }
+
+    glm::vec3 Transform3d::local_to_global(glm::vec3 local_point) const
+    {
+        return glm::vec3(global_matrix() * glm::vec4(local_point, 1.0f));
+    }
+
+    glm::vec3 Transform3d::global_to_local(glm::vec3 global_point) const
+    {
+        return glm::vec3(inverse_global_matrix() * glm::vec4(global_point, 1.0f));
     }
 
     void Transform3d::serialize(serializer::Adapter& adapter)

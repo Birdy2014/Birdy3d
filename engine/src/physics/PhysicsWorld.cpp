@@ -46,10 +46,10 @@ namespace Birdy3d::physics {
                 collision = &m_collisions.emplace_back(collider_component_1, collider_component_2);
             }
 
-            bool collided_last_frame = collision->points.has_collision;
-            CollisionPoints points = collider_1->compute_collision(*collider_1.get(), *collider_2.get(), collider_component_1.entity->transform.global_matrix(), collider_component_2.entity->transform.global_matrix());
-            collision->points = points;
-            if (points.has_collision) {
+            bool collided_last_frame = collision->points.has_value();
+            auto optional_points = collider_1->compute_collision(*collider_1.get(), *collider_2.get(), collider_component_1.entity->transform, collider_component_2.entity->transform);
+            collision->points = optional_points;
+            if (optional_points.has_value()) {
                 if (collided_last_frame)
                     core::Application::event_bus->emit<events::CollisionEvent>(collider_1, collider_2, events::CollisionEvent::COLLIDING);
                 else
