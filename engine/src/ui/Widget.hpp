@@ -34,12 +34,6 @@
 
 namespace Birdy3d::ui {
 
-    class Canvas;
-    class Rectangle;
-    class Text;
-    class Theme;
-    class Triangle;
-
     template <class T>
     concept is_widget = std::is_base_of_v<Widget, T>;
 

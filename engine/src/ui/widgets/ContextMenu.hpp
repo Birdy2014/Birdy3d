@@ -38,9 +38,6 @@ namespace Birdy3d::ui {
     private:
         int m_arrow_size;
         int m_half_arrow_size;
-        Rectangle* m_background_rect;
-        Rectangle* m_border_rect;
-        Triangle* m_submenu_triangle;
 
         [[nodiscard]] bool contains(glm::ivec2) const override;
 
