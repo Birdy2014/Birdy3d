@@ -135,47 +135,43 @@ $(document).ready(function(){initNavTree('ContextMenu_8hpp_source.html',''); ini
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordtype">int</span> m_arrow_size;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keywordtype">int</span> m_half_arrow_size;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a>* m_background_rect;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Rectangle.html">Rectangle</a>* m_border_rect;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        Triangle* m_submenu_triangle;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        [[nodiscard]] <span class="keywordtype">bool</span> contains(glm::ivec2) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordtype">void</span> draw_context_item_children(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a>&amp;);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordtype">bool</span> handle_context_item_children_click(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a>&amp;, <span class="keywordtype">bool</span> click);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        [[nodiscard]] <span class="keywordtype">bool</span> context_item_contains(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a> <span class="keyword">const</span>&amp;, glm::ivec2 point) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordtype">void</span> on_click(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a>&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordtype">void</span> on_key(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1KeyEvent.html">KeyEvent</a>&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordtype">void</span> on_focus_lost(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1FocusLostEvent.html">FocusLostEvent</a>&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    };</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1ui_1_1MenuBar.html">   56</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1ui_1_1MenuBar.html">MenuBar</a> : <span class="keyword">public</span> <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1MenuBar.html">MenuBar</a>(<a class="code hl_struct" href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Options</a>);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a>&amp; add_item(std::string);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordtype">void</span> remove_item(std::string);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        std::vector&lt;std::unique_ptr&lt;ContextMenu&gt;&gt; m_menus;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordtype">int</span> m_menu_gap = 20;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        [[nodiscard]] <span class="keywordtype">bool</span> contains(glm::ivec2) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordtype">void</span> draw_context_item_children(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a>&amp;);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordtype">bool</span> handle_context_item_children_click(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a>&amp;, <span class="keywordtype">bool</span> click);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        [[nodiscard]] <span class="keywordtype">bool</span> context_item_contains(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a> <span class="keyword">const</span>&amp;, glm::ivec2 point) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordtype">void</span> on_click(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a>&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordtype">void</span> on_key(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1KeyEvent.html">KeyEvent</a>&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordtype">void</span> on_focus_lost(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1FocusLostEvent.html">FocusLostEvent</a>&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    };</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1ui_1_1MenuBar.html">   53</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1ui_1_1MenuBar.html">MenuBar</a> : <span class="keyword">public</span> <a class="code hl_class" href="classBirdy3d_1_1ui_1_1Widget.html">Widget</a> {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1MenuBar.html">MenuBar</a>(<a class="code hl_struct" href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Options</a>);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <a class="code hl_class" href="classBirdy3d_1_1ui_1_1ContextItem.html">ContextItem</a>&amp; add_item(std::string);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordtype">void</span> remove_item(std::string);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        std::vector&lt;std::unique_ptr&lt;ContextMenu&gt;&gt; m_menus;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordtype">int</span> m_menu_gap = 20;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordtype">void</span> on_click(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a>&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    };</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordtype">void</span> on_click(<a class="code hl_class" href="classBirdy3d_1_1ui_1_1ClickEvent.html">ClickEvent</a>&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    };</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1ClickEvent_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1ClickEvent.html">Birdy3d::ui::ClickEvent</a></div><div class="ttdef"><b>Definition:</b> UIEvent.hpp:74</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1ContextItem_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1ContextItem.html">Birdy3d::ui::ContextItem</a></div><div class="ttdef"><b>Definition:</b> ContextMenu.hpp:7</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1ContextMenu_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1ContextMenu.html">Birdy3d::ui::ContextMenu</a></div><div class="ttdef"><b>Definition:</b> ContextMenu.hpp:28</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1FocusLostEvent_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1FocusLostEvent.html">Birdy3d::ui::FocusLostEvent</a></div><div class="ttdef"><b>Definition:</b> UIEvent.hpp:167</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1KeyEvent_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1KeyEvent.html">Birdy3d::ui::KeyEvent</a></div><div class="ttdef"><b>Definition:</b> UIEvent.hpp:94</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1ui_1_1MenuBar_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1MenuBar.html">Birdy3d::ui::MenuBar</a></div><div class="ttdef"><b>Definition:</b> ContextMenu.hpp:56</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1MenuBar_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1MenuBar.html">Birdy3d::ui::MenuBar</a></div><div class="ttdef"><b>Definition:</b> ContextMenu.hpp:53</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Rect_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Rect.html">Birdy3d::ui::Rect</a></div><div class="ttdef"><b>Definition:</b> Rect.hpp:8</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Rectangle_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Rectangle.html">Birdy3d::ui::Rectangle</a></div><div class="ttdef"><b>Definition:</b> Rectangle.hpp:9</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1TextDescription_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1TextDescription.html">Birdy3d::ui::TextDescription</a></div><div class="ttdef"><b>Definition:</b> Text.hpp:11</div></div>
-<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Widget_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:68</div></div>
-<div class="ttc" id="astructBirdy3d_1_1ui_1_1Widget_1_1Options_html"><div class="ttname"><a href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Birdy3d::ui::Widget::Options</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:70</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1ui_1_1Widget_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Widget.html">Birdy3d::ui::Widget</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:62</div></div>
+<div class="ttc" id="astructBirdy3d_1_1ui_1_1Widget_1_1Options_html"><div class="ttname"><a href="structBirdy3d_1_1ui_1_1Widget_1_1Options.html">Birdy3d::ui::Widget::Options</a></div><div class="ttdef"><b>Definition:</b> Widget.hpp:64</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
