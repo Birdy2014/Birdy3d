@@ -106,6 +106,16 @@ namespace Birdy3d::ui {
             return true;
         }
 
+        [[nodiscard]] int bottom() const
+        {
+            return m_position.y + m_size.y;
+        }
+
+        bool bottom(int y)
+        {
+            return height(y - top());
+        }
+
         [[nodiscard]] int width() const
         {
             return size().x;

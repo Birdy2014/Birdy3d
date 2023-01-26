@@ -152,7 +152,24 @@ namespace Birdy3d::ui {
 
     void OpenGLPainter::paint_text(glm::ivec2 position, TextDescription const& text) const
     {
-        core::Application::theme().text_renderer().render_text(text.text(), position.x, position.y, text.font_size());
+        auto bottom_position_y = position.y;
+        int line_height = text.font_size(); // FIXME: Add line_height() function to TextDescription
+
+        std::u32string output_text;
+        auto lines = text.lines();
+        for (auto it = lines.cbegin(); it != lines.cend(); ++it) {
+            bottom_position_y += line_height;
+
+            if (bottom_position_y < m_visible_rectangle.top() || bottom_position_y - line_height > m_visible_rectangle.bottom())
+                continue;
+
+            if (it + 1 != lines.cend())
+                output_text.append(*it + U'\n');
+            else
+                output_text.append(*it);
+        }
+
+        core::Application::theme().text_renderer().render_text(output_text, position.x, bottom_position_y - line_height, text.font_size());
     }
 
     void OpenGLPainter::recreate_projection_matrix(int viewport_width, int viewport_height)
