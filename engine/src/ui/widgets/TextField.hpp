@@ -15,9 +15,7 @@ namespace Birdy3d::ui {
 
         TextField(is_widget_options auto options)
             : Scrollable(options)
-        {
-            m_text = std::make_unique<Text>(0_px, std::string(), utils::Color::Name::FG, Placement::TOP_LEFT);
-        }
+        { }
 
         glm::ivec2 minimal_size() override;
         std::string text();
@@ -28,9 +26,17 @@ namespace Birdy3d::ui {
 
     protected:
         float m_side_padding = 2;
-        std::unique_ptr<Text> m_text;
+        TextDescription m_text;
         bool m_selecting = false;
         bool m_changed = false;
+
+        bool m_cursor_visible = false;
+        TextDescription::Position m_cursor_pos;
+        bool m_highlight_visible = false;
+
+        // highlight_start is inclusive, m_highlight_end is exclusive
+        TextDescription::Position m_highlight_start;
+        TextDescription::Position m_highlight_end;
 
         virtual void draw() override;
 
@@ -45,18 +51,18 @@ namespace Birdy3d::ui {
 
         void clear_selection();
         void late_update() override;
-        void scroll_if_needed(std::size_t cursor_pos);
+        void scroll_if_needed(TextDescription::Position cursor_pos);
         virtual glm::ivec2 content_size() override;
 
     private:
-        std::size_t char_index(glm::ivec2 pos);
+        TextDescription::Position char_index(glm::ivec2 pos);
 
         /**
          * @brief Pixel coordinates of a character in the text.
          *
          * The bottom right coordinates of the character, relative to the origin of m_text.
          */
-        glm::ivec2 coordinate_of_index(std::size_t index);
+        glm::ivec2 coordinate_of_index(TextDescription::Position);
     };
 
 }

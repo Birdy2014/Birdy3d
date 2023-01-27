@@ -3,7 +3,6 @@
 #include "core/Input.hpp"
 #include "ui/TextRenderer.hpp"
 #include "ui/Theme.hpp"
-#include "utils/Unicode.hpp"
 
 namespace Birdy3d::ui {
 
@@ -14,31 +13,25 @@ namespace Birdy3d::ui {
 
     std::string TextField::text()
     {
-        return *m_text;
+        return m_text.text();
     }
 
     void TextField::text(std::string text)
     {
-        std::u32string new_text = utils::Unicode::utf8_to_utf32(text);
-        if (new_text != *m_text)
-            m_changed = true;
-        *m_text = new_text;
+        m_text.text(text);
     }
 
     void TextField::append(std::string text)
     {
         m_changed = true;
-        *m_text += text;
+        m_text.append(text);
     }
 
     void TextField::clear()
     {
-        m_text->clear();
-        m_text->cursor_pos = 0;
+        m_text.clear();
         m_selecting = false;
-        m_text->highlight_visible = false;
-        m_text->highlight_start = 0;
-        m_text->highlight_end = 0;
+        m_highlight_visible = false;
         m_changed = true;
     }
 
@@ -54,12 +47,15 @@ namespace Birdy3d::ui {
             auto local_pos = core::Input::cursor_pos_int() - m_absolute_rect.position();
             auto scrolled_text_local_pos = local_pos - m_scroll_offset;
             auto char_pos = char_index(glm::ivec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
-            if (m_text->highlight_start == char_pos) {
-                m_text->highlight_visible = false;
+            if (m_highlight_start == char_pos) {
+                m_highlight_visible = false;
             } else {
-                m_text->highlight_end = char_pos + (m_text->highlight_start < char_pos ? -1 : 0);
-                m_text->highlight_visible = true;
-                scroll_if_needed(m_text->highlight_end);
+                if (m_highlight_start < char_pos)
+                    m_highlight_end = char_pos.previous_in(m_text);
+                else
+                    m_highlight_end = char_pos;
+                m_highlight_visible = true;
+                scroll_if_needed(m_highlight_end);
             }
         }
     }
@@ -80,14 +76,14 @@ namespace Birdy3d::ui {
             auto scrolled_text_local_pos = local_pos - m_scroll_offset;
             auto char_pos = char_index(glm::ivec2(scrolled_text_local_pos.x - m_side_padding, scrolled_text_local_pos.y));
             m_selecting = true;
-            m_text->highlight_start = char_pos;
-            m_text->cursor_visible = false;
-        } else if (event.action == GLFW_RELEASE && !m_text->highlight_visible) {
+            m_highlight_start = char_pos;
+            m_cursor_visible = false;
+        } else if (event.action == GLFW_RELEASE && !m_highlight_visible) {
             ungrab_cursor();
             m_selecting = false;
-            m_text->cursor_visible = true;
-            m_text->cursor_pos = m_text->highlight_start;
-            m_text->highlight_visible = false;
+            m_cursor_visible = true;
+            m_cursor_pos = m_highlight_start;
+            m_highlight_visible = false;
         } else if (event.action == GLFW_RELEASE) {
             ungrab_cursor();
             m_selecting = false;
@@ -99,70 +95,107 @@ namespace Birdy3d::ui {
         if (readonly || (event.action != GLFW_PRESS && event.action != GLFW_REPEAT))
             return;
 
+        // FIXME: Enter creates newline in multiline textfield
         if (event.key == GLFW_KEY_ENTER) {
             if (on_accept)
                 std::invoke(on_accept);
             return;
         }
 
-        if (m_text->highlight_visible) {
+        if (m_highlight_visible) {
             if (event.key == GLFW_KEY_DELETE || event.key == GLFW_KEY_BACKSPACE)
                 clear_selection();
             return;
         }
 
-        if (m_text->cursor_visible) {
+        if (m_cursor_visible) {
             switch (event.key) {
             case GLFW_KEY_DELETE:
-                if (m_text->cursor_pos == m_text->length())
+                if (m_cursor_pos == m_text.end())
                     break;
-                m_text->erase(m_text->cursor_pos);
+                m_text.erase_char(m_cursor_pos);
                 m_changed = true;
                 break;
             case GLFW_KEY_BACKSPACE:
-                if (m_text->cursor_pos == 0)
+                if (m_cursor_pos.is_zero())
                     break;
-                m_text->erase(m_text->cursor_pos - 1);
-                m_text->cursor_pos--;
+                m_cursor_pos = m_cursor_pos.previous_in(m_text);
+                m_text.erase_char(m_cursor_pos);
                 m_changed = true;
                 break;
             case GLFW_KEY_LEFT:
-                if (m_text->cursor_pos == 0)
+                if (m_cursor_pos.is_zero())
                     break;
-                m_text->cursor_pos--;
+                m_cursor_pos = m_cursor_pos.previous_in(m_text);
                 break;
             case GLFW_KEY_RIGHT:
-                if (m_text->cursor_pos == m_text->length())
-                    break;
-                m_text->cursor_pos++;
+                m_cursor_pos = m_cursor_pos.next_in(m_text);
                 break;
             case GLFW_KEY_UP: {
                 if (!multiline)
                     break;
-                auto const cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
+                auto const cursor_pixel_pos = coordinate_of_index(m_cursor_pos);
                 auto const line_height = core::Application::theme().line_height();
-                m_text->cursor_pos = char_index({cursor_pixel_pos.x, cursor_pixel_pos.y - line_height * 2.0f});
+                m_cursor_pos = char_index({cursor_pixel_pos.x, cursor_pixel_pos.y - line_height * 2.0f});
                 break;
             }
             case GLFW_KEY_DOWN: {
                 if (!multiline)
                     break;
-                auto const cursor_pixel_pos = coordinate_of_index(m_text->cursor_pos);
-                m_text->cursor_pos = char_index({cursor_pixel_pos.x, cursor_pixel_pos.y});
+                auto const cursor_pixel_pos = coordinate_of_index(m_cursor_pos);
+                m_cursor_pos = char_index({cursor_pixel_pos.x, cursor_pixel_pos.y});
                 break;
             }
             }
         }
-        scroll_if_needed(m_text->cursor_pos);
+        scroll_if_needed(m_cursor_pos);
     }
 
     void TextField::draw()
     {
-        auto color_input_bg = core::Application::theme().color(utils::Color::Name::BG_INPUT);
+        auto& theme = core::Application::theme();
+        auto color_fg = theme.color(utils::Color::Name::FG);
+        auto color_input_bg = theme.color(utils::Color::Name::BG_INPUT);
         paint_background(color_input_bg);
 
-        auto move = glm::translate(glm::mat4(1.0f), glm::vec3(m_absolute_rect.position() - m_scroll_offset, 0.0f));
-        m_text->draw(move);
+        paint_text(-m_scroll_offset, m_text);
+
+        if (m_cursor_visible) {
+            auto cursor_screen_position = coordinate_of_index(m_cursor_pos) - glm::ivec2(1, theme.line_height());
+
+            auto cursor_rectangle = Rect::from_position_and_size(cursor_screen_position, glm::ivec2(2, m_text.font_size()));
+            paint_rectangle_filled(cursor_rectangle, color_fg);
+        }
+
+        if (m_highlight_visible) {
+            auto color_highlight = theme.color(utils::Color::Name::TEXT_HIGHLIGHT);
+
+            auto hlstart = m_highlight_start;
+            auto hlend = m_highlight_end;
+            if (hlstart > m_text.end())
+                hlstart = m_text.end();
+            if (hlend > m_text.end())
+                hlend = m_text.end();
+
+            if (hlstart != hlend.next_in(m_text)) {
+                if (hlstart > hlend) {
+                    std::swap(hlstart, hlend);
+                    hlend = hlend.previous_in(m_text);
+                }
+
+                for (auto row = hlstart.row; row <= hlend.row; ++row) {
+                    auto start_column = row == hlstart.row ? hlstart.column : 0;
+                    auto end_column = row == hlend.row ? hlend.column : m_text.lines()[row].length() - 1;
+
+                    auto hlstart_pos = coordinate_of_index(TextDescription::Position{.row = row, .column = start_column}) - glm::ivec2(0, theme.line_height() + 2);
+                    auto hlend_pos = coordinate_of_index(TextDescription::Position{.row = row, .column = end_column + 1}) - glm::ivec2(0, 2);
+
+                    auto highlight_rectangle = Rect::from_top_left_and_bottom_right(hlstart_pos, hlend_pos);
+
+                    paint_rectangle_filled(highlight_rectangle, color_highlight);
+                }
+            }
+        }
 
         if (multiline)
             Scrollable::draw();
@@ -175,16 +208,16 @@ namespace Birdy3d::ui {
 
         clear_selection();
 
-        if (!m_text->cursor_visible || m_text->cursor_pos > m_text->length())
+        if (!m_cursor_visible || (!m_text.contains(m_cursor_pos) && m_cursor_pos != m_text.end()))
             return;
 
         char32_t c[2];
         c[0] = event.codepoint;
         c[1] = 0;
-        m_text->insert(m_text->cursor_pos, c);
-        m_text->cursor_pos++;
+        m_text.insert_u32(m_cursor_pos, c);
+        m_cursor_pos.column++;
         m_changed = true;
-        scroll_if_needed(m_text->cursor_pos);
+        scroll_if_needed(m_cursor_pos);
     }
 
     void TextField::on_mouse_enter(MouseEnterEvent&)
@@ -201,23 +234,23 @@ namespace Birdy3d::ui {
 
     void TextField::on_focus_lost(FocusLostEvent&)
     {
-        m_text->cursor_visible = false;
+        m_cursor_visible = false;
     }
 
     void TextField::clear_selection()
     {
-        if (!m_text->highlight_visible)
+        if (!m_highlight_visible)
             return;
-        if (m_text->highlight_start > m_text->highlight_end)
-            std::swap(m_text->highlight_start, m_text->highlight_end);
+
+        if (m_highlight_start > m_highlight_end)
+            std::swap(m_highlight_start, m_highlight_end);
         else
-            m_text->highlight_end++;
-        m_text->erase(m_text->highlight_start, m_text->highlight_end);
-        m_text->cursor_visible = true;
-        m_text->cursor_pos = m_text->highlight_start;
-        m_text->highlight_start = 0;
-        m_text->highlight_end = 0;
-        m_text->highlight_visible = false;
+            m_highlight_end = m_highlight_end.next_in(m_text);
+
+        m_text.erase(m_highlight_start, m_highlight_end.previous_in(m_text));
+        m_cursor_visible = true;
+        m_cursor_pos = m_highlight_start;
+        m_highlight_visible = false;
         m_selecting = false;
     }
 
@@ -231,7 +264,7 @@ namespace Birdy3d::ui {
         }
     }
 
-    void TextField::scroll_if_needed(std::size_t cursor_pos)
+    void TextField::scroll_if_needed(TextDescription::Position cursor_pos)
     {
         auto const cursor_pixel_pos = coordinate_of_index(cursor_pos) + m_scroll_offset;
         auto const line_height = core::Application::theme().line_height();
@@ -251,52 +284,55 @@ namespace Birdy3d::ui {
 
     glm::ivec2 TextField::content_size()
     {
-        return m_text->size().to_pixels();
+        return m_text.text_size();
     }
 
-    std::size_t TextField::char_index(glm::ivec2 pos)
+    TextDescription::Position TextField::char_index(glm::ivec2 pos)
     {
         float width = 0;
         float height = core::Application::theme().line_height();
         float current_char_width;
-        for (size_t i = 0; i < m_text->length(); i++) {
-            if (m_text->text()[i] == '\x1B') {
-                i++; // Go to color
-                if (i >= m_text->length())
+        for (TextDescription::Position i; i < m_text.end(); i = i.next_in(m_text)) {
+            auto optional_current = m_text.at_u32(i);
+            assert(optional_current.has_value());
+            auto current_char = optional_current.value();
+
+            if (current_char == U'\x1B') {
+                i = i.next_in(m_text); // Go to color
+                if (i >= m_text.end())
                     break;
                 continue;
             }
-            if (m_text->text()[i] == '\n') {
+            if (current_char == U'\n') {
                 if (pos.y < height)
                     return i;
                 width = 0;
                 height += core::Application::theme().line_height();
                 continue;
             }
-            width += current_char_width = core::Application::theme().text_renderer().char_width(m_text->text()[i], m_text->font_size);
+            width += current_char_width = core::Application::theme().text_renderer().char_width(current_char, m_text.font_size());
             if (pos.y < height && (pos.x < width - current_char_width / 2))
                 return i;
         }
-        return m_text->length();
+        return m_text.end();
     }
 
-    glm::ivec2 TextField::coordinate_of_index(std::size_t index)
+    glm::ivec2 TextField::coordinate_of_index(TextDescription::Position index)
     {
         auto const line_height = core::Application::theme().line_height();
-        glm::ivec2 pos = {0.0f, line_height};
-        for (std::size_t i = 0; i < m_text->length() && i < index; ++i) {
-            if (m_text->text()[i] == '\x1B') {
-                i++; // Go to color
-                if (i >= m_text->length() || i >= index)
+        glm::ivec2 pos = {0, line_height * (index.row + 1)};
+        for (TextDescription::Position current_position{.row = index.row}; m_text.contains(current_position) && current_position.column < index.column; ++current_position.column) {
+            auto optional_current = m_text.at_u32(current_position);
+            assert(optional_current.has_value());
+            auto current_char = optional_current.value();
+
+            if (current_char == U'\x1B') {
+                current_position = current_position.next_in(m_text); // Go to color
+                if (!m_text.contains(current_position) || current_position.column >= index.column)
                     break;
                 continue;
             }
-            if (m_text->text()[i] == '\n') {
-                pos.x = 0.0f;
-                pos.y += line_height;
-                continue;
-            }
-            pos.x += core::Application::theme().text_renderer().char_width(m_text->text()[i], m_text->font_size);
+            pos.x += core::Application::theme().text_renderer().char_width(current_char, m_text.font_size());
         }
         return pos;
     }
