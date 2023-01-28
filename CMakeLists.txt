@@ -37,3 +37,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/out/bin)
 
 add_subdirectory(engine)
 add_subdirectory(sandbox)
+add_subdirectory(test)
