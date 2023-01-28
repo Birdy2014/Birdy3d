@@ -2,6 +2,7 @@
 
 #include "core/Logger.hpp"
 #include <iomanip>
+#include <regex>
 #include <sstream>
 
 namespace Birdy3d::utils {
@@ -58,24 +59,22 @@ namespace Birdy3d::utils {
 
     glm::vec4 Color::parse(std::string const& color_string)
     {
-        bool has_hash = color_string.at(0) == '#';
+        std::regex const color_regex("#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?");
 
-        int color_length;
-        if ((int)color_string.length() == 6 + has_hash || (int)color_string.length() == 8 + has_hash) {
-            color_length = 2;
-        } else if ((int)color_string.length() == 3 + has_hash) {
-            color_length = 1;
-        } else {
+        std::smatch matches;
+        if (!std::regex_match(color_string, matches, color_regex)) {
             core::Logger::warn("Invalid color: {}", color_string);
             return glm::vec4(1);
         }
 
         glm::vec4 color(1);
-
-        for (size_t pos = has_hash; pos < color_string.length(); pos += color_length) {
-            int nr = std::stoi(color_string.substr(pos, color_length), nullptr, 16);
-            color[pos / color_length] = nr / (std::pow(16, color_length) - 1);
+        for (std::size_t i = 1; i < matches.size(); ++i) {
+            if (!matches[i].matched)
+                continue;
+            auto nr = std::stoi(matches[i], nullptr, 16);
+            color[i - 1] = nr / 255.0f;
         }
+
         return color;
     }
 
