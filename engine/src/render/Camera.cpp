@@ -255,6 +255,7 @@ namespace Birdy3d::render {
 
         target->bind();
         glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_FRAMEBUFFER_SRGB);
         m_deferred_light_shader->set_int("gbuffer_position", 0);
         m_deferred_light_shader->set_int("gbuffer_normal", 1);
         m_deferred_light_shader->set_int("gbuffer_albedo_spec", 2);
@@ -262,6 +263,7 @@ namespace Birdy3d::render {
         m_deferred_light_shader->set_mat4("view", m_view);
         m_deferred_light_shader->set_vec3("view_pos", entity->transform.world_position());
         render_quad();
+        glDisable(GL_FRAMEBUFFER_SRGB);
     }
 
     void Camera::render_forward(bool render_opaque)
@@ -269,6 +271,7 @@ namespace Birdy3d::render {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_FRAMEBUFFER_SRGB);
         m_forward_shader.arg("SHADOW_CASCADE_SIZE", core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE));
         for (size_t i = 0; i < m_dirlights.size(); i++)
             m_dirlights[i]->use(*m_forward_shader, i, 4 + i);
@@ -306,6 +309,7 @@ namespace Birdy3d::render {
         for (auto it = sorted.rbegin(); it != sorted.rend(); it++) {
             it->second->render(*m_forward_shader, true);
         }
+        glDisable(GL_FRAMEBUFFER_SRGB);
     }
 
     void Camera::render_normals()
