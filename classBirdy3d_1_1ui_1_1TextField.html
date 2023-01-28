@@ -280,9 +280,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_selection</b> (
 <tr class="separator:af5bfa664157a19dbb2f1fadef40d916a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8ad9d5382928330ac3b3a0a668766ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#ab8ad9d5382928330ac3b3a0a668766ed">late_update</a> () override</td></tr>
 <tr class="separator:ab8ad9d5382928330ac3b3a0a668766ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3807b9da0ae40bca35577413ae6cbe74"><td class="memItemLeft" align="right" valign="top"><a id="a3807b9da0ae40bca35577413ae6cbe74" name="a3807b9da0ae40bca35577413ae6cbe74"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>scroll_if_needed</b> (std::size_t cursor_pos)</td></tr>
-<tr class="separator:a3807b9da0ae40bca35577413ae6cbe74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bcb9b73c7c461214a387fd92dc2060a"><td class="memItemLeft" align="right" valign="top"><a id="a1bcb9b73c7c461214a387fd92dc2060a" name="a1bcb9b73c7c461214a387fd92dc2060a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scroll_if_needed</b> (<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">TextDescription::Position</a> cursor_pos)</td></tr>
+<tr class="separator:a1bcb9b73c7c461214a387fd92dc2060a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e601ea3ae8684422efb0405f7940f66"><td class="memItemLeft" align="right" valign="top">virtual glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextField.html#a1e601ea3ae8684422efb0405f7940f66">content_size</a> () override</td></tr>
 <tr class="separator:a1e601ea3ae8684422efb0405f7940f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classBirdy3d_1_1ui_1_1Scrollable"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBirdy3d_1_1ui_1_1Scrollable')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html">Birdy3d::ui::Scrollable</a></td></tr>
@@ -403,15 +403,30 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ae9e2b0eea4a9e1f9432aaf151bfa103d"><td class="memItemLeft" align="right" valign="top"><a id="ae9e2b0eea4a9e1f9432aaf151bfa103d" name="ae9e2b0eea4a9e1f9432aaf151bfa103d"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>m_side_padding</b> = 2</td></tr>
 <tr class="separator:ae9e2b0eea4a9e1f9432aaf151bfa103d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af364e4125381476dd44f5b83b5b4c501"><td class="memItemLeft" align="right" valign="top"><a id="af364e4125381476dd44f5b83b5b4c501" name="af364e4125381476dd44f5b83b5b4c501"></a>
-std::unique_ptr&lt; <a class="el" href="classBirdy3d_1_1ui_1_1Text.html">Text</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_text</b></td></tr>
-<tr class="separator:af364e4125381476dd44f5b83b5b4c501"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b8b392f00345a8ba43544aa39f92fff"><td class="memItemLeft" align="right" valign="top"><a id="a9b8b392f00345a8ba43544aa39f92fff" name="a9b8b392f00345a8ba43544aa39f92fff"></a>
+<a class="el" href="classBirdy3d_1_1ui_1_1TextDescription.html">TextDescription</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_text</b></td></tr>
+<tr class="separator:a9b8b392f00345a8ba43544aa39f92fff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08a1b1e09515da5976e10f92907214c3"><td class="memItemLeft" align="right" valign="top"><a id="a08a1b1e09515da5976e10f92907214c3" name="a08a1b1e09515da5976e10f92907214c3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_selecting</b> = false</td></tr>
 <tr class="separator:a08a1b1e09515da5976e10f92907214c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a886e4b9d22e73bfb9be4098ac58131ba"><td class="memItemLeft" align="right" valign="top"><a id="a886e4b9d22e73bfb9be4098ac58131ba" name="a886e4b9d22e73bfb9be4098ac58131ba"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_changed</b> = false</td></tr>
 <tr class="separator:a886e4b9d22e73bfb9be4098ac58131ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4dcc03124ed3ceddba07d36297618c3"><td class="memItemLeft" align="right" valign="top"><a id="ad4dcc03124ed3ceddba07d36297618c3" name="ad4dcc03124ed3ceddba07d36297618c3"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_cursor_visible</b> = false</td></tr>
+<tr class="separator:ad4dcc03124ed3ceddba07d36297618c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c6e6c2698949908a49219f5d4f8de6"><td class="memItemLeft" align="right" valign="top"><a id="a68c6e6c2698949908a49219f5d4f8de6" name="a68c6e6c2698949908a49219f5d4f8de6"></a>
+<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">TextDescription::Position</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_cursor_pos</b></td></tr>
+<tr class="separator:a68c6e6c2698949908a49219f5d4f8de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a531d65ad22354e032dcd7c0c70364597"><td class="memItemLeft" align="right" valign="top"><a id="a531d65ad22354e032dcd7c0c70364597" name="a531d65ad22354e032dcd7c0c70364597"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_highlight_visible</b> = false</td></tr>
+<tr class="separator:a531d65ad22354e032dcd7c0c70364597"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff0531c7e3490e9989a60043f8787ca5"><td class="memItemLeft" align="right" valign="top"><a id="aff0531c7e3490e9989a60043f8787ca5" name="aff0531c7e3490e9989a60043f8787ca5"></a>
+<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">TextDescription::Position</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_highlight_start</b></td></tr>
+<tr class="separator:aff0531c7e3490e9989a60043f8787ca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c23ea717e8ff5100c005ed7d98c2fbd"><td class="memItemLeft" align="right" valign="top"><a id="a7c23ea717e8ff5100c005ed7d98c2fbd" name="a7c23ea717e8ff5100c005ed7d98c2fbd"></a>
+<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">TextDescription::Position</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_highlight_end</b></td></tr>
+<tr class="separator:a7c23ea717e8ff5100c005ed7d98c2fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classBirdy3d_1_1ui_1_1Scrollable"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classBirdy3d_1_1ui_1_1Scrollable')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classBirdy3d_1_1ui_1_1Scrollable.html">Birdy3d::ui::Scrollable</a></td></tr>
 <tr class="memitem:a8627b92566d8986392eafdfe702b335d inherit pro_attribs_classBirdy3d_1_1ui_1_1Scrollable"><td class="memItemLeft" align="right" valign="top"><a id="a8627b92566d8986392eafdfe702b335d" name="a8627b92566d8986392eafdfe702b335d"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_horizontal_scroll_enabled</b> = true</td></tr>

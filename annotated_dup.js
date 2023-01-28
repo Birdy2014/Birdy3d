@@ -123,7 +123,7 @@ var annotated_dup =
         [ "Size", "classBirdy3d_1_1ui_1_1Size.html", null ],
         [ "StaticGridLayout", "classBirdy3d_1_1ui_1_1StaticGridLayout.html", "classBirdy3d_1_1ui_1_1StaticGridLayout" ],
         [ "Text", "classBirdy3d_1_1ui_1_1Text.html", null ],
-        [ "TextDescription", "classBirdy3d_1_1ui_1_1TextDescription.html", null ],
+        [ "TextDescription", "classBirdy3d_1_1ui_1_1TextDescription.html", "classBirdy3d_1_1ui_1_1TextDescription" ],
         [ "TextField", "classBirdy3d_1_1ui_1_1TextField.html", null ],
         [ "TextRenderer", "classBirdy3d_1_1ui_1_1TextRenderer.html", null ],
         [ "TextVertex", "structBirdy3d_1_1ui_1_1TextVertex.html", null ],

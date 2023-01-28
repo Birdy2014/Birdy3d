@@ -46,7 +46,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "Adapter_8hpp_source.html",
-"structBirdy3d_1_1physics_1_1Triangle.html"
+"structBirdy3d_1_1physics_1_1Mesh.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -93,12 +93,18 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1ui_1_1TextDescription.
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classBirdy3d_1_1ui_1_1TextDescription-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Birdy3d::ui::TextDescription Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0b8eb98739ef0ddb87ed39020b0822bf"><td class="memItemLeft" align="right" valign="top"><a id="a0b8eb98739ef0ddb87ed39020b0822bf" name="a0b8eb98739ef0ddb87ed39020b0822bf"></a>
@@ -107,6 +113,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a672143de66fe5669360ab756bcc89445"><td class="memItemLeft" align="right" valign="top"><a id="a672143de66fe5669360ab756bcc89445" name="a672143de66fe5669360ab756bcc89445"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TextDescription</b> (std::string text, unsigned int font_size=0)</td></tr>
 <tr class="separator:a672143de66fe5669360ab756bcc89445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c593a385493ba710d7e711fddc3a205"><td class="memItemLeft" align="right" valign="top"><a id="a0c593a385493ba710d7e711fddc3a205" name="a0c593a385493ba710d7e711fddc3a205"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
+<tr class="separator:a0c593a385493ba710d7e711fddc3a205"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a845e919ecc8b1418a8d88ef82c1673bd"><td class="memItemLeft" align="right" valign="top"><a id="a845e919ecc8b1418a8d88ef82c1673bd" name="a845e919ecc8b1418a8d88ef82c1673bd"></a>
+std::optional&lt; char32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>at_u32</b> (<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a> position) const</td></tr>
+<tr class="separator:a845e919ecc8b1418a8d88ef82c1673bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31f5be5e1085ba9bc1124d5ea8276a77"><td class="memItemLeft" align="right" valign="top"><a id="a31f5be5e1085ba9bc1124d5ea8276a77" name="a31f5be5e1085ba9bc1124d5ea8276a77"></a>
 std::vector&lt; std::u32string &gt; const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>lines</b> () const</td></tr>
 <tr class="separator:a31f5be5e1085ba9bc1124d5ea8276a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,6 +134,29 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>text</b> () co
 <tr class="memitem:a79f7625ab37617b03e6bd87b19c0b854"><td class="memItemLeft" align="right" valign="top"><a id="a79f7625ab37617b03e6bd87b19c0b854" name="a79f7625ab37617b03e6bd87b19c0b854"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>text</b> (std::string text)</td></tr>
 <tr class="separator:a79f7625ab37617b03e6bd87b19c0b854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a472629ccc0dbac5861fcb65810e3dc39"><td class="memItemLeft" align="right" valign="top"><a id="a472629ccc0dbac5861fcb65810e3dc39" name="a472629ccc0dbac5861fcb65810e3dc39"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>append_u32</b> (std::u32string_view text)</td></tr>
+<tr class="separator:a472629ccc0dbac5861fcb65810e3dc39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1b27b55845ff4907c677f3b006db5fb"><td class="memItemLeft" align="right" valign="top"><a id="aa1b27b55845ff4907c677f3b006db5fb" name="aa1b27b55845ff4907c677f3b006db5fb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>append</b> (std::string const &amp;text)</td></tr>
+<tr class="separator:aa1b27b55845ff4907c677f3b006db5fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79fb8e81ae07e0d9158ad1d092f189b7"><td class="memItemLeft" align="right" valign="top"><a id="a79fb8e81ae07e0d9158ad1d092f189b7" name="a79fb8e81ae07e0d9158ad1d092f189b7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>append_line_u32</b> (std::u32string_view text)</td></tr>
+<tr class="separator:a79fb8e81ae07e0d9158ad1d092f189b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a426eb02c0f5f0871fd0c2b883db5f02a"><td class="memItemLeft" align="right" valign="top"><a id="a426eb02c0f5f0871fd0c2b883db5f02a" name="a426eb02c0f5f0871fd0c2b883db5f02a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>append_line</b> (std::string const &amp;text)</td></tr>
+<tr class="separator:a426eb02c0f5f0871fd0c2b883db5f02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d0400c21ca249aa087590be0e368a46"><td class="memItemLeft" align="right" valign="top"><a id="a7d0400c21ca249aa087590be0e368a46" name="a7d0400c21ca249aa087590be0e368a46"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>insert_u32</b> (<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a> position, std::u32string_view text)</td></tr>
+<tr class="separator:a7d0400c21ca249aa087590be0e368a46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3358eb2b7b13488d6259d839410b774a"><td class="memItemLeft" align="right" valign="top"><a id="a3358eb2b7b13488d6259d839410b774a" name="a3358eb2b7b13488d6259d839410b774a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>insert</b> (<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a> position, std::string const &amp;text)</td></tr>
+<tr class="separator:a3358eb2b7b13488d6259d839410b774a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ab611833dbf4f1ee23394d27ffe456e"><td class="memItemLeft" align="right" valign="top"><a id="a5ab611833dbf4f1ee23394d27ffe456e" name="a5ab611833dbf4f1ee23394d27ffe456e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_char</b> (<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a> const &amp;position)</td></tr>
+<tr class="separator:a5ab611833dbf4f1ee23394d27ffe456e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4312d51cd2a0c4e299e7725b7fe82871"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1ui_1_1TextDescription.html#a4312d51cd2a0c4e299e7725b7fe82871">erase</a> (<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a> const &amp;start, <a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a> const &amp;end)</td></tr>
+<tr class="separator:a4312d51cd2a0c4e299e7725b7fe82871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9589aefbb6fc2ac712d181d6633a161"><td class="memItemLeft" align="right" valign="top"><a id="ac9589aefbb6fc2ac712d181d6633a161" name="ac9589aefbb6fc2ac712d181d6633a161"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>font_size</b> () const</td></tr>
 <tr class="separator:ac9589aefbb6fc2ac712d181d6633a161"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,9 +166,47 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>font_size</b> (unsign
 <tr class="memitem:a3ed8684d0f146a269472d7a3d8f5d56c"><td class="memItemLeft" align="right" valign="top"><a id="a3ed8684d0f146a269472d7a3d8f5d56c" name="a3ed8684d0f146a269472d7a3d8f5d56c"></a>
 glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>text_size</b> () const</td></tr>
 <tr class="separator:a3ed8684d0f146a269472d7a3d8f5d56c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6945256233790bd944ffe274f8d61e50"><td class="memItemLeft" align="right" valign="top"><a id="a6945256233790bd944ffe274f8d61e50" name="a6945256233790bd944ffe274f8d61e50"></a>
+<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
+<tr class="separator:a6945256233790bd944ffe274f8d61e50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f59f32425ab63c35b0c47a91ce8d6e1"><td class="memItemLeft" align="right" valign="top"><a id="a8f59f32425ab63c35b0c47a91ce8d6e1" name="a8f59f32425ab63c35b0c47a91ce8d6e1"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (<a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">Position</a> const &amp;position) const</td></tr>
+<tr class="separator:a8f59f32425ab63c35b0c47a91ce8d6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4312d51cd2a0c4e299e7725b7fe82871" name="a4312d51cd2a0c4e299e7725b7fe82871"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4312d51cd2a0c4e299e7725b7fe82871">&#9670;&#160;</a></span>erase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Birdy3d::ui::TextDescription::erase </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">TextDescription::Position</a> const &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html">TextDescription::Position</a> const &amp;&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Erase range from start (inclusive) to end (exclusive).</p>
+<p>Erase range from start to end (inclusive). </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>engine/src/ui/<a class="el" href="Text_8hpp_source.html">Text.hpp</a></li>
+<li>engine/src/ui/Text.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

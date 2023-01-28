@@ -199,6 +199,7 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1ui_1_1StaticGridLayout.html#a935d20affd3f5e7714699a25efd2997e":[2,0,0,6,41,0],
 "classBirdy3d_1_1ui_1_1Text.html":[2,0,0,6,42],
 "classBirdy3d_1_1ui_1_1TextDescription.html":[2,0,0,6,43],
+"classBirdy3d_1_1ui_1_1TextDescription.html#a4312d51cd2a0c4e299e7725b7fe82871":[2,0,0,6,43,1],
 "classBirdy3d_1_1ui_1_1TextField.html":[2,0,0,6,44],
 "classBirdy3d_1_1ui_1_1TextRenderer.html":[2,0,0,6,45],
 "classBirdy3d_1_1ui_1_1Theme.html":[2,0,0,6,47],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "index.html#autotoc_md1":[0],
 "pages.html":[],
 "physics_2Forward_8hpp_source.html":[3,0,0,0,3,7],
-"render_2Forward_8hpp_source.html":[3,0,0,0,4,2],
-"structBirdy3d_1_1physics_1_1Mesh.html":[2,0,0,3,9]
+"render_2Forward_8hpp_source.html":[3,0,0,0,4,2]
 };

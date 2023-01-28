@@ -7,7 +7,7 @@ var searchData=
   ['physicsworld_4',['PhysicsWorld',['../classBirdy3d_1_1physics_1_1PhysicsWorld.html',1,'Birdy3d::physics']]],
   ['pointerregistry_5',['PointerRegistry',['../classBirdy3d_1_1serializer_1_1PointerRegistry.html',1,'Birdy3d::serializer']]],
   ['pointlight_6',['PointLight',['../classBirdy3d_1_1render_1_1PointLight.html',1,'Birdy3d::render']]],
-  ['position_7',['Position',['../classBirdy3d_1_1ui_1_1Position.html',1,'Birdy3d::ui']]],
+  ['position_7',['Position',['../classBirdy3d_1_1ui_1_1Position.html',1,'Birdy3d::ui::Position'],['../structBirdy3d_1_1ui_1_1TextDescription_1_1Position.html',1,'Birdy3d::ui::TextDescription::Position']]],
   ['prettyjsongenerator_8',['PrettyJsonGenerator',['../classBirdy3d_1_1serializer_1_1PrettyJsonGenerator.html',1,'Birdy3d::serializer']]],
   ['primitivegenerator_9',['PrimitiveGenerator',['../classBirdy3d_1_1utils_1_1PrimitiveGenerator.html',1,'Birdy3d::utils']]],
   ['print_10',['print',['../classBirdy3d_1_1ui_1_1Console.html#a31723769cbb3aeeb26c09acf3d43a8bb',1,'Birdy3d::ui::Console']]],
