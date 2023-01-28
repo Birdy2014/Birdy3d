@@ -18,6 +18,8 @@ namespace Birdy3d::ui {
 
     void TextField::text(std::string text)
     {
+        if (text != m_text.text())
+            m_changed = true;
         m_text.text(text);
     }
 
