@@ -43,6 +43,7 @@ namespace Birdy3d::ecs {
                 m_global_matrix = m_entity->parent->transform.global_matrix() * m_local_matrix;
             else
                 m_global_matrix = m_local_matrix;
+            m_inverse_global_matrix = {};
         }
         for (auto child_entity : m_entity->children())
             child_entity->transform.update(changed);
