@@ -40,6 +40,7 @@ var hierarchy =
       [ "Birdy3d::events::InputClickEvent", "classBirdy3d_1_1events_1_1InputClickEvent.html", null ],
       [ "Birdy3d::events::InputKeyEvent", "classBirdy3d_1_1events_1_1InputKeyEvent.html", null ],
       [ "Birdy3d::events::InputScrollEvent", "classBirdy3d_1_1events_1_1InputScrollEvent.html", null ],
+      [ "Birdy3d::events::ResourceLoadEvent", "classBirdy3d_1_1events_1_1ResourceLoadEvent.html", null ],
       [ "Birdy3d::events::TransformChangedEvent", "classBirdy3d_1_1events_1_1TransformChangedEvent.html", null ],
       [ "Birdy3d::events::WindowResizeEvent", "classBirdy3d_1_1events_1_1WindowResizeEvent.html", null ]
     ] ],
@@ -59,6 +60,7 @@ var hierarchy =
       [ "Birdy3d::events::FunctionHandler< EventType >", "classBirdy3d_1_1events_1_1FunctionHandler.html", null ],
       [ "Birdy3d::events::MemberFunctionHandler< T, EventType >", "classBirdy3d_1_1events_1_1MemberFunctionHandler.html", null ]
     ] ],
+    [ "Birdy3d::utils::Identifier", "classBirdy3d_1_1utils_1_1Identifier.html", null ],
     [ "Birdy3d::core::Input", "classBirdy3d_1_1core_1_1Input.html", null ],
     [ "Birdy3d::physics::IntermediateMesh", "classBirdy3d_1_1physics_1_1IntermediateMesh.html", null ],
     [ "Birdy3d::ui::Layout", "classBirdy3d_1_1ui_1_1Layout.html", [

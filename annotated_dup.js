@@ -26,6 +26,7 @@ var annotated_dup =
         [ "InputKeyEvent", "classBirdy3d_1_1events_1_1InputKeyEvent.html", null ],
         [ "InputScrollEvent", "classBirdy3d_1_1events_1_1InputScrollEvent.html", null ],
         [ "MemberFunctionHandler", "classBirdy3d_1_1events_1_1MemberFunctionHandler.html", null ],
+        [ "ResourceLoadEvent", "classBirdy3d_1_1events_1_1ResourceLoadEvent.html", null ],
         [ "TransformChangedEvent", "classBirdy3d_1_1events_1_1TransformChangedEvent.html", null ],
         [ "WindowResizeEvent", "classBirdy3d_1_1events_1_1WindowResizeEvent.html", null ]
       ] ],
@@ -140,6 +141,7 @@ var annotated_dup =
       [ "utils", null, [
         [ "Color", "classBirdy3d_1_1utils_1_1Color.html", null ],
         [ "FPPlayerController", "classBirdy3d_1_1utils_1_1FPPlayerController.html", null ],
+        [ "Identifier", "classBirdy3d_1_1utils_1_1Identifier.html", null ],
         [ "PrimitiveGenerator", "classBirdy3d_1_1utils_1_1PrimitiveGenerator.html", null ],
         [ "Unicode", "classBirdy3d_1_1utils_1_1Unicode.html", null ]
       ] ]

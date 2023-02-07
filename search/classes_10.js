@@ -14,5 +14,6 @@ var searchData=
   ['resourcehandle_3c_20birdy3d_3a_3arender_3a_3atexture_20_3e_11',['ResourceHandle&lt; Birdy3d::render::Texture &gt;',['../classBirdy3d_1_1core_1_1ResourceHandle.html',1,'Birdy3d::core']]],
   ['resourcehandle_3c_20birdy3d_3a_3aui_3a_3atheme_20_3e_12',['ResourceHandle&lt; Birdy3d::ui::Theme &gt;',['../classBirdy3d_1_1core_1_1ResourceHandle.html',1,'Birdy3d::core']]],
   ['resourceidentifier_13',['ResourceIdentifier',['../classBirdy3d_1_1core_1_1ResourceIdentifier.html',1,'Birdy3d::core']]],
-  ['resourcemanager_14',['ResourceManager',['../classBirdy3d_1_1core_1_1ResourceManager.html',1,'Birdy3d::core']]]
+  ['resourceloadevent_14',['ResourceLoadEvent',['../classBirdy3d_1_1events_1_1ResourceLoadEvent.html',1,'Birdy3d::events']]],
+  ['resourcemanager_15',['ResourceManager',['../classBirdy3d_1_1core_1_1ResourceManager.html',1,'Birdy3d::core']]]
 ];
