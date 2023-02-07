@@ -9,6 +9,7 @@ namespace Birdy3d::events {
     class InputCharEvent;
     class InputKeyEvent;
     class InputScrollEvent;
+    class ResourceLoadEvent;
     class TransformChangedEvent;
     class WindowResizeEvent;
     template <class T, class EventType>

@@ -1,6 +1,7 @@
 #include "physics/ColliderComponent.hpp"
 
 #include "ecs/Entity.hpp"
+#include "events/ResourceEvents.hpp"
 #include "render/ModelComponent.hpp"
 
 namespace Birdy3d::physics {
@@ -12,6 +13,22 @@ namespace Birdy3d::physics {
     { }
 
     void ColliderComponent::start()
+    {
+        core::Application::event_bus->subscribe(this, &ColliderComponent::on_resource_loaded);
+        reload_collider();
+    }
+
+    void ColliderComponent::cleanup()
+    {
+        core::Application::event_bus->unsubscribe(this, &ColliderComponent::on_resource_loaded);
+    }
+
+    void ColliderComponent::on_resource_loaded(events::ResourceLoadEvent const&)
+    {
+        reload_collider();
+    }
+
+    void ColliderComponent::reload_collider()
     {
         auto model_component = entity->get_component<render::ModelComponent>();
         if (!model_component) {
@@ -46,6 +63,10 @@ namespace Birdy3d::physics {
             collider_id.args["generation_mode"] = "DECOMPOSITION_MESHES";
             break;
         }
+
+        if (m_collider.id() == collider_id)
+            return;
+
         m_collider = core::ResourceManager::get_collider(collider_id);
     }
 

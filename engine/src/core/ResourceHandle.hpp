@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/Application.hpp"
+#include "events/EventBus.hpp"
+#include "events/ResourceEvents.hpp"
 #include "physics/Forward.hpp"
 #include "render/Forward.hpp"
 #include "ui/Forward.hpp"
@@ -27,7 +30,8 @@ namespace Birdy3d::core {
         ResourceIdentifier() = default;
         ResourceIdentifier(std::string);
         ResourceIdentifier(char const* str);
-        explicit operator std::string() const;
+        bool operator==(ResourceIdentifier const&) const;
+        [[nodiscard]] std::string to_string(bool include_args = true) const;
     };
 
     template <class T>
@@ -35,35 +39,34 @@ namespace Birdy3d::core {
     public:
         ResourceHandle() = default;
         ResourceHandle(ResourceIdentifier id)
-            : m_id(id)
+            : m_resource_id(id)
         {
-            load(m_id);
+            load(m_resource_id);
         }
         T& operator*() const { return *m_ptr; }
         T* operator->() const { return m_ptr.get(); }
-        explicit operator std::string() const { return static_cast<std::string>(m_id); }
+        explicit operator std::string() const { return m_resource_id.to_string(); }
         explicit operator bool() const { return static_cast<bool>(m_ptr); }
         [[nodiscard]] std::shared_ptr<T> ptr() const { return m_ptr; }
-        bool load() { return load(m_id); }
-        ResourceIdentifier const& id() { return m_id; }
+        bool load() { return load(m_resource_id); }
+        ResourceIdentifier const& id() { return m_resource_id; }
+
+        utils::Identifier handle_id() { return m_handle_id; }
 
         bool operator=(ResourceIdentifier new_id)
         {
-            auto success = load(new_id);
-            if (success)
-                m_id = new_id;
-            return success;
+            return load(new_id);
         }
 
         std::string arg(std::string key)
         {
-            return m_id.args[key];
+            return m_resource_id.args[key];
         }
 
         void arg(std::string key, std::string value)
         {
-            auto old = m_id.args[key];
-            m_id.args[key] = value;
+            auto old = m_resource_id.args[key];
+            m_resource_id.args[key] = value;
             if (old != value)
                 load();
         }
@@ -74,10 +77,16 @@ namespace Birdy3d::core {
         }
 
     private:
-        ResourceIdentifier m_id;
+        utils::Identifier m_handle_id = utils::Identifier::new_random();
+        ResourceIdentifier m_resource_id;
         std::shared_ptr<T> m_ptr;
 
         bool load(ResourceIdentifier const&) { return false; }
+
+        void notify_load()
+        {
+            core::Application::event_bus->emit<events::ResourceLoadEvent>(m_handle_id);
+        }
     };
 
     template <>

@@ -30,7 +30,9 @@ namespace Birdy3d::core {
         auto val = ResourceManager::get_shader_ptr(new_id);
         if (!val)
             return false;
+        m_resource_id = new_id;
         m_ptr = val;
+        notify_load();
         return true;
     }
 
@@ -40,7 +42,9 @@ namespace Birdy3d::core {
         auto val = ResourceManager::get_theme_ptr(new_id);
         if (!val)
             return false;
+        m_resource_id = new_id;
         m_ptr = val;
+        notify_load();
         return true;
     }
 
@@ -50,7 +54,9 @@ namespace Birdy3d::core {
         auto val = ResourceManager::get_model_ptr(new_id);
         if (!val)
             return false;
+        m_resource_id = new_id;
         m_ptr = val;
+        notify_load();
         return true;
     }
 
@@ -60,7 +66,9 @@ namespace Birdy3d::core {
         auto val = ResourceManager::get_texture_ptr(new_id);
         if (!val)
             return false;
+        m_resource_id = new_id;
         m_ptr = val;
+        notify_load();
         return true;
     }
 
@@ -70,7 +78,9 @@ namespace Birdy3d::core {
         auto val = ResourceManager::get_collider_ptr(new_id);
         if (!val)
             return false;
+        m_resource_id = new_id;
         m_ptr = val;
+        notify_load();
         return true;
     }
 
@@ -118,9 +128,23 @@ namespace Birdy3d::core {
     ResourceIdentifier::ResourceIdentifier(char const* full_name)
         : ResourceIdentifier(std::string{full_name}){};
 
-    ResourceIdentifier::operator std::string() const
+    bool ResourceIdentifier::operator==(ResourceIdentifier const& other) const
     {
-        return source + "::" + name + std::accumulate(args.cbegin(), args.cend(), std::string{}, [](std::string const& sum, std::pair<std::string, std::string> const& element) { return sum + ":" + element.first + "=" + element.second; });
+        return type == other.type
+            && source == other.source
+            && name == other.name
+            && args == other.args;
+    }
+
+    std::string ResourceIdentifier::to_string(bool include_args) const
+    {
+        auto location = source + "::" + name;
+        if (!include_args)
+            return location;
+
+        auto data = std::accumulate(args.cbegin(), args.cend(), std::string{}, [](std::string const& sum, std::pair<std::string, std::string> const& element) { return sum + ":" + element.first + "=" + element.second; });
+
+        return location + data;
     }
 
     std::unordered_map<std::string, std::shared_ptr<render::Shader>> ResourceManager::m_shaders;
@@ -156,7 +180,7 @@ namespace Birdy3d::core {
 
     std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(ResourceIdentifier const& id)
     {
-        std::string name = static_cast<std::string>(id);
+        auto name = id.to_string();
         std::shared_ptr<render::Shader> shader = m_shaders[name];
         if (!shader) {
             if (id.source != "file" && id.source != "") {
@@ -175,7 +199,7 @@ namespace Birdy3d::core {
 
     std::shared_ptr<ui::Theme> ResourceManager::get_theme_ptr(ResourceIdentifier const& id)
     {
-        std::string name = static_cast<std::string>(id);
+        std::string name = id.to_string();
         std::shared_ptr<ui::Theme> theme = m_themes[name];
         if (!theme) {
             if (id.source == "file" || id.source == "") {
@@ -200,7 +224,7 @@ namespace Birdy3d::core {
 
     std::shared_ptr<render::Model> ResourceManager::get_model_ptr(ResourceIdentifier const& id)
     {
-        std::string name = static_cast<std::string>(id);
+        std::string name = id.to_string();
         std::shared_ptr<render::Model> model = m_models[name];
         if (!model) {
             if (id.source == "file" || id.source == "") {
@@ -248,7 +272,7 @@ namespace Birdy3d::core {
 
     std::shared_ptr<render::Texture> ResourceManager::get_texture_ptr(ResourceIdentifier const& id)
     {
-        std::string name = static_cast<std::string>(id);
+        std::string name = id.to_string();
         std::shared_ptr<render::Texture> texture = m_textures[name];
         if (!texture) {
             if (id.source == "file" || id.source == "") {
@@ -269,12 +293,12 @@ namespace Birdy3d::core {
 
     std::shared_ptr<physics::Collider> ResourceManager::get_collider_ptr(ResourceIdentifier const& id)
     {
-        std::string name = static_cast<std::string>(id);
+        std::string name = id.to_string(false);
         auto collider = m_colliders[name];
         if (collider)
             return collider;
 
-        auto model = get_model_ptr(id);
+        auto model = get_model_ptr(name);
         if (!model)
             return {};
 

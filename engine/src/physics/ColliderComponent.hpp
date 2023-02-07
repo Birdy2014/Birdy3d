@@ -13,6 +13,7 @@ namespace Birdy3d::physics {
         ColliderComponent(GenerationMode);
 
         void start() override;
+        void cleanup() override;
         void serialize(serializer::Adapter&) override;
         int priority() override { return 10; }
         void render_wireframe(render::Shader&);
@@ -22,6 +23,9 @@ namespace Birdy3d::physics {
     private:
         GenerationMode m_generation_mode = GenerationMode::NONE;
         core::ResourceHandle<Collider> m_collider;
+
+        void on_resource_loaded(events::ResourceLoadEvent const& event);
+        void reload_collider();
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(ecs::Component, ColliderComponent);
     };
