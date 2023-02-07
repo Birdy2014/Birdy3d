@@ -37,6 +37,6 @@ private:
             return;
         auto id = std::any_cast<Birdy3d::core::ResourceIdentifier>(event.data);
         *m_target = id;
-        m_text.text(static_cast<std::string>(id));
+        m_text.text(id.to_string());
     }
 };

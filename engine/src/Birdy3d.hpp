@@ -17,6 +17,7 @@
 #include "events/Event.hpp"
 #include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
+#include "events/ResourceEvents.hpp"
 #include "events/TransformChangedEvent.hpp"
 #include "events/WindowResizeEvent.hpp"
 
@@ -67,6 +68,7 @@
 // Utils
 #include "utils/Color.hpp"
 #include "utils/FPPlayerController.hpp"
+#include "utils/Identifier.hpp"
 #include "utils/PrimitiveGenerator.hpp"
 #include "utils/Stacktrace.hpp"
 #include "utils/serializer/Reflector.hpp"
