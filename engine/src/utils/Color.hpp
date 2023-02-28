@@ -31,6 +31,8 @@ namespace Birdy3d::utils {
             BG_INPUT,
             BG_SELECTED,
             TEXT_HIGHLIGHT,
+            OBJECT_SELECTION,
+            COLLIDER_WIREFRAME,
             NONE,
         };
 

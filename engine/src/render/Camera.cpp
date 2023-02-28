@@ -11,6 +11,7 @@
 #include "render/PointLight.hpp"
 #include "render/Shader.hpp"
 #include "render/Spotlight.hpp"
+#include "ui/Theme.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -406,7 +407,7 @@ namespace Birdy3d::render {
         m_simple_color_shader->use();
         m_simple_color_shader->set_mat4("projection", m_projection);
         m_simple_color_shader->set_mat4("view", m_view);
-        m_simple_color_shader->set_vec4("color", utils::Color("#e0902180"));
+        m_simple_color_shader->set_vec4("color", core::Application::theme().color(utils::Color::Name::OBJECT_SELECTION));
         m_simple_color_shader->set_mat4("model", selected_entity->transform.global_matrix());
         glBindVertexArray(m_outline_vao);
         glDrawArrays(GL_LINES, 0, 24);
@@ -422,7 +423,7 @@ namespace Birdy3d::render {
         m_simple_color_shader->use();
         m_simple_color_shader->set_mat4("projection", m_projection);
         m_simple_color_shader->set_mat4("view", m_view);
-        m_simple_color_shader->set_vec4("color", utils::Color("#00ff0080"));
+        m_simple_color_shader->set_vec4("color", core::Application::theme().color(utils::Color::Name::COLLIDER_WIREFRAME));
         for (auto c : entity->scene->get_components<physics::ColliderComponent>(false, true)) {
             c->render_wireframe(*m_simple_color_shader);
         }

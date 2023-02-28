@@ -35,6 +35,10 @@ namespace Birdy3d::ui {
             return m_color_bg_selected;
         case utils::Color::Name::TEXT_HIGHLIGHT:
             return m_color_text_highlight;
+        case utils::Color::Name::OBJECT_SELECTION:
+            return m_color_object_selection;
+        case utils::Color::Name::COLLIDER_WIREFRAME:
+            return m_color_collider_wireframe;
         default:
             return utils::Color::NONE;
         }
@@ -65,6 +69,8 @@ namespace Birdy3d::ui {
         adapter("color_bg_input", m_color_bg_input);
         adapter("color_bg_selected", m_color_bg_selected);
         adapter("color_text_highlight", m_color_text_highlight);
+        adapter("color_object_selection", m_color_object_selection);
+        adapter("color_collider_wireframe", m_color_collider_wireframe);
         adapter("font", m_font);
         adapter("font_size", m_font_size);
         adapter("line_height", m_line_height);
