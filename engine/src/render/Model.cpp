@@ -53,7 +53,7 @@ namespace Birdy3d::render {
         }
     }
 
-    void Model::render_wireframe(ecs::Entity& entity, Shader const& shader) const
+    void Model::render_wireframe(ecs::Entity const& entity, Shader const& shader) const
     {
         glm::mat4 model = entity.transform.global_matrix();
         shader.use();

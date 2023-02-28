@@ -5,6 +5,7 @@
 #include "ecs/Forward.hpp"
 #include "events/Forward.hpp"
 #include "ui/Forward.hpp"
+#include "utils/Channel.hpp"
 
 namespace Birdy3d::core {
 
@@ -35,14 +36,21 @@ namespace Birdy3d::core {
         static void option_bool(BoolOption, bool);
         static int option_int(IntOption);
         static void option_int(IntOption, int);
-        static ui::Theme& theme();
+        static ui::Theme const& theme();
         static bool theme(std::string const&);
+
+        static void defer_main(std::function<void()>);
+        static void defer_loading(std::function<void()>);
 
     private:
         static GLFWwindow* m_window;
         static std::unordered_map<BoolOption, bool> m_options_bool;
         static std::unordered_map<IntOption, int> m_options_int;
         static ResourceHandle<ui::Theme> m_theme;
+
+        static Channel<std::function<void()>> m_channel_main;
+        static Channel<std::function<void()>> m_channel_loading;
+        static std::thread m_loading_thread;
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);

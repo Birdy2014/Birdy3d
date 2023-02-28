@@ -473,7 +473,7 @@ namespace Birdy3d::ui {
 
     void Text::draw_cursor(glm::mat4 move)
     {
-        Theme& theme = core::Application::theme();
+        auto& theme = core::Application::theme();
         TextRenderer& renderer = theme.text_renderer();
 
         float scale = font_size > 0 ? font_size / theme.text_renderer().m_font_size : 1;
@@ -516,7 +516,7 @@ namespace Birdy3d::ui {
             --hl_end;
         }
 
-        Theme& theme = core::Application::theme();
+        auto& theme = core::Application::theme();
         float scale = font_size > 0 ? font_size / theme.text_renderer().m_font_size : 1;
         Position current_pos = m_position;
         Position start_pos;

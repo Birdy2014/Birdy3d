@@ -47,7 +47,7 @@ namespace Birdy3d::physics {
             }
 
             bool collided_last_frame = collision->points.has_value();
-            auto optional_points = collider_1->compute_collision(*collider_1.get(), *collider_2.get(), collider_component_1.entity->transform, collider_component_2.entity->transform);
+            auto optional_points = collider_1->compute_collision(*collider_1, *collider_2, collider_component_1.entity->transform, collider_component_2.entity->transform);
             collision->points = optional_points;
             if (optional_points.has_value()) {
                 if (collided_last_frame)

@@ -70,7 +70,7 @@ namespace Birdy3d::physics {
         m_collider = core::ResourceManager::get_collider(collider_id);
     }
 
-    void ColliderComponent::render_wireframe(render::Shader& shader)
+    void ColliderComponent::render_wireframe(render::Shader const& shader) const
     {
         if (!m_collider)
             return;

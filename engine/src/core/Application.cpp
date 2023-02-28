@@ -26,6 +26,10 @@ namespace Birdy3d::core {
     std::unordered_map<BoolOption, bool> Application::m_options_bool;
     std::unordered_map<IntOption, int> Application::m_options_int;
 
+    Channel<std::function<void()>> Application::m_channel_main;
+    Channel<std::function<void()>> Application::m_channel_loading;
+    std::thread Application::m_loading_thread;
+
     void glfw_error_callback([[maybe_unused]] int error, char const* description)
     {
         core::Logger::error("GLFW Error: {}", description);
@@ -93,12 +97,27 @@ namespace Birdy3d::core {
         option_bool(BoolOption::VSYNC, true);
         option_int(IntOption::SHADOW_CASCADE_SIZE, 5);
 
+        m_loading_thread = std::thread([]() {
+            while (true) {
+                auto task = m_channel_loading.get();
+                try {
+                    std::invoke(task);
+                } catch (std::exception&) {
+                    return;
+                }
+            }
+        });
+
         return true;
     }
 
     void Application::cleanup()
     {
         glfwTerminate();
+        m_channel_loading.push_task([]() {
+            throw std::exception();
+        });
+        m_loading_thread.join();
     }
 
     void Application::mainloop()
@@ -121,6 +140,15 @@ namespace Birdy3d::core {
                 scene_ptr->update();
 
             event_bus->flush();
+
+            while (true) {
+                auto task = m_channel_main.try_get();
+                if (task.has_value()) {
+                    std::invoke(task.value());
+                } else {
+                    break;
+                }
+            }
 
             // draw the entitys
             if (scene_ptr) {
@@ -256,7 +284,7 @@ namespace Birdy3d::core {
         m_options_int[option] = value;
     }
 
-    ui::Theme& Application::theme()
+    ui::Theme const& Application::theme()
     {
         return *m_theme;
     }
@@ -268,6 +296,16 @@ namespace Birdy3d::core {
             return false;
         m_theme = new_theme;
         return true;
+    }
+
+    void Application::defer_main(std::function<void()> function)
+    {
+        m_channel_main.push_task(function);
+    }
+
+    void Application::defer_loading(std::function<void()> function)
+    {
+        m_channel_loading.push_task(function);
     }
 
 }

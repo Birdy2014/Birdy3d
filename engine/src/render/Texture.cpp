@@ -141,7 +141,7 @@ namespace Birdy3d::render {
         return m_transparent;
     }
 
-    void Texture::bind(int texture_unit)
+    void Texture::bind(int texture_unit) const
     {
         glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, m_id);

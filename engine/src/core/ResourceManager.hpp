@@ -40,17 +40,29 @@ namespace Birdy3d::core {
         friend class ResourceHandle<render::Texture>;
         friend class ResourceHandle<physics::Collider>;
 
-        static std::unordered_map<std::string, std::shared_ptr<render::Shader>> m_shaders;
-        static std::unordered_map<std::string, std::shared_ptr<ui::Theme>> m_themes;
-        static std::unordered_map<std::string, std::shared_ptr<render::Model>> m_models;
-        static std::unordered_map<std::string, std::shared_ptr<render::Texture>> m_textures;
-        static std::unordered_map<std::string, std::shared_ptr<physics::Collider>> m_colliders;
+        static std::unordered_map<std::string, std::size_t> m_shader_indices;
+        static std::unordered_map<std::string, std::size_t> m_theme_indices;
+        static std::unordered_map<std::string, std::size_t> m_model_indices;
+        static std::unordered_map<std::string, std::size_t> m_texture_indices;
+        static std::unordered_map<std::string, std::size_t> m_collider_indices;
 
-        static std::shared_ptr<render::Shader> get_shader_ptr(ResourceIdentifier const&);
-        static std::shared_ptr<ui::Theme> get_theme_ptr(ResourceIdentifier const&);
-        static std::shared_ptr<render::Model> get_model_ptr(ResourceIdentifier const&);
-        static std::shared_ptr<render::Texture> get_texture_ptr(ResourceIdentifier const&);
-        static std::shared_ptr<physics::Collider> get_collider_ptr(ResourceIdentifier const&);
+        static std::vector<std::unique_ptr<render::Shader>> m_shaders;
+        static std::vector<std::unique_ptr<ui::Theme>> m_themes;
+        static std::vector<std::unique_ptr<render::Model>> m_models;
+        static std::vector<std::unique_ptr<render::Texture>> m_textures;
+        static std::vector<std::unique_ptr<physics::Collider>> m_colliders;
+
+        static std::optional<std::size_t> load_shader_ptr(ResourceIdentifier const&);
+        static std::optional<std::size_t> load_theme_ptr(ResourceIdentifier const&);
+        static std::optional<std::size_t> load_model_ptr(ResourceIdentifier const&);
+        static std::optional<std::size_t> load_texture_ptr(ResourceIdentifier const&);
+        static std::optional<std::size_t> load_collider_ptr(ResourceIdentifier const&);
+
+        static render::Shader const* get_shader_ptr(std::size_t const&);
+        static ui::Theme const* get_theme_ptr(std::size_t const&);
+        static render::Model const* get_model_ptr(std::size_t const&);
+        static render::Texture const* get_texture_ptr(std::size_t const&);
+        static physics::Collider const* get_collider_ptr(std::size_t const&);
 
         static std::string get_executable_dir();
     };
