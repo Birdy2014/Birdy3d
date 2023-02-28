@@ -272,7 +272,6 @@ namespace Birdy3d::render {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_FRAMEBUFFER_SRGB);
         m_forward_shader.arg("SHADOW_CASCADE_SIZE", core::Application::option_int(core::IntOption::SHADOW_CASCADE_SIZE));
         for (size_t i = 0; i < m_dirlights.size(); i++)
             m_dirlights[i]->use(*m_forward_shader, i, 4 + i);
@@ -290,6 +289,7 @@ namespace Birdy3d::render {
             glBlitFramebuffer(0, 0, target->width() - 1, target->height() - 1, 0, 0, target->width() - 1, target->height() - 1, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         }
 
+        glEnable(GL_FRAMEBUFFER_SRGB);
         m_forward_shader->use();
         m_forward_shader->set_mat4("projection", m_projection);
         m_forward_shader->set_mat4("view", m_view);
