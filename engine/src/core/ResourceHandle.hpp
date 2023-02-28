@@ -43,13 +43,13 @@ namespace Birdy3d::core {
         {
             load(m_resource_id);
         }
-        T& operator*() const { return *m_ptr; }
-        T* operator->() const { return m_ptr.get(); }
+        T const& operator*() const { return *ptr(); }
+        T const* operator->() const { return ptr(); }
         explicit operator std::string() const { return m_resource_id.to_string(); }
-        explicit operator bool() const { return static_cast<bool>(m_ptr); }
-        [[nodiscard]] std::shared_ptr<T> ptr() const { return m_ptr; }
+        explicit operator bool() const { return static_cast<bool>(ptr()); }
         bool load() { return load(m_resource_id); }
         ResourceIdentifier const& id() { return m_resource_id; }
+        [[nodiscard]] T const* ptr() const { return nullptr; }
 
         utils::Identifier handle_id() { return m_handle_id; }
 
@@ -79,7 +79,7 @@ namespace Birdy3d::core {
     private:
         utils::Identifier m_handle_id = utils::Identifier::new_random();
         ResourceIdentifier m_resource_id;
-        std::shared_ptr<T> m_ptr;
+        std::size_t m_resource_index;
 
         bool load(ResourceIdentifier const&) { return false; }
 

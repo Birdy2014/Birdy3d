@@ -11,7 +11,7 @@ namespace Birdy3d::ui {
         m_text_renderer = std::make_unique<TextRenderer>(*this);
     }
 
-    TextRenderer& Theme::text_renderer()
+    TextRenderer& Theme::text_renderer() const
     {
         return *m_text_renderer.get();
     }

@@ -14,11 +14,11 @@ namespace Birdy3d::events {
             EXIT
         };
 
-        const std::weak_ptr<physics::Collider> collider_a;
-        const std::weak_ptr<physics::Collider> collider_b;
-        const Type type;
+        physics::Collider const* collider_a;
+        physics::Collider const* collider_b;
+        Type const type;
 
-        CollisionEvent(const std::weak_ptr<physics::Collider> collider_a, const std::weak_ptr<physics::Collider> collider_b, const Type type)
+        CollisionEvent(physics::Collider const* collider_a, physics::Collider const* collider_b, const Type type)
             : collider_a(collider_a)
             , collider_b(collider_b)
             , type(type)
@@ -36,23 +36,20 @@ namespace Birdy3d::events {
             auto colliders = entity->get_components<physics::Collider>(false, true);
             if (colliders.empty())
                 return false;
-            auto collider_a_ptr = collider_a.lock();
-            auto collider_b_ptr = collider_b.lock();
-            if (!collider_a_ptr || !collider_b_ptr)
+            if (!collider_a || !collider_b)
                 return false;
-            return std::find(colliders.begin(), colliders.end(), collider_a_ptr) != colliders.end() || std::find(colliders.begin(), colliders.end(), collider_b_ptr) != colliders.end();
+            return std::find_if(colliders.begin(), colliders.end(), [&](auto current) { return current.get() == collider_a; }) != colliders.end()
+                || std::find_if(colliders.begin(), colliders.end(), [&](auto current) { return current.get() == collider_b; }) != colliders.end();
         }
 
-        std::shared_ptr<physics::Collider> other(physics::Collider* current)
+        physics::Collider const* other(physics::Collider* current)
         {
-            auto collider_a_ptr = collider_a.lock();
-            auto collider_b_ptr = collider_b.lock();
-            if (!collider_a_ptr || !collider_b_ptr)
+            if (!collider_a || !collider_b)
                 return {};
-            if (collider_a_ptr.get() == current)
-                return collider_b_ptr;
-            if (collider_b_ptr.get() == current)
-                return collider_a_ptr;
+            if (collider_a == current)
+                return collider_b;
+            if (collider_b == current)
+                return collider_a;
             return {};
         }
     };

@@ -18,7 +18,7 @@ namespace Birdy3d::render {
         Model(std::vector<Mesh>&);
         void render(ecs::Entity& entity, Material const* material, Shader const& shader, bool transparent) const;
         void render_depth(ecs::Entity&, Shader const&) const;
-        void render_wireframe(ecs::Entity&, Shader const&) const;
+        void render_wireframe(ecs::Entity const&, Shader const&) const;
         [[nodiscard]] std::vector<Mesh> const& get_meshes() const;
         [[nodiscard]] std::pair<glm::vec3, glm::vec3> bounding_box() const { return m_bounding_box; }
 

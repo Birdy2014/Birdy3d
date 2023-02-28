@@ -1,13 +1,16 @@
 #include "physics/CollisionMesh.hpp"
+#include "utils/Ranges.hpp"
 
 #include <algorithm>
 #include <ranges>
 
 namespace Birdy3d::physics {
 
-    CollisionMesh::CollisionMesh(std::vector<glm::vec3> const vertices)
-        : m_vertices{vertices}
+    CollisionMesh::CollisionMesh(Mesh const mesh)
+        : m_mesh(mesh)
     {
+        m_vertices = utils::to_vector(mesh.vertices | std::views::transform([](render::Vertex vertex) { return vertex.position; }));
+
         auto last = std::unique(m_vertices.begin(), m_vertices.end());
         m_vertices.erase(last, m_vertices.end());
     }
@@ -24,6 +27,15 @@ namespace Birdy3d::physics {
             }
         }
         return furthest_vertex;
+    }
+
+    [[nodiscard]] render::Mesh const* CollisionMesh::get_render_mesh() const
+    {
+        if (m_render_mesh.has_value())
+            return &m_render_mesh.value();
+
+        m_render_mesh = render::Mesh(m_mesh.vertices, m_mesh.indices);
+        return &m_render_mesh.value();
     }
 
 }

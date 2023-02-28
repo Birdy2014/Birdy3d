@@ -12,7 +12,7 @@ namespace Birdy3d::ui {
     class Theme {
     public:
         Theme(std::string const& file_content);
-        TextRenderer& text_renderer();
+        [[nodiscard]] TextRenderer& text_renderer() const;
         [[nodiscard]] utils::Color color(utils::Color::Name) const;
         [[nodiscard]] std::string font() const;
         [[nodiscard]] int font_size() const;

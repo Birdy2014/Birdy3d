@@ -7,7 +7,7 @@
 
 namespace Birdy3d::utils {
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_plane(unsigned int resolution)
+    std::unique_ptr<render::Model> PrimitiveGenerator::generate_plane(unsigned int resolution)
     {
         std::vector<render::Vertex> vertices;
         std::vector<unsigned int> indices;
@@ -46,10 +46,10 @@ namespace Birdy3d::utils {
         }
 
         auto mesh = render::Mesh{vertices, indices};
-        return std::make_shared<render::Model>(std::move(mesh));
+        return std::make_unique<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_cube()
+    std::unique_ptr<render::Model> PrimitiveGenerator::generate_cube()
     {
         // clang-format off
         std::vector<render::Vertex> vertices = {
@@ -105,10 +105,10 @@ namespace Birdy3d::utils {
         // clang-format on
 
         auto mesh = render::Mesh{vertices, indices};
-        return std::make_shared<render::Model>(std::move(mesh));
+        return std::make_unique<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_uv_sphere(unsigned int resolution)
+    std::unique_ptr<render::Model> PrimitiveGenerator::generate_uv_sphere(unsigned int resolution)
     {
         int longitude_count = resolution;
         int latitude_count = resolution;
@@ -176,10 +176,10 @@ namespace Birdy3d::utils {
         }
 
         auto mesh = render::Mesh{vertices, indices};
-        return std::make_shared<render::Model>(std::move(mesh));
+        return std::make_unique<render::Model>(std::move(mesh));
     }
 
-    std::shared_ptr<render::Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution [[maybe_unused]])
+    std::unique_ptr<render::Model> PrimitiveGenerator::generate_ico_sphere(unsigned int resolution [[maybe_unused]])
     {
         // TODO: ico sphere primitive
         BIRDY3D_TODO

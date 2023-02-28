@@ -23,7 +23,7 @@ namespace Birdy3d::render {
         Texture(Texture&) = delete;
         ~Texture();
         [[nodiscard]] bool transparent() const;
-        void bind(int texture_unit);
+        void bind(int texture_unit) const;
         void resize(int width, int height);
         [[nodiscard]] GLuint id() const;
         [[nodiscard]] bool is_depth() const;

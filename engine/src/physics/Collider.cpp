@@ -1,29 +1,36 @@
 #include "physics/Collider.hpp"
 
 #include "core/Logger.hpp"
+#include "ecs/Entity.hpp"
 #include "ecs/Transform.hpp"
 #include "physics/Collision.hpp"
 #include "physics/CollisionSphere.hpp"
-#include "render/Model.hpp"
+#include "render/Mesh.hpp"
+#include "render/Shader.hpp"
 
 namespace Birdy3d::physics {
 
     Collider::Collider()
-        : m_render_model(nullptr)
-        , m_generation_mode(GenerationMode::NONE)
+        : m_generation_mode(GenerationMode::NONE)
     { }
 
-    Collider::Collider(std::shared_ptr<render::Model> model, std::vector<std::unique_ptr<CollisionShape>> shapes)
-        : m_render_model(model)
-        , m_collision_shapes(std::move(shapes))
+    Collider::Collider(std::vector<std::unique_ptr<CollisionShape>> shapes)
+        : m_collision_shapes(std::move(shapes))
     { }
 
-    void Collider::render_wireframe(ecs::Entity& entity, render::Shader& shader)
+    void Collider::render_wireframe(ecs::Entity const& entity, render::Shader const& shader) const
     {
-        m_render_model->render_wireframe(entity, shader);
+        glm::mat4 model = entity.transform.global_matrix();
+        shader.use();
+        shader.set_mat4("model", model);
+        for (auto const& collision_shape : m_collision_shapes) {
+            auto render_mesh = collision_shape->get_render_mesh();
+            if (render_mesh)
+                render_mesh->render_wireframe();
+        }
     }
 
-    std::optional<CollisionPoints> Collider::compute_collision(Collider const& collider_a, Collider const& collider_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b)
+    std::optional<CollisionPoints> Collider::compute_collision(Collider const& collider_a, Collider const& collider_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b) const
     {
         for (auto const& shape_a : collider_a.m_collision_shapes) {
             for (auto const& shape_b : collider_b.m_collision_shapes) {
@@ -45,7 +52,7 @@ namespace Birdy3d::physics {
         return {};
     }
 
-    std::optional<CollisionPoints> Collider::compute_shape_collision_gjk(CollisionShape const& shape_a, CollisionShape const& shape_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b)
+    std::optional<CollisionPoints> Collider::compute_shape_collision_gjk(CollisionShape const& shape_a, CollisionShape const& shape_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b) const
     {
         // FIXME: stop if one of the matrices scales to 0
         m_point_count = 0;
@@ -70,7 +77,7 @@ namespace Birdy3d::physics {
         }
     }
 
-    std::optional<CollisionPoints> Collider::compute_shape_collision_spheres(CollisionSphere const& shape_a, CollisionSphere const& shape_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b)
+    std::optional<CollisionPoints> Collider::compute_shape_collision_spheres(CollisionSphere const& shape_a, CollisionSphere const& shape_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b) const
     {
         auto shape_a_center = transform_a.world_position();
         auto shape_b_center = transform_b.world_position();
@@ -95,7 +102,7 @@ namespace Birdy3d::physics {
             .depth = radius_sum - center_distance};
     }
 
-    glm::vec3 Collider::support(CollisionShape const& mesh_a, CollisionShape const& mesh_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b, glm::vec3 direction)
+    glm::vec3 Collider::support(CollisionShape const& mesh_a, CollisionShape const& mesh_b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b, glm::vec3 direction) const
     {
         glm::vec3 local_direction_a = transform_a.global_to_local(direction) - transform_a.global_to_local(glm::vec3(0.0f));
         glm::vec3 local_direction_b = transform_b.global_to_local(direction) - transform_b.global_to_local(glm::vec3(0.0f));
@@ -109,7 +116,7 @@ namespace Birdy3d::physics {
         return world_furthest_a - world_furthest_b;
     }
 
-    void Collider::push_front(glm::vec3 point)
+    void Collider::push_front(glm::vec3 point) const
     {
         if (m_point_count >= 4 || m_point_count < 0)
             core::Logger::critical("Simplex has a maximum size of 4");
@@ -122,7 +129,7 @@ namespace Birdy3d::physics {
         m_point_count++;
     }
 
-    bool Collider::next_simplex(glm::vec3& direction)
+    bool Collider::next_simplex(glm::vec3& direction) const
     {
         switch (m_point_count) {
         case 2:
@@ -136,7 +143,7 @@ namespace Birdy3d::physics {
         return false;
     }
 
-    bool Collider::line(glm::vec3& direction)
+    bool Collider::line(glm::vec3& direction) const
     {
         glm::vec3 a = m_points[0];
         glm::vec3 b = m_points[1];
@@ -154,7 +161,7 @@ namespace Birdy3d::physics {
         return false;
     }
 
-    bool Collider::triangle(glm::vec3& direction)
+    bool Collider::triangle(glm::vec3& direction) const
     {
         glm::vec3 a = m_points[0];
         glm::vec3 b = m_points[1];
@@ -193,7 +200,7 @@ namespace Birdy3d::physics {
         return false;
     }
 
-    bool Collider::tetrahedron(glm::vec3& direction)
+    bool Collider::tetrahedron(glm::vec3& direction) const
     {
         glm::vec3 a = m_points[0];
         glm::vec3 b = m_points[1];
@@ -231,7 +238,7 @@ namespace Birdy3d::physics {
         return true;
     }
 
-    bool Collider::same_direction(glm::vec3 a, glm::vec3 b)
+    bool Collider::same_direction(glm::vec3 a, glm::vec3 b) const
     {
         return glm::dot(a, b) > 0;
     }

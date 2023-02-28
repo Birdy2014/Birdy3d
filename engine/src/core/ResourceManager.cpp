@@ -25,13 +25,43 @@
 namespace Birdy3d::core {
 
     template <>
+    [[nodiscard]] render::Shader const* ResourceHandle<render::Shader>::ptr() const
+    {
+        return ResourceManager::get_shader_ptr(m_resource_index);
+    }
+
+    template <>
+    [[nodiscard]] ui::Theme const* ResourceHandle<ui::Theme>::ptr() const
+    {
+        return ResourceManager::get_theme_ptr(m_resource_index);
+    }
+
+    template <>
+    [[nodiscard]] render::Model const* ResourceHandle<render::Model>::ptr() const
+    {
+        return ResourceManager::get_model_ptr(m_resource_index);
+    }
+
+    template <>
+    [[nodiscard]] render::Texture const* ResourceHandle<render::Texture>::ptr() const
+    {
+        return ResourceManager::get_texture_ptr(m_resource_index);
+    }
+
+    template <>
+    [[nodiscard]] physics::Collider const* ResourceHandle<physics::Collider>::ptr() const
+    {
+        return ResourceManager::get_collider_ptr(m_resource_index);
+    }
+
+    template <>
     bool ResourceHandle<render::Shader>::load(ResourceIdentifier const& new_id)
     {
-        auto val = ResourceManager::get_shader_ptr(new_id);
-        if (!val)
+        auto optional_index = ResourceManager::load_shader_ptr(new_id);
+        if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_ptr = val;
+        m_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -39,11 +69,11 @@ namespace Birdy3d::core {
     template <>
     bool ResourceHandle<ui::Theme>::load(ResourceIdentifier const& new_id)
     {
-        auto val = ResourceManager::get_theme_ptr(new_id);
-        if (!val)
+        auto optional_index = ResourceManager::load_theme_ptr(new_id);
+        if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_ptr = val;
+        m_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -51,11 +81,11 @@ namespace Birdy3d::core {
     template <>
     bool ResourceHandle<render::Model>::load(ResourceIdentifier const& new_id)
     {
-        auto val = ResourceManager::get_model_ptr(new_id);
-        if (!val)
+        auto optional_index = ResourceManager::load_model_ptr(new_id);
+        if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_ptr = val;
+        m_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -63,11 +93,11 @@ namespace Birdy3d::core {
     template <>
     bool ResourceHandle<render::Texture>::load(ResourceIdentifier const& new_id)
     {
-        auto val = ResourceManager::get_texture_ptr(new_id);
-        if (!val)
+        auto optional_index = ResourceManager::load_texture_ptr(new_id);
+        if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_ptr = val;
+        m_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -75,11 +105,11 @@ namespace Birdy3d::core {
     template <>
     bool ResourceHandle<physics::Collider>::load(ResourceIdentifier const& new_id)
     {
-        auto val = ResourceManager::get_collider_ptr(new_id);
-        if (!val)
+        auto optional_index = ResourceManager::load_collider_ptr(new_id);
+        if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_ptr = val;
+        m_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -147,11 +177,17 @@ namespace Birdy3d::core {
         return location + data;
     }
 
-    std::unordered_map<std::string, std::shared_ptr<render::Shader>> ResourceManager::m_shaders;
-    std::unordered_map<std::string, std::shared_ptr<ui::Theme>> ResourceManager::m_themes;
-    std::unordered_map<std::string, std::shared_ptr<render::Model>> ResourceManager::m_models;
-    std::unordered_map<std::string, std::shared_ptr<render::Texture>> ResourceManager::m_textures;
-    std::unordered_map<std::string, std::shared_ptr<physics::Collider>> ResourceManager::m_colliders;
+    std::unordered_map<std::string, std::size_t> ResourceManager::m_shader_indices;
+    std::unordered_map<std::string, std::size_t> ResourceManager::m_theme_indices;
+    std::unordered_map<std::string, std::size_t> ResourceManager::m_model_indices;
+    std::unordered_map<std::string, std::size_t> ResourceManager::m_texture_indices;
+    std::unordered_map<std::string, std::size_t> ResourceManager::m_collider_indices;
+
+    std::vector<std::unique_ptr<render::Shader>> ResourceManager::m_shaders;
+    std::vector<std::unique_ptr<ui::Theme>> ResourceManager::m_themes;
+    std::vector<std::unique_ptr<render::Model>> ResourceManager::m_models;
+    std::vector<std::unique_ptr<render::Texture>> ResourceManager::m_textures;
+    std::vector<std::unique_ptr<physics::Collider>> ResourceManager::m_colliders;
 
     ResourceHandle<render::Shader> ResourceManager::get_shader(ResourceIdentifier const& id)
     {
@@ -178,127 +214,164 @@ namespace Birdy3d::core {
         return ResourceHandle<physics::Collider>(id);
     }
 
-    std::shared_ptr<render::Shader> ResourceManager::get_shader_ptr(ResourceIdentifier const& id)
+    std::optional<std::size_t> ResourceManager::load_shader_ptr(ResourceIdentifier const& id)
     {
         auto name = id.to_string();
-        std::shared_ptr<render::Shader> shader = m_shaders[name];
-        if (!shader) {
-            if (id.source != "file" && id.source != "") {
-                Logger::error("invalid shader source '{}'", id.source);
-                return nullptr;
-            }
-            std::map<std::string, std::string> shader_parameters;
-            for (auto const& [key, value] : id.args) {
-                shader_parameters[key] = value;
-            }
-            shader = std::make_shared<render::Shader>(id.name, shader_parameters);
-            m_shaders[name] = shader;
+
+        if (m_shader_indices.contains(name))
+            return m_shader_indices[name];
+
+        if (id.source != "file" && id.source != "") {
+            Logger::error("invalid shader source '{}'", id.source);
+            return {};
         }
-        return shader;
+
+        std::map<std::string, std::string> shader_parameters;
+        for (auto const& [key, value] : id.args) {
+            shader_parameters[key] = value;
+        }
+
+        auto shader = std::make_unique<render::Shader>(id.name, shader_parameters);
+
+        auto index = m_shaders.size();
+        m_shader_indices[name] = index;
+        m_shaders.push_back(std::move(shader));
+
+        return index;
     }
 
-    std::shared_ptr<ui::Theme> ResourceManager::get_theme_ptr(ResourceIdentifier const& id)
+    std::optional<std::size_t> ResourceManager::load_theme_ptr(ResourceIdentifier const& id)
     {
         std::string name = id.to_string();
-        std::shared_ptr<ui::Theme> theme = m_themes[name];
-        if (!theme) {
-            if (id.source == "file" || id.source == "") {
-                std::string path = get_resource_path(id.name, ResourceType::THEME);
-                if (path.empty())
-                    return nullptr;
-                std::string file_content = ResourceManager::read_file(path);
-                if (file_content.empty())
-                    return nullptr;
-                try {
-                    theme = std::make_shared<ui::Theme>(file_content);
-                } catch (std::exception const& e) {
-                    return nullptr;
+
+        if (m_theme_indices.contains(name))
+            return m_theme_indices[name];
+
+        if (id.source == "file" || id.source == "") {
+            std::string path = get_resource_path(id.name, ResourceType::THEME);
+            if (path.empty())
+                return {};
+            std::string file_content = ResourceManager::read_file(path);
+            if (file_content.empty())
+                return {};
+            try {
+                auto theme = std::make_unique<ui::Theme>(file_content);
+
+                auto index = m_themes.size();
+                m_theme_indices[name] = index;
+                m_themes.push_back(std::move(theme));
+
+                return index;
+            } catch (std::exception const& e) {
+                return {};
+            }
+        } else {
+            Logger::error("invalid theme source '{}'", id.source);
+        }
+
+        return {};
+    }
+
+    std::optional<std::size_t> ResourceManager::load_model_ptr(ResourceIdentifier const& id)
+    {
+        std::string name = id.to_string();
+
+        if (m_model_indices.contains(name))
+            return m_model_indices[name];
+
+        std::unique_ptr<render::Model> model;
+
+        if (id.source == "file" || id.source == "") {
+            std::string path = get_resource_path(id.name, ResourceType::MODEL);
+            if (path.empty())
+                return {};
+            model = std::make_unique<render::Model>(path);
+        } else if (id.source == "primitive") {
+            if (id.name == "plane") {
+                int resolution = 1;
+                if (id.args.contains("resolution")) {
+                    int resolution_arg = std::stoi(id.args.at("resolution"));
+                    if (resolution_arg > resolution)
+                        resolution = resolution_arg;
                 }
-            } else {
-                Logger::error("invalid theme source '{}'", id.source);
-            }
-            m_themes[name] = theme;
-        }
-        return theme;
-    }
-
-    std::shared_ptr<render::Model> ResourceManager::get_model_ptr(ResourceIdentifier const& id)
-    {
-        std::string name = id.to_string();
-        std::shared_ptr<render::Model> model = m_models[name];
-        if (!model) {
-            if (id.source == "file" || id.source == "") {
-                std::string path = get_resource_path(id.name, ResourceType::MODEL);
-                if (path.empty())
-                    return nullptr;
-                model = std::make_shared<render::Model>(path);
-            } else if (id.source == "primitive") {
-                if (id.name == "plane") {
-                    int resolution = 1;
-                    if (id.args.contains("resolution")) {
-                        int resolution_arg = std::stoi(id.args.at("resolution"));
-                        if (resolution_arg > resolution)
-                            resolution = resolution_arg;
-                    }
-                    model = utils::PrimitiveGenerator::generate_plane(resolution);
-                } else if (id.name == "cube") {
-                    model = utils::PrimitiveGenerator::generate_cube();
-                } else if (id.name == "uv_sphere") {
-                    int resolution = 5;
-                    if (id.args.contains("resolution")) {
-                        int resolution_arg = std::stoi(id.args.at("resolution"));
-                        if (resolution_arg > resolution)
-                            resolution = resolution_arg;
-                    }
-                    model = utils::PrimitiveGenerator::generate_uv_sphere(resolution);
-                } else if (id.name == "ico_sphere") {
-                    int resolution = 5;
-                    if (id.args.contains("resolution")) {
-                        int resolution_arg = std::stoi(id.args.at("resolution"));
-                        if (resolution_arg > resolution)
-                            resolution = resolution_arg;
-                    }
-                    model = utils::PrimitiveGenerator::generate_ico_sphere(resolution);
-                } else {
-                    Logger::error("invalid primitive type '{}'", id.name);
+                model = utils::PrimitiveGenerator::generate_plane(resolution);
+            } else if (id.name == "cube") {
+                model = utils::PrimitiveGenerator::generate_cube();
+            } else if (id.name == "uv_sphere") {
+                int resolution = 5;
+                if (id.args.contains("resolution")) {
+                    int resolution_arg = std::stoi(id.args.at("resolution"));
+                    if (resolution_arg > resolution)
+                        resolution = resolution_arg;
                 }
+                model = utils::PrimitiveGenerator::generate_uv_sphere(resolution);
+            } else if (id.name == "ico_sphere") {
+                int resolution = 5;
+                if (id.args.contains("resolution")) {
+                    int resolution_arg = std::stoi(id.args.at("resolution"));
+                    if (resolution_arg > resolution)
+                        resolution = resolution_arg;
+                }
+                model = utils::PrimitiveGenerator::generate_ico_sphere(resolution);
             } else {
-                Logger::error("invalid model source '{}'", id.source);
+                Logger::error("invalid primitive type '{}'", id.name);
+                return {};
             }
-            m_models[name] = model;
+        } else {
+            Logger::error("invalid model source '{}'", id.source);
+            return {};
         }
-        return model;
+
+        auto index = m_models.size();
+        m_model_indices[name] = index;
+        m_models.push_back(std::move(model));
+
+        return index;
     }
 
-    std::shared_ptr<render::Texture> ResourceManager::get_texture_ptr(ResourceIdentifier const& id)
+    std::optional<std::size_t> ResourceManager::load_texture_ptr(ResourceIdentifier const& id)
     {
         std::string name = id.to_string();
-        std::shared_ptr<render::Texture> texture = m_textures[name];
-        if (!texture) {
-            if (id.source == "file" || id.source == "") {
-                std::string path = get_resource_path(id.name, ResourceType::TEXTURE);
-                if (path.empty())
-                    return nullptr;
-                texture = std::make_shared<render::Texture>(path);
-            } else if (id.source == "color") {
-                utils::Color color = id.name;
-                texture = std::make_shared<render::Texture>(color);
-            } else {
-                Logger::error("invalid texture source '{}'", id.source);
-            }
-            m_textures[name] = texture;
+
+        if (m_texture_indices.contains(name))
+            return m_texture_indices[name];
+
+        std::unique_ptr<render::Texture> texture;
+
+        if (id.source == "file" || id.source == "") {
+            std::string path = get_resource_path(id.name, ResourceType::TEXTURE);
+            if (path.empty())
+                return {};
+            texture = std::make_unique<render::Texture>(path);
+        } else if (id.source == "color") {
+            utils::Color color = id.name;
+            texture = std::make_unique<render::Texture>(color);
+        } else {
+            Logger::error("invalid texture source '{}'", id.source);
         }
-        return texture;
+
+        auto index = m_textures.size();
+        m_texture_indices[name] = index;
+        m_textures.push_back(std::move(texture));
+
+        return index;
     }
 
-    std::shared_ptr<physics::Collider> ResourceManager::get_collider_ptr(ResourceIdentifier const& id)
+    std::optional<std::size_t> ResourceManager::load_collider_ptr(ResourceIdentifier const& id)
     {
         std::string name = id.to_string(false);
-        auto collider = m_colliders[name];
-        if (collider)
-            return collider;
 
-        auto model = get_model_ptr(name);
+        if (m_collider_indices.contains(name))
+            return m_collider_indices[name];
+
+        std::unique_ptr<physics::Collider> collider;
+
+        auto model_index = load_model_ptr(id);
+        if (!model_index.has_value())
+            return {};
+
+        // FIXME: Wait for model to be available
+        auto model = get_model_ptr(model_index.value());
         if (!model)
             return {};
 
@@ -309,7 +382,7 @@ namespace Birdy3d::core {
             } else if (id.name == "uv_sphere" || id.name == " ico_sphere") {
                 auto shapes = std::vector<std::unique_ptr<physics::CollisionShape>>();
                 shapes.push_back(std::make_unique<physics::CollisionSphere>(1.0f));
-                collider = std::make_shared<physics::Collider>(model, std::move(shapes));
+                collider = std::make_unique<physics::Collider>(std::move(shapes));
             }
         }
 
@@ -336,11 +409,49 @@ namespace Birdy3d::core {
                 return {};
             }
 
-            collider = physics::ConvexMeshGenerators::generate_collider(generation_mode, model);
+            collider = physics::ConvexMeshGenerators::generate_collider(generation_mode, *model);
         }
 
-        m_colliders[name] = collider;
-        return collider;
+        auto index = m_colliders.size();
+        m_collider_indices[name] = index;
+        m_colliders.push_back(std::move(collider));
+
+        return index;
+    }
+
+    render::Shader const* ResourceManager::get_shader_ptr(std::size_t const& index)
+    {
+        if (index >= m_shaders.size())
+            return nullptr;
+        return m_shaders[index].get();
+    }
+
+    ui::Theme const* ResourceManager::get_theme_ptr(std::size_t const& index)
+    {
+        if (index >= m_themes.size())
+            return nullptr;
+        return m_themes[index].get();
+    }
+
+    render::Model const* ResourceManager::get_model_ptr(std::size_t const& index)
+    {
+        if (index >= m_models.size())
+            return nullptr;
+        return m_models[index].get();
+    }
+
+    render::Texture const* ResourceManager::get_texture_ptr(std::size_t const& index)
+    {
+        if (index >= m_textures.size())
+            return nullptr;
+        return m_textures[index].get();
+    }
+
+    physics::Collider const* ResourceManager::get_collider_ptr(std::size_t const& index)
+    {
+        if (index >= m_colliders.size())
+            return nullptr;
+        return m_colliders[index].get();
     }
 
     std::string ResourceManager::get_resource_path(std::string name, ResourceType type)

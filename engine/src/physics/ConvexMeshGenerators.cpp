@@ -6,15 +6,14 @@
 #include "physics/IntermediateMesh.hpp"
 #include "render/Mesh.hpp"
 #include "render/Model.hpp"
-#include "utils/Ranges.hpp"
 
 namespace Birdy3d::physics {
 
-    std::shared_ptr<Collider> ConvexMeshGenerators::generate_collider(GenerationMode mode, std::shared_ptr<render::Model> model)
+    std::unique_ptr<Collider> ConvexMeshGenerators::generate_collider(GenerationMode mode, render::Model const& model)
     {
         if (mode == GenerationMode::COPY || mode == GenerationMode::HULL_MESHES || mode == GenerationMode::DECOMPOSITION_MESHES) {
             std::vector<std::unique_ptr<CollisionShape>> meshes;
-            for (auto const& m : model->get_meshes()) {
+            for (auto const& m : model.get_meshes()) {
                 auto in_mesh = Mesh{m.vertices, m.indices};
                 std::optional<Mesh> out_mesh;
                 switch (mode) {
@@ -31,18 +30,18 @@ namespace Birdy3d::physics {
                     return nullptr;
                 }
                 if (out_mesh.has_value()) {
-                    auto points = utils::to_vector(out_mesh->vertices | std::views::transform([](render::Vertex vertex) { return vertex.position; }));
-                    meshes.push_back(std::make_unique<CollisionMesh>(points));
+                    meshes.push_back(std::make_unique<CollisionMesh>(out_mesh.value()));
                 }
             }
             if (meshes.size() == 0)
                 return nullptr;
-            return std::make_shared<Collider>(model, std::move(meshes));
+            // FIXME: Don't pass `model`, but a model generated from the meshes
+            return std::make_unique<Collider>(std::move(meshes));
         } else {
             std::vector<render::Vertex> vertices;
             std::vector<unsigned int> indices;
             unsigned int previous_sizes = 0;
-            for (auto const& m : model->get_meshes()) {
+            for (auto const& m : model.get_meshes()) {
                 for (auto const& vertex : m.vertices)
                     vertices.push_back(vertex);
                 for (auto const& index : m.indices)
@@ -65,10 +64,9 @@ namespace Birdy3d::physics {
             if (!out_mesh.has_value())
                 return nullptr;
             if (out_mesh.has_value()) {
-                auto points = utils::to_vector(out_mesh->vertices | std::views::transform([](render::Vertex vertex) { return vertex.position; }));
-                meshes.push_back(std::make_unique<CollisionMesh>(points));
+                meshes.push_back(std::make_unique<CollisionMesh>(out_mesh.value()));
             }
-            return std::make_shared<Collider>(model, std::move(meshes));
+            return std::make_unique<Collider>(std::move(meshes));
         }
     }
 

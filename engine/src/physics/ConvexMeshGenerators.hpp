@@ -18,7 +18,7 @@ namespace Birdy3d::physics {
 
     class ConvexMeshGenerators {
     public:
-        static std::shared_ptr<Collider> generate_collider(GenerationMode, std::shared_ptr<render::Model>);
+        static std::unique_ptr<Collider> generate_collider(GenerationMode, render::Model const&);
 
     private:
         static std::optional<Mesh> copy(Mesh const&);
