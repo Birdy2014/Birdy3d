@@ -28,6 +28,8 @@ namespace Birdy3d::ui {
         utils::Color m_color_bg_input;
         utils::Color m_color_bg_selected;
         utils::Color m_color_text_highlight;
+        utils::Color m_color_object_selection;
+        utils::Color m_color_collider_wireframe;
 
         std::string m_font;
         int m_font_size;

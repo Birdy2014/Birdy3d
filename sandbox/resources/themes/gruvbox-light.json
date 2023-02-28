@@ -25,6 +25,8 @@
     "color_bg_input": "#f9f5d7",
     "color_bg_selected": "#00000011",
     "color_text_highlight": "#0000a050",
+    "color_object_selection": "#e0902180",
+    "color_collider_wireframe": "#00ff0080",
     "font": "Noto_Sans/NotoSans-Regular.ttf",
     "font_size": 16,
     "line_height": 18,

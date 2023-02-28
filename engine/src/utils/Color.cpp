@@ -59,10 +59,10 @@ namespace Birdy3d::utils {
 
     glm::vec4 Color::parse(std::string const& color_string)
     {
-        std::regex const color_regex("#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?");
+        static std::regex const COLOR_REGEX("#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?");
 
         std::smatch matches;
-        if (!std::regex_match(color_string, matches, color_regex)) {
+        if (!std::regex_match(color_string, matches, COLOR_REGEX)) {
             core::Logger::warn("Invalid color: {}", color_string);
             return glm::vec4(1);
         }
