@@ -95,7 +95,7 @@ $(document).ready(function(){initNavTree('classBirdy3d_1_1physics_1_1CollisionSp
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classBirdy3d_1_1physics_1_1CollisionSphere-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Birdy3d::physics::CollisionSphere Class Reference</div></div>
+  <div class="headertitle"><div class="title">Birdy3d::physics::CollisionSphere Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
@@ -115,9 +115,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9fd541397bd94dc1063bb44d5141fb6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0db30c2d8746af35ba7a105e3975c3d8"><td class="memItemLeft" align="right" valign="top">virtual glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1physics_1_1CollisionSphere.html#a0db30c2d8746af35ba7a105e3975c3d8">find_furthest_point</a> (const glm::vec3 direction) const override</td></tr>
 <tr class="separator:a0db30c2d8746af35ba7a105e3975c3d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0fea9be196860085f9d2d31c20f2f45"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classBirdy3d_1_1render_1_1Mesh.html">render::Mesh</a> const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBirdy3d_1_1physics_1_1CollisionSphere.html#ad0fea9be196860085f9d2d31c20f2f45">get_render_mesh</a> () const override</td></tr>
+<tr class="separator:ad0fea9be196860085f9d2d31c20f2f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05467ee0cd7d8c25dafdb4b2021db7ff"><td class="memItemLeft" align="right" valign="top"><a id="a05467ee0cd7d8c25dafdb4b2021db7ff" name="a05467ee0cd7d8c25dafdb4b2021db7ff"></a>
 virtual glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>find_furthest_point</b> (const glm::vec3 direction) const =0</td></tr>
 <tr class="separator:a05467ee0cd7d8c25dafdb4b2021db7ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd8bfff376317650be49e4855d62c024"><td class="memItemLeft" align="right" valign="top"><a id="acd8bfff376317650be49e4855d62c024" name="acd8bfff376317650be49e4855d62c024"></a>
+virtual <a class="el" href="classBirdy3d_1_1render_1_1Mesh.html">render::Mesh</a> const *&#160;</td><td class="memItemRight" valign="bottom"><b>get_render_mesh</b> () const =0</td></tr>
+<tr class="separator:acd8bfff376317650be49e4855d62c024"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0db30c2d8746af35ba7a105e3975c3d8" name="a0db30c2d8746af35ba7a105e3975c3d8"></a>
@@ -134,6 +139,33 @@ virtual glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>find_fur
           <td>(</td>
           <td class="paramtype">const glm::vec3&#160;</td>
           <td class="paramname"><em>direction</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classBirdy3d_1_1physics_1_1CollisionShape.html">Birdy3d::physics::CollisionShape</a>.</p>
+
+</div>
+</div>
+<a id="ad0fea9be196860085f9d2d31c20f2f45" name="ad0fea9be196860085f9d2d31c20f2f45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0fea9be196860085f9d2d31c20f2f45">&#9670;&#160;</a></span>get_render_mesh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classBirdy3d_1_1render_1_1Mesh.html">render::Mesh</a> const  * Birdy3d::physics::CollisionSphere::get_render_mesh </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>

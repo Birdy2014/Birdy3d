@@ -115,7 +115,7 @@ $(document).ready(function(){initNavTree('ConvexMeshGenerators_8hpp_source.html'
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">   19</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">ConvexMeshGenerators</a> {</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keyword">static</span> std::shared_ptr&lt;Collider&gt; generate_collider(GenerationMode, std::shared_ptr&lt;render::Model&gt;);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keyword">static</span> std::unique_ptr&lt;Collider&gt; generate_collider(GenerationMode, <a class="code hl_class" href="classBirdy3d_1_1render_1_1Model.html">render::Model</a> <span class="keyword">const</span>&amp;);</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">static</span> std::optional&lt;Mesh&gt; copy(<a class="code hl_struct" href="structBirdy3d_1_1physics_1_1Mesh.html">Mesh</a> <span class="keyword">const</span>&amp;);</div>
@@ -125,6 +125,7 @@ $(document).ready(function(){initNavTree('ConvexMeshGenerators_8hpp_source.html'
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
 <div class="ttc" id="aclassBirdy3d_1_1physics_1_1ConvexMeshGenerators_html"><div class="ttname"><a href="classBirdy3d_1_1physics_1_1ConvexMeshGenerators.html">Birdy3d::physics::ConvexMeshGenerators</a></div><div class="ttdef"><b>Definition:</b> ConvexMeshGenerators.hpp:19</div></div>
+<div class="ttc" id="aclassBirdy3d_1_1render_1_1Model_html"><div class="ttname"><a href="classBirdy3d_1_1render_1_1Model.html">Birdy3d::render::Model</a></div><div class="ttdef"><b>Definition:</b> Model.hpp:14</div></div>
 <div class="ttc" id="astructBirdy3d_1_1physics_1_1Mesh_html"><div class="ttname"><a href="structBirdy3d_1_1physics_1_1Mesh.html">Birdy3d::physics::Mesh</a></div><div class="ttdef"><b>Definition:</b> IntermediateMesh.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

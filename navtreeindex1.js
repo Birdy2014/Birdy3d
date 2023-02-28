@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"hierarchy.html":[2,2],
+"index.html":[],
 "index.html#autotoc_md1":[0],
 "pages.html":[],
 "physics_2Forward_8hpp_source.html":[3,0,0,0,3,7],
@@ -34,5 +36,5 @@ var NAVTREEINDEX1 =
 "structfmt_1_1formatter_3_01EventType_01_4.html":[2,0,1,2],
 "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html":[2,0,1,3],
 "ui_2Forward_8hpp_source.html":[3,0,0,0,5,5],
-"utils_2Forward_8hpp_source.html":[3,0,0,0,6,2]
+"utils_2Forward_8hpp_source.html":[3,0,0,0,6,3]
 };

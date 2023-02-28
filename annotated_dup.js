@@ -151,5 +151,6 @@ var annotated_dup =
       [ "formatter< Birdy3d::utils::Color >", "structfmt_1_1formatter_3_01Birdy3d_1_1utils_1_1Color_01_4.html", null ],
       [ "formatter< EventType >", "structfmt_1_1formatter_3_01EventType_01_4.html", null ],
       [ "formatter< glm::vec< L, T > >", "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html", null ]
-    ] ]
+    ] ],
+    [ "Channel", "classChannel.html", null ]
 ];

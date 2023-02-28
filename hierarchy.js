@@ -7,6 +7,8 @@ var hierarchy =
       [ "Birdy3d::serializer::DerivedRegister< Base, Derived >", "structBirdy3d_1_1serializer_1_1DerivedRegister.html", null ]
     ] ],
     [ "Birdy3d::serializer::Bool", "structBirdy3d_1_1serializer_1_1Bool.html", null ],
+    [ "Channel< T >", "classChannel.html", null ],
+    [ "Channel< std::function< void()> >", "classChannel.html", null ],
     [ "Birdy3d::ui::Character", "structBirdy3d_1_1ui_1_1Character.html", null ],
     [ "Birdy3d::physics::Collider", "classBirdy3d_1_1physics_1_1Collider.html", null ],
     [ "Birdy3d::physics::Collision", "classBirdy3d_1_1physics_1_1Collision.html", null ],
