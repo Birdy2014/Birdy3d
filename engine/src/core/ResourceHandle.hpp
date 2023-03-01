@@ -51,8 +51,6 @@ namespace Birdy3d::core {
         ResourceIdentifier const& id() { return m_resource_id; }
         [[nodiscard]] T const* ptr() const { return nullptr; }
 
-        utils::Identifier handle_id() { return m_handle_id; }
-
         bool operator=(ResourceIdentifier new_id)
         {
             return load(new_id);
@@ -77,7 +75,6 @@ namespace Birdy3d::core {
         }
 
     private:
-        utils::Identifier m_handle_id = utils::Identifier::new_random();
         ResourceIdentifier m_resource_id;
         std::size_t m_resource_index;
 
@@ -85,7 +82,7 @@ namespace Birdy3d::core {
 
         void notify_load()
         {
-            core::Application::event_bus->emit<events::ResourceLoadEvent>(m_handle_id);
+            core::Application::event_bus->emit<events::ResourceLoadEvent>();
         }
     };
 

@@ -110,7 +110,6 @@ namespace Birdy3d::core {
             return false;
         m_resource_id = new_id;
         m_resource_index = optional_index.value();
-        notify_load();
         return true;
     }
 
@@ -364,8 +363,6 @@ namespace Birdy3d::core {
         if (m_collider_indices.contains(name))
             return m_collider_indices[name];
 
-        std::unique_ptr<physics::Collider> collider;
-
         auto model_index = load_model_ptr(id);
         if (!model_index.has_value())
             return {};
@@ -382,39 +379,50 @@ namespace Birdy3d::core {
             } else if (id.name == "uv_sphere" || id.name == " ico_sphere") {
                 auto shapes = std::vector<std::unique_ptr<physics::CollisionShape>>();
                 shapes.push_back(std::make_unique<physics::CollisionSphere>(1.0f));
-                collider = std::make_unique<physics::Collider>(std::move(shapes));
+                auto collider = std::make_unique<physics::Collider>(std::move(shapes));
+
+                auto index = m_colliders.size();
+                m_collider_indices[name] = index;
+                m_colliders.push_back(std::move(collider));
+                return index;
             }
         }
 
-        if (!collider) {
-            physics::GenerationMode generation_mode = physics::GenerationMode::NONE;
-            if (!id.args.contains("generation_mode"))
-                return {};
+        physics::GenerationMode generation_mode = physics::GenerationMode::NONE;
+        if (!id.args.contains("generation_mode"))
+            return {};
 
-            auto mode_string = id.args.at("generation_mode");
-            if (mode_string == "NONE") {
-                generation_mode = physics::GenerationMode::NONE;
-            } else if (mode_string == "COPY") {
-                generation_mode = physics::GenerationMode::COPY;
-            } else if (mode_string == "HULL_MODEL") {
-                generation_mode = physics::GenerationMode::HULL_MODEL;
-            } else if (mode_string == "HULL_MESHES") {
-                generation_mode = physics::GenerationMode::HULL_MESHES;
-            } else if (mode_string == "DECOMPOSITION_MODEL") {
-                generation_mode = physics::GenerationMode::DECOMPOSITION_MODEL;
-            } else if (mode_string == "DECOMPOSITION_MESHES") {
-                generation_mode = physics::GenerationMode::DECOMPOSITION_MESHES;
-            } else {
-                Logger::error("Invalid generation mode '{}'", mode_string);
-                return {};
-            }
-
-            collider = physics::ConvexMeshGenerators::generate_collider(generation_mode, *model);
+        auto mode_string = id.args.at("generation_mode");
+        if (mode_string == "NONE") {
+            generation_mode = physics::GenerationMode::NONE;
+        } else if (mode_string == "COPY") {
+            generation_mode = physics::GenerationMode::COPY;
+        } else if (mode_string == "HULL_MODEL") {
+            generation_mode = physics::GenerationMode::HULL_MODEL;
+        } else if (mode_string == "HULL_MESHES") {
+            generation_mode = physics::GenerationMode::HULL_MESHES;
+        } else if (mode_string == "DECOMPOSITION_MODEL") {
+            generation_mode = physics::GenerationMode::DECOMPOSITION_MODEL;
+        } else if (mode_string == "DECOMPOSITION_MESHES") {
+            generation_mode = physics::GenerationMode::DECOMPOSITION_MESHES;
+        } else {
+            Logger::error("Invalid generation mode '{}'", mode_string);
+            return {};
         }
 
         auto index = m_colliders.size();
         m_collider_indices[name] = index;
-        m_colliders.push_back(std::move(collider));
+        m_colliders.push_back(nullptr);
+
+        core::Application::defer_loading([=]() {
+            auto collider = physics::ConvexMeshGenerators::generate_collider(generation_mode, *model);
+
+            // FIXME: Possible race condition. Use a mutex?
+            if (!m_colliders[index])
+                m_colliders[index] = std::move(collider);
+
+            core::Application::event_bus->emit<events::ResourceLoadEvent>();
+        });
 
         return index;
     }
