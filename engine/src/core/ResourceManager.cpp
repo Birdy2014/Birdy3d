@@ -27,31 +27,91 @@ namespace Birdy3d::core {
     template <>
     [[nodiscard]] render::Shader const* ResourceHandle<render::Shader>::ptr() const
     {
-        return ResourceManager::get_shader_ptr(m_resource_index);
+        if (m_new_resource_index.has_value()) {
+            auto resource = ResourceManager::get_shader_ptr(m_new_resource_index.value());
+            if (resource) {
+                m_resource_index = m_new_resource_index.value();
+                m_new_resource_index = {};
+                return resource;
+            }
+        }
+
+        if (m_resource_index.has_value())
+            return ResourceManager::get_shader_ptr(m_resource_index.value());
+
+        return nullptr;
     }
 
     template <>
     [[nodiscard]] ui::Theme const* ResourceHandle<ui::Theme>::ptr() const
     {
-        return ResourceManager::get_theme_ptr(m_resource_index);
+        if (m_new_resource_index.has_value()) {
+            auto resource = ResourceManager::get_theme_ptr(m_new_resource_index.value());
+            if (resource) {
+                m_resource_index = m_new_resource_index.value();
+                m_new_resource_index = {};
+                return resource;
+            }
+        }
+
+        if (m_resource_index.has_value())
+            return ResourceManager::get_theme_ptr(m_resource_index.value());
+
+        return nullptr;
     }
 
     template <>
     [[nodiscard]] render::Model const* ResourceHandle<render::Model>::ptr() const
     {
-        return ResourceManager::get_model_ptr(m_resource_index);
+        if (m_new_resource_index.has_value()) {
+            auto resource = ResourceManager::get_model_ptr(m_new_resource_index.value());
+            if (resource) {
+                m_resource_index = m_new_resource_index.value();
+                m_new_resource_index = {};
+                return resource;
+            }
+        }
+
+        if (m_resource_index.has_value())
+            return ResourceManager::get_model_ptr(m_resource_index.value());
+
+        return nullptr;
     }
 
     template <>
     [[nodiscard]] render::Texture const* ResourceHandle<render::Texture>::ptr() const
     {
-        return ResourceManager::get_texture_ptr(m_resource_index);
+        if (m_new_resource_index.has_value()) {
+            auto resource = ResourceManager::get_texture_ptr(m_new_resource_index.value());
+            if (resource) {
+                m_resource_index = m_new_resource_index.value();
+                m_new_resource_index = {};
+                return resource;
+            }
+        }
+
+        if (m_resource_index.has_value())
+            return ResourceManager::get_texture_ptr(m_resource_index.value());
+
+        return nullptr;
     }
 
     template <>
     [[nodiscard]] physics::Collider const* ResourceHandle<physics::Collider>::ptr() const
     {
-        return ResourceManager::get_collider_ptr(m_resource_index);
+        if (m_new_resource_index.has_value()) {
+            auto resource = ResourceManager::get_collider_ptr(m_new_resource_index.value());
+            if (resource) {
+                m_resource_index = m_new_resource_index.value();
+                m_new_resource_index = {};
+                return resource;
+            }
+        }
+
+        if (m_resource_index.has_value())
+            return ResourceManager::get_collider_ptr(m_resource_index.value());
+
+        return nullptr;
     }
 
     template <>
@@ -61,7 +121,9 @@ namespace Birdy3d::core {
         if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_resource_index = optional_index.value();
+        if (m_new_resource_index.has_value() && ResourceManager::get_shader_ptr(m_new_resource_index.value()))
+            m_resource_index = m_new_resource_index.value();
+        m_new_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -73,7 +135,9 @@ namespace Birdy3d::core {
         if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_resource_index = optional_index.value();
+        if (m_new_resource_index.has_value() && ResourceManager::get_theme_ptr(m_new_resource_index.value()))
+            m_resource_index = m_new_resource_index.value();
+        m_new_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -85,7 +149,9 @@ namespace Birdy3d::core {
         if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_resource_index = optional_index.value();
+        if (m_new_resource_index.has_value() && ResourceManager::get_model_ptr(m_new_resource_index.value()))
+            m_resource_index = m_new_resource_index.value();
+        m_new_resource_index = optional_index.value();
         notify_load();
         return true;
     }
@@ -97,8 +163,9 @@ namespace Birdy3d::core {
         if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_resource_index = optional_index.value();
-        notify_load();
+        if (m_new_resource_index.has_value() && ResourceManager::get_texture_ptr(m_new_resource_index.value()))
+            m_resource_index = m_new_resource_index.value();
+        m_new_resource_index = optional_index.value();
         return true;
     }
 
@@ -109,7 +176,9 @@ namespace Birdy3d::core {
         if (!optional_index.has_value())
             return false;
         m_resource_id = new_id;
-        m_resource_index = optional_index.value();
+        if (m_new_resource_index.has_value() && ResourceManager::get_collider_ptr(m_new_resource_index.value()))
+            m_resource_index = m_new_resource_index.value();
+        m_new_resource_index = optional_index.value();
         return true;
     }
 
@@ -335,25 +404,48 @@ namespace Birdy3d::core {
         if (m_texture_indices.contains(name))
             return m_texture_indices[name];
 
-        std::unique_ptr<render::Texture> texture;
-
         if (id.source == "file" || id.source == "") {
             std::string path = get_resource_path(id.name, ResourceType::TEXTURE);
             if (path.empty())
                 return {};
-            texture = std::make_unique<render::Texture>(path);
+
+            auto index = m_textures.size();
+            m_texture_indices[name] = index;
+            m_textures.push_back(nullptr);
+
+            core::Application::defer_loading([=]() {
+                auto optional_image = utils::TextureLoader::from_file(path);
+
+                if (!optional_image.has_value()) {
+                    core::Logger::warn("Failed to load texture at {}", path);
+                    return;
+                }
+
+                core::Application::defer_main([index, image = optional_image.value()]() {
+                    auto texture = std::make_unique<render::Texture>(image);
+
+                    if (!m_textures[index])
+                        m_textures[index] = std::move(texture);
+
+                    core::Application::event_bus->emit<events::ResourceLoadEvent>();
+                });
+            });
+
+            return index;
         } else if (id.source == "color") {
             utils::Color color = id.name;
-            texture = std::make_unique<render::Texture>(color);
+            auto texture = std::make_unique<render::Texture>(color);
+
+            auto index = m_textures.size();
+            m_texture_indices[name] = index;
+            m_textures.push_back(std::move(texture));
+
+            return index;
         } else {
             Logger::error("invalid texture source '{}'", id.source);
         }
 
-        auto index = m_textures.size();
-        m_texture_indices[name] = index;
-        m_textures.push_back(std::move(texture));
-
-        return index;
+        return {};
     }
 
     std::optional<std::size_t> ResourceManager::load_collider_ptr(ResourceIdentifier const& id)
