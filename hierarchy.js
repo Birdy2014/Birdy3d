@@ -63,6 +63,7 @@ var hierarchy =
       [ "Birdy3d::events::MemberFunctionHandler< T, EventType >", "classBirdy3d_1_1events_1_1MemberFunctionHandler.html", null ]
     ] ],
     [ "Birdy3d::utils::Identifier", "classBirdy3d_1_1utils_1_1Identifier.html", null ],
+    [ "Birdy3d::utils::TextureLoader::Image", "structBirdy3d_1_1utils_1_1TextureLoader_1_1Image.html", null ],
     [ "Birdy3d::core::Input", "classBirdy3d_1_1core_1_1Input.html", null ],
     [ "Birdy3d::physics::IntermediateMesh", "classBirdy3d_1_1physics_1_1IntermediateMesh.html", null ],
     [ "Birdy3d::ui::Layout", "classBirdy3d_1_1ui_1_1Layout.html", [
@@ -123,6 +124,7 @@ var hierarchy =
     [ "Birdy3d::ui::TextDescription", "classBirdy3d_1_1ui_1_1TextDescription.html", null ],
     [ "Birdy3d::ui::TextRenderer", "classBirdy3d_1_1ui_1_1TextRenderer.html", null ],
     [ "Birdy3d::render::Texture", "classBirdy3d_1_1render_1_1Texture.html", null ],
+    [ "Birdy3d::utils::TextureLoader", "classBirdy3d_1_1utils_1_1TextureLoader.html", null ],
     [ "Birdy3d::ui::TextVertex", "structBirdy3d_1_1ui_1_1TextVertex.html", null ],
     [ "Birdy3d::ui::Theme", "classBirdy3d_1_1ui_1_1Theme.html", null ],
     [ "Birdy3d::ecs::Transform3d", "classBirdy3d_1_1ecs_1_1Transform3d.html", null ],

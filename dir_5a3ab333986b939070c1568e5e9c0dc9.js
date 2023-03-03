@@ -9,5 +9,6 @@ var dir_5a3ab333986b939070c1568e5e9c0dc9 =
     [ "PrimitiveGenerator.hpp", "PrimitiveGenerator_8hpp_source.html", null ],
     [ "Ranges.hpp", "Ranges_8hpp_source.html", null ],
     [ "Stacktrace.hpp", "Stacktrace_8hpp_source.html", null ],
+    [ "TextureLoader.hpp", "TextureLoader_8hpp_source.html", null ],
     [ "Unicode.hpp", "Unicode_8hpp_source.html", null ]
 ];

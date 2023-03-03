@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"functions_func.html":[2,3,1],
+"functions_vars.html":[2,3,2],
 "hierarchy.html":[2,2],
 "index.html":[],
 "index.html#autotoc_md1":[0],
@@ -31,6 +33,7 @@ var NAVTREEINDEX1 =
 "structBirdy3d_1_1ui_1_1Widget_1_1Options.html":[2,0,0,6,53,0],
 "structBirdy3d_1_1ui_1_1Widget_1_1Padding.html":[2,0,0,6,53,1],
 "structBirdy3d_1_1ui_1_1WindowSnapArea_1_1Options.html":[2,0,0,6,55,0],
+"structBirdy3d_1_1utils_1_1TextureLoader_1_1Image.html":[2,0,0,7,4,0],
 "structfmt_1_1formatter_3_01Birdy3d_1_1ui_1_1Rect_01_4.html":[2,0,1,0],
 "structfmt_1_1formatter_3_01Birdy3d_1_1utils_1_1Color_01_4.html":[2,0,1,1],
 "structfmt_1_1formatter_3_01EventType_01_4.html":[2,0,1,2],

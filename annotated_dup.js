@@ -143,6 +143,7 @@ var annotated_dup =
         [ "FPPlayerController", "classBirdy3d_1_1utils_1_1FPPlayerController.html", null ],
         [ "Identifier", "classBirdy3d_1_1utils_1_1Identifier.html", null ],
         [ "PrimitiveGenerator", "classBirdy3d_1_1utils_1_1PrimitiveGenerator.html", null ],
+        [ "TextureLoader", "classBirdy3d_1_1utils_1_1TextureLoader.html", "classBirdy3d_1_1utils_1_1TextureLoader" ],
         [ "Unicode", "classBirdy3d_1_1utils_1_1Unicode.html", null ]
       ] ]
     ] ],

@@ -70,6 +70,7 @@ var NAVTREEINDEX0 =
 "TextField_8hpp_source.html":[3,0,0,0,5,1,9],
 "TextRenderer_8hpp_source.html":[3,0,0,0,5,14],
 "Text_8hpp_source.html":[3,0,0,0,5,13],
+"TextureLoader_8hpp_source.html":[3,0,0,0,6,9],
 "Texture_8hpp_source.html":[3,0,0,0,4,11],
 "Theme_8hpp_source.html":[3,0,0,0,5,15],
 "TransformChangedEvent_8hpp_source.html":[3,0,0,0,2,6],
@@ -78,7 +79,7 @@ var NAVTREEINDEX0 =
 "TypeRegistry_8hpp_source.html":[3,0,0,0,6,0,5],
 "Types_8hpp_source.html":[3,0,0,0,6,0,6],
 "UIEvent_8hpp_source.html":[3,0,0,0,5,16],
-"Unicode_8hpp_source.html":[3,0,0,0,6,9],
+"Unicode_8hpp_source.html":[3,0,0,0,6,10],
 "Units_8hpp_source.html":[3,0,0,0,5,17],
 "Vertex_8hpp_source.html":[3,0,0,0,4,12],
 "Widget_8hpp_source.html":[3,0,0,0,5,18],
@@ -221,7 +222,8 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1utils_1_1FPPlayerController.html":[2,0,0,7,1],
 "classBirdy3d_1_1utils_1_1Identifier.html":[2,0,0,7,2],
 "classBirdy3d_1_1utils_1_1PrimitiveGenerator.html":[2,0,0,7,3],
-"classBirdy3d_1_1utils_1_1Unicode.html":[2,0,0,7,4],
+"classBirdy3d_1_1utils_1_1TextureLoader.html":[2,0,0,7,4],
+"classBirdy3d_1_1utils_1_1Unicode.html":[2,0,0,7,5],
 "classChannel.html":[2,0,2],
 "classes.html":[2,1],
 "conceptBirdy3d_1_1serializer_1_1ArithmeticType.html":[1,0,0,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "ecs_2Forward_8hpp_source.html":[3,0,0,0,1,2],
 "events_2Forward_8hpp_source.html":[3,0,0,0,2,3],
 "files.html":[3,0],
-"functions.html":[2,3,0],
-"functions_func.html":[2,3,1],
-"functions_vars.html":[2,3,2]
+"functions.html":[2,3,0]
 };
