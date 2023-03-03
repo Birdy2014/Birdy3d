@@ -2,6 +2,7 @@
 
 #include "core/Base.hpp"
 #include "utils/Color.hpp"
+#include "utils/TextureLoader.hpp"
 
 namespace Birdy3d::render {
 
@@ -17,7 +18,7 @@ namespace Birdy3d::render {
             DEPTH
         };
 
-        Texture(std::string const& file_path);
+        Texture(utils::TextureLoader::Image const&);
         Texture(utils::Color const&);
         Texture(int width, int height, Preset);
         Texture(Texture&) = delete;
@@ -35,7 +36,7 @@ namespace Birdy3d::render {
         bool m_transparent;
         GLuint m_id;
         bool m_depth = false;
-        GLenum m_internalformat;
+        GLenum m_internal_format;
         GLenum m_format;
         GLenum m_type;
         bool m_resizable = false;

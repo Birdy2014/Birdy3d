@@ -76,7 +76,8 @@ namespace Birdy3d::core {
 
     private:
         ResourceIdentifier m_resource_id;
-        std::size_t m_resource_index;
+        std::optional<std::size_t> mutable m_resource_index;
+        std::optional<std::size_t> mutable m_new_resource_index;
 
         bool load(ResourceIdentifier const&) { return false; }
 

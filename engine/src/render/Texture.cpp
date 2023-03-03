@@ -1,59 +1,51 @@
 #include "render/Texture.hpp"
 
 #include "core/Logger.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 namespace Birdy3d::render {
 
-    Texture::Texture(std::string const& file_path)
+    Texture::Texture(utils::TextureLoader::Image const& image)
     {
-        unsigned char* data = stbi_load(file_path.data(), &m_width, &m_height, &m_channels, 0);
+        m_width = image.width;
+        m_height = image.height;
 
-        if (!data) {
-            core::Logger::warn("Failed to load texture at {}", file_path);
-            return;
-        }
-
-        GLenum format = GL_RED;
-        GLenum internal_format = GL_RED;
-        switch (m_channels) {
-        case 1:
-            format = GL_RED;
-            internal_format = GL_RED;
+        switch (image.format) {
+        case utils::TextureLoader::ImageFormat::R:
+            m_channels = 1;
+            m_format = GL_RED;
+            m_internal_format = GL_RED;
             break;
-        case 2:
-            format = GL_RG;
-            internal_format = GL_RG;
+        case utils::TextureLoader::ImageFormat::RG:
+            m_channels = 2;
+            m_format = GL_RG;
+            m_internal_format = GL_RG;
             break;
-        case 3:
-            format = GL_RGB;
-            internal_format = GL_SRGB;
+        case utils::TextureLoader::ImageFormat::RGB:
+            m_channels = 3;
+            m_format = GL_RGB;
+            m_internal_format = GL_SRGB;
             break;
-        case 4:
-            format = GL_RGBA;
-            internal_format = GL_SRGB_ALPHA;
+        case utils::TextureLoader::ImageFormat::RGBA:
+            m_channels = 4;
+            m_format = GL_RGBA;
+            m_internal_format = GL_SRGB_ALPHA;
             break;
         default:
-            core::Logger::critical("Invalid number of texture channels: {}", m_channels);
-            stbi_image_free(data);
-            return;
+            assert(false);
         }
 
-        m_transparent = format == GL_RGBA;
+        m_transparent = m_format == GL_RGBA;
 
         glGenTextures(1, &m_id);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_id);
-        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_internal_format, m_width, m_height, 0, m_format, GL_UNSIGNED_BYTE, &image.data[0]);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
     }
 
     Texture::Texture(utils::Color const& color)
@@ -87,43 +79,43 @@ namespace Birdy3d::render {
             return;
         case Preset::COLOR_RGB:
             m_channels = 3;
-            m_internalformat = GL_RGB;
+            m_internal_format = GL_RGB;
             m_format = GL_RGB;
             m_type = GL_UNSIGNED_BYTE;
             break;
         case Preset::COLOR_RGBA:
             m_channels = 4;
-            m_internalformat = GL_RGBA;
+            m_internal_format = GL_RGBA;
             m_format = GL_RGBA;
             m_type = GL_UNSIGNED_BYTE;
             break;
         case Preset::COLOR_R_FLOAT:
             m_channels = 1;
-            m_internalformat = GL_RED;
+            m_internal_format = GL_RED;
             m_format = GL_RED;
             m_type = GL_FLOAT;
             break;
         case Preset::COLOR_RGB_FLOAT:
             m_channels = 3;
-            m_internalformat = GL_RGB16F;
+            m_internal_format = GL_RGB16F;
             m_format = GL_RGB;
             m_type = GL_FLOAT;
             break;
         case Preset::COLOR_RGBA_FLOAT:
             m_channels = 4;
-            m_internalformat = GL_RGBA16F;
+            m_internal_format = GL_RGBA16F;
             m_format = GL_RGBA;
             m_type = GL_FLOAT;
             break;
         case Preset::DEPTH:
             m_channels = 1;
-            m_internalformat = GL_DEPTH_COMPONENT;
+            m_internal_format = GL_DEPTH_COMPONENT;
             m_format = GL_DEPTH_COMPONENT;
             m_type = GL_FLOAT;
             m_depth = true;
             break;
         }
-        glTexImage2D(GL_TEXTURE_2D, 0, m_internalformat, m_width, m_height, 0, m_format, m_type, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_internal_format, m_width, m_height, 0, m_format, m_type, nullptr);
         if (m_depth)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
         // TODO: Parameters: FILTER, WRAP, COMPARE_MODE
@@ -155,7 +147,7 @@ namespace Birdy3d::render {
         m_height = height;
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_id);
-        glTexImage2D(GL_TEXTURE_2D, 0, m_internalformat, m_width, m_height, 0, m_format, m_type, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_internal_format, m_width, m_height, 0, m_format, m_type, nullptr);
     }
 
     GLuint Texture::id() const

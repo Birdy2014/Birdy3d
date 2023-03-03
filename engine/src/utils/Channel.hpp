@@ -13,7 +13,7 @@ public:
         std::lock_guard<std::mutex> queue_lock{m_queue_mutex};
 
         if (!m_queue.empty()) {
-            auto event = std::move(m_queue.back());
+            auto event = std::move(m_queue.front());
             m_queue.pop();
 
             return event;
@@ -32,7 +32,7 @@ public:
             m_convar.wait(queue_lock, [&]() { return !m_queue.empty(); });
 
             if (!m_queue.empty()) {
-                auto event = std::move(m_queue.back());
+                auto event = std::move(m_queue.front());
                 m_queue.pop();
 
                 return event;
