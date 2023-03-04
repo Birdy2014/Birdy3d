@@ -88,6 +88,17 @@ namespace Birdy3d::core {
     };
 
     template <>
+    [[nodiscard]] render::Shader const* ResourceHandle<render::Shader>::ptr() const;
+    template <>
+    [[nodiscard]] ui::Theme const* ResourceHandle<ui::Theme>::ptr() const;
+    template <>
+    [[nodiscard]] render::Model const* ResourceHandle<render::Model>::ptr() const;
+    template <>
+    [[nodiscard]] render::Texture const* ResourceHandle<render::Texture>::ptr() const;
+    template <>
+    [[nodiscard]] physics::Collider const* ResourceHandle<physics::Collider>::ptr() const;
+
+    template <>
     bool ResourceHandle<render::Shader>::load(ResourceIdentifier const& new_id);
     template <>
     bool ResourceHandle<ui::Theme>::load(ResourceIdentifier const& new_id);

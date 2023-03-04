@@ -6,6 +6,7 @@
 #include "physics/IntermediateMesh.hpp"
 #include "render/Mesh.hpp"
 #include "render/Model.hpp"
+#include <iterator>
 
 namespace Birdy3d::physics {
 

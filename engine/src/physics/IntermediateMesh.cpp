@@ -1,5 +1,7 @@
 #include "physics/IntermediateMesh.hpp"
 
+#include <iterator>
+
 namespace Birdy3d::physics {
 
     glm::vec3 Triangle::normal() const
