@@ -58,7 +58,7 @@ namespace Birdy3d::physics {
             m_triangles.push_back(dab);
     }
 
-    void IntermediateMesh::expand(glm::vec3 point)
+    std::list<Triangle> IntermediateMesh::expand(glm::vec3 point)
     {
         // Remove triangles that are facing in the wrong direction
         std::vector<Triangle> removed_triangles;
@@ -85,7 +85,9 @@ namespace Birdy3d::physics {
                     new_triangles.push_back(new_triangle);
             }
         }
-        m_triangles.splice(m_triangles.cend(), new_triangles);
+
+        std::copy(new_triangles.begin(), new_triangles.end(), std::back_inserter(m_triangles));
+        return new_triangles;
     }
 
     Mesh IntermediateMesh::to_mesh() const

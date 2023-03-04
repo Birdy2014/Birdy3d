@@ -35,7 +35,6 @@ namespace Birdy3d::physics {
             }
             if (meshes.size() == 0)
                 return nullptr;
-            // FIXME: Don't pass `model`, but a model generated from the meshes
             return std::make_unique<Collider>(std::move(meshes));
         } else {
             std::vector<render::Vertex> vertices;
@@ -159,21 +158,22 @@ namespace Birdy3d::physics {
         };
         */
 
-        bool done = false;
-        while (!done) {
-            done = true;
-            glm::vec3 furthest;
-            // Find Triangle for furthest point
-            for (auto it = intermediate.triangles().cbegin(); it != intermediate.triangles().cend(); it++) {
-                glm::vec3 normal = it->normal();
-                furthest = find_furthest_point(normal);
-                if (std::find(visited.cbegin(), visited.cend(), furthest) == visited.cend()) {
-                    done = false;
-                    break;
-                }
+        std::list<Triangle> pending_triangles;
+
+        auto intermediate_triangles = intermediate.triangles();
+        std::copy(intermediate_triangles.begin(), intermediate_triangles.end(), std::back_inserter(pending_triangles));
+
+        while (!pending_triangles.empty()) {
+            auto triangle = pending_triangles.front();
+            pending_triangles.pop_front();
+
+            glm::vec3 normal = triangle.normal();
+            auto furthest = find_furthest_point(normal);
+            if (std::find(visited.cbegin(), visited.cend(), furthest) == visited.cend()) {
+                visited.push_back(furthest);
+                auto new_triangles = intermediate.expand(furthest);
+                pending_triangles.splice(pending_triangles.end(), new_triangles);
             }
-            visited.push_back(furthest);
-            intermediate.expand(furthest);
         }
 
         return intermediate.to_mesh();
