@@ -40,7 +40,7 @@ namespace Birdy3d::physics {
 
         [[nodiscard]] std::list<Triangle> const& triangles() const { return m_triangles; }
 
-        void expand(glm::vec3 point);
+        std::list<Triangle> expand(glm::vec3 point);
         [[nodiscard]] Mesh to_mesh() const;
 
     private:
