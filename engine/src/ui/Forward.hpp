@@ -7,8 +7,6 @@ namespace Birdy3d::ui {
     class Container;
     class DirectionalLayout;
     class Layout;
-    class Rectangle;
-    class Shape;
     class TextRenderer;
     class Text;
     class Theme;
