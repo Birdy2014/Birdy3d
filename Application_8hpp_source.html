@@ -147,7 +147,7 @@ $(document).ready(function(){initNavTree('Application_8hpp_source.html',''); ini
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">static</span> <a class="code hl_class" href="classChannel.html">Channel</a>&lt;std::function&lt;void()&gt;&gt; m_channel_main;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">static</span> <a class="code hl_class" href="classChannel.html">Channel</a>&lt;std::function&lt;void()&gt;&gt; m_channel_loading;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">static</span> std::thread m_loading_thread;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">static</span> std::vector&lt;std::thread&gt; m_loading_threads;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> framebuffer_size_callback(GLFWwindow* window, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> window_focus_callback(GLFWwindow* window, <span class="keywordtype">int</span> focused);</div>
@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('Application_8hpp_source.html',''); ini
 <div class="ttc" id="aclassBirdy3d_1_1core_1_1ResourceHandle_html"><div class="ttname"><a href="classBirdy3d_1_1core_1_1ResourceHandle.html">Birdy3d::core::ResourceHandle</a></div><div class="ttdef"><b>Definition:</b> ResourceHandle.hpp:38</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ecs_1_1Entity_html"><div class="ttname"><a href="classBirdy3d_1_1ecs_1_1Entity.html">Birdy3d::ecs::Entity</a></div><div class="ttdef"><b>Definition:</b> Entity.hpp:10</div></div>
 <div class="ttc" id="aclassBirdy3d_1_1ui_1_1Theme_html"><div class="ttname"><a href="classBirdy3d_1_1ui_1_1Theme.html">Birdy3d::ui::Theme</a></div><div class="ttdef"><b>Definition:</b> Theme.hpp:12</div></div>
-<div class="ttc" id="aclassChannel_html"><div class="ttname"><a href="classChannel.html">Channel</a></div><div class="ttdef"><b>Definition:</b> Channel.hpp:8</div></div>
+<div class="ttc" id="aclassChannel_html"><div class="ttname"><a href="classChannel.html">Channel</a></div><div class="ttdef"><b>Definition:</b> Channel.hpp:15</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

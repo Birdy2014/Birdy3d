@@ -225,6 +225,7 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1utils_1_1TextureLoader.html":[2,0,0,7,4],
 "classBirdy3d_1_1utils_1_1Unicode.html":[2,0,0,7,5],
 "classChannel.html":[2,0,2],
+"classChannelClosedException.html":[2,0,3],
 "classes.html":[2,1],
 "conceptBirdy3d_1_1serializer_1_1ArithmeticType.html":[1,0,0,0],
 "conceptBirdy3d_1_1ui_1_1is__event.html":[1,0,1,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "dir_eb17c4f8c3f57bb1fd7a4f9eda46c207.html":[3,0,0,0,6,0],
 "ecs_2Forward_8hpp_source.html":[3,0,0,0,1,2],
 "events_2Forward_8hpp_source.html":[3,0,0,0,2,3],
-"files.html":[3,0],
-"functions.html":[2,3,0]
+"files.html":[3,0]
 };

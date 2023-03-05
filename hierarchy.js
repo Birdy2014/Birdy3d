@@ -113,6 +113,9 @@ var hierarchy =
     [ "Birdy3d::core::ResourceHandle< Birdy3d::ui::Theme >", "classBirdy3d_1_1core_1_1ResourceHandle.html", null ],
     [ "Birdy3d::core::ResourceIdentifier", "classBirdy3d_1_1core_1_1ResourceIdentifier.html", null ],
     [ "Birdy3d::core::ResourceManager", "classBirdy3d_1_1core_1_1ResourceManager.html", null ],
+    [ "std::runtime_error", null, [
+      [ "ChannelClosedException", "classChannelClosedException.html", null ]
+    ] ],
     [ "Birdy3d::serializer::Serializer", "classBirdy3d_1_1serializer_1_1Serializer.html", null ],
     [ "Birdy3d::render::Shader", "classBirdy3d_1_1render_1_1Shader.html", null ],
     [ "Birdy3d::ui::Shape", "classBirdy3d_1_1ui_1_1Shape.html", [

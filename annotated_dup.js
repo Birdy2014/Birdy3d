@@ -153,5 +153,6 @@ var annotated_dup =
       [ "formatter< EventType >", "structfmt_1_1formatter_3_01EventType_01_4.html", null ],
       [ "formatter< glm::vec< L, T > >", "structfmt_1_1formatter_3_01glm_1_1vec_3_01L_00_01T_01_4_01_4.html", null ]
     ] ],
-    [ "Channel", "classChannel.html", null ]
+    [ "Channel", "classChannel.html", null ],
+    [ "ChannelClosedException", "classChannelClosedException.html", null ]
 ];
