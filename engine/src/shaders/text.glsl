@@ -8,10 +8,9 @@ out vec4 v_color;
 
 uniform mat4 projection;
 uniform mat4 move;
-uniform mat4 move_self;
 
 void main() {
-    gl_Position = projection * (move * move_self * vec4(in_pos, 0, 1));
+    gl_Position = projection * (move * vec4(in_pos, 0, 1));
     v_frag_tex = in_tex;
     v_color = in_color;
 }

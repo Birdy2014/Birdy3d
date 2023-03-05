@@ -2,6 +2,7 @@
 
 #include "core/Input.hpp"
 #include "core/Logger.hpp"
+#include "core/ResourceManager.hpp"
 #include "ecs/Scene.hpp"
 #include "events/EventBus.hpp"
 #include "events/InputEvents.hpp"
