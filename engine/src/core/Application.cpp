@@ -28,7 +28,7 @@ namespace Birdy3d::core {
 
     Channel<std::function<void()>> Application::m_channel_main;
     Channel<std::function<void()>> Application::m_channel_loading;
-    std::thread Application::m_loading_thread;
+    std::vector<std::thread> Application::m_loading_threads;
 
     void glfw_error_callback([[maybe_unused]] int error, char const* description)
     {
@@ -97,16 +97,20 @@ namespace Birdy3d::core {
         option_bool(BoolOption::VSYNC, true);
         option_int(IntOption::SHADOW_CASCADE_SIZE, 5);
 
-        m_loading_thread = std::thread([]() {
-            while (true) {
-                auto task = m_channel_loading.get();
+        std::size_t const loading_thread_count = 4;
+
+        for (std::size_t i = 0; i < loading_thread_count; ++i) {
+            m_loading_threads.push_back(std::thread([]() {
                 try {
-                    std::invoke(task);
-                } catch (std::exception&) {
+                    while (true) {
+                        auto task = m_channel_loading.get();
+                        std::invoke(task);
+                    }
+                } catch (ChannelClosedException&) {
                     return;
                 }
-            }
-        });
+            }));
+        }
 
         return true;
     }
@@ -114,10 +118,10 @@ namespace Birdy3d::core {
     void Application::cleanup()
     {
         glfwTerminate();
-        m_channel_loading.push_task([]() {
-            throw std::exception();
-        });
-        m_loading_thread.join();
+        m_channel_loading.close();
+        for (auto& thread : m_loading_threads) {
+            thread.join();
+        }
     }
 
     void Application::mainloop()
