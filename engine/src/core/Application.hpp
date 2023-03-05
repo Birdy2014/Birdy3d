@@ -50,7 +50,7 @@ namespace Birdy3d::core {
 
         static Channel<std::function<void()>> m_channel_main;
         static Channel<std::function<void()>> m_channel_loading;
-        static std::thread m_loading_thread;
+        static std::vector<std::thread> m_loading_threads;
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void window_focus_callback(GLFWwindow* window, int focused);
