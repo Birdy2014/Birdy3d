@@ -118,10 +118,6 @@ var hierarchy =
     ] ],
     [ "Birdy3d::serializer::Serializer", "classBirdy3d_1_1serializer_1_1Serializer.html", null ],
     [ "Birdy3d::render::Shader", "classBirdy3d_1_1render_1_1Shader.html", null ],
-    [ "Birdy3d::ui::Shape", "classBirdy3d_1_1ui_1_1Shape.html", [
-      [ "Birdy3d::ui::Rectangle", "classBirdy3d_1_1ui_1_1Rectangle.html", null ],
-      [ "Birdy3d::ui::Text", "classBirdy3d_1_1ui_1_1Text.html", null ]
-    ] ],
     [ "Birdy3d::ui::Size", "classBirdy3d_1_1ui_1_1Size.html", null ],
     [ "Birdy3d::serializer::String", "structBirdy3d_1_1serializer_1_1String.html", null ],
     [ "Birdy3d::ui::TextDescription", "classBirdy3d_1_1ui_1_1TextDescription.html", null ],

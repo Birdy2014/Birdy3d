@@ -11,8 +11,6 @@ var dir_4157e6b4bacb470a599887dcc1e90291 =
     [ "OpenGLPainter.hpp", "OpenGLPainter_8hpp_source.html", null ],
     [ "Painter.hpp", "Painter_8hpp_source.html", null ],
     [ "Rect.hpp", "Rect_8hpp_source.html", null ],
-    [ "Rectangle.hpp", "Rectangle_8hpp_source.html", null ],
-    [ "Shape.hpp", "Shape_8hpp_source.html", null ],
     [ "Text.hpp", "Text_8hpp_source.html", null ],
     [ "TextRenderer.hpp", "TextRenderer_8hpp_source.html", null ],
     [ "Theme.hpp", "Theme_8hpp_source.html", null ],
