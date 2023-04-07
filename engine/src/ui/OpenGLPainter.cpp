@@ -188,8 +188,7 @@ namespace Birdy3d::ui {
 
     void OpenGLPainter::recreate_projection_matrix(int viewport_width, int viewport_height)
     {
-        // The -1 is necessary, because the parameter describes the rightmost/top coordinate, not the screen size
-        m_projection_matrix = glm::ortho(0.0f, viewport_width - 1.0f, viewport_height - 1.0f, 0.0f);
+        m_projection_matrix = glm::ortho(0.0f, static_cast<float>(viewport_width), static_cast<float>(viewport_height), 0.0f);
     }
 
 }
