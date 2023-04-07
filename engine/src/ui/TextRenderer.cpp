@@ -184,7 +184,7 @@ namespace Birdy3d::ui {
         auto move = glm::translate(glm::mat4(1), glm::vec3(position, 0.0f));
 
         auto viewport = core::Application::get_viewport_size();
-        auto projection_matrix = glm::ortho(0.0f, viewport.x - 1.0f, viewport.y - 1.0f, 0.0f);
+        auto projection_matrix = glm::ortho(0.0f, viewport.x, viewport.y, 0.0f);
 
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
