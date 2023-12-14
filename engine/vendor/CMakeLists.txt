@@ -15,6 +15,7 @@ include(FetchContent)
 find_package(Freetype)
 if (FREETYPE_FOUND)
     target_include_directories(Birdy3d_engine PRIVATE ${FREETYPE_INCLUDE_DIRS})
+    target_link_libraries(Birdy3d_engine ${FREETYPE_LIBRARIES})
 else()
     FetchContent_Declare(
         freetype
@@ -24,8 +25,8 @@ else()
     )
 
     FetchContent_MakeAvailable(freetype)
+    target_link_libraries(Birdy3d_engine freetype)
 endif()
-target_link_libraries(Birdy3d_engine freetype)
 
 find_path(LIBRARY_GLM glm)
 if(LIBRARY_GLM STREQUAL "LIBRARY_GLM-NOTFOUND")
@@ -65,7 +66,9 @@ endif()
 target_link_libraries(Birdy3d_engine glfw)
 
 find_library(LIBRARY_ASSIMP assimp)
-if (NOT LIBRARY_ASSIMP)
+if (LIBRARY_ASSIMP)
+    target_link_libraries(Birdy3d_engine ${LIBRARY_ASSIMP})
+else()
     set(ASSIMP_BUILD_TESTS CACHE INTERNAL OFF)
     set(BUILD_SHARED_LIBS CACHE INTERNAL OFF)
     set(ASSIMP_BUILD_ASSIMP_TOOLS CACHE INTERNAL OFF)
@@ -77,15 +80,17 @@ if (NOT LIBRARY_ASSIMP)
     )
 
     FetchContent_MakeAvailable(assimp)
+    target_link_libraries(Birdy3d_engine assimp)
 endif()
-target_link_libraries(Birdy3d_engine assimp)
 
 find_library(LIBRARY_FMT fmt)
-if(NOT LIBRARY_FMT)
+if(LIBRARY_FMT)
+    target_link_libraries(Birdy3d_engine ${LIBRARY_FMT})
+else()
     FetchContent_Declare(fmt
         GIT_REPOSITORY https://github.com/fmtlib/fmt.git
         GIT_TAG master
     )
     FetchContent_MakeAvailable(fmt)
+    target_link_libraries(Birdy3d_engine fmt)
 endif()
-target_link_libraries(Birdy3d_engine fmt)
