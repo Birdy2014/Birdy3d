@@ -16,11 +16,11 @@ Dependencies (the optional dependencies will be automatically downloaded if they
 - freetype2 (optional)
 - fmtlib (optional)
 
-Compiling on Linux using GCC >= 10 or Clang >= 10 and Make:
+Compiling on Linux using GCC >= 12 or Clang >= 16 and Ninja:
 
 ```
-cmake -B build -DCMAKE_BUILD_TYPE=Release -G Make
-cmake --build build -- -j4
+cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja
+cmake --build build
 ```
 
 Windows with Visual Studio 2019 (or newer):
