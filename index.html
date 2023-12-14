@@ -109,9 +109,9 @@ Building</h1>
 <li>freetype2 (optional)</li>
 <li>fmtlib (optional)</li>
 </ul>
-<p>Compiling on Linux using GCC &gt;= 10 or Clang &gt;= 10 and Make:</p>
-<div class="fragment"><div class="line">cmake -B build -DCMAKE_BUILD_TYPE=Release -G Make</div>
-<div class="line">cmake --build build -- -j4</div>
+<p>Compiling on Linux using GCC &gt;= 12 or Clang &gt;= 16 and Ninja:</p>
+<div class="fragment"><div class="line">cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja</div>
+<div class="line">cmake --build build</div>
 </div><!-- fragment --><p>Windows with Visual Studio 2019 (or newer):</p>
 <div class="fragment"><div class="line">cmake -B build -G &#39;Visual Studio 16 2019&#39;</div>
 <div class="line">cmake --build build --config Release</div>
