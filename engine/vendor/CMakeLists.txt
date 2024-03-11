@@ -33,7 +33,7 @@ if(LIBRARY_GLM STREQUAL "LIBRARY_GLM-NOTFOUND")
     FetchContent_Declare(
         glm
         GIT_REPOSITORY https://github.com/g-truc/glm
-        GIT_TAG        master
+        GIT_TAG        0.9.9.8
     )
 
     FetchContent_MakeAvailable(glm)
@@ -58,7 +58,7 @@ endif()
     FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw
-        GIT_TAG        master
+        GIT_TAG        8e6c8d7effc54f8aecd30eda17069588298f4ada
     )
 
     FetchContent_MakeAvailable(glfw)
@@ -89,7 +89,7 @@ if(LIBRARY_FMT)
 else()
     FetchContent_Declare(fmt
         GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-        GIT_TAG master
+        GIT_TAG 10.2.1
     )
     FetchContent_MakeAvailable(fmt)
     target_link_libraries(Birdy3d_engine fmt)
