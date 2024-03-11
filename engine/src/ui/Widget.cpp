@@ -131,7 +131,7 @@ namespace Birdy3d::ui {
             break;
         }
         default:
-            birdy3d_dbgln("Invalid event type: {}", event.type);
+            // birdy3d_dbgln("Invalid event type: {}", event.type);
             assert(false);
         }
         if (event.bubbles() && parent)
