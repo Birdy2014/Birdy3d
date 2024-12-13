@@ -1,5 +1,6 @@
 #pragma once
 
+#include "events/Forward.hpp"
 #include "events/WindowResizeEvent.hpp"
 #include "ui/Widget.hpp"
 #include <vector>

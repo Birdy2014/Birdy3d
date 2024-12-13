@@ -213,14 +213,14 @@ namespace Birdy3d::core {
 
     void Application::gl_message_callback(GLenum source, GLenum type, GLenum, GLenum severity, GLsizei, GLchar const* message, void const*)
     {
-        static const std::unordered_map<GLenum, std::string> ERROR_SOURCE_MAP{
+        static std::unordered_map<GLenum, std::string> const ERROR_SOURCE_MAP{
             {GL_DEBUG_SOURCE_API, "SOURCE_API"},
             {GL_DEBUG_SOURCE_WINDOW_SYSTEM, "WINDOW_SYSTEM"},
             {GL_DEBUG_SOURCE_SHADER_COMPILER, "SHADER_COMPILER"},
             {GL_DEBUG_SOURCE_THIRD_PARTY, "THIRD_PARTY"},
             {GL_DEBUG_SOURCE_APPLICATION, "APPLICATION"},
             {GL_DEBUG_SOURCE_OTHER, "OTHER"}};
-        static const std::unordered_map<GLenum, std::string> ERROR_TYPE_MAP{
+        static std::unordered_map<GLenum, std::string> const ERROR_TYPE_MAP{
             {GL_DEBUG_TYPE_ERROR, "ERROR"},
             {GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "DEPRECATED_BEHAVIOR"},
             {GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "UNDEFINED_BEHAVIOR"},
@@ -228,7 +228,7 @@ namespace Birdy3d::core {
             {GL_DEBUG_TYPE_PERFORMANCE, "PERFORMANCE"},
             {GL_DEBUG_TYPE_OTHER, "OTHER"},
             {GL_DEBUG_TYPE_MARKER, "MARKER"}};
-        static const std::unordered_map<GLenum, std::string> ERROR_SEVERITY_MAP{
+        static std::unordered_map<GLenum, std::string> const ERROR_SEVERITY_MAP{
             {GL_DEBUG_SEVERITY_HIGH, "HIGH"},
             {GL_DEBUG_SEVERITY_MEDIUM, "MEDIUM"},
             {GL_DEBUG_SEVERITY_LOW, "LOW"},

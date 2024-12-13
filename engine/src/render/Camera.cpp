@@ -341,7 +341,7 @@ namespace Birdy3d::render {
             glBindBuffer(GL_ARRAY_BUFFER, m_outline_vbo);
 
             glm::vec3 vertices[24];
-            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_DYNAMIC_DRAW);
 
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);

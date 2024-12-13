@@ -176,12 +176,12 @@ int main()
 
         // Components
         inspector_component_container->clear_children();
-        for (const auto& component : core::Application::selected_entity->components()) {
-            const auto& c = serializer::Reflector::get_class(component.get());
+        for (auto const& component : core::Application::selected_entity->components()) {
+            auto const& c = serializer::Reflector::get_class(component.get());
             auto box = inspector_component_container->add_child<ui::CollapsibleContainer>({.position = ui::Position(0_px, 5_px), .size = ui::Size(100_pc, 0_px), .title = c.name});
             box->set_layout<ui::StaticGridLayout>(5);
             int current_row = 0;
-            for (const auto& member : c.m_members) {
+            for (auto const& member : c.m_members) {
                 auto label = box->add_child<ui::Label>({.placement = ui::Placement::BOTTOM_LEFT, .column = 0, .row = current_row, .text = member.name});
                 auto widget_options = ui::Widget::Options{.size = ui::Size(100_pc, 20_px), .column = 1, .row = current_row};
                 if (member.type == typeid(std::string)) {

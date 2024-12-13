@@ -25,8 +25,8 @@ namespace Birdy3d::physics {
         glm::vec3 mutable m_points[4];
         int mutable m_point_count;
 
-        [[nodiscard]] std::optional<CollisionPoints> compute_shape_collision_gjk(CollisionShape const& shape_a, CollisionShape const& shape_b, ecs::Transform3d const&, ecs::Transform3d const&) const;
-        [[nodiscard]] std::optional<CollisionPoints> compute_shape_collision_spheres(CollisionSphere const& shape_a, CollisionSphere const& shape_b, ecs::Transform3d const&, ecs::Transform3d const&) const;
+        [[nodiscard]] std::optional<CollisionPoints> compute_shape_collision_gjk(CollisionShape const&, CollisionShape const&, ecs::Transform3d const&, ecs::Transform3d const&) const;
+        [[nodiscard]] std::optional<CollisionPoints> compute_shape_collision_spheres(CollisionSphere const&, CollisionSphere const&, ecs::Transform3d const&, ecs::Transform3d const&) const;
         // FIXME: Move GJK stuff to separate class where it doesn't need to be const
         glm::vec3 support(CollisionShape const& a, CollisionShape const& b, ecs::Transform3d const& transform_a, ecs::Transform3d const& transform_b, glm::vec3 direction) const;
         bool line(glm::vec3& direction) const;

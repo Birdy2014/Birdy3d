@@ -71,6 +71,7 @@
 #include "utils/Identifier.hpp"
 #include "utils/PrimitiveGenerator.hpp"
 #include "utils/Stacktrace.hpp"
+#include "utils/Unicode.hpp"
 #include "utils/serializer/Reflector.hpp"
 #include "utils/serializer/Serializer.hpp"
 

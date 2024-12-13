@@ -4,18 +4,18 @@
 
 namespace Birdy3d::utils {
 
-    const uint8_t ut_f8_one_byte_mask = 0b10000000;
-    const uint8_t ut_f8_one_byte_count = 0;
+    uint8_t const ut_f8_one_byte_mask = 0b10000000;
+    uint8_t const ut_f8_one_byte_count = 0;
 
-    const uint8_t ut_f8_two_byte_mask = 0b11100000;
-    const uint8_t ut_f8_two_byte_count = 0b11000000;
+    uint8_t const ut_f8_two_byte_mask = 0b11100000;
+    uint8_t const ut_f8_two_byte_count = 0b11000000;
 
-    const uint8_t ut_f8_three_byte_mask = 0b11110000;
-    const uint8_t ut_f8_three_byte_count = 0b11100000;
+    uint8_t const ut_f8_three_byte_mask = 0b11110000;
+    uint8_t const ut_f8_three_byte_count = 0b11100000;
 
-    const uint8_t ut_f8_four_byte_mask = 0b11111000;
+    uint8_t const ut_f8_four_byte_mask = 0b11111000;
 
-    const uint8_t ut_f8_other_mask = 0b00111111;
+    uint8_t const ut_f8_other_mask = 0b00111111;
 
     size_t utf8_codepoint_size(uint8_t text)
     {

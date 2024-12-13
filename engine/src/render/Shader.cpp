@@ -72,10 +72,10 @@ namespace Birdy3d::render {
         std::ifstream stream;
         stream.open(path);
 
-        const std::regex regex_include("#include ([a-zA-Z0-9_./]+)");
-        const std::regex regex_type("#type (vertex|geometry|fragment)");
-        const std::regex regex_parameter_empty("#parameter ([a-zA-Z0-9_]+)");
-        const std::regex regex_parameter_default("#parameter ([a-zA-Z0-9_]+) ([a-zA-Z0-9_\".]+)");
+        std::regex const regex_include("#include ([a-zA-Z0-9_./]+)");
+        std::regex const regex_type("#type (vertex|geometry|fragment)");
+        std::regex const regex_parameter_empty("#parameter ([a-zA-Z0-9_]+)");
+        std::regex const regex_parameter_default("#parameter ([a-zA-Z0-9_]+) ([a-zA-Z0-9_\".]+)");
 
         std::string* current_shader_source = nullptr;
         std::size_t line_number = 1;

@@ -16,7 +16,6 @@
 #include <string>
 
 #if defined(BIRDY3D_PLATFORM_LINUX)
-    #include <limits.h>
     #include <unistd.h>
 #elif defined(BIRDY3D_PLATFORM_WINDOWS)
     #include <windows.h>
@@ -224,7 +223,7 @@ namespace Birdy3d::core {
     }
 
     ResourceIdentifier::ResourceIdentifier(char const* full_name)
-        : ResourceIdentifier(std::string{full_name}){};
+        : ResourceIdentifier(std::string{full_name}) {};
 
     bool ResourceIdentifier::operator==(ResourceIdentifier const& other) const
     {

@@ -70,20 +70,17 @@ namespace Birdy3d::ui {
         bool done = false;
         while (!done) {
             done = true;
-            size_t i = 0;
             for (std::list<Widget*>::iterator it = smaller_widgets.begin(); it != smaller_widgets.end();) {
                 Widget* w = *it;
                 int current_widget_size = (horizontal ? w->minimal_size().x : w->minimal_size().y);
                 if (widget_size * w->weight < current_widget_size) {
                     it = smaller_widgets.erase(it);
-                    i--;
                     weights -= w->weight;
                     widget_size -= ((current_widget_size - widget_size * w->weight) / weights);
                     done = false;
                 } else {
                     it++;
                 }
-                i++;
             }
         }
 

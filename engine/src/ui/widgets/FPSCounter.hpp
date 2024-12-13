@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Application.hpp"
 #include "ui/Widget.hpp"
 
 namespace Birdy3d::ui {

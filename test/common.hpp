@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Birdy3d.hpp"
-#include <doctest.h>
+#include <doctest/doctest.h>
 
 using namespace Birdy3d;
 

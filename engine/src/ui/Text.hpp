@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/Application.hpp"
-#include "ui/Theme.hpp"
-#include "utils/Unicode.hpp"
-#include <ranges>
+#include <glm/glm.hpp>
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace Birdy3d::ui {
 
