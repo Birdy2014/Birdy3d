@@ -127,8 +127,6 @@ int main()
 
     ui::Console::attach(*canvas);
 
-    auto snap_area = canvas->add_child<ui::WindowSnapArea>({.size = ui::Size(600_px, 400_px), .placement = ui::Placement::BOTTOM_RIGHT, .mode = ui::WindowSnapArea::Mode::HORIZONTAL});
-
     auto scene_context_menu = canvas->add_child<ui::ContextMenu>({});
 
     canvas->add_child<ui::FPSCounter>({.placement = ui::Placement::TOP_RIGHT});
