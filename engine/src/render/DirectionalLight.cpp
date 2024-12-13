@@ -135,7 +135,7 @@ namespace Birdy3d::render {
         for (unsigned int x = 0; x < 2; ++x) {
             for (unsigned int y = 0; y < 2; ++y) {
                 for (unsigned int z = 0; z < 2; ++z) {
-                    const glm::vec4 pt = inv * glm::vec4(2.0f * x - 1.0f, 2.0f * y - 1.0f, 2.0f * z - 1.0f, 1.0f);
+                    glm::vec4 const pt = inv * glm::vec4(2.0f * x - 1.0f, 2.0f * y - 1.0f, 2.0f * z - 1.0f, 1.0f);
                     frustum_corners.push_back(pt / pt.w);
                 }
             }
@@ -176,7 +176,7 @@ namespace Birdy3d::render {
             max_z *= m_cam_offset;
         }
 
-        const glm::mat4 light_projection = glm::ortho(min_x, max_x, min_y, max_y, min_z, max_z);
+        glm::mat4 const light_projection = glm::ortho(min_x, max_x, min_y, max_y, min_z, max_z);
 
         return light_projection * light_view;
     }

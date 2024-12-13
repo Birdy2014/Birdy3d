@@ -71,11 +71,11 @@ namespace Birdy3d::ui {
 
         Position(Dimension both)
             : x(both)
-            , y(both){};
+            , y(both) {};
 
         Position(Dimension x, Dimension y)
             : x(x)
-            , y(y){};
+            , y(y) {};
 
         Position& operator=(Position const& other);
         bool operator==(Position const& other) const { return x == other.x && y == other.y; }
@@ -115,11 +115,11 @@ namespace Birdy3d::ui {
 
         Size(Dimension both)
             : x(both)
-            , y(both){};
+            , y(both) {};
 
         Size(Dimension x, Dimension y)
             : x(x)
-            , y(y){};
+            , y(y) {};
 
         Size& operator=(Size const& other);
         bool operator==(Size const& other) const { return x == other.x && y == other.y; }

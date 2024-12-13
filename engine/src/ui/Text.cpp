@@ -3,7 +3,6 @@
 #include "core/Application.hpp"
 #include "ui/Theme.hpp"
 #include "utils/Unicode.hpp"
-#include <ranges>
 
 namespace Birdy3d::ui {
 

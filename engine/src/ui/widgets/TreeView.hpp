@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ecs/Forward.hpp"
 #include "ui/Widget.hpp"
 #include <memory>
 

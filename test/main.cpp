@@ -1,6 +1,5 @@
-#include "Birdy3d.hpp"
 #define DOCTEST_CONFIG_IMPLEMENT
-#include <doctest.h>
+#include "common.hpp"
 
 using namespace Birdy3d;
 

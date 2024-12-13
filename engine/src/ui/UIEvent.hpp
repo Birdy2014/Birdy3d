@@ -190,7 +190,7 @@ namespace Birdy3d::ui {
 
     class DropEvent : public UIEvent {
     public:
-        const std::any data;
+        std::any const data;
 
         DropEvent(std::any data)
             : UIEvent(UIEvent::DROP)

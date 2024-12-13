@@ -130,15 +130,15 @@ namespace Birdy3d::ui {
     void ConsoleCommands::register_console()
     {
         Console::register_command("console.log", [](std::vector<std::string> args) {
-            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }));
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](std::string const& a, std::string const& b) { return a.empty() ? b : a + " " + b; }));
         });
 
         Console::register_command("console.warn", [](std::vector<std::string> args) {
-            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), utils::Color::Name::YELLOW);
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](std::string const& a, std::string const& b) { return a.empty() ? b : a + " " + b; }), utils::Color::Name::YELLOW);
         });
 
         Console::register_command("console.error", [](std::vector<std::string> args) {
-            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](const std::string& a, const std::string& b) { return a.empty() ? b : a + " " + b; }), utils::Color::Name::RED);
+            Console::println(std::accumulate(args.begin(), args.end(), std::string(), [](std::string const& a, std::string const& b) { return a.empty() ? b : a + " " + b; }), utils::Color::Name::RED);
         });
 
         Console::register_command("console.clear", [](std::vector<std::string>) {

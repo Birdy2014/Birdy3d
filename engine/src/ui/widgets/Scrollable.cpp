@@ -1,6 +1,7 @@
 #include "ui/widgets/Scrollable.hpp"
 
 #include "core/Input.hpp"
+#include "ui/Theme.hpp"
 
 namespace Birdy3d::ui {
 

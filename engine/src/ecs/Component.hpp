@@ -33,9 +33,9 @@ namespace Birdy3d::ecs {
     protected:
         bool m_loaded = false;
 
-        virtual void start(){};
-        virtual void update(){};
-        virtual void cleanup(){};
+        virtual void start() {};
+        virtual void update() {};
+        virtual void cleanup() {};
 
         BIRDY3D_REGISTER_TYPE_DEC(Component);
     };

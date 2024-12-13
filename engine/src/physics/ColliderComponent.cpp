@@ -79,9 +79,7 @@ namespace Birdy3d::physics {
 
     void ColliderComponent::serialize(serializer::Adapter& adapter)
     {
-        int generation_mode = static_cast<int>(m_generation_mode);
-        adapter("generation_mode", generation_mode);
-        m_generation_mode = static_cast<GenerationMode>(generation_mode);
+        adapter("generation_mode", *reinterpret_cast<int*>(&m_generation_mode));
     }
 
     BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, ColliderComponent);

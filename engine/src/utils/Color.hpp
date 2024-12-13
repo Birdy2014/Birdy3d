@@ -36,9 +36,9 @@ namespace Birdy3d::utils {
             NONE,
         };
 
-        static const Color NONE;
-        static const Color WHITE;
-        static const Color BLACK;
+        static Color const NONE;
+        static Color const WHITE;
+        static Color const BLACK;
 
         glm::vec4 value;
 

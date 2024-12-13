@@ -1,5 +1,6 @@
 #pragma once
 
+#include "events/Forward.hpp"
 #include "ui/Container.hpp"
 
 namespace Birdy3d::ui {

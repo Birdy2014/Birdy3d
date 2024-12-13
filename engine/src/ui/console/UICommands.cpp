@@ -1,3 +1,4 @@
+#include "core/Application.hpp"
 #include "ui/console/Commands.hpp"
 #include "ui/console/Console.hpp"
 

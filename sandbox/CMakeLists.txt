@@ -16,3 +16,6 @@ endif()
 
 set_target_properties(Birdy3d_sandbox PROPERTIES DEBUG_POSTFIX "")
 set_target_properties(Birdy3d_sandbox PROPERTIES RELEASE_POSTFIX "")
+
+# FIXME: Properly do this so that resources are also copied
+install(TARGETS Birdy3d_sandbox)

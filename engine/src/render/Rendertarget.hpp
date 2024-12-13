@@ -7,7 +7,7 @@ namespace Birdy3d::render {
 
     class Rendertarget {
     public:
-        static std::shared_ptr<Rendertarget> DEFAULT;
+        static std::shared_ptr<Rendertarget> DEFAULT; // NOLINT
 
         Rendertarget();
         Rendertarget(int width, int height);

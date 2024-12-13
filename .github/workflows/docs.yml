@@ -22,10 +22,12 @@ jobs:
         ln -s doxygen-1.9.6/bin/doxygen doxygen
 
     - name: Build
-      run: ./doxygen
+      run: |
+        mkdir build
+        ./doxygen
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build-docs/html
+        publish_dir: build/docs/html

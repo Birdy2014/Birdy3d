@@ -1,6 +1,7 @@
 #pragma once
 
 #include "render/Forward.hpp"
+#include "ui/Forward.hpp"
 #include "ui/Layout.hpp"
 #include "ui/Rect.hpp"
 #include "ui/Text.hpp"
