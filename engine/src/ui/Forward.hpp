@@ -29,7 +29,6 @@ namespace Birdy3d::ui {
     class TextField;
     class TreeView;
     class TreeItem;
-    class WindowSnapArea;
     class Painter;
     class Rect;
 
