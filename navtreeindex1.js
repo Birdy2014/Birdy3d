@@ -1,7 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"pages.html":[],
-"physics_2Forward_8hpp_source.html":[3,0,0,0,3,7],
 "render_2Forward_8hpp_source.html":[3,0,0,0,4,2],
 "structBirdy3d_1_1physics_1_1Mesh.html":[2,0,0,3,9],
 "structBirdy3d_1_1physics_1_1Triangle.html":[2,0,0,3,11],
@@ -27,7 +25,6 @@ var NAVTREEINDEX1 =
 "structBirdy3d_1_1ui_1_1TreeItemPosition.html":[2,0,0,6,46],
 "structBirdy3d_1_1ui_1_1Widget_1_1Options.html":[2,0,0,6,50,0],
 "structBirdy3d_1_1ui_1_1Widget_1_1Padding.html":[2,0,0,6,50,1],
-"structBirdy3d_1_1ui_1_1WindowSnapArea_1_1Options.html":[2,0,0,6,52,0],
 "structBirdy3d_1_1utils_1_1TextureLoader_1_1Image.html":[2,0,0,7,4,0],
 "structfmt_1_1formatter_3_01Birdy3d_1_1ui_1_1Rect_01_4.html":[2,0,1,0],
 "structfmt_1_1formatter_3_01Birdy3d_1_1utils_1_1Color_01_4.html":[2,0,1,1],

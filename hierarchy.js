@@ -87,7 +87,6 @@ var hierarchy =
     [ "Birdy3d::ui::Label::Options", "structBirdy3d_1_1ui_1_1Label_1_1Options.html", null ],
     [ "Birdy3d::ui::NumberInput::Options", "structBirdy3d_1_1ui_1_1NumberInput_1_1Options.html", null ],
     [ "Birdy3d::ui::Widget::Options", "structBirdy3d_1_1ui_1_1Widget_1_1Options.html", null ],
-    [ "Birdy3d::ui::WindowSnapArea::Options", "structBirdy3d_1_1ui_1_1WindowSnapArea_1_1Options.html", null ],
     [ "Birdy3d::ui::Widget::Padding", "structBirdy3d_1_1ui_1_1Widget_1_1Padding.html", null ],
     [ "Birdy3d::ui::Painter", "classBirdy3d_1_1ui_1_1Painter.html", [
       [ "Birdy3d::ui::OpenGLPainter", "classBirdy3d_1_1ui_1_1OpenGLPainter.html", null ]
@@ -165,7 +164,6 @@ var hierarchy =
           [ "Birdy3d::ui::NumberInput", "classBirdy3d_1_1ui_1_1NumberInput.html", null ]
         ] ]
       ] ],
-      [ "Birdy3d::ui::TreeView", "classBirdy3d_1_1ui_1_1TreeView.html", null ],
-      [ "Birdy3d::ui::WindowSnapArea", "classBirdy3d_1_1ui_1_1WindowSnapArea.html", null ]
+      [ "Birdy3d::ui::TreeView", "classBirdy3d_1_1ui_1_1TreeView.html", null ]
     ] ]
 ];

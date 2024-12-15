@@ -132,8 +132,7 @@ var annotated_dup =
         [ "TreeView", "classBirdy3d_1_1ui_1_1TreeView.html", null ],
         [ "UIEvent", "classBirdy3d_1_1ui_1_1UIEvent.html", null ],
         [ "Widget", "classBirdy3d_1_1ui_1_1Widget.html", "classBirdy3d_1_1ui_1_1Widget" ],
-        [ "Window", "classBirdy3d_1_1ui_1_1Window.html", null ],
-        [ "WindowSnapArea", "classBirdy3d_1_1ui_1_1WindowSnapArea.html", "classBirdy3d_1_1ui_1_1WindowSnapArea" ]
+        [ "Window", "classBirdy3d_1_1ui_1_1Window.html", null ]
       ] ],
       [ "utils", null, [
         [ "Color", "classBirdy3d_1_1utils_1_1Color.html", null ],

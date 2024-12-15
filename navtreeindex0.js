@@ -82,7 +82,6 @@ var NAVTREEINDEX0 =
 "Vertex_8hpp_source.html":[3,0,0,0,4,12],
 "Widget_8hpp_source.html":[3,0,0,0,5,16],
 "WindowResizeEvent_8hpp_source.html":[3,0,0,0,2,7],
-"WindowSnapArea_8hpp_source.html":[3,0,0,0,5,1,11],
 "Window_8hpp_source.html":[3,0,0,0,5,17],
 "annotated.html":[2,0],
 "classBirdy3d_1_1core_1_1Application.html":[2,0,0,0,0],
@@ -211,7 +210,6 @@ var NAVTREEINDEX0 =
 "classBirdy3d_1_1ui_1_1Widget.html#aaac396132b3a26ac35d685076de44299":[2,0,0,6,50,2],
 "classBirdy3d_1_1ui_1_1Widget.html#abe5c72204afcdbf3abbfc0e87fd90153":[2,0,0,6,50,3],
 "classBirdy3d_1_1ui_1_1Window.html":[2,0,0,6,51],
-"classBirdy3d_1_1ui_1_1WindowSnapArea.html":[2,0,0,6,52],
 "classBirdy3d_1_1utils_1_1Color.html":[2,0,0,7,0],
 "classBirdy3d_1_1utils_1_1FPPlayerController.html":[2,0,0,7,1],
 "classBirdy3d_1_1utils_1_1Identifier.html":[2,0,0,7,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "functions_vars.html":[2,3,2],
 "hierarchy.html":[2,2],
 "index.html":[],
-"index.html#autotoc_md1":[0]
+"index.html#autotoc_md1":[0],
+"pages.html":[],
+"physics_2Forward_8hpp_source.html":[3,0,0,0,3,7]
 };
