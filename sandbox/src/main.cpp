@@ -168,9 +168,9 @@ int main()
         input_scale_x->value(core::Application::selected_entity->transform.scale.x);
         input_scale_y->value(core::Application::selected_entity->transform.scale.y);
         input_scale_z->value(core::Application::selected_entity->transform.scale.z);
-        input_orientation_x->value(core::Application::selected_entity->transform.orientation.x);
-        input_orientation_y->value(core::Application::selected_entity->transform.orientation.y);
-        input_orientation_z->value(core::Application::selected_entity->transform.orientation.z);
+        input_orientation_x->value(glm::degrees(core::Application::selected_entity->transform.orientation.x));
+        input_orientation_y->value(glm::degrees(core::Application::selected_entity->transform.orientation.y));
+        input_orientation_z->value(glm::degrees(core::Application::selected_entity->transform.orientation.z));
 
         // Components
         inspector_component_container->clear_children();
@@ -386,32 +386,32 @@ int main()
 
     input_orientation_x->on_change = [&]() {
         if (core::Application::selected_entity)
-            core::Application::selected_entity->transform.orientation.x = input_orientation_x->value();
+            core::Application::selected_entity->transform.orientation.x = glm::radians(input_orientation_x->value());
     };
 
     input_orientation_y->on_change = [&]() {
         if (core::Application::selected_entity)
-            core::Application::selected_entity->transform.orientation.y = input_orientation_y->value();
+            core::Application::selected_entity->transform.orientation.y = glm::radians(input_orientation_y->value());
     };
 
     input_orientation_z->on_change = [&]() {
         if (core::Application::selected_entity)
-            core::Application::selected_entity->transform.orientation.z = input_orientation_z->value();
+            core::Application::selected_entity->transform.orientation.z = glm::radians(input_orientation_z->value());
     };
 
     input_orientation_x->add_callback("on_focus_lost", [&](std::any) {
         if (core::Application::selected_entity)
-            input_orientation_x->value(core::Application::selected_entity->transform.orientation.x);
+            input_orientation_x->value(glm::degrees(core::Application::selected_entity->transform.orientation.x));
     });
 
     input_orientation_y->add_callback("on_focus_lost", [&](std::any) {
         if (core::Application::selected_entity)
-            input_orientation_y->value(core::Application::selected_entity->transform.orientation.y);
+            input_orientation_y->value(glm::degrees(core::Application::selected_entity->transform.orientation.y));
     });
 
     input_orientation_z->add_callback("on_focus_lost", [&](std::any) {
         if (core::Application::selected_entity)
-            input_orientation_z->value(core::Application::selected_entity->transform.orientation.z);
+            input_orientation_z->value(glm::degrees(core::Application::selected_entity->transform.orientation.z));
     });
 
     core::Application::event_bus->subscribe<events::TransformChangedEvent>([&](events::TransformChangedEvent const& event) {
@@ -430,11 +430,11 @@ int main()
         if (!input_scale_z->is_focused())
             input_scale_z->value(event.entity->transform.scale.z);
         if (!input_orientation_x->is_focused())
-            input_orientation_x->value(event.entity->transform.orientation.x);
+            input_orientation_x->value(glm::degrees(event.entity->transform.orientation.x));
         if (!input_orientation_y->is_focused())
-            input_orientation_y->value(event.entity->transform.orientation.y);
+            input_orientation_y->value(glm::degrees(event.entity->transform.orientation.y));
         if (!input_orientation_z->is_focused())
-            input_orientation_z->value(event.entity->transform.orientation.z);
+            input_orientation_z->value(glm::degrees(event.entity->transform.orientation.z));
     });
 
     inspector_component_container = inspector_scroll_view->add_child<ui::Container>({.size = ui::Size(100_pc, 0_px)});
