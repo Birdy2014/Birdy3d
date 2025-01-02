@@ -24,11 +24,15 @@ namespace Birdy3d::ui {
             updated = true;
             auto viewport_size = core::Application::get_viewport_size();
             auto viewport_rect = Rect::from_position_and_size(glm::ivec2(0), viewport_size);
-            Widget::do_layout(viewport_rect);
-            Widget::update_visible_area(viewport_rect);
+
             if (!m_cursor_grabbed)
                 Widget::update_hover();
             Widget::on_update();
+
+            // Do layout after update to allow positions and sizes to be changed in `on_update`
+            Widget::do_layout(viewport_rect);
+            Widget::update_visible_area(viewport_rect);
+
             Widget::late_update();
         }
     }
