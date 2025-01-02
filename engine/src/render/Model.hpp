@@ -29,8 +29,8 @@ namespace Birdy3d::render {
         std::pair<glm::vec3, glm::vec3> m_bounding_box;
 
         void load(std::string path);
-        void process_node(aiNode* node, aiScene const* scene);
-        Mesh process_mesh(aiMesh* mesh, aiScene const* scene);
+        void process_node(aiNode* node, aiScene const* scene, glm::mat4 parent_transform);
+        Mesh process_mesh(aiMesh* mesh, aiScene const* scene, glm::mat4 transform);
         void compute_bounding_box();
     };
 
