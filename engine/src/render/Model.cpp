@@ -79,33 +79,42 @@ namespace Birdy3d::render {
         }
         m_directory = path.substr(0, path.find_last_of('/'));
 
-        process_node(scene->mRootNode, scene);
+        process_node(scene->mRootNode, scene, glm::mat4{1.0f});
     }
 
-    void Model::process_node(aiNode* node, aiScene const* scene)
+    void Model::process_node(aiNode* node, aiScene const* scene, glm::mat4 parent_transform)
     {
+        auto t = node->mTransformation;
+        // clang-format off
+        auto transform = parent_transform * glm::mat4{
+            t.a1, t.b1, t.c1, t.d1,
+            t.a2, t.b2, t.c2, t.d2,
+            t.a3, t.b3, t.c3, t.d3,
+            t.a4, t.b4, t.c4, t.d4,
+        };
+        // clang-format on
+
         // process own meshes
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            m_meshes.push_back(process_mesh(mesh, scene));
+            m_meshes.push_back(process_mesh(mesh, scene, transform));
         }
         // children
         for (unsigned int i = 0; i < node->mNumChildren; i++) {
-            process_node(node->mChildren[i], scene);
+            process_node(node->mChildren[i], scene, transform);
         }
     }
 
-    Mesh Model::process_mesh(aiMesh* mesh, aiScene const* scene)
+    Mesh Model::process_mesh(aiMesh* mesh, aiScene const* scene, glm::mat4 transform)
     {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture*> textures;
 
         // process vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             Vertex vertex;
             if (mesh->HasPositions())
-                vertex.position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+                vertex.position = transform * glm::vec4(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f);
             else
                 vertex.position = glm::vec3(0);
 
