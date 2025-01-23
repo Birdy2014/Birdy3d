@@ -126,8 +126,8 @@ $(document).ready(function(){initNavTree('Model_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        std::pair&lt;glm::vec3, glm::vec3&gt; m_bounding_box;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keywordtype">void</span> load(std::string path);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordtype">void</span> process_node(aiNode* node, aiScene <span class="keyword">const</span>* scene);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Mesh.html">Mesh</a> process_mesh(aiMesh* mesh, aiScene <span class="keyword">const</span>* scene);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordtype">void</span> process_node(aiNode* node, aiScene <span class="keyword">const</span>* scene, glm::mat4 parent_transform);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_class" href="classBirdy3d_1_1render_1_1Mesh.html">Mesh</a> process_mesh(aiMesh* mesh, aiScene <span class="keyword">const</span>* scene, glm::mat4 transform);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordtype">void</span> compute_bounding_box();</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    };</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
