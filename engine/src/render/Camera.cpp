@@ -74,9 +74,26 @@ namespace Birdy3d::render {
         m_ssao_blur_shader->use();
         m_ssao_blur_shader->set_int("ssao_input", 0);
 
-        // SSAO noise texture
-        std::uniform_real_distribution<GLfloat> random_floats(0.0, 1.0);
+        // SSAO sample kernel and noise
+        auto lerp = [](float a, float b, float f) {
+            return a + f * (b - a);
+        };
+        std::uniform_real_distribution<float> random_floats(0.0, 1.0);
         std::default_random_engine generator;
+        for (unsigned int i = 0; i < m_ssao_kernel.size(); ++i) {
+            glm::vec3 sample(
+                random_floats(generator) * 2.0 - 1.0,
+                random_floats(generator) * 2.0 - 1.0,
+                random_floats(generator));
+            sample = glm::normalize(sample);
+            sample *= random_floats(generator);
+            float scale = float(i) / m_ssao_kernel.size();
+            scale = lerp(0.1f, 1.0f, scale * scale);
+            sample *= scale;
+            m_ssao_kernel[i] = sample;
+        }
+
+        // SSAO noise texture
         std::array<glm::vec3, 16> ssao_noise;
         for (unsigned int i = 0; i < ssao_noise.size(); i++) {
             glm::vec3 noise(random_floats(generator) * 2.0 - 1.0, random_floats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
@@ -187,27 +204,6 @@ namespace Birdy3d::render {
 
     void Camera::render_deferred()
     {
-        auto lerp = [](float a, float b, float f) {
-            return a + f * (b - a);
-        };
-
-        // Create SSAO sample kernel and noise
-        std::uniform_real_distribution<float> random_floats(0.0, 1.0);
-        std::default_random_engine generator;
-        std::array<glm::vec3, 16> ssao_kernel;
-        for (unsigned int i = 0; i < ssao_kernel.size(); ++i) {
-            glm::vec3 sample(
-                random_floats(generator) * 2.0 - 1.0,
-                random_floats(generator) * 2.0 - 1.0,
-                random_floats(generator));
-            sample = glm::normalize(sample);
-            sample *= random_floats(generator);
-            float scale = float(i) / ssao_kernel.size();
-            scale = lerp(0.1f, 1.0f, scale * scale);
-            sample *= scale;
-            ssao_kernel[i] = sample;
-        }
-
         // 1. geometry pass: render all geometric/color data to g-buffer
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
@@ -228,8 +224,8 @@ namespace Birdy3d::render {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, m_ssao_noise);
         m_ssao_shader->use();
-        for (unsigned int i = 0; i < ssao_kernel.size(); i++)
-            m_ssao_shader->set_vec3("samples[" + std::to_string(i) + "]", ssao_kernel[i]);
+        for (unsigned int i = 0; i < m_ssao_kernel.size(); i++)
+            m_ssao_shader->set_vec3("samples[" + std::to_string(i) + "]", m_ssao_kernel[i]);
         m_ssao_shader->set_mat4("projection", m_projection);
         m_ssao_shader->set_mat4("view", m_view);
         render_quad();

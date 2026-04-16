@@ -56,6 +56,7 @@ namespace Birdy3d::render {
 
         Rendertarget m_ssao_blur_target;
         Texture* m_ssao_blur_texture;
+        std::array<glm::vec3, 16> m_ssao_kernel;
 
         GLuint m_ssao_noise;
         core::ResourceHandle<Shader> m_ssao_shader, m_ssao_blur_shader;
@@ -66,6 +67,7 @@ namespace Birdy3d::render {
         void render_deferred();
         void render_forward(bool render_opaque);
         void render_normals();
+        void init_ssao();
 
         BIRDY3D_REGISTER_DERIVED_TYPE_DEC(Component, Camera);
     };
