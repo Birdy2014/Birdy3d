@@ -86,8 +86,8 @@ namespace Birdy3d::render {
         float nearest = 5.0f;
         float camera_near = entity->scene->m_current_camera->near;
         float camera_far = entity->scene->m_current_camera->far;
-        m_light_space_transforms.reserve(shadow_cascade_size);
-        m_shadow_cascade_levels.reserve(shadow_cascade_size);
+        m_light_space_transforms.resize(shadow_cascade_size);
+        m_shadow_cascade_levels.resize(shadow_cascade_size);
         for (int i = 0; i < shadow_cascade_size; ++i) {
             // TODO: Use exponential scale instead of linear
             float near = i == 0 ? camera_near : m_shadow_cascade_levels[i - 1];
