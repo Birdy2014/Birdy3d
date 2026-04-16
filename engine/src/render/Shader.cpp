@@ -246,13 +246,6 @@ namespace Birdy3d::render {
         glProgramUniform2fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
-    void Shader::set_vec2(char const* name, float x, float y) const
-    {
-        if (!check_program_valid())
-            return;
-        glProgramUniform2f(m_id, glGetUniformLocation(m_id, name), x, y);
-    }
-
     void Shader::set_vec3(char const* name, glm::vec3 const& value) const
     {
         if (!check_program_valid())
@@ -260,25 +253,11 @@ namespace Birdy3d::render {
         glProgramUniform3fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
     }
 
-    void Shader::set_vec3(char const* name, float x, float y, float z) const
-    {
-        if (!check_program_valid())
-            return;
-        glProgramUniform3f(m_id, glGetUniformLocation(m_id, name), x, y, z);
-    }
-
     void Shader::set_vec4(char const* name, glm::vec4 const& value) const
     {
         if (!check_program_valid())
             return;
         glProgramUniform4fv(m_id, glGetUniformLocation(m_id, name), 1, &value[0]);
-    }
-
-    void Shader::set_vec4(char const* name, float x, float y, float z, float w) const
-    {
-        if (!check_program_valid())
-            return;
-        glProgramUniform4f(m_id, glGetUniformLocation(m_id, name), x, y, z, w);
     }
 
     void Shader::set_mat2(char const* name, glm::mat2 const& mat) const
@@ -330,13 +309,6 @@ namespace Birdy3d::render {
         glProgramUniform2fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
-    void Shader::set_vec2(std::string const& name, float x, float y) const
-    {
-        if (!check_program_valid())
-            return;
-        glProgramUniform2f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y);
-    }
-
     void Shader::set_vec3(std::string const& name, glm::vec3 const& value) const
     {
         if (!check_program_valid())
@@ -344,25 +316,11 @@ namespace Birdy3d::render {
         glProgramUniform3fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
     }
 
-    void Shader::set_vec3(std::string const& name, float x, float y, float z) const
-    {
-        if (!check_program_valid())
-            return;
-        glProgramUniform3f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y, z);
-    }
-
     void Shader::set_vec4(std::string const& name, glm::vec4 const& value) const
     {
         if (!check_program_valid())
             return;
         glProgramUniform4fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
-    }
-
-    void Shader::set_vec4(std::string const& name, float x, float y, float z, float w) const
-    {
-        if (!check_program_valid())
-            return;
-        glProgramUniform4f(m_id, glGetUniformLocation(m_id, name.c_str()), x, y, z, w);
     }
 
     void Shader::set_mat2(std::string const& name, glm::mat2 const& mat) const
@@ -384,6 +342,30 @@ namespace Birdy3d::render {
         if (!check_program_valid())
             return;
         glProgramUniformMatrix4fv(m_id, glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    template <>
+    void Shader::set_uniform(int location, bool value) const
+    {
+        glProgramUniform1i(m_id, location, value);
+    }
+
+    template <>
+    void Shader::set_uniform(int location, int value) const
+    {
+        glProgramUniform1i(m_id, location, value);
+    }
+
+    template <>
+    void Shader::set_uniform(int location, float value) const
+    {
+        glProgramUniform1f(m_id, location, value);
+    }
+
+    template <>
+    void Shader::set_uniform(int location, glm::vec4 value) const
+    {
+        glProgramUniform4fv(m_id, location, 1, &value[0]);
     }
 
     void Shader::PreprocessedSources::operator+=(PreprocessedSources const& other)

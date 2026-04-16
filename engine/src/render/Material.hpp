@@ -35,6 +35,24 @@ namespace Birdy3d::render {
         core::ResourceHandle<Texture> m_normal_map = core::ResourceManager::get_texture("color::" + utils::Color::WHITE.to_string());
         core::ResourceHandle<Texture> m_emissive_map = core::ResourceManager::get_texture("color::" + utils::Color::BLACK.to_string());
 
+        mutable struct {
+            int diffuse_map_enabled;
+            int diffuse_color;
+            int diffuse_map;
+
+            int specular_map_enabled;
+            int specular_value;
+            int specular_map;
+
+            int normal_map_enabled;
+            int normal_map;
+
+            int emissive_map_enabled;
+            int emissive_color;
+            int emissive_map;
+        } m_cached_shader_uniform_locations;
+        mutable unsigned int m_cached_shader_id{0};
+
         BIRDY3D_REGISTER_TYPE_DEC(Material);
     };
 

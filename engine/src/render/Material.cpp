@@ -26,24 +26,42 @@ namespace Birdy3d::render {
 
     void Material::use(Shader const& shader) const
     {
-        shader.set_bool("material.diffuse_map_enabled", diffuse_map_enabled);
-        shader.set_vec4("material.diffuse_color", diffuse_color);
+        if (m_cached_shader_id != shader.id()) {
+            m_cached_shader_id = shader.id();
+            m_cached_shader_uniform_locations.diffuse_map_enabled = shader.get_uniform_location("material.diffuse_map_enabled");
+            m_cached_shader_uniform_locations.diffuse_color = shader.get_uniform_location("material.diffuse_color");
+            m_cached_shader_uniform_locations.diffuse_map = shader.get_uniform_location("material.diffuse_map");
+
+            m_cached_shader_uniform_locations.specular_map_enabled = shader.get_uniform_location("material.specular_map_enabled");
+            m_cached_shader_uniform_locations.specular_value = shader.get_uniform_location("material.specular_value");
+            m_cached_shader_uniform_locations.specular_map = shader.get_uniform_location("material.specular_map");
+
+            m_cached_shader_uniform_locations.normal_map_enabled = shader.get_uniform_location("material.normal_map_enabled");
+            m_cached_shader_uniform_locations.normal_map = shader.get_uniform_location("material.normal_map");
+
+            m_cached_shader_uniform_locations.emissive_map_enabled = shader.get_uniform_location("material.emissive_map_enabled");
+            m_cached_shader_uniform_locations.emissive_color = shader.get_uniform_location("material.emissive_color");
+            m_cached_shader_uniform_locations.emissive_map = shader.get_uniform_location("material.emissive_map");
+        }
+
+        shader.set_uniform(m_cached_shader_uniform_locations.diffuse_map_enabled, diffuse_map_enabled);
+        shader.set_uniform(m_cached_shader_uniform_locations.diffuse_color, diffuse_color.value);
         m_diffuse_map->bind(0);
-        shader.set_int("material.diffuse_map", 0);
+        shader.set_uniform(m_cached_shader_uniform_locations.diffuse_map, 0);
 
-        shader.set_bool("material.specular_map_enabled", specular_map_enabled);
-        shader.set_float("material.specular_value", specular_value);
+        shader.set_uniform(m_cached_shader_uniform_locations.specular_map_enabled, specular_map_enabled);
+        shader.set_uniform(m_cached_shader_uniform_locations.specular_value, specular_value);
         m_specular_map->bind(1);
-        shader.set_int("material.specular_map", 1);
+        shader.set_uniform(m_cached_shader_uniform_locations.specular_map, 1);
 
-        shader.set_bool("material.normal_map_enabled", normal_map_enabled);
+        shader.set_uniform(m_cached_shader_uniform_locations.normal_map_enabled, normal_map_enabled);
         m_normal_map->bind(2);
-        shader.set_int("material.normal_map", 2);
+        shader.set_uniform(m_cached_shader_uniform_locations.normal_map, 2);
 
-        shader.set_bool("material.emissive_map_enabled", emissive_map_enabled);
-        shader.set_vec4("material.emissive_color", emissive_color);
+        shader.set_uniform(m_cached_shader_uniform_locations.emissive_map_enabled, emissive_map_enabled);
+        shader.set_uniform(m_cached_shader_uniform_locations.emissive_color, emissive_color.value);
         m_emissive_map->bind(3);
-        shader.set_int("material.emissive_map", 3);
+        shader.set_uniform(m_cached_shader_uniform_locations.emissive_map, 3);
     }
 
     bool Material::transparent() const
