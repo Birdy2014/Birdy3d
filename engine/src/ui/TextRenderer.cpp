@@ -84,6 +84,8 @@ namespace Birdy3d::ui {
         m_texture_atlas_current_pos.x += (*m_face)->glyph->bitmap.width + 1;
         if (m_texture_atlas_current_line_height < character.size.y)
             m_texture_atlas_current_line_height = character.size.y;
+        if (m_max_bearing_y < character.bearing.y)
+            m_max_bearing_y = character.bearing.y;
         return true;
     }
 
@@ -150,8 +152,8 @@ namespace Birdy3d::ui {
 
                 float xpos = x + ch.bearing.x * scale;
 
-                float max_font_top_to_origin = font_size * (4.0f / 5.0f);
-                float ypos = y + max_font_top_to_origin - ch.bearing.y;
+                float max_font_top_to_origin = renderer.m_max_bearing_y * scale;
+                float ypos = y + max_font_top_to_origin - ch.bearing.y * scale;
 
                 float w = ch.size.x * scale;
                 float h = ch.size.y * scale;

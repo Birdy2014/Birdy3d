@@ -57,6 +57,7 @@ namespace Birdy3d::ui {
         glm::vec2 m_texture_atlas_size;
         glm::ivec2 m_texture_atlas_current_pos;
         int m_texture_atlas_current_line_height{0};
+        int m_max_bearing_y{0};
         std::vector<TextVertex> m_vertices;
         std::vector<GLuint> m_indices;
 
