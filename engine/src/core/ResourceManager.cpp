@@ -14,12 +14,7 @@
 #include <fstream>
 #include <numeric>
 #include <string>
-
-#if defined(BIRDY3D_PLATFORM_LINUX)
-    #include <unistd.h>
-#elif defined(BIRDY3D_PLATFORM_WINDOWS)
-    #include <windows.h>
-#endif
+#include <unistd.h>
 
 namespace Birdy3d::core {
 
@@ -602,14 +597,9 @@ namespace Birdy3d::core {
 
     std::string ResourceManager::get_executable_dir()
     {
-#if defined(BIRDY3D_PLATFORM_LINUX)
         char result[PATH_MAX];
         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
         std::string exec = std::string(result, (count > 0) ? count : 0);
-#elif defined(BIRDY3D_PLATFORM_WINDOWS)
-        char result[MAX_PATH];
-        std::string exec = std::string(result, GetModuleFileName(NULL, result, MAX_PATH));
-#endif
         return exec.substr(0, exec.find_last_of("/\\") + 1);
     }
 

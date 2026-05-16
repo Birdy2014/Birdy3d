@@ -1,11 +1,9 @@
 #include "Birdy3d.hpp"
 #include "FileBrowser.hpp"
 #include "ResourceInput.hpp"
+#include <csignal>
 #include <filesystem>
 #include <fstream>
-#ifdef BIRDY3D_PLATFORM_LINUX
-    #include <csignal>
-#endif
 
 using namespace Birdy3d;
 
@@ -79,7 +77,6 @@ private:
 
 BIRDY3D_REGISTER_DERIVED_TYPE_DEF(ecs::Component, MoveUpDown);
 
-#ifdef BIRDY3D_PLATFORM_LINUX
 void handler(int sig)
 {
     if (sig == SIGSEGV)
@@ -91,13 +88,10 @@ void handler(int sig)
 
     exit(1);
 }
-#endif
 
 int main()
 {
-#ifdef BIRDY3D_PLATFORM_LINUX
     std::signal(SIGSEGV, handler);
-#endif
 
     if (!core::Application::init("Birdy3d", 1280, 720, "gruvbox-dark.json")) {
         return -1;

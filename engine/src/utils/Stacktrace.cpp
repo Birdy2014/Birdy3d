@@ -1,18 +1,14 @@
 #include "utils/Stacktrace.hpp"
 
 #include "core/Base.hpp"
-
-#ifdef BIRDY3D_PLATFORM_LINUX
-    #include <execinfo.h>
-    #include <regex>
-    #include <string>
-#endif
+#include <execinfo.h>
+#include <regex>
+#include <string>
 
 namespace Birdy3d::utils {
 
     void print_stacktrace()
     {
-#ifdef BIRDY3D_PLATFORM_LINUX
         void* trace_array[10];
         size_t trace_size;
 
@@ -41,7 +37,6 @@ namespace Birdy3d::utils {
         }
 
         free(messages);
-#endif
     }
 
 }
