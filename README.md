@@ -3,8 +3,6 @@ A 3D game engine written in C++.
 Its main purpose is for me to learn C++ and OpenGL.
 
 ## Building
-[![Build](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml/badge.svg)](https://github.com/Birdy2014/Birdy3d/actions/workflows/build.yml)
-
 Dependencies (the optional dependencies will be automatically downloaded if they are not found):
 - CMake
 - libgl
