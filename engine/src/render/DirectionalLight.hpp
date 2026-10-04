@@ -24,7 +24,6 @@ namespace Birdy3d::render {
 
     private:
         unsigned int const shadow_size = 2048;
-        float m_cam_offset = 1000.0f;
         std::vector<float> m_shadow_cascade_levels;
         std::vector<glm::mat4> m_light_space_transforms;
         core::ResourceHandle<Shader> m_depth_shader;

@@ -58,7 +58,6 @@ namespace Birdy3d::render {
         std::string name = "directional_lights[" + std::to_string(id) + "].";
         light_shader.use();
         light_shader.set_bool(name + "shadow_enabled", shadow_enabled);
-        light_shader.set_vec3(name + "position", entity->scene->m_current_camera->entity->transform.world_position() - entity->world_forward() * m_cam_offset);
         light_shader.set_vec3(name + "direction", entity->world_forward());
         light_shader.set_vec3(name + "ambient", color.value * intensity_ambient);
         light_shader.set_vec3(name + "diffuse", color.value * intensity_diffuse);
@@ -83,15 +82,16 @@ namespace Birdy3d::render {
         m_depth_shader.arg("SHADOW_CASCADE_SIZE", shadow_cascade_size);
         m_depth_shader->use();
 
-        float nearest = 5.0f;
         float camera_near = entity->scene->m_current_camera->near;
         float camera_far = entity->scene->m_current_camera->far;
         m_light_space_transforms.resize(shadow_cascade_size);
         m_shadow_cascade_levels.resize(shadow_cascade_size);
+        auto const f = [&](int x) {
+            return (camera_far / std::pow((shadow_cascade_size + camera_near), 2)) * std::pow(x + camera_near, 2);
+        };
         for (int i = 0; i < shadow_cascade_size; ++i) {
-            // TODO: Use exponential scale instead of linear
-            float near = i == 0 ? camera_near : m_shadow_cascade_levels[i - 1];
-            float far = i == 0 ? nearest : near + (camera_far - near) / (shadow_cascade_size - i);
+            float near = f(i);
+            float far = f(i + 1);
             m_shadow_cascade_levels[i] = far;
             m_light_space_transforms[i] = calculate_light_space_matrix(near, far);
             m_depth_shader->set_mat4("light_space_matrices[" + std::to_string(i) + "]", m_light_space_transforms[i]);
@@ -120,14 +120,13 @@ namespace Birdy3d::render {
         adapter("color", color);
         adapter("intensity_ambient", intensity_ambient);
         adapter("intensity_diffuse", intensity_diffuse);
-        adapter("cam_offset", m_cam_offset);
     }
 
     glm::mat4 DirectionalLight::calculate_light_space_matrix(float const near_plane, float const far_plane)
     {
         auto const camera = entity->scene->m_current_camera;
         auto const projection = glm::perspective(camera->fov, (float)camera->target->width() / (float)camera->target->height(), near_plane, far_plane);
-        auto const view = entity->scene->m_current_camera->view();
+        auto const view = camera->view();
 
         auto const inv = glm::inverse(projection * view);
 
@@ -165,18 +164,15 @@ namespace Birdy3d::render {
             max_z = std::max(max_z, trf.z);
         }
 
-        if (min_z < 0) {
-            min_z *= m_cam_offset;
-        } else {
-            min_z /= m_cam_offset;
-        }
-        if (max_z < 0) {
-            max_z /= m_cam_offset;
-        } else {
-            max_z *= m_cam_offset;
-        }
+        float margin = 5.0f;
+        min_x -= margin;
+        max_x += margin;
+        min_y -= margin;
+        max_y += margin;
+        min_z -= 50.0f;
+        max_z += 50.0f;
 
-        glm::mat4 const light_projection = glm::ortho(min_x, max_x, min_y, max_y, min_z, max_z);
+        glm::mat4 const light_projection = glm::ortho(min_x, max_x, min_y, max_y, -max_z, -min_z);
 
         return light_projection * light_view;
     }

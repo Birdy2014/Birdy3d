@@ -4,7 +4,6 @@
 struct DirectionalLight {
     bool shadow_enabled;
 
-    vec3 position;
     vec3 direction;
 
     vec3 ambient;
@@ -53,6 +52,8 @@ struct Spotlight {
 #parameter POINTLIGHTS_AMOUNT 0
 #parameter SPOTLIGHTS_AMOUNT 0
 
+#define PI 3.1415926538
+
 #if DIRECTIONAL_LIGHTS_AMOUNT > 0
 uniform DirectionalLight directional_lights[DIRECTIONAL_LIGHTS_AMOUNT];
 #endif
@@ -92,51 +93,36 @@ vec3 calc_directional_light(DirectionalLight light, vec3 normal, vec3 frag_pos, 
         return lighting + ambient;
 
     // SHADOW
-    /*
-    float bias = 0.0f;
-
-    float shadow = 0.0;
-    for(int x = -1; x <= 1; ++x) {
-        for(int y = -1; y <= 1; ++y) {
-            vec4 frag_pos_light_space = light.light_space_matrix * vec4(frag_pos + vec3(x, y, 0.0f) * 0.001, 1.0);
-            vec3 proj_coords = frag_pos_light_space.xyz / frag_pos_light_space.w;
-            proj_coords = proj_coords * 0.5f + 0.5f;
-            shadow += texture(light.shadow_map, proj_coords, bias);
-        }
-    }
-    shadow /= 9.0;
-    */
-
     vec4 frag_pos_view_space = view * vec4(frag_pos, 1.0);
-    float depth = abs(frag_pos_view_space.z);
+    float frag_depth = abs(frag_pos_view_space.z);
 
     int layer = -1;
     for (int i = 0; i < SHADOW_CASCADE_SIZE; ++i) {
-        if (depth < light.shadow_cascade_levels[i]) {
+        if (frag_depth < light.shadow_cascade_levels[i]) {
             layer = i;
             break;
         }
     }
-    if (layer == -1) {
+    if (layer == -1)
         layer = SHADOW_CASCADE_SIZE - 1;
-    }
 
     vec4 frag_pos_light_space = light.light_space_matrices[layer] * vec4(frag_pos, 1.0);
-
     vec3 proj_coords = frag_pos_light_space.xyz / frag_pos_light_space.w;
     proj_coords = proj_coords * 0.5 + 0.5;
 
-    // get depth of current fragment from light's perspective
-    // float current_depth = proj_coords.z;
-    // if (current_depth > 1.0) {
-    //     return 0.0;
-    // }
-    // calculate bias (based on depth map resolution and slope)
     float bias = max(0.05 * (1.0 - dot(normal, light_dir)), 0.005);
     bias *= 1 / (light.shadow_cascade_levels[layer] * 0.5f);
 
-    // float shadow = texture(light.shadow_map, vec4(proj_coords, layer), bias);
-    float shadow = texture(light.shadow_map, vec4(proj_coords.xy, layer, proj_coords.z));
+    float shadow = 0.0;
+    vec2 texel_size = 1.0 / vec2(textureSize(light.shadow_map, 0));
+    float noise = fract(dot(gl_FragCoord.xy, vec2(0.754877669, 0.569840296)));
+    float radius = 1.5;
+    for (int i = 0; i < 8; ++i) {
+        float angle = noise * 2 * PI + float(i) * (PI / 2);
+        vec2 offset = vec2(cos(angle), sin(angle)) * texel_size * radius;
+        shadow += texture(light.shadow_map, vec4(proj_coords.xy + offset, layer, proj_coords.z - bias));
+    }
+    shadow /= 8.0;
 
     return lighting * shadow + ambient;
 }
